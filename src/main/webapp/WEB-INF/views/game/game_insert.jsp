@@ -369,7 +369,7 @@
 	            	$(auto).each(function(){
 	    				var suggestion=auto(this);
 	    				console.log(suggestion);
-	    				
+						console.log(auto);
 	    				$("#artistSuggestions").append(suggestion);
 	    			});
 	            }
