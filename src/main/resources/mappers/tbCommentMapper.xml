@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="tbComment">
+	<select id="getCommentList" resultType="tbCommentDto">
+		select * from tb_comments 
+		where tb_num = #{tb_num}
+		order by create_date desc
+	</select>
+	
+	<select id="commentCount">
+		select count(*) from tb_comments
+		where tb_num = #{tb_num}
+	</select>
+	
+	<insert id="insertComment">
+		insert into tb_comments 
+			(reply_reg_num, reply_parent_reg_num, tb_num, 
+			content, create_user) 
+		values
+			(seq_tb_comments.nextval, 1, #{tb_num}, #{content}, #{create_user})
+	</insert>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

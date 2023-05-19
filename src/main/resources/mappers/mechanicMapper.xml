@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="mechanic">
+	<select id="check" resultType="int">
+		select count(*)
+		from mechanic
+		where mechanic=#{mechanic}
+	</select>
+	
+	<insert id="insert">
+		insert into mechanic
+		values (seq_mechanic.nextval, #{mechanic})
+	</insert>
+	
+	<insert id="insertmapping">
+		insert into game_mechanic
+		values (seq_game.currval,seq_mechanic.currval)
+	</insert>
+	
+	<select id="mechanic_num" resultType="int">
+		select mnum
+		from mechanic
+		where mechanic=#{mechanic} 
+	</select>
+	
+	<insert id="insertmapping_mnum">
+		insert into game_mechanic
+		values (seq_game.currval,#{mnum})
+	</insert>
+	
+	<select id="list" resultType="mechanicDto">
+		select * from mechanic
+	</select>	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

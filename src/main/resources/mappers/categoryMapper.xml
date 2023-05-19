@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="category">
+	
+	<select id="check" resultType="int">
+		select count(*)
+		from category
+		where gamecategory=#{gamecategory}
+	</select>
+	
+	<insert id="insert">
+		insert into category
+		values (seq_category.nextval, #{gamecategory})
+	</insert>
+	
+	<insert id="insertmapping">
+		insert into game_category
+		values (seq_game.currval,seq_category.currval)
+	</insert>
+	
+	<select id="category_num" resultType="int">
+		select cnum
+		from category
+		where gamecategory=#{gamecategory} 
+	</select>
+	
+	<insert id="insertmapping_cnum">
+		insert into game_category
+		values (seq_game.currval,#{cnum})
+	</insert>
+	
+	<select id="list" resultType="categoryDto">
+		select * from category
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

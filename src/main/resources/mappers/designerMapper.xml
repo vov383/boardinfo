@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="designer">
+	
+	<select id="check" resultType="int">
+		select count(*)
+		from designer
+		where designer=#{designer}
+	</select>
+	
+	<insert id="insert">
+		insert into designer
+		values (seq_designer.nextval, #{designer})
+	</insert>
+	
+	<insert id="insertmapping">
+		insert into game_designer
+		values (seq_game.currval,seq_designer.currval)
+	</insert>
+	
+	<select id="designer_num" resultType="int">
+		select dnum
+		from designer
+		where designer=#{designer} 
+	</select>
+	
+	<insert id="insertmapping_dnum">
+		insert into game_designer
+		values (seq_game.currval,#{dnum})
+	</insert>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

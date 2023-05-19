@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="game">
+	<select id="gameList" resultType="gameDto">
+		select * 
+		from game
+		order by gnum
+	</select>
+	
+	<insert id="gameInsert">
+		insert into game 
+			(gnum,gametitle,gametitle_eng,players,playtime,
+			 ages,language,gamephoto_url,release_year)
+		values 
+			(seq_game.nextval,#{gametitle},#{gametitle_eng},#{players},
+			 #{playtime},#{ages},#{language},'dd',#{release_year})
+	</insert>
+	
+	<update id="increaseViewcnt">
+		update game set viewcount = viewcount+1
+		where gnum=#{gnum}
+	</update>
+	
+	<select id="view" resultType="gameDto">
+	 	select gnum, exnum, renum, bggnum, gametitle, gametitle_eng, players, 
+	 		   playtime, ages, language,gamephoto_url, release_year, bgg_game_score,
+	 		   bggrank, write_date, viewcount
+	      from game
+	     where gnum=#{gnum}
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="artist">
+	
+	<select id="check" resultType="int">
+		select count(*)
+		from artist
+		where artist=#{artist}
+	</select>
+	
+	<insert id="insert">
+		insert into artist
+		values (seq_artist.nextval, #{artist})
+	</insert>
+	
+	<insert id="insertmapping">
+		insert into game_artist
+		values (seq_game.currval,seq_artist.currval)
+	</insert>
+	
+	<select id="artist_num" resultType="int">
+		select anum
+		from artist
+		where artist=#{artist} 
+	</select>
+	
+	<insert id="insertmapping_anum">
+		insert into game_artist
+		values (seq_game.currval,#{anum})
+	</insert>
+	
+	<select id="getAuto" resultType="artistDto">
+	<bind name="query" value="'%'+query+'%'"/>
+		select artist
+		from artist
+		where artist like #{query}
+		order by artist
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

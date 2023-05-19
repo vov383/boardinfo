@@ -1,0 +1,114 @@
+@charset "UTF-8";
+
+body {
+	color: #666;
+	font: 14px/24px "Open Sans", "HelveticaNeue-Light",
+		"Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial,
+		"Lucida Grande", Sans-Serif;
+}
+
+/* 테이블 관련 속성 */
+
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+	width: 100%;
+}
+
+th, td {
+	padding: 6px 15px;
+}
+
+th {
+	background: #42444e;
+	color: #fff;
+	text-align: left;
+}
+
+tr:first-child th:first-child {
+	border-top-left-radius: 6px;
+}
+
+tr:first-child th:last-child {
+	border-top-right-radius: 6px;
+}
+
+td {
+	border-right: 1px solid #c6c9cc;
+	border-bottom: 1px solid #c6c9cc;
+}
+
+td:first-child {
+	border-left: 1px solid #c6c9cc;
+}
+
+tr:nth-child(even) td {
+	background: #eaeaed;
+}
+
+tr:last-child td:first-child {
+	border-bottom-left-radius: 6px;
+}
+
+tr:last-child td:last-child {
+	border-bottom-right-radius: 6px;
+}
+
+/* game_insert에서의 toggle스위치 관련 */
+.toggleSwitch {
+  width: 50px;
+  height: 25px;
+  display: block;
+  position: relative;
+  border-radius: 15px;
+  background-color: #fff;
+  box-shadow: 0 0 16px 3px rgba(0 0 0 / 15%);
+  cursor: pointer;
+  margin: 15px;
+}
+
+.toggleSwitch .toggleButton {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: #f03d3d;
+}
+
+#toggleCategory, #toggleMechanic {
+	display: none;
+}
+
+#toggleCategory:checked ~ .toggleSwitch,
+#toggleMechanic:checked ~ .toggleSwitch {
+  background: #f03d3d;
+}
+
+#toggleCategory:checked ~ .toggleSwitch .toggleButton,
+#toggleMechanic:checked ~ .toggleSwitch .toggleButton {
+  left: calc(100% - 22px);
+  background: #fff;
+}
+
+.toggleSwitch, .toggleButton {
+  transition: all 0.2s ease-in;
+}
+
+/* toggle 스위치를 켰을 때 목록이 나타나게 함 */
+#divCategory, #divMechanic {
+	display: none;
+}
+
+#toggleCategory:checked ~ #divCategory,
+#toggleMechanic:checked ~ #divMechanic {
+ 	display:unset;
+}
+
+.cursor_pointer {
+	cursor: pointer;
+}
+
+

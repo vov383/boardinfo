@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+
+		<typeAlias type="com.example.boardinfo.model.game.dto.GameDTO" alias="gameDto"/>
+		<typeAlias type="com.example.boardinfo.model.game.dto.category.CategoryDTO" alias="categoryDto"/>
+		<typeAlias type="com.example.boardinfo.model.game.dto.mechanic.MechanicDTO" alias="mechanicDto"/>
+		<typeAlias type="com.example.boardinfo.model.game.dto.artist.ArtistDTO" alias="artistDto"/>
+
+		<typeAlias type="com.example.boardinfo.model.tboard.dto.TBoardDTO" 
+			alias="tboardDto"/>
+		<typeAlias type="com.example.boardinfo.model.tboard.dto.TBCommentDTO"
+			alias="tbCommentDto" />
+		<typeAlias type="com.example.boardinfo.model.tboard.dto.TBCommentDTO"
+			alias="tbFileDto"/>
+
+	</typeAliases>
+</configuration>
+
+
