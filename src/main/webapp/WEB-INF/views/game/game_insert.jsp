@@ -36,7 +36,7 @@
 
 			<tr>
 
-				<td>사진</td>
+				<td>사진dk</td>
 				<td><input type="file" name="gamephoto_url" id="gamephoto"></td>
 
 			</tr>
