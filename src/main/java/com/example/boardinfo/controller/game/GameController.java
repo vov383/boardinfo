@@ -36,9 +36,11 @@ public class GameController {
 	
 	@RequestMapping("write.do")
 	public ModelAndView write(ModelAndView mav) {
-	    
+
+		//카테고리와 메카닉은 테이블에서 선택하기에 미리 값을 받아놈
 	    List<CategoryDTO> categorylist = gameService.categorylist();
 	    List<MechanicDTO> mechaniclist = gameService.mechaniclist();
+
 	    
 	    Map<String, Object> map=new HashMap<>();
 	    map.put("clist", categorylist);
@@ -66,9 +68,10 @@ public class GameController {
 	
 	@RequestMapping("auto.do/{input}")
     @ResponseBody
-    public List<String> autoCompleteArtist(@PathVariable String input) {
+    public List<ArtistDTO> autoCompleteArtist(@PathVariable String input) {
 
-        return gameService.getAuto(input);
+		List<ArtistDTO> list = gameService.getAuto(input);
+        return list;
     }
 	
 	

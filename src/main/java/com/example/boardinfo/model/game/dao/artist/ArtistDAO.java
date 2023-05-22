@@ -11,5 +11,5 @@ public interface ArtistDAO {
 	public void insert_artist_mapping();
 	public int artistnum(String artist);
 	public void insert_artist_mapping(int anum);
-	public List<String> getAuto(String input);
+	public List<ArtistDTO> getAuto(String input);
 }

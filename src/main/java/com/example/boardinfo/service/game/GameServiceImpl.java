@@ -46,12 +46,14 @@ public class GameServiceImpl implements GameService {
     
     // 아티스트,카테고리,퍼블리셔,디자이너,메카닉 동일값 있는지 확인
     int check_artist = artistDao.check_artist(dto.getArtist());
-//    int check_category = categoryDao.check_category(dto.getGamecategory());
     int check_publisher = publisherDao.check_publisher(dto.getPublisher());
     int check_designer = designerDao.check_designer(dto.getDesigner());
     int check_mechanic = mechanicDao.check_mechanic(dto.getMechanic());
+    
+    //게임테이블에 insert
     gameDao.gameinsert(dto);
     
+    //카테고리배열
     String[] gamecategories = dto.getGamecategory().split(",");
     for(String str : gamecategories) {
       int check_category = categoryDao.check_category(str);
@@ -135,5 +137,5 @@ public class GameServiceImpl implements GameService {
     return mechanicDao.list();
   }
   
-  public List<String> getAuto(String input){ return artistDao.getAuto(input);  }
+  public List<ArtistDTO> getAuto(String input){ return artistDao.getAuto(input);  }
 }

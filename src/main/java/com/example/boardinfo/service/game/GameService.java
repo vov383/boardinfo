@@ -17,6 +17,6 @@ public interface GameService {
   public Object view(int gnum) throws Exception;
   public List<CategoryDTO> categorylist();
   public List<MechanicDTO> mechaniclist();
-  public List<String> getAuto(String input);
+  public List<ArtistDTO> getAuto(String input);
 
 }
