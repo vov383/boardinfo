@@ -11,7 +11,13 @@
 <title>BOARDINFO</title>
 <%@ include file="../include/js/header.jsp"%>
 <link rel="stylesheet" href="${path}/include/js/style_game.css">
+<style>
 
+	.input_game {
+		width: 300px;
+	}
+
+</style>
 </head>
 
 <body>
@@ -44,21 +50,21 @@
 			<tr>
 
 			  	<td>게임 이름</td>
-				<td><input name="gametitle" id="gametitle"></td>
+				<td><input name="gametitle" id="gametitle" class="input_game"></td>
 
 			</tr>
 
 			<tr>
 
 				<td>게임 이름(영문)</td>
-				<td><input name="gametitle_eng" id="gametitle_eng"></td>
+				<td><input name="gametitle_eng" id="gametitle_eng" class="input_game"></td>
 
 			</tr>
 
 			<tr>
 
 				<td>제작자</td>
-				<td><input name="designer" id="designer"></td>
+				<td><input name="designer" id="designer" class="input_game"></td>
 
 			</tr>
 			
@@ -123,7 +129,9 @@
 
 				<td>아트웍</td>
 				<td>
-					<input name="artist" id="artist" autocomplete="off">
+					<div id="selectedArtist"></div>
+					<input type="hidden" name="artist" id="artist">
+					<input id="inputArtist" class="input_game" autocomplete="off">
 					<div id="artistSuggestions"></div>
 				</td>
 
@@ -188,42 +196,42 @@
 			<tr>
 
 				<td>제작사</td>
-				<td><input name="publisher" id="publisher"></td>
+				<td><input name="publisher" id="publisher" class="input_game"></td>
 
 			</tr>
 
 			<tr>
 
 				<td>플레이 인원</td>
-				<td><input name="players" id="players"></td>
+				<td><input name="players" id="players" class="input_game"></td>
 
 			</tr>
 
 			<tr>
 
 				<td>플레이 시간</td>
-				<td><input name="playtime" id="playtime"></td>
+				<td><input name="playtime" id="playtime" class="input_game"></td>
 
 			</tr>
 
 			<tr>
 
 				<td>사용연령</td>
-				<td><input name="ages" id="ages"></td>
+				<td><input name="ages" id="ages" class="input_game"></td>
 
 			</tr>
 
 			<tr>
 
 				<td>발매년도</td>
-				<td><input name="release_year" id="release_year"></td>
+				<td><input name="release_year" id="release_year" class="input_game"></td>
 
 			</tr>
 
 			<tr>
 
 				<td>사용언어</td>
-				<td><input name="language" id="language"></td>
+				<td><input name="language" id="language" class="input_game"></td>
 
 			</tr>
 
@@ -360,20 +368,66 @@
 		
 		
 		//	artist 검색 자동완성 쿼리 
-		$('#artist').keyup(function() {
+		$('#inputArtist').keyup(function() {
 	        var input = $(this).val();
 	        $.ajax({
 				type: "post",
 	        	url: "${path}/game/auto.do/"+input,
-	            success: function(list) {
-	            	$(list).each(function(){
-	    				var artists = list;
-	    				console.log(artists);
-	    				$("#artistSuggestions").append(artists);
-	    			});
-	            }
+	            success: function(result) {
+					var suggestionsDiv = $('#artistSuggestions');
+					suggestionsDiv.empty(); // 기존 내용 비우기
+
+					if (result.length > 0) {
+						suggestionsDiv.css('height', '150px').show(); // 값이 있을 경우 높이 설정하고 보이기
+						$(result).each(function(index, item) {
+							var artist = item.artist;
+							suggestionsDiv.append("<div class='searched cursor_pointer'>" + artist + "</div>");
+						});
+					} else {
+						suggestionsDiv.hide(); // 값이 없을 경우 숨기기
+					}
+	            },
+				error: function() {
+					console.log("에러..");
+				}
 	        });
 	    });
+
+		var selectedArtists = [];
+
+		function updateArtistInput() {
+			var artistInput = $("#artist");
+			artistInput.val(selectedArtists.join(","));
+		}
+
+		$('#artistSuggestions').on('click', '.searched', function() {
+			var selectedArtist = $(this).text();
+			selectedArtists.push(selectedArtist);
+			$("#selectedArtist").append("<div class='selected cursor_pointer'>" + selectedArtist + "</div>");
+			console.log("배열"+selectedArtists);
+			$("#inputArtist").val("");
+			$("#artistSuggestions").empty().css('height', '0').hide();
+			updateArtistInput();
+			console.log("인풋"+$("#artist").val());
+		});
+
+		// 선택된 값 클릭 이벤트 처리
+		$("#selectedArtist").on("click", ".selected", function() {
+
+			var value = $(this).text();
+
+			// 선택된 값 배열에서 해당 값을 제거
+			selectedArtists = selectedArtists.filter(function(selected) {
+				return selected !== value;
+			});
+
+			// 선택된 값 표시가 삭제되도록 처리
+			$(this).remove();
+
+			updateArtistInput();
+			console.log("인풋"+$("#artist").val());
+		});
+
 
 
 

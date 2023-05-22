@@ -1,5 +1,6 @@
 package com.example.boardinfo.model.game.dao.artist;
 
+import java.sql.ClientInfoStatus;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -41,8 +42,10 @@ public class ArtistDAOImpl implements ArtistDAO {
 		sqlSession.insert("artist.insertmapping_anum",anum);
 	}
 	
-	public List<String> getAuto(String input){
-	    return sqlSession.selectList("artist.getAuto", input);
+	public List<ArtistDTO> getAuto(String input){
+		List<ArtistDTO> list = sqlSession.selectList("artist.getAuto", input);
+		System.out.println(list);
+	    return list;
 	}
 	
 }
