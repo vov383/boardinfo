@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("review/*")
@@ -22,13 +21,16 @@ public class ReviewController {
 		mav.addObject("list", reviewservice.reviewlist());
 		return mav;
 	}
-
+	// 페이지 열기
 	@RequestMapping("reviewInTest.do")
-	public String insert(@ModelAttribute TestDTO testdto, HttpSession httpSession){
-		String writer = (String)httpSession.getAttribute("test1");
-				testdto.setTest1(writer);
+	public String insert(@ModelAttribute TestDTO testdto){
+		return "/review/reviewInTest";
+	}
+	// 저장
+	@RequestMapping("reviewInTestInsertPage.do")
+	public String insertPage(@ModelAttribute TestDTO testdto){
 		reviewservice.create(testdto);
-		return "/review/reviewMain";
+		return "/review/reviewInTest";
 	}
 
 
