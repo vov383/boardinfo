@@ -5,8 +5,7 @@ import java.util.Arrays;
 public class ArtistDTO {
   private int anum;
   private String artist;
-  private String[] artists;
-  
+
   
   public ArtistDTO() {}
 
@@ -26,20 +25,11 @@ public class ArtistDTO {
     this.artist = artist;
   }
 
-  public String[] getArtists() {
-    return artists;
-  }
-
-  public void setArtists(String[] artists) {
-    this.artists = artists;
-  }
-
   @Override
   public String toString() {
     return "ArtistDTO{" +
             "anum=" + anum +
             ", artist='" + artist + '\'' +
-            ", artists=" + Arrays.toString(artists) +
             '}';
   }
 
