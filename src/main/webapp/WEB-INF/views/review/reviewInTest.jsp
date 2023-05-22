@@ -14,9 +14,8 @@
    <body>
 
    <h3> Review In Test </h3>
-   <%@ page import="java.sql.*" %>
 
-   <form action="./test2.jsp">
+   <form id="test-form" name="testform" method="post" action=${path}/review/reviewInTest.do>
 
        <p>ID : <input type="text" name="category"></p>
 

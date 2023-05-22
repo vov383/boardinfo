@@ -5,6 +5,7 @@ import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.review.dto.TestDTO;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -24,13 +25,11 @@ public class ReviewServiceImpl implements ReviewService {
 		return list;
 	}
 
+
+	@Transactional
 	@Override // 덮어쓰기 의미
-	public List<TestDTO> reviewInTest(){
-
-		List<TestDTO> list = reviewDAO.reviewInTest();
-		System.out.print("vo : " + new Gson().toJson(list));
-
-		return list;
+	public void create(TestDTO testdto){
+		reviewDAO.create(testdto);
 	}
 
 }
