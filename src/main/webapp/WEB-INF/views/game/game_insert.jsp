@@ -36,7 +36,7 @@
 
 			<tr>
 
-				<td>사진dk</td>
+				<td>사진</td>
 				<td><input type="file" name="gamephoto_url" id="gamephoto"></td>
 
 			</tr>
@@ -363,19 +363,19 @@
 		$('#artist').keyup(function() {
 	        var input = $(this).val();
 	        $.ajax({
-	        	url: "${path}/game/auto.do",
-	            data: { query: input },
-	            success: function(auto) {
-	            	$(auto).each(function(){
-	    				var suggestion=auto(this);
-	    				console.log(suggestion);
-						console.log('auo');
-	    				$("#artistSuggestions").append(suggestion);
+				type: "post",
+	        	url: "${path}/game/auto.do/"+input,
+	            success: function(list) {
+	            	$(list).each(function(){
+	    				var artists = list;
+	    				console.log(artists);
+	    				$("#artistSuggestions").append(artists);
 	    			});
 	            }
 	        });
 	    });
-		
+
+
 
 	});
 	

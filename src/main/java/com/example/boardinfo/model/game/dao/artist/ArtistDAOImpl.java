@@ -41,8 +41,8 @@ public class ArtistDAOImpl implements ArtistDAO {
 		sqlSession.insert("artist.insertmapping_anum",anum);
 	}
 	
-	public List<String> getAuto(String query){
-	    return sqlSession.selectList("artist.getAuto", query);
+	public List<String> getAuto(String input){
+	    return sqlSession.selectList("artist.getAuto", input);
 	}
 	
 }
