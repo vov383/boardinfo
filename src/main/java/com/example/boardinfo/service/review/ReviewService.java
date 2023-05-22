@@ -1,6 +1,7 @@
 package com.example.boardinfo.service.review;
 
 import com.example.boardinfo.model.review.dto.ReviewDTO;
+import com.example.boardinfo.model.review.dto.TestDTO;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface ReviewService {
 	public List<ReviewDTO> reviewlist();
 
 	// 리뷰 입력 테스트
-	List<ReviewDTO> reviewInTest();
+	List<TestDTO> reviewInTest();
 
 	/*public List<ReviewDTO> reviewDetail();*/
 /*

@@ -10,6 +10,7 @@
 		<typeAlias type="com.example.boardinfo.model.game.dto.mechanic.MechanicDTO" alias="mechanicDto"/>
 		<typeAlias type="com.example.boardinfo.model.game.dto.artist.ArtistDTO" alias="artistDto"/>
 		<typeAlias type="com.example.boardinfo.model.review.dto.ReviewDTO" alias="reviewDto"/>
+		<typeAlias type="com.example.boardinfo.model.review.dto.TestDTO" alias="testDto"/>
 
 		<typeAlias type="com.example.boardinfo.model.tboard.dto.TBoardDTO" 
 			alias="tboardDto"/>

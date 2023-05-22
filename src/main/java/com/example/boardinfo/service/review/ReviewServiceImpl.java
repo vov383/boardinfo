@@ -2,6 +2,7 @@ package com.example.boardinfo.service.review;
 
 import com.example.boardinfo.model.review.dao.ReviewDAO;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
+import com.example.boardinfo.model.review.dto.TestDTO;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +25,9 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override // 덮어쓰기 의미
-	public List<ReviewDTO> reviewInTest(){
+	public List<TestDTO> reviewInTest(){
 
-		List<ReviewDTO> list = reviewDAO.reviewlist();
+		List<TestDTO> list = reviewDAO.reviewInTest();
 		System.out.print("vo : " + new Gson().toJson(list));
 
 		return list;

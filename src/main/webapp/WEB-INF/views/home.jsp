@@ -15,11 +15,17 @@
        
 	<div align="center">
 		<h1><a href="${path}/sample/sample.do" style="color: black;">SAMPLE CLICK</a></h1>
-		<h1><a href="${path}/game/gamelist.do" style="color: black;">gamelist</a></h1>
-		<h1><a href="${path}/tboard/list.do" style="color: black;">중고거래 게시판</a></h1>
-		<h1><a href="${path}/chat/goChat.do" style="color: black;">sjTest</a></h1>
+        <br>
+        <h1><a href="${path}/game/gamelist.do" style="color: black;">gamelist</a></h1>
+        <br>
+        <h1><a href="${path}/tboard/list.do" style="color: black;">중고거래 게시판</a></h1>
+        <br>
+        <h1><a href="${path}/chat/goChat.do" style="color: black;">sjTest</a></h1>
+        <br>
+        <h1><a href="${path}/review/reviewlist.do" style="color: black;">Review List</a></h1>
+        <h1><a href="${path}/review/reviewInTest.do" style="color: black;">Review In Test</a></h1>
 
-	</div>
+    </div>
   <div>
   	<!-- 실제로 서비스되는 디렉토리(배포 디렉토리) 값 가져오기 -->
 		<%= application.getRealPath("/resources/ckimg/") %>

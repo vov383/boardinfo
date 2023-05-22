@@ -1,6 +1,7 @@
 package com.example.boardinfo.model.review.dao;
 
 import com.example.boardinfo.model.review.dto.ReviewDTO;
+import com.example.boardinfo.model.review.dto.TestDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +23,7 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     //리뷰 입력 테스트
     @Override
-    public List<ReviewDTO> reviewInTest() {
+    public List<TestDTO> reviewInTest() {
         return sqlSession.selectList("review.reviewList");
     }
 

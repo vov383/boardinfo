@@ -30,6 +30,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		   , MEMBER M
 		WHERE R.CREATE_USER = M.USERID
 	</select>
+	
+	<select id="reviewInTest" resultType="testDto">
+		SELECT
+			TEST1
+		FROM REVIEW_IN_TEST
+	</select>
 
 
 
