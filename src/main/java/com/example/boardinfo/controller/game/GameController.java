@@ -10,10 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.boardinfo.model.game.dto.GameDTO;
@@ -67,11 +64,11 @@ public class GameController {
 		return mav;
 	}
 	
-	@RequestMapping("auto.do")
+	@RequestMapping("auto.do/{input}")
     @ResponseBody
-    public List<String> autoCompleteArtist(@PathVariable String query) {
-	  List<String> auto = gameService.getAuto(query);
-        return auto;
+    public List<String> autoCompleteArtist(@PathVariable String input) {
+
+        return gameService.getAuto(input);
     }
 	
 	

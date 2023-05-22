@@ -135,7 +135,5 @@ public class GameServiceImpl implements GameService {
     return mechanicDao.list();
   }
   
-  public List<String> getAuto(String query){
-    return artistDao.getAuto(query);
-  }
+  public List<String> getAuto(String input){ return artistDao.getAuto(input);  }
 }
