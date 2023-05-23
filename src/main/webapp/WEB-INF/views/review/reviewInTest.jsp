@@ -9,7 +9,7 @@
         <meta charset="utf-8">
         <title>Review In Test</title>
         <%@ include file="../include/js/header.jsp" %>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>--%>
         <script type="text/javascript">
 
             // $(document).ready(function() {
