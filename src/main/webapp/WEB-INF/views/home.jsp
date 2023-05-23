@@ -34,9 +34,11 @@
   <div>
   	<!-- 실제로 서비스되는 디렉토리(배포 디렉토리) 값 가져오기 -->
 		<%= application.getRealPath("/resources/ckimg/") %>
+
   </div>
 
    <%@include file="include/footer.jsp" %>
+
   
     </body>
     
