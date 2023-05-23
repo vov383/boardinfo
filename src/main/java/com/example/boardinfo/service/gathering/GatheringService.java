@@ -10,6 +10,7 @@ public interface GatheringService {
 	public boolean deletePost();
 	public boolean editPost();
 	public List<GatheringDTO> list();
+	public GatheringDTO view(int gathering_id, boolean updateViewCount);
 
 
 }

@@ -11,22 +11,28 @@
 <title>BOARDINFO</title>
 <%@ include file="../include/js/header.jsp"%>
 <link rel="stylesheet" href="${path}/include/js/style_game.css">
-<style>
 
-	.input_game {
-		width: 300px;
-	}
-
-</style>
 </head>
 
 <body>
+
+	<header>
+		<%@include file="../include/top.jsp" %>
+	</header>
+
+	<main>
+		<br><br><br><br><br>
 
 	<div align="center">
 	
 	<form name="gameform" method="post" action="${path}/game/insert.do">
 
 		<table>
+
+		<colgroup>
+			<col width="28%" />
+			<col width="68%" />
+		</colgroup>
 
 		<thead>
 
@@ -63,8 +69,16 @@
 
 			<tr>
 
-				<td>제작자</td>
-				<td><input name="designer" id="designer" class="input_game"></td>
+				<td>
+					<h4>디자이너</h4>
+					<input type="button" id="btnAddDesigner" value="추가">
+				</td>
+				<td>
+					<div id="selectedDesigner"></div>
+					<input type="hidden" name="designer" id="designer">
+					<input id="inputDesigner" class="input_game" autocomplete="off">
+					<div id="designerSuggestions"></div>
+				</td>
 
 			</tr>
 			
@@ -130,7 +144,10 @@
 
 			<tr>
 
-				<td>아트웍</td>
+				<td>
+					<h4>아트웍</h4>
+					<input type="button" id="btnAddArtist" value="추가">
+				</td>
 				<td>
 					<div id="selectedArtist"></div>
 					<input type="hidden" name="artist" id="artist">
@@ -142,7 +159,10 @@
 
 			<tr>
 
-				<td>메카닉</td>
+				<td>
+					<h4>메카닉</h4>
+					<input type="button" id="btnAddMechanic" value="추가">
+				</td>
 				<td>
 				
 					<div id="selectedMechanic"></div>
@@ -198,8 +218,16 @@
 
 			<tr>
 
-				<td>제작사</td>
-				<td><input name="publisher" id="publisher" class="input_game"></td>
+				<td>
+					<h4>제작사</h4>
+					<input type="button" id="btnAddPublisher" value="추가">
+				</td>
+				<td>
+					<div id="selectedPublisher"></div>
+					<input type="hidden" name="publisher" id="publisher">
+					<input id="inputPublisher" class="input_game" autocomplete="off">
+					<div id="publisherSuggestions"></div>
+				</td>
 
 			</tr>
 
@@ -254,9 +282,10 @@
 	
 	</div>
 
+	</main>
+
 
 <script type="text/javascript">
-
 
 	$(document).ready(function() {
 		
@@ -273,32 +302,29 @@
 		function updateGameCategoryInput() {
 	 		var gameCategoryInput = $("#gamecategory");
 			gameCategoryInput.val(selectedCategories.join(","));
-			console.log(selectedCategories);
 		}
 
 		//새로운 카테고리명을 추가
 		$("#btnAddCategory").click(function(){
 			var newCategory = prompt("추가할 카테고리명을 적어주세요.");
-			var check = confirm(newCategory+" 맞습니까?");
-			if(check == true){
-				if (selectedCategories.indexOf(newCategory) === -1) {
-					selectedCategories.push(newCategory);
+			if(newCategory != null){
+				var check = confirm(newCategory+" 맞습니까?");
+				if(check == true){
+					if (selectedCategories.indexOf(newCategory) === -1) {
+						selectedCategories.push(newCategory);
 
-					// 선택된 값 표시
-					$("#selectedCategory").append("<div class='selected-value'>" + newCategory + "</div>");
+						// 선택된 값 표시
+						$("#selectedCategory").append("<div class='selected-value'>" + newCategory + "</div>");
+					}
+					updateGameCategoryInput();
 				}
-				updateGameCategoryInput();
 			}
 
-
 		});
-	
-		  
+
 		// 테이블 셀 클릭 이벤트 처리
 		$("#tableCategory").on("click", "td", function() {
-			
-			
-			
+
 			//중복클릭을 막음
 			if ($(this).hasClass("selected")) {
 				return;
@@ -317,7 +343,6 @@
 		      	// 선택된 <td> 태그에 'selected' 클래스 추가하여 클릭 불가능하게 만듦
 		 	    $(this).addClass("selected");
 		    }
-		 	
 		    updateGameCategoryInput();
 		});
 		  
@@ -345,7 +370,25 @@
 	 		var mechanicInput = $("#mechanic");
 	 		mechanicInput.val(selectedMechanics.join(","));
 		}
-		  
+
+		//새로운 메카닉명을 추가
+		$("#btnAddMechanic").click(function(){
+			var newMechanic = prompt("추가할 메카닉명을 적어주세요.");
+			if(newMechanic != null){
+				var check = confirm(newMechanic+" 맞습니까?");
+				if(check == true){
+					if (selectedMechanics.indexOf(newMechanic) === -1) {
+						selectedMechanics.push(newMechanic);
+
+						// 선택된 값 표시
+						$("#selectedMechanic").append("<div class='selected-value'>" + newMechanic + "</div>");
+					}
+					updateGameMechanicInput();
+				}
+			}
+
+		});
+
 		// 테이블 셀 클릭 이벤트 처리
 		$("#tableMechanic").on("click", "td", function() {
 			
@@ -394,7 +437,7 @@
 	        var input = $(this).val();
 	        $.ajax({
 				type: "post",
-	        	url: "${path}/game/auto.do/"+input,
+	        	url: "${path}/game/autoArtist.do/"+input,
 	            success: function(result) {
 					var suggestionsDiv = $('#artistSuggestions');
 					suggestionsDiv.empty(); // 기존 내용 비우기
@@ -413,6 +456,7 @@
 					console.log("에러..");
 				}
 	        });
+	        if(input=="")	$('#artistSuggestions').empty();
 	    });
 
 		var selectedArtists = [];
@@ -422,6 +466,25 @@
 			artistInput.val(selectedArtists.join(","));
 		}
 
+		//새로운 아티스트명을 추가
+		$("#btnAddArtist").click(function(){
+			var newArtist = prompt("추가할 아티스트명을 적어주세요.");
+			if(newArtist != null){
+				var check = confirm(newArtist+" 맞습니까?");
+				if(check == true){
+					if (selectedArtists.indexOf(newArtist) === -1) {
+						selectedArtists.push(newArtist);
+
+						// 선택된 값 표시
+						$("#selectedArtist").append("<div class='selected-value'>" + newArtist + "</div>");
+					}
+					updateArtistInput();
+				}
+			}
+
+		});
+
+		//아티스트 검색값 클릭시 배열에 추가
 		$('#artistSuggestions').on('click', '.searched', function() {
 			var selectedArtist = $(this).text();
 			selectedArtists.push(selectedArtist);
@@ -451,10 +514,175 @@
 		});
 
 
+		//	designer 검색 자동완성 쿼리
+		$('#inputDesigner').keyup(function() {
+			var input = $(this).val();
+			$.ajax({
+				type: "post",
+				url: "${path}/game/autoDesigner.do/"+input,
+				success: function(result) {
+					var suggestionsDiv = $('#designerSuggestions');
+					suggestionsDiv.empty(); // 기존 내용 비우기
+
+					if (result.length > 0) {
+						suggestionsDiv.css('max-height', '150px').show(); // 값이 있을 경우 높이 설정하고 보이기
+						$(result).each(function(index, item) {
+							var designer = item.designer;
+							suggestionsDiv.append("<div class='searched cursor_pointer'>" + designer + "</div>");
+						});
+					} else {
+						suggestionsDiv.hide(); // 값이 없을 경우 숨기기
+					}
+				},
+				error: function() {
+					console.log("에러..");
+				}
+			});
+			if(input=="")	$('#designerSuggestions').empty();
+		});
+
+		var selectedDesigners = [];
+
+		function updateDesignerInput() {
+			var designerInput = $("#designer");
+			designerInput.val(selectedDesigners.join(","));
+		}
+
+		//새로운 디자이너명을 추가
+		$("#btnAddDesigner").click(function(){
+			var newDesigner = prompt("추가할 디자이너명을 적어주세요.");
+			if(newDesigner != null){
+				var check = confirm(newDesigner+" 맞습니까?");
+				if(check == true){
+					if (selectedDesigners.indexOf(newDesigner) === -1) {
+						selectedDesigners.push(newDesigner);
+
+						// 선택된 값 표시
+						$("#selectedDesigner").append("<div class='selected-value'>" + newDesigner + "</div>");
+					}
+					updateDesignerInput();
+				}
+			}
+
+		});
+
+		//디자이너 검색값 클릭시 배열에 추가
+		$('#designerSuggestions').on('click', '.searched', function() {
+			var selectedDesigner = $(this).text();
+			selectedDesigners.push(selectedDesigner);
+			$("#selectedDesigner").append("<div class='selected cursor_pointer'>" + selectedDesigner + "</div>");
+			console.log("배열"+selectedDesigners);
+			$("#inputDesigner").val("");
+			$("#designerSuggestions").empty().hide();
+			updateDesignerInput();
+			console.log("인풋"+$("#designer").val());
+		});
+
+		// 선택된 값 클릭 이벤트 처리
+		$("#selectedDesigner").on("click", ".selected", function() {
+
+			var value = $(this).text();
+
+			// 선택된 값 배열에서 해당 값을 제거
+			selectedDesigners = selectedDesigners.filter(function(selected) {
+				return selected !== value;
+			});
+
+			// 선택된 값 표시가 삭제되도록 처리
+			$(this).remove();
+
+			updateDesignerInput();
+			console.log("인풋"+$("#designer").val());
+		});
 
 
+		//	publisher 검색 자동완성 쿼리
+		$('#inputPublisher').keyup(function() {
+			var input = $(this).val();
+			$.ajax({
+				type: "post",
+				url: "${path}/game/autoPublisher.do/"+input,
+				success: function(result) {
+					var suggestionsDiv = $('#publisherSuggestions');
+					suggestionsDiv.empty(); // 기존 내용 비우기
+
+					if (result.length > 0) {
+						suggestionsDiv.css('max-height', '150px').show(); // 값이 있을 경우 높이 설정하고 보이기
+						$(result).each(function(index, item) {
+							var publisher = item.publisher;
+							suggestionsDiv.append("<div class='searched cursor_pointer'>" + publisher + "</div>");
+						});
+					} else {
+						suggestionsDiv.hide(); // 값이 없을 경우 숨기기
+					}
+				},
+				error: function() {
+					console.log("에러..");
+				}
+			});
+			if(input=="")	$('#publisherSuggestions').empty();
+		});
+
+		var selectedPublishers = [];
+
+		function updatePublisherInput() {
+			var publisherInput = $("#publisher");
+			publisherInput.val(selectedPublishers.join(","));
+		}
+
+		//새로운 퍼블리셔명을 추가
+		$("#btnAddPublisher").click(function(){
+			var newPublisher = prompt("추가할 퍼블리셔명을 적어주세요.");
+			if(newPublisher != null){
+				var check = confirm(newPublisher+" 맞습니까?");
+				if(check == true){
+					if (selectedPublishers.indexOf(newPublisher) === -1) {
+						selectedPublishers.push(newPublisher);
+
+						// 선택된 값 표시
+						$("#selectedPublisher").append("<div class='selected-value'>" + newPublisher + "</div>");
+					}
+					updatePublisherInput();
+				}
+			}
+
+		});
+
+		//퍼블리셔 검색값 클릭시 배열에 추가
+		$('#publisherSuggestions').on('click', '.searched', function() {
+			var selectedPublisher = $(this).text();
+			selectedPublishers.push(selectedPublisher);
+			$("#selectedPublisher").append("<div class='selected cursor_pointer'>" + selectedPublisher + "</div>");
+			console.log("배열"+selectedPublishers);
+			$("#inputPublisher").val("");
+			$("#publisherSuggestions").empty().hide();
+			updatePublisherInput();
+			console.log("인풋"+$("#publisher").val());
+		});
+
+		// 선택된 값 클릭 이벤트 처리
+		$("#selectedPublisher").on("click", ".selected", function() {
+
+			var value = $(this).text();
+
+			// 선택된 값 배열에서 해당 값을 제거
+			selectedPublishers = selectedPublishers.filter(function(selected) {
+				return selected !== value;
+			});
+
+			// 선택된 값 표시가 삭제되도록 처리
+			$(this).remove();
+
+			updatePublisherInput();
+			console.log("인풋"+$("#publisher").val());
+		});
 	});
 </script>
+
+	<footer>
+		<%@include file="../include/footer.jsp" %>
+	</footer>
+
 </body>
 
 </html>

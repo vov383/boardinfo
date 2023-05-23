@@ -32,6 +32,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into game_designer
 		values (seq_game.currval,#{dnum})
 	</insert>
+
+	<select id="getAuto" resultType="designerDto">
+		select designer
+		from designer
+		where upper(designer) like upper(#{input})||'%'
+		order by designer
+	</select>
 	
 </mapper>
 

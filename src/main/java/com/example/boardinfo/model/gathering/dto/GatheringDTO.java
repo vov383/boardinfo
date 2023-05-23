@@ -21,6 +21,8 @@ public class GatheringDTO {
 	private String address2;
 	private String address3;
 	private String place_name;
+	private double lat;
+	private double lng;
 	private int maxPeople;
 	private String attendSystem;
 	private String note;
@@ -28,6 +30,7 @@ public class GatheringDTO {
 	private String status;
 	private int club_id;
 	private int is_public;
+	private int view_count;
 	
 	public int getGathering_id() {
 		return gathering_id;
@@ -149,6 +152,28 @@ public class GatheringDTO {
 	public void setIs_public(int is_public) {
 		this.is_public = is_public;
 	}
+	public double getLat() {
+		return lat;
+	}
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+	public double getLng() {
+		return lng;
+	}
+	public void setLng(double lng) {
+		this.lng = lng;
+	}
+	public int getView_count() {
+		return view_count;
+	}
+	public void setView_count(int view_count) {
+		this.view_count = view_count;
+	}
+	
+	
+	
+	
 
 	
 

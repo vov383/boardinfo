@@ -42,7 +42,7 @@ public class ArtistDAOImpl implements ArtistDAO {
 		sqlSession.insert("artist.insertmapping_anum",anum);
 	}
 	
-	public List<ArtistDTO> getAuto(String input){
+	public List<ArtistDTO> getAutoArtist(String input){
 		List<ArtistDTO> list = sqlSession.selectList("artist.getAuto", input);
 		System.out.println(list);
 	    return list;

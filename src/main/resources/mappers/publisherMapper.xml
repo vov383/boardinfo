@@ -32,6 +32,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into game_publisher
 		values (seq_game.currval,#{pnum})
 	</insert>
+
+	<select id="getAuto" resultType="publisherDto">
+		select publisher
+		from publisher
+		where upper(publisher) like upper(#{input})||'%'
+		order by publisher
+	</select>
 	
 </mapper>
 
