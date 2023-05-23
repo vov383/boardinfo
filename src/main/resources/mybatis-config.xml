@@ -8,6 +8,8 @@
 		<typeAlias type="com.example.boardinfo.model.game.dto.GameDTO" alias="gameDto"/>
 		<typeAlias type="com.example.boardinfo.model.game.dto.category.CategoryDTO" alias="categoryDto"/>
 		<typeAlias type="com.example.boardinfo.model.game.dto.mechanic.MechanicDTO" alias="mechanicDto"/>
+		<typeAlias type="com.example.boardinfo.model.game.dto.designer.DesignerDTO" alias="designerDto"/>
+		<typeAlias type="com.example.boardinfo.model.game.dto.publisher.PublisherDTO" alias="publisherDto"/>
 		<typeAlias type="com.example.boardinfo.model.game.dto.artist.ArtistDTO" alias="artistDto"/>
 		<typeAlias type="com.example.boardinfo.model.review.dto.ReviewDTO" alias="reviewDto"/>
 		<typeAlias type="com.example.boardinfo.model.review.dto.TestDTO" alias="testDto"/>

@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="review">
 
 	<!-- 리뷰 DB -->
-	<select id="reviewList" resultType="reviewDto">
+	<select id="reviewList" resultType="com.example.boardinfo.model.review.dto.ReviewDTO">
 		SELECT
 			R.REG_NUM
 			 , M.NICKNAME
@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			 , R.GOOD
 			 , R.DEL
 			 , R.CREATE_USER
-			 , R.CREATE_DATE
+			 , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD') AS CREATE_DATE
 			 , R.UPDATE_USER
 			 , R.UPDATE_DATE
 		FROM REVIEW R

@@ -12,7 +12,13 @@
    </head>
 
    <body>
-       
+
+    <header>
+        <%@include file="include/top.jsp" %>
+    </header>
+
+    <main>
+
 	<div align="center">
 		<h1><a href="${path}/sample/sample.do" style="color: black;">SAMPLE CLICK</a></h1>
         <br>
@@ -34,10 +40,24 @@
   <div>
   	<!-- 실제로 서비스되는 디렉토리(배포 디렉토리) 값 가져오기 -->
 		<%= application.getRealPath("/resources/ckimg/") %>
+
 		<%= application.getRealPath("/resources/uploaded_images/") %>
   </div>      
   
   
+
+
+  
+
+
+    </main>
+
+    <footer>
+       <%@include file="include/footer.jsp" %>
+    </footer>
+
+
+
     </body>
     
 </html>

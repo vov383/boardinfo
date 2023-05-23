@@ -12,7 +12,7 @@ body {
 table {
 	border-collapse: separate;
 	border-spacing: 0;
-	width: 100%;
+	width: 80%;
 }
 
 th, td {
@@ -111,10 +111,11 @@ tr:last-child td:last-child {
 	cursor: pointer;
 }
 
-#artistSuggestions {
+#artistSuggestions, #designerSuggestions, #publisherSuggestions{
 	width: 300px;
-	border: 1px solid black;
 	background-color: white;
 	overflow-y: auto;
 }
-
+.input_game {
+	width: 300px;
+}
