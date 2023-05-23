@@ -33,7 +33,21 @@ public class GatheringDAOImpl implements GatheringDAO {
 
 	@Override
 	public List<GatheringDTO> list() {
-		return null;
+		return sqlSession.selectList("gathering.list");
 	}
+
+	@Override
+	public GatheringDTO view(int gathering_id) {
+		return sqlSession.selectOne("gathering.view", gathering_id);
+	}
+
+	@Override
+	public void updateViewCount(int gathering_id) {
+		sqlSession.update("gathering.viewCount", gathering_id);
+	}
+	
+	
+	
+	
 
 }

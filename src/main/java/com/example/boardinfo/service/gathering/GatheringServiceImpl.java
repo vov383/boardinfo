@@ -1,5 +1,7 @@
 package com.example.boardinfo.service.gathering;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -36,7 +38,57 @@ public class GatheringServiceImpl implements GatheringService {
 
 	@Override
 	public List<GatheringDTO> list() {
-		return null;
+		List<GatheringDTO> list = gatheringDao.list();
+		
+		for (GatheringDTO dto : list) {
+			
+			if(dto.getAddress2()!=null && !dto.getAddress2().equals("")) {
+				String address2 = dto.getAddress2() + " ";
+				int num = address2.indexOf(" ", 3);
+				address2 = address2.substring(0, num);
+				dto.setAddress2(address2);
+			}
+			
+			//status 세팅
+			LocalDate now = LocalDate.now();
+			LocalDate gathering_date = dto.getGathering_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			if(now.isAfter(gathering_date)) {
+				dto.setStatus("모임종료");
+			}
+			
+			else dto.setStatus("모집중");
+		}
+		
+		return list;
 	}
+
+	@Override
+	public GatheringDTO view(int gathering_id, boolean updateViewCount) {
+		
+		
+		/* 일단 막아놓자 커뮤니티에서는 조회수 계속 올라가는 편이 자연스러운것 같기도 함
+		if(updateViewCount) {
+		*/
+			gatheringDao.updateViewCount(gathering_id);
+		/*	
+		}
+		*/
+		GatheringDTO dto = gatheringDao.view(gathering_id);
+		
+		//status 세팅
+		LocalDate now = LocalDate.now();
+		LocalDate gathering_date = dto.getGathering_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		if(now.isAfter(gathering_date)) {
+			dto.setStatus("모임종료");
+		}
+		
+		else dto.setStatus("모집중");
+		
+		return dto;
+		
+	}
+	
+	
+	
 
 }

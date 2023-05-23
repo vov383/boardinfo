@@ -22,6 +22,7 @@
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
+	<resources location="/resources/uploaded_images/" mapping="/uploaded_images/**"/>
 	
 	<!-- ck에디터 업로드 이미지 첨부파일 경로  -->
 	<resources mapping="/ckimg/**" location="/resources/ckimg/" />

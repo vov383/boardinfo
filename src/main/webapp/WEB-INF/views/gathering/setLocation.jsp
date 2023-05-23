@@ -90,8 +90,8 @@
       window.opener.document.getElementById("address2").value = $("#address2").val();
       window.opener.document.getElementById("address3").value = $("#address3").val();
       window.opener.document.getElementById("place_name").value = $("#place_name").val();
-      window.opener.document.getElementById("lat").value = $("lat").val();
-      window.opener.document.getElementById("lng").value = $("lng").val();
+      window.opener.document.getElementById("lat").value = $("#lat").val();
+      window.opener.document.getElementById("lng").value = $("#lng").val();
       window.opener.document.getElementById("locationFull").value = $("#address").text();
 
       let lat = $("#lat").val();
@@ -128,7 +128,7 @@
   <input type="hidden" id="address1" type="text" value="">
   
   <!-- 구 -->  
-  <input type="hidden" id="address2" type="text" value="">
+  <input id="address2" type="text" value="">
   
   <!-- 기타주소 -->
   <input type="hidden" id="address3" type="text" value="">
@@ -142,10 +142,10 @@
   <button type="button" id="btn-reset">취소</button>
     
   <!-- 위도 -->  
-  <input type="hidden" id="lat">
+  <input type="hidden" id="lat" name="lat">
     
   <!-- 경도 -->  
-  <input type="hidden" id="lng">
+  <input type="hidden" id="lng" name="lng">
   </div>
 
 
