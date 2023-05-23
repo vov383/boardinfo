@@ -70,7 +70,10 @@
 			
 			<tr>
 
-				<td>카테고리</td>
+				<td>
+					<h4>카테고리</h4>
+					<input type="button" id="btnAddCategory" value="추가">
+				</td>
 				<td>
 				
 					<div id="selectedCategory"></div>
@@ -265,11 +268,30 @@
 		
 	//category항목 리스트에서 선택할수 있게하는 기능
 		var selectedCategories = [];
-		
+
+		//서버로 보낼 카테고리의 배열에 값을 넣는 함수
 		function updateGameCategoryInput() {
 	 		var gameCategoryInput = $("#gamecategory");
 			gameCategoryInput.val(selectedCategories.join(","));
+			console.log(selectedCategories);
 		}
+
+		//새로운 카테고리명을 추가
+		$("#btnAddCategory").click(function(){
+			var newCategory = prompt("추가할 카테고리명을 적어주세요.");
+			var check = confirm(newCategory+" 맞습니까?");
+			if(check == true){
+				if (selectedCategories.indexOf(newCategory) === -1) {
+					selectedCategories.push(newCategory);
+
+					// 선택된 값 표시
+					$("#selectedCategory").append("<div class='selected-value'>" + newCategory + "</div>");
+				}
+				updateGameCategoryInput();
+			}
+
+
+		});
 	
 		  
 		// 테이블 셀 클릭 이벤트 처리
@@ -378,7 +400,7 @@
 					suggestionsDiv.empty(); // 기존 내용 비우기
 
 					if (result.length > 0) {
-						suggestionsDiv.css('height', '150px').show(); // 값이 있을 경우 높이 설정하고 보이기
+						suggestionsDiv.css('max-height', '150px').show(); // 값이 있을 경우 높이 설정하고 보이기
 						$(result).each(function(index, item) {
 							var artist = item.artist;
 							suggestionsDiv.append("<div class='searched cursor_pointer'>" + artist + "</div>");
@@ -406,7 +428,7 @@
 			$("#selectedArtist").append("<div class='selected cursor_pointer'>" + selectedArtist + "</div>");
 			console.log("배열"+selectedArtists);
 			$("#inputArtist").val("");
-			$("#artistSuggestions").empty().css('height', '0').hide();
+			$("#artistSuggestions").empty().hide();
 			updateArtistInput();
 			console.log("인풋"+$("#artist").val());
 		});
@@ -432,8 +454,6 @@
 
 
 	});
-	
-	
 </script>
 </body>
 

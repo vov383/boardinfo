@@ -113,7 +113,6 @@ tr:last-child td:last-child {
 
 #artistSuggestions {
 	width: 300px;
-	border: 1px solid black;
 	background-color: white;
 	overflow-y: auto;
 }
