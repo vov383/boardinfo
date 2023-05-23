@@ -23,7 +23,7 @@
   ~~~~~
   </div>
   </div>
-  !!!헤더 첨부해주세요
+  !!! 첨부해주세요
    <%@include file="../include/footer.jsp" %>
    </body>
    
