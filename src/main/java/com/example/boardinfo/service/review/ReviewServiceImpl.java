@@ -29,6 +29,8 @@ public class ReviewServiceImpl implements ReviewService {
 	@Transactional
 	@Override // 덮어쓰기 의미
 	public void create(TestDTO testdto){
+
+		System.out.println("test 1 : " + testdto.getTest1());
 		reviewDAO.create(testdto);
 	}
 
