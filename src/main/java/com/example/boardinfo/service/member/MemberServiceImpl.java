@@ -71,4 +71,9 @@ public class MemberServiceImpl implements MemberService {
 		
 	}
 
+	@Override
+	public int mbidCheck(String userid) {
+		return memberDao.mbidCheck(userid);
+	}
+
 }

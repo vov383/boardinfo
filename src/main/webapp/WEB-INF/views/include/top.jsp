@@ -2,7 +2,8 @@
     pageEncoding="UTF-8"%>
 <meta charset="UTF-8">
 <div id="header">
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="path" value="${pageContext.request.contextPath}" />
   <div id="header-upper-box">
   <div>
     <div id="header-left">
@@ -15,8 +16,19 @@
           <img src="${path}/images/search.png">
         </div>
       </form>
-      <a href="#" title="로그인" class="sign" id="signIn">로그인</a>
-      <a href="#" title="회원가입" class="sign" id="signUp">회원가입</a>
+      <c:choose>
+  	 <c:when test="${sessionScope.userid == null}">
+    <!-- 로그인하지 않은 상태 -->
+      <a href="${path}/member/member_login.do" title="로그인" class="sign" id="signIn">로그인</a>
+      <a href="${path}/member/member_join.do" title="회원가입" class="sign" id="signUp">회원가입</a>
+      </c:when>
+   <c:otherwise>
+    <!-- 로그인한 상태 -->
+    ${sessionScope.name}님이 로그인중입니다.
+    <a href="${path}/member/view.do?userid=${sessionScope.userid}">회원정보</a> |
+    <a href="${path}/member/logout.do">로그아웃</a> 
+   </c:otherwise>
+  </c:choose>
     </div>
   </div>
   </div>

@@ -28,6 +28,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where userid=#{userid} 
 	</select>
 	
+	<select id="mbidCheck" parameterType="String" resultType="int">
+		select count(*) 
+		from member 
+		where userid = #{userid}
+	</select>
+	
+	
 </mapper>
 
 

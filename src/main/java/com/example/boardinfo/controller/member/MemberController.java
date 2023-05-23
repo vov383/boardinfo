@@ -1,15 +1,15 @@
 package com.example.boardinfo.controller.member;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.boardinfo.model.member.dto.MemberDTO;
@@ -71,6 +71,13 @@ public class MemberController {
 			mav.setViewName("member/login");
 			mav.addObject("message", "logout");
 			return mav;
+		}
+		
+		@RequestMapping("id_check.do")
+		@ResponseBody
+		public int mbidCheck(String userid) {
+			int result = memberService.mbidCheck(userid);
+			return result;
 		}
 		
 		

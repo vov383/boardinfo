@@ -16,5 +16,6 @@ public interface MemberService {
 	public void deleteMember(String userid);
 	public MemberDTO viewMember(String userid);
 	public void logout(HttpSession session);
+	public int mbidCheck(String userid);
 	
 }
