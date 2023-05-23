@@ -31,11 +31,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE R.CREATE_USER = M.USERID
 	</select>
 	
-	<select id="reviewInTest" resultType="testDto">
-		SELECT
-			TEST1
-		FROM REVIEW_IN_TEST
-	</select>
+	<insert id="reviewInTest" parameterType="hashMap">
+		INSERT INTO REVIEW_IN_TEST (TEST1)
+		    VALUES(#{test1})
+	</insert>
 
 
 

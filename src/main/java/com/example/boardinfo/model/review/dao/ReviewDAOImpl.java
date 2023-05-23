@@ -23,8 +23,9 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     //리뷰 입력 테스트
     @Override
-    public List<TestDTO> reviewInTest() {
-        return sqlSession.selectList("review.reviewList");
+    public void create(TestDTO testdto) {
+
+        sqlSession.insert("review.reviewInTest", testdto);
     }
 
 /*

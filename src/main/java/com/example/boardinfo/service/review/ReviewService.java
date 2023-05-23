@@ -2,6 +2,7 @@ package com.example.boardinfo.service.review;
 
 import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.review.dto.TestDTO;
+import org.aspectj.weaver.ast.Test;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface ReviewService {
 	public List<ReviewDTO> reviewlist();
 
 	// 리뷰 입력 테스트
-	List<TestDTO> reviewInTest();
+	public void create(TestDTO testdto);
 
 	/*public List<ReviewDTO> reviewDetail();*/
 /*

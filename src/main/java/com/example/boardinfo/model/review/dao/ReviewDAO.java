@@ -11,7 +11,8 @@ public interface ReviewDAO {
 	public List<ReviewDTO> reviewlist();
 
 	// 리뷰 입력 테스트
-	public List<TestDTO> reviewInTest();
+	public void create(TestDTO testdto);
+
 
 /*
 
