@@ -13,8 +13,12 @@
 
    <body>
 
-   <%@include file="include/top.jsp" %>
-       
+    <header>
+        <%@include file="include/top.jsp" %>
+    </header>
+
+    <main>
+
 	<div align="center">
 		<h1><a href="${path}/sample/sample.do" style="color: black;">SAMPLE CLICK</a></h1>
         <br>
@@ -37,9 +41,14 @@
 
   </div>
 
-   <%@include file="include/footer.jsp" %>
 
-  
+    </main>
+
+    <footer>
+       <%@include file="include/footer.jsp" %>
+    </footer>
+
+
     </body>
     
 </html>
