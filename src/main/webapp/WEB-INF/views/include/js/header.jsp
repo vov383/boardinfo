@@ -5,5 +5,4 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <script src="${path}/include/js/jquery-3.6.3.min.js"></script>
-<link rel="stylesheet" href="${path}/include/js/style.css">
-
+<link href="${path}/include/style.css" type="text/css" rel="stylesheet">

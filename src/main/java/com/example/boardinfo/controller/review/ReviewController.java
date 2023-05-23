@@ -17,28 +17,39 @@ public class ReviewController {
 
 	@RequestMapping("reviewlist.do")
 	public ModelAndView revewlist(ModelAndView mav) {
-		mav.setViewName("review/reviewMain");
+		mav.setViewName("review/gameReviewMain");
 		mav.addObject("list", reviewservice.reviewlist());
 		return mav;
 	}
 	// 페이지 열기
 	@RequestMapping("reviewInTest.do")
 	public String insert(@ModelAttribute TestDTO testdto){
-		return "/review/reviewInTest";
+
+		return "/review/reviewinset";
+
 	}
 	// 저장
 	@RequestMapping("reviewInTestInsertPage.do")
 	public String insertPage(@ModelAttribute TestDTO testdto){
 		reviewservice.create(testdto);
 		return "/review/reviewInTest";
+
 	}
 
 
-	/*public ModelAndView reviewDetail(ModelAndView mav) {
-		mav.setViewName("review/reviewInTest");
-		mav.addObject("list", reviewservice.reviewInTest());
-		return mav;
-	}*/
+/*	// 페이지 열기
+	@RequestMapping("reviewInTest.do")
+	public String insert(@ModelAttribute TestDTO testdto){
+		return "/review/reviewInTest";
+	}
+
+	// 저장
+	@RequestMapping("reviewInTestInsertPage.do")
+	public String insertPage(@ModelAttribute TestDTO testdto){
+		reviewservice.create(testdto);
+		return "/review/reviewInTest";
+	}
+*/
 
 
 }
