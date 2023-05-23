@@ -3,10 +3,7 @@
 
 **레이아웃 적용방법**
 
-  <body>
 
-  </body>
-     
        !!!헤더 첨부해주세요
    <%@include file="../include/top.jsp" %>
   <div id="contents">
@@ -27,6 +24,7 @@
    <%@include file="../include/footer.jsp" %>
    
    
+
      
      대표색상코드
      
