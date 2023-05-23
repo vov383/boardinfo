@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <%@ include file="../include/js/header.jsp" %>
+<script src="../include/js/jquery-3.6.3.min.js"></script>
 </head>
 <body>
 <% pageContext.setAttribute("newLineChar", "\n"); %>

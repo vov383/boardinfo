@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 <%@ include file="../include/js/header.jsp"%>
 <script src="${path}/include/js/common.js"></script>
-
+<script src="../include/js/jquery-3.6.3.min.js"></script>
 <!-- ckeditor의 라이브러리 -->
 <script src="${path}/ckeditor/ckeditor.js"></script>
 

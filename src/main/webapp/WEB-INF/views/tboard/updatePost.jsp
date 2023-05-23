@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <%@ include file="../include/js/header.jsp" %>
 <script src="${path}/include/js/common.js"></script>
-
+<script src="../include/js/jquery-3.6.3.min.js"></script>
 
 
 <!-- ckeditor의 라이브러리 -->
