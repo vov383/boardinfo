@@ -45,16 +45,17 @@ public class GameServiceImpl implements GameService {
   public void gameinsert(GameDTO dto) {
     
     // 아티스트,카테고리,퍼블리셔,디자이너,메카닉 동일값 있는지 확인
-    int check_artist = artistDao.check_artist(dto.getArtist());
     int check_publisher = publisherDao.check_publisher(dto.getPublisher());
     int check_designer = designerDao.check_designer(dto.getDesigner());
     int check_mechanic = mechanicDao.check_mechanic(dto.getMechanic());
-    
+
     //게임테이블에 insert
     gameDao.gameinsert(dto);
-    
+
+    //카테고리테이블 insert
     //카테고리배열
     String[] gamecategories = dto.getGamecategory().split(",");
+
     for(String str : gamecategories) {
       int check_category = categoryDao.check_category(str);
       
@@ -67,24 +68,38 @@ public class GameServiceImpl implements GameService {
       }
     }
     
-    
+    //아티스트테이블 insert
+    //아티스트배열
+    String[] artists = dto.getArtist().split(",");
 
-    if (check_artist == 0) { // 해당 아티스트가 db에 없다면
-      artistDao.insert_artist(dto.getArtist());
-      artistDao.insert_artist_mapping();
-    } else { // db에 존재하는 아티스트라면
-      int anum = artistDao.artistnum(dto.getArtist());
-      artistDao.insert_artist_mapping(anum);
+    for(String str : artists) {
+      int check_artist = artistDao.check_artist(str);
+
+      if (check_artist == 0) { // 해당 아티스트가 db에 없다면
+        artistDao.insert_artist(str);
+        artistDao.insert_artist_mapping();
+      } else { // db에 존재하는 아티스트라면
+        int anum = artistDao.artistnum(str);
+        artistDao.insert_artist_mapping(anum);
+      }
     }
-    
-    
-//    if (check_category == 0) { // 해당 카테고리가 db에 없다면
-//      categoryDao.insert_category(dto.getGamecategory());
-//      categoryDao.insert_category_mapping();
-//    } else { // db에 존재하는 카테고리라면
-//      int cnum = categoryDao.categorynum(dto.getGamecategory());
-//      categoryDao.insert_category_mapping(cnum);
-//    }
+
+    //메카닉테테이블 insert
+   //카테고리배열
+    String[] gamecategories = dto.getGamecategory().split(",");
+
+    for(String str : gamecategories) {
+      int check_category = categoryDao.check_category(str);
+
+      if (check_category == 0) { // 해당 카테고리가 db에 없다면
+        categoryDao.insert_category(str);
+        categoryDao.insert_category_mapping();
+      } else { // db에 존재하는 카테고리라면
+        int cnum = categoryDao.categorynum(str);
+        categoryDao.insert_category_mapping(cnum);
+      }
+    }
+
     
     
     if (check_publisher == 0) { // 해당 제작자가 db에 없다면
