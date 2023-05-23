@@ -8,7 +8,6 @@
 <%@ include file="../include/js/header.jsp" %>
 
   <style>
-
     @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 100;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.otf) format('opentype');}
 
     @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 300;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype');}
@@ -208,7 +207,7 @@
 
     #map{
       overflow: hidden;
-      display: none;
+      /*display: none;*/
     }
 
     #postUpper > div:nth-of-type(2){
@@ -334,15 +333,58 @@
       width: 100%;
       max-width: 1120px;
     }
-    
+
+
+    .map_wrap {
+      position:relative;
+    }
+
+    .title {
+      font-weight:bold;
+      display:block;
+    }
+
+    .hAddr {
+      position:absolute;
+      left:10px;
+      top:10px;
+      border-radius: 2px;
+      background:#fff;
+      background:rgba(255,255,255,0.8);
+      z-index:1;
+      padding:5px;
+    }
+
+    #centerAddr {
+      display: block;
+      margin-top: 2px;
+      font-weight: normal;
+    }
+
+    #infoWindow{
+      display: flex;
+      align-items: center;
+      max-width: 300px;
+      word-break: normal;
+      background-color: white;
+      border: 1px solid black;
+      border-radius: 6px;
+      padding: 10px 10px;
+    }
+
+    #infoWindow > span{
+      line-height: 16px;
+    }
+
+
 
   </style>
 
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=aaa4a3ee6e039439424a544717323d1a&libraries=services"></script>
   <script>
 
     $(function(){
-
-      $('input[name=attendSystem]').change(function(){
+        $('input[name=attendSystem]').change(function(){
 
         if($("input[name=attendSystem]:checked").val()=="p"){
           $("#hiddenQuestion").css("visibility", "visible");
@@ -355,12 +397,20 @@
 
       });
 
+      /*
+      let t = document.getElementById('locationFull');
+      t.addEventListener('input', function(event){
+        alert('바뀜');
+        $("#tmpDiv").css("display","none");
+        $("#Map").css("display", "block");
+        makeMap($("#lat").val(), $("#lng").val());
+      });
+       */
+
+
     });
-    
-    
-    
+
     function add(){
-    	
     	let title = $("#title").val().trim();
     	$("#title").val(title);
     	if(title==''){
@@ -370,15 +420,13 @@
     		return;
     	}
     	
-    	/*
+
     	let locationFull = $("#locationFull").val();
     	if(locationFull==''){
     		alert('검색 버튼을 눌러 장소를 선택해주세요.');
     		window.scrollTo(0, 0);
     		return;
     	}
-    	*/
-    	
 
     	
     	let offerdate = $("#gathering_date").val();
@@ -394,7 +442,7 @@
     	offerdate = offerdate.substr(0, index) + ' ' + offerdate.substr(index+1);
     	
     	let date1 = new Date();
-    	date1.setDate(date1.getMinutes() + 30);
+    	date1.setMinutes(date1.getMinutes() + 30);
     	let minDate = getFormatDate(date1);
     	
     	let date2 = new Date();
@@ -402,7 +450,7 @@
     	date2.setMinutes(23);
     	date2.setHours(59);
     	let maxDate = getFormatDate(date2);
-    	
+
     	if(offerdate < minDate){
     		alert('현재로부터 최소 30분 이후의 일정만 만들 수 있습니다.');
     		$("#gathering_date").focus();
@@ -486,7 +534,6 @@
 		
     	window.open("${path}/gathering/locationSearch.do", "날짜검색 - 모임모집", "left="+left+", top="+top+", width=820, height=580");
     }
-    
 
   </script>
 
@@ -534,20 +581,121 @@
     <form name="gatheringAddForm" method="post" action="${path}/gathering/add.do">
       <div id="postUpper">
         <div>
-          <div id="map"></div>
-          <div id="tmpDiv"><span>장소를 입력하세요.</span></div>
+          <div class="map_wrap">
+            <div id="map"></div>
+            <div class="hAddr">
+              <span class="title">주소정보</span>
+              <span id="centerAddr"></span>
+            </div>
+          </div>
+            <!--<div id="tmpDiv"><span>장소를 입력하세요.</span></div>-->
+
+          <script>
+
+            let mapContainer = document.getElementById('map'); // 지도를 표시할 div
+
+            let mapOption =
+                    {
+                      center: new kakao.maps.LatLng(37.4989347355231, 127.032854329609), // 지도의 중심좌표
+                      level: 1 // 지도의 확대 레벨
+                    };
+
+            // 지도를 생성합니다
+            let map = new kakao.maps.Map(mapContainer, mapOption);
+
+            // 주소-좌표 변환 객체를 생성합니다
+            let geocoder = new kakao.maps.services.Geocoder();
+
+            let imageSrc = 'https://img.freepik.com/icones-gratuites/espace-reserve_318-556820.jpg?w=360', // 마커이미지의 주소입니다
+                    imageSize = new kakao.maps.Size(44, 48); // 마커이미지의 크기입니다
+
+            // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+            let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+            let mainMarker;
+
+            let infoDiv = document.getElementById('centerAddr');
+
+            let lat, lng;
+
+
+            function makeMap(getLat, getLng){
+
+              lat = getLat;
+              lng = getLng;
+              mapOption =
+                      {
+                        center: new kakao.maps.LatLng(lat, lng), // 지도의 중심좌표
+                        level: 1 // 지도의 확대 레벨
+                      };
+
+              // 지도를 생성합니다
+              map = new kakao.maps.Map(mapContainer, mapOption);
+
+              //마커 생성
+              let markerPosition = new window.kakao.maps.LatLng(lat, lng);
+
+              //마커 생성
+              mainMarker = new window.kakao.maps.Marker({
+                position: markerPosition,
+                image: markerImage
+              });
+
+              mainMarker.setMap(map);
+              mainMarker.setZIndex(3);
+
+              // 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
+              searchDetailAddrFromCoords(map.getCenter(), displayCenterInfo);
+            }
+
+            /*
+            function searchAddrFromCoords(coords, callback) {
+              // 좌표로 행정동 주소 정보를 요청합니다
+              geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
+            }
+            */
+
+
+            function searchDetailAddrFromCoords(coords, callback) {
+              // 좌표로 법정동 상세 주소 정보를 요청합니다
+              geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+            }
+
+            //지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
+            function displayCenterInfo(result, status) {
+              if (status === kakao.maps.services.Status.OK) {
+                    infoDiv.innerHTML = result[0].address.address_name;
+
+                    var content = '<div id="infoWindow"><span>'+result[0].address.address_name+
+                            ' ' + $("#place_name").val() + '</span></div>';
+                    var position = new kakao.maps.LatLng(lat, lng);
+                    var customOverlay = new kakao.maps.CustomOverlay({
+                      position: position,
+                      content: content,
+                      xAnchor: 0.5, // 커스텀 오버레이의 x축 위치입니다. 1에 가까울수록 왼쪽에 위치합니다. 기본값은 0.5 입니다
+                      yAnchor: 2 // 커스텀 오버레이의 y축 위치입니다. 1에 가까울수록 위쪽에 위치합니다. 기본값은 0.5 입니다
+                    });
+
+                    customOverlay.setMap(map);
+                    map.setCenter(customOverlay.getPosition());
+              }
+            }
+
+
+          </script>
+
+
         </div>
         <div>
           <div class="labelAndItem"><span>제목</span>
           <input class="flex" name="title" id="title"></div>
           <div class="labelAndItem"><span>장소</span>
             <input class="flex" disabled id="locationFull">
-	          <input type="hidden" name="location1">
-	          <input type="hidden" name="location2">
-	          <input type="hidden" name="location3">                    
-	          <input type="hidden" name="place_name">
-	          <input type="hidden" name="lat">
-	          <input type="hidden" name="lng">            
+	          <input type="hidden" name="address1" id="address1">
+	          <input type="hidden" name="address2" id="address2">
+	          <input type="hidden" name="address3" id="address3">
+	          <input type="hidden" name="place_name" id="place_name">
+	          <input type="hidden" name="lat" id="lat">
+	          <input type="hidden" name="lng" id="lng">
             <button type="button" id="locationSearchBtn" onclick="locationSearch()">검색</button></div>
           <div class="labelAndItem"><span>일시</span>
            <input type="datetime-local" name="gathering_date" id="gathering_date">
