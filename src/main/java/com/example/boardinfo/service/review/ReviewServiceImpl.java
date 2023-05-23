@@ -20,7 +20,7 @@ public class ReviewServiceImpl implements ReviewService {
 	public List<ReviewDTO> reviewlist(){
 
 		List<ReviewDTO> list = reviewDAO.reviewlist();
-		System.out.print("vo : " + new Gson().toJson(list));
+		System.out.println("vo : " + new Gson().toJson(list));
 
 		return list;
 	}
