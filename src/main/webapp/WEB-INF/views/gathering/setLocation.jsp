@@ -80,9 +80,30 @@
       background-color: white;
     }
     
-    
-    }
+
   </style>
+
+  <script>
+
+    function sendData(){
+      window.opener.document.getElementById("address1").value = $("#address1").val();
+      window.opener.document.getElementById("address2").value = $("#address2").val();
+      window.opener.document.getElementById("address3").value = $("#address3").val();
+      window.opener.document.getElementById("place_name").value = $("#place_name").val();
+      window.opener.document.getElementById("lat").value = $("lat").val();
+      window.opener.document.getElementById("lng").value = $("lng").val();
+      window.opener.document.getElementById("locationFull").value = $("#address").text();
+
+      let lat = $("#lat").val();
+      let lng = $("#lng").val()
+
+      window.opener.makeMap(lat, lng);
+      window.close();
+    }
+
+  </script>
+
+
 </head>
 
 
@@ -117,18 +138,18 @@
     
   <!-- 출력주소 -->  
   <div id="address">위치를 검색하거나 직접 지도를 클릭하여 선택하세요.</div>
-  <button type="button" id="btn-submit">확인</button>
+  <button type="button" id="btn-submit" onclick="sendData()">확인</button>
   <button type="button" id="btn-reset">취소</button>
     
   <!-- 위도 -->  
-  <input type="hidden" id="yInput">
+  <input type="hidden" id="lat">
     
   <!-- 경도 -->  
-  <input type="hidden" id="xInput">
+  <input type="hidden" id="lng">
   </div>
 
 
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=38b7d95abad81aea15bff7d5e7e7b86a&libraries=services"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=aaa4a3ee6e039439424a544717323d1a&libraries=services"></script>
 <script>
   // 마커를 담을 배열
   let markers = [];
@@ -153,7 +174,7 @@
   // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
   var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
-  const mainMarker = new window.kakao.maps.Marker({
+  let mainMarker = new window.kakao.maps.Marker({
     position: markerPosition,
     image: markerImage
   });
@@ -405,8 +426,8 @@
                 building_name==null? result[0].address.address_name : result[0].address.address_name + ' ' + building_name
         );
 
-        $("#xInput").val(location.getLng());
-        $("#yInput").val(location.getLat());
+        $("#lng").val(location.getLng());
+        $("#lat").val(location.getLat());
       }});
   }
 
@@ -436,8 +457,8 @@
                 address.address_name + ' ' + title
         );
         $("#place_name").val(title);
-        $("#xInput").val(location.getLng());
-        $("#yInput").val(location.getLat());
+        $("#lng").val(location.getLng());
+        $("#lat").val(location.getLat());
         
       }});
   }
