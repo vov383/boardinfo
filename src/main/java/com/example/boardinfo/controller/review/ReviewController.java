@@ -52,7 +52,9 @@ public class ReviewController {
 /*	// 페이지 열기
 	@RequestMapping("reviewInTest.do")
 	public String insert(@ModelAttribute TestDTO testdto){
-		return "/review/reviewInTest";
+
+		return "/review/reviewinset";
+
 	}
 
 	// 저장
@@ -60,6 +62,7 @@ public class ReviewController {
 	public String insertPage(@ModelAttribute TestDTO testdto){
 		reviewservice.create(testdto);
 		return "/review/reviewInTest";
+
 	}
 */
 

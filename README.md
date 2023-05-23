@@ -23,7 +23,7 @@
   ~~~~~
   </div>
   </div>
-  !!! 첨부해주세요
+  !!!F;O;O;T;E;R 첨부해주세요
    <%@include file="../include/footer.jsp" %>
    </body>
    

@@ -13,7 +13,13 @@
    </head>
 
    <body>
-       
+
+   <header>
+	   <%@include file="../include/top.jsp" %>
+   </header>
+
+   <main>
+
 	<div align="center">
 		
 		<table>
@@ -68,7 +74,13 @@
 		</table>
 		
 	</div>
-        
+
+   </main>
+
+   <footer>
+	   <%@include file="../include/footer.jsp" %>
+   </footer>
+
     </body>
     
 </html>

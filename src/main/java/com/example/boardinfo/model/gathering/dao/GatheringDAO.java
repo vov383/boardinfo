@@ -9,5 +9,7 @@ public interface GatheringDAO {
 	public int deletePost();
 	public int editPost();
 	public List<GatheringDTO> list();
+	public GatheringDTO view(int gathering_id);
+	public void updateViewCount(int gathering_id);
 
 }

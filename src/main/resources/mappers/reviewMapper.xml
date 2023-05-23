@@ -23,6 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			 , R.GOOD
 			 , R.DEL
 			 , R.CREATE_USER
+
 			 , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD') AS CREATEDATE
 			 , R.UPDATE_USER
 			 , R.UPDATE_DATE

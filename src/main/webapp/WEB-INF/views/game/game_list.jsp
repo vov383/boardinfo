@@ -14,11 +14,18 @@
 
 </head>
 
-<body>
+<header>
+	<%@include file="../include/top.jsp" %>
+</header>
+
+<main>
+	<br><br><br><br><br>
+
 	<div align="center">
 		<a href="${path}/game/write.do">insert</a>
 	</div>
-	<div>
+
+	<div align="center">
 		<table>
 			
 			<thead>
@@ -59,6 +66,14 @@
 			</tbody>
 		</table>
 	</div>
+
+</main>
+
+<footer>
+	<%@include file="../include/footer.jsp" %>
+</footer>
+
+
 
 </body>
 

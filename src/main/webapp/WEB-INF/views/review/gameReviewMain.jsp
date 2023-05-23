@@ -411,6 +411,7 @@
             <td style="width: 200px; text-align: center;">${vo.views}</td>
             <td style="width: 200px; text-align: center;">/댓글 연결 예정/</td>
             <td style="width: 200px; text-align: center;">${vo.gametitle}</td>
+
           </tr>
         </c:forEach>
       </table>
