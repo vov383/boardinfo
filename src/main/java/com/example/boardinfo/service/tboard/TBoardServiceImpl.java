@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
+import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
 import org.springframework.stereotype.Service;
 
 import com.example.boardinfo.model.tboard.dao.TBoardDAO;
@@ -24,6 +25,11 @@ public class TBoardServiceImpl implements TBoardService {
 	@Override
 	public void insert(TBoardDTO dto) {
 		tboardDao.insert(dto);
+	}
+
+	@Override
+	public void fileAttach(TBAttachDTO f_dto) {
+		tboardDao.fileAttach(f_dto);
 	}
 
 	@Override

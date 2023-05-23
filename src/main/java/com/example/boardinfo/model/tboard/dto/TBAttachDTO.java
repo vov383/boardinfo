@@ -1,40 +1,116 @@
 package com.example.boardinfo.model.tboard.dto;
 
-public class TBAttachDTO {
-	private String fileName;
-	private String uploadPath;
-	private String uuid;
-	private boolean image;
+import java.util.Arrays;
+import java.util.Date;
 
-	//getter, setter, toString()
-	public String getFileName() {
-		return fileName;
+public class TBAttachDTO {
+
+	private int file_reg_num;
+	private int tb_num;
+	private String fullName;
+	private String formatName;
+	private byte[] fileData;
+	private String del;
+	private String create_user;
+	private Date create_date;
+
+	private String update_user;
+	private Date update_date;
+
+	public String getFormatName() {
+		return formatName;
 	}
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+
+	public void setFormatName(String formatName) {
+		this.formatName = formatName;
 	}
-	public String getUploadPath() {
-		return uploadPath;
+
+	public int getFile_reg_num() {
+		return file_reg_num;
 	}
-	public void setUploadPath(String uploadPath) {
-		this.uploadPath = uploadPath;
+
+	public void setFile_reg_num(int file_reg_num) {
+		this.file_reg_num = file_reg_num;
 	}
-	public String getUuid() {
-		return uuid;
+
+	public int getTb_num() {
+		return tb_num;
 	}
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+
+	public void setTb_num(int tb_num) {
+		this.tb_num = tb_num;
 	}
-	public boolean isImage() {
-		return image;
+
+	public String getFullName() {
+		return fullName;
 	}
-	public void setImage(boolean image) {
-		this.image = image;
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
+
+
+	public byte[] getFileData() {
+		return fileData;
+	}
+
+	public void setFileData(byte[] fileData) {
+		this.fileData = fileData;
+	}
+
+	public String getDel() {
+		return del;
+	}
+
+	public void setDel(String del) {
+		this.del = del;
+	}
+
+	public String getCreate_user() {
+		return create_user;
+	}
+
+	public void setCreate_user(String create_user) {
+		this.create_user = create_user;
+	}
+
+	public Date getCreate_date() {
+		return create_date;
+	}
+
+	public void setCreate_date(Date create_date) {
+		this.create_date = create_date;
+	}
+
+	public String getUpdate_user() {
+		return update_user;
+	}
+
+	public void setUpdate_user(String update_user) {
+		this.update_user = update_user;
+	}
+
+	public Date getUpdate_date() {
+		return update_date;
+	}
+
+	public void setUpdate_date(Date update_date) {
+		this.update_date = update_date;
+	}
+
 	@Override
 	public String toString() {
-		return "TBAttachDTO [fileName=" + fileName + ", uploadPath=" + uploadPath + ", uuid=" + uuid + ", image="
-				+ image + "]";
+		return "TBAttachDTO{" +
+				"file_reg_num=" + file_reg_num +
+				", tb_num=" + tb_num +
+				", fullName='" + fullName + '\'' +
+				", formatName='" + formatName + '\'' +
+				", fileData=" + Arrays.toString(fileData) +
+				", del='" + del + '\'' +
+				", create_user='" + create_user + '\'' +
+				", create_date=" + create_date +
+				", update_user='" + update_user + '\'' +
+				", update_date=" + update_date +
+				'}';
 	}
-	
 }

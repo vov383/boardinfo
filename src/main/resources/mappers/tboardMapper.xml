@@ -90,10 +90,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		order by create_date desc
 	</select>
 	
-	<insert id="insertAttach">
+	<insert id="insertFile">
 		insert into tb_files (file_reg_num, tb_num, 
 			fullName, formatName, fileData, create_user)
-		values (seq_tb_files, #{tb_num}, #{fullName}, #{formatName},
+		values ((seq_tb_files.nextval), (seq_t_board.currval), #{fullName}, #{formatName},
 			#{fileData}, #{create_user})
 	</insert>
 	
