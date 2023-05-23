@@ -5,191 +5,17 @@
 <head>
   <meta charset="UTF-8">
   <title>글쓰기 - 모임모집</title>
+  
 <%@ include file="../include/js/header.jsp" %>
 
+
   <style>
-    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 100;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.otf) format('opentype');}
-
-    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 300;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype');}
-
-    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 400;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype');}
-
-    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 500;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.otf) format('opentype');}
-
-    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 700;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.otf) format('opentype');}
-
-    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 900;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');}
-
-    * {
-      font-family: 'Noto Sans KR', sans-serif;
-      font-size: 15px;
-    }
-
-    html, body{
-      margin: 0 0;
-      padding: 0 0;
-      min-height: 100%;
-    }
-
-    div, input, span{
-      box-sizing: border-box;
-    }
-
-    #header{
-      width: 100%;
-      margin: 0 auto;
-      position: fixed;
-      left: 0;
-      top: 0;
-      background-color: white;
-      z-index: 450;
-      border-bottom: 1px solid #D9D9D9;      
-    }
-
-    #header-upper-box{
-      background-color: #FFC61A;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 77px;
-    }
-    
-    #header-upper-box > div{
-	 display: flex;
-     justify-content: space-between;
-     align-items: center;
-     height: 77px;
-     flex-basis: 1120px;
-     max-width: 1120px;
-    }
-
-    #header-left{
-      display: flex;
-      align-items: center;
-    }
-
-    #header-right {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 15px;
-    }
-
-    form[name="gameSearch"] > div:first-of-type{
-      background-color: white;
-      position: relative;
-      width: 320px;
-      height: 34px;
-      padding: 2px 10px;
-      border: 2px black solid;
-      border-radius: 20px;
-    }
-
-    form[name="gameSearch"] img{
-      width: 20px;
-      position: absolute;
-      top: 5px;
-      right: 12px;
-      margin: 0;
-      -webkit-user-drag: none;
-    }
-
-    #header-right input:first-of-type{
-      width: 270px;
-      height: 25px;
-      padding-left: 20px;
-      border: none;
-      font-size: 16px;
-      background-color: rgba(255, 255, 255, 0.5);
-    }
-
-    .sign{
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: bold;
-      color: black;
-    }
-
-    #signIn{
-      margin: 0 30px;
-    }
-
-    .nav{
-      margin: 0 auto;
-      max-width: 1120px;
-      display: flex;
-    }
-
-    .menu {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 45px;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .menu li {
-      display: inline-block;
-      flex: 0 0 25%;
-      max-width: 25%;
-      height: 100%;
-      line-height: 45px;
-    }
-
-    .toMenu{
-      display: flex;
-      align-items: center;
-      font-size: 16px;
-      font-weight: bold;
-      text-decoration: none;
-      color: black;
-      margin-right: 20px;
-    }
-
-    .toMenu > img{
-      margin-left: -4px;
-      -webkit-user-drag: none;
-    }
-
-    #contents{
-      display: flex;
-      flex-direction: column;
-      margin: auto;
-      max-width: 1120px;
-      min-height: 100%;
-      padding: 129px 0 0 0;
-      font-size: 16px;
-    }
-
-    #contentsHeader{
-      margin: 0;
-      padding-top: 32px;
-      padding-bottom: 5px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    #contentsHeader h2{
-      font-size: 1.9em;
-      margin-top: 0;
-      margin-bottom: 5px;
-    }
-
-    #contentsLocation{
-      margin-bottom: 30px;
-    }
-
-    #contentsMain{
+  
+      #contentsMain{
       border-top: 2px solid black;
-      margin-bottom: 80px;
-      flex-grow: 1;
-      min-height: 420px;
-    }
-
-    #postUpper{
+      }
+  
+     #postUpper{
       display: flex;
     }
 
@@ -362,10 +188,6 @@
     }
 
     #infoWindow{
-      display: flex;
-      align-items: center;
-      max-width: 300px;
-      word-break: normal;
       background-color: white;
       border: 1px solid black;
       border-radius: 6px;
@@ -373,7 +195,10 @@
     }
 
     #infoWindow > span{
+      display: block;
       line-height: 16px;
+      max-width: 300px;
+      word-break: break-all;      
     }
 
 
@@ -381,6 +206,7 @@
   </style>
 
   <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=aaa4a3ee6e039439424a544717323d1a&libraries=services"></script>
+  <script src="${path}/ckeditor/ckeditor.js"></script>
   <script>
 
     $(function(){
@@ -490,20 +316,18 @@
     			alert('승인제를 선택하셨습니다.\n모임을 신청하려는 보드인들에게 묻고 싶은 질문을 입력해주세요.');
     			$("#question").focus();
         		window.scrollTo(0, 100);
+        		return;
     		}
     		
     	}
     	
     	
-    	let description = $("#description").val().trim();
-    	$("#description").val(description);
-    	if(description==''){
-    		alert('모임 소개글을 입력하세요');
-    		$("#description").focus();
-    		window.scrollTo(0, 200);
+    	if(CKEDITOR.instances.description.getData().length < 1){
+    		alert("모임 소개글을 입력해 주세요.");
+    		$("#cke_description").focus();
     		return;
-    	}
-    	
+    		}
+
     	
     	document.gatheringAddForm.submit();
     	
@@ -536,39 +360,14 @@
     }
 
   </script>
+  
+  
 
 
 </head>
 <body>
-<div id="header">
 
-  <div id="header-upper-box">
-  <div>
-    <div id="header-left">
-      <a href="#" title="보드인포"><img src="${path}/images/boardinfo_logo.png" width="170px"></a>
-    </div>
-    <div id="header-right">
-      <form name="gameSearch" id="gameSearch" method="get">
-        <div>
-          <input type="text" name="gameKeyword" placeholder="보드게임 찾기">
-          <img src="${path}/images/search.png">
-        </div>
-      </form>
-      <a href="#" title="로그인" class="sign" id="signIn">로그인</a>
-      <a href="#" title="회원가입" class="sign" id="signUp">회원가입</a>
-    </div>
-  </div>
-  </div>
-  
-  <div class="nav">
-    <ul class="menu">
-      <li><a href="#" class="toMenu" title="게임정보">게임정보<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="커뮤니티">커뮤니티<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="오프모임">오프모임<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="중고장터">중고장터<img src="${path}/images/dropdown.png" width="34px"></a></li>
-    </ul>
-  </div>
-</div>
+<%@include file="../include/top.jsp" %>
 
 <div id="contents">
   <div id="contentsHeader">
@@ -672,7 +471,7 @@
                       position: position,
                       content: content,
                       xAnchor: 0.5, // 커스텀 오버레이의 x축 위치입니다. 1에 가까울수록 왼쪽에 위치합니다. 기본값은 0.5 입니다
-                      yAnchor: 2 // 커스텀 오버레이의 y축 위치입니다. 1에 가까울수록 위쪽에 위치합니다. 기본값은 0.5 입니다
+                      yAnchor: 2.6 // 커스텀 오버레이의 y축 위치입니다. 1에 가까울수록 위쪽에 위치합니다. 기본값은 0.5 입니다
                     });
 
                     customOverlay.setMap(map);
@@ -731,6 +530,12 @@
           <button type="button" id="btn-attachGame">게임첨부</button>
         </div>
         <textarea id="description" name="description" placeholder="모임을 자유롭게 소개해보세요."></textarea>
+        <script>
+        CKEDITOR.replace("description",{
+        	filebrowserUploadUrl : "${path}/imageUpload.do"
+        });
+        </script>
+        
         <ul>
           <li>참가인원이 모두 모이면 '모집완료', 모임시간이 되면 '모임종료'로 변경됩니다.</li>
           <li>소외되는 보드인 없이 모두가 즐거운 모임이 될 수 있게 노력해주세요.</li>
@@ -746,12 +551,7 @@
   </div>
 </div>
 
-<footer>
-  <div>
-    서울특별시 강남구 테헤란로14길 6 남도빌딩 2,3F<br>
-    KH정보교육원 TEAM BOARDINFO
-  </div>
-</footer>
+<%@include file="../include/footer.jsp" %>
 
 </body>
 </html>

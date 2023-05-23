@@ -21,7 +21,9 @@
         <h1><a href="${path}/tboard/list.do" style="color: black;">중고거래 게시판</a></h1>
         <br>
         <h1><a href="${path}/chat/goChat.do" style="color: black;">sjTest</a></h1>
+        <h1><a href="${path}/gathering/list.do" style="color: black;">모임리스트</a></h1>
         <h1><a href="${path}/gathering/add.do" style="color: black;">모임만들기</a></h1>
+        <h1><a href="${path}/gathering/view.do" style="color: black;">모임게시글</a></h1>
         <h1><a href="${path}/gathering/setLocation.do" style="color: black;">위치검색</a></h1>
         
         <br>
@@ -32,6 +34,7 @@
   <div>
   	<!-- 실제로 서비스되는 디렉토리(배포 디렉토리) 값 가져오기 -->
 		<%= application.getRealPath("/resources/ckimg/") %>
+		<%= application.getRealPath("/resources/uploaded_images/") %>
   </div>      
   
   
