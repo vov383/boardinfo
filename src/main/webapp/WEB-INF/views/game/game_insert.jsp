@@ -22,6 +22,8 @@
 
 <body>
 
+	<%@include file="../include/top.jsp" %>
+
 	<div align="center">
 	
 	<form name="gameform" method="post" action="${path}/game/insert.do">
@@ -455,6 +457,9 @@
 
 	});
 </script>
+
+	<%@include file="../include/footer.jsp" %>
+
 </body>
 
 </html>

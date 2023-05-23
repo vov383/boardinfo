@@ -15,6 +15,7 @@
 </head>
 
 <body>
+<%@include file="../include/top.jsp" %>
 	<div align="center">
 		<a href="${path}/game/write.do">insert</a>
 	</div>
@@ -59,6 +60,8 @@
 			</tbody>
 		</table>
 	</div>
+
+<%@include file="../include/footer.jsp" %>
 
 </body>
 
