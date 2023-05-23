@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -31,5 +32,9 @@ public class GameDAOImpl implements GameDAO {
 	
 	public Object view(int gnum) throws Exception {
 		return sqlSession.selectOne("game.view", gnum);
+	}
+
+	public List<GameDTO> getAutoGame(String input){
+		return sqlSession.selectList("game.getAuto", input);
 	}
 }

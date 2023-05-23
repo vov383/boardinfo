@@ -2,8 +2,12 @@ package com.example.boardinfo.model.game.dao.publisher;
 
 import javax.inject.Inject;
 
+import com.example.boardinfo.model.game.dto.artist.ArtistDTO;
+import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class PublisherDAOImpl implements PublisherDAO {
@@ -34,5 +38,11 @@ public class PublisherDAOImpl implements PublisherDAO {
 	@Override
 	public void insert_publisher_mapping(int pnum) {
 		sqlSession.insert("publisher.insertmapping_pnum",pnum);
+	}
+
+	public List<PublisherDTO> getAutoPublisher(String input){
+		List<PublisherDTO> list = sqlSession.selectList("publisher.getAuto", input);
+		System.out.println(list);
+		return list;
 	}
 }

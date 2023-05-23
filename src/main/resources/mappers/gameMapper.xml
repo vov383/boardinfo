@@ -32,6 +32,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	      from game
 	     where gnum=#{gnum}
 	</select>
+
+	<select id="getAuto" resultType="gameDto">
+		select *
+		from game
+		where gametitle like #{input}||'%'
+
+	</select>
 	
 </mapper>
 
