@@ -6,6 +6,8 @@
 
 
        !!!헤더 첨부해주세요
+       
+   <body>
    <%@include file="../include/top.jsp" %>
   <div id="contents">
   <div id="contentsHeader">
@@ -23,7 +25,7 @@
   </div>
   !!!헤더 첨부해주세요
    <%@include file="../include/footer.jsp" %>
-   
+   </body>
    
 
      
