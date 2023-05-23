@@ -21,10 +21,19 @@ public class ReviewController {
 		mav.addObject("list", reviewservice.reviewlist());
 		return mav;
 	}
-
+	// 페이지 열기
 	@RequestMapping("reviewInTest.do")
 	public String insert(@ModelAttribute TestDTO testdto){
+
 		return "/review/reviewinset";
+
+	}
+	// 저장
+	@RequestMapping("reviewInTestInsertPage.do")
+	public String insertPage(@ModelAttribute TestDTO testdto){
+		reviewservice.create(testdto);
+		return "/review/reviewInTest";
+
 	}
 
 
