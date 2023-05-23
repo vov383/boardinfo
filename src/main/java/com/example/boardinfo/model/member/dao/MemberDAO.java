@@ -12,5 +12,6 @@ public interface MemberDAO {
 	public void updateMember(MemberDTO dto);
 	public void deleteMember(String userid);
 	public MemberDTO viewMember(String userid);
+	public int mbidCheck(String userid);
 	
 }

@@ -11,6 +11,33 @@
 <%@ include file="../include/js/header.jsp" %>
 <script type="text/javascript">
 
+$('#userid').keyup(function() {
+	var userid= $('#userid').val();
+
+	$.ajax({
+		url: "${path}/id_check.do",
+		type : "post",
+		data : param,
+		dataType : 'json',
+		success : function(result) {
+			if(result ==1){
+				$("#id_feedback").html('이미 사용중인 아이디입니다.');
+				$("#id_feedback").attr('color','#dc3545');
+			}else{
+				$("#id_feedback").html('사용할 수 있는 아이디입니다.');
+				$("#id_feedback").attr('color','2fb380');
+			}
+		},
+		error : function () {
+			alert("오류 입니다.");
+		}
+		
+	});
+});
+
+
+
+
 function check() {
 	//아이디 체크
 	var userid = $("#userid").val();
@@ -19,6 +46,7 @@ function check() {
 		$("#userid").focus();
 		return;
 	}
+
 	//아이디 정규식
 	var exp1 = /^[a-z0-9]{4,15}$/;
 	if(!exp1.test(userid)){
@@ -81,10 +109,11 @@ function check() {
 	var hp = $("#hp").val();
 	var exp5 = /^[\d]{11,12}$/;
 	if(!exp5.test(hp)){
-		alert("-를 빼고 입력해주세요. ex)01012345678");
+		alert("11~12자리를 숫자로 입력해주세요.");
 		$("#hp").focus();
 		return;
 	}
+	
 	document.form1.action="${path}/member/member_insert.do";
 	document.form1.submit();
 	alert("정상적으로 회원가입 되었습니다.")
@@ -105,6 +134,7 @@ id="name" type="text">
 <div class="form-group">
 아이디 <input class="form-control" placeholder="아이디" name="userid" 
 id="userid" type="text">
+<button type="button" class="btn btn-dark button" id="btnIdCheck">중복확인</button>
 </div>
 <div class="form-group">
 비밀번호 <input class="form-control" placeholder="비밀번호" name="passwd" 
