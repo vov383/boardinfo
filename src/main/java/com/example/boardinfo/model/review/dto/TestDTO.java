@@ -18,7 +18,7 @@ public class TestDTO {				// 리뷰 입력 테스트 테이블
 
 	@Override
 	public String toString() {
-		return "GameDTO [test1=" + test1 + "]";
+		return "TestDTO [test1=" + test1 + "]";
 	}
 
 	public String getTest1() {

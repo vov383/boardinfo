@@ -50,8 +50,8 @@
         
         <br>
         <h1><a href="${path}/review/reviewlist.do" style="color: black;">Review List</a></h1>
-        <h1><a href="${path}/review/reviewInTest.do" style="color: black;">Review In Test</a></h1>
-        		
+        <h1><a href="${path}/review/reviewInsert.do" style="color: black;">Review Insert</a></h1>
+
     </div>
   <div>
   	<!-- 실제로 서비스되는 디렉토리(배포 디렉토리) 값 가져오기 -->
@@ -59,19 +59,12 @@
 
 		<%= application.getRealPath("/resources/uploaded_images/") %>
   </div>      
-  
-  
-
-
-  
-
-
+ 
     </main>
 
     <footer>
        <%@include file="include/footer.jsp" %>
     </footer>
-
 
 
     </body>

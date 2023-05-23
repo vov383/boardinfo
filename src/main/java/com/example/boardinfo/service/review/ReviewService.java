@@ -12,7 +12,7 @@ public interface ReviewService {
 	public List<ReviewDTO> reviewlist();
 
 	// 리뷰 입력 테스트
-	public void create(TestDTO testdto);
+	public void create(ReviewDTO reviewDTO);
 
 	/*public List<ReviewDTO> reviewDetail();*/
 /*

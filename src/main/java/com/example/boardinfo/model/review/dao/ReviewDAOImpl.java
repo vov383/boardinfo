@@ -23,9 +23,9 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     //리뷰 입력 테스트
     @Override
-    public void create(TestDTO testdto) {
+    public void create(ReviewDTO reviewDTO) {
 
-        sqlSession.insert("review.reviewInTest", testdto);
+        sqlSession.insert("review.reviewInsertPage", reviewDTO);
     }
 
 /*
