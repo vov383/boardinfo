@@ -8,8 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <%@ include file="../include/js/header.jsp" %>
 <script src="${path}/include/js/common.js"></script>
-
-
+<script src="${path}/include/js/jquery-3.6.3.min.js"></script>
 
 <!-- ckeditor의 라이브러리 -->
 <script src="${path}/ckeditor/ckeditor.js"></script>
@@ -52,7 +51,7 @@ $(function(){ //자동으로 실행되는 코드
 	
 	//목록 버튼
 	$("#btnList").click(function(){
-		location.href="${path}/board/list.do";
+		location.href="${path}/tboard/list.do";
 	});
 		
 	//첨부파일 삭제
@@ -100,7 +99,7 @@ $(function(){ //자동으로 실행되는 코드
 			//hidden 태그 구성
 			str+=
 				"<input type='hidden' name='files["+i+"]' value='"
-				+$(this).val()+"'>";
+					+$(this).val()+"'>";
 		});
 		//폼에 hidden 태그들을 붙임
 		$("#form1").append(str);
@@ -130,7 +129,7 @@ function listAttach(){
 				//console.log(fileInfo);
 				var html="<div><a href='"+fileInfo.getLink+"'>"
 					+fileInfo.fileName+"</a>&nbsp;&nbsp;";
-				<c:if test="${sessionScope.userid == dto.writer}">	
+				<c:if test="${sessionScope.userid == dto.create_user}">
 					html+="<a href='#' class='file_del' data-src='"
 						+this+"'>[삭제]</a></div>";
 				</c:if>

@@ -31,7 +31,6 @@ public class TBCommentServiceImpl implements TBCommentService {
 
 	@Override
 	public void insertChilComment(TBCommentDTO dto) {
-		// TODO Auto-generated method stub
 
 	}
 

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -80,5 +81,9 @@ public class TBoardDAOImpl implements TBoardDAO {
 		sqlSession.delete("tboard.deleteAttach", fileName);
 	}
 
+	@Override
+	public void fileAttach(TBAttachDTO f_dto) {
+		sqlSession.insert("tboard.insertFile", f_dto);
+	}
 
 }

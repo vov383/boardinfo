@@ -37,6 +37,7 @@ public class TBoardController {
 	TBCommentService tbcommentService;
 	
 	@RequestMapping("list.do")
+	@ResponseBody
 	public ModelAndView list(
 			@RequestParam(defaultValue = "all") String select_category,
 			@RequestParam(defaultValue = "all") String search_option,

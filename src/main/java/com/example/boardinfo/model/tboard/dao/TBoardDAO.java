@@ -2,6 +2,7 @@ package com.example.boardinfo.model.tboard.dao;
 
 import java.util.List;
 
+import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
 import com.example.boardinfo.model.tboard.dto.TBoardDTO;
 
 public interface TBoardDAO {	
@@ -27,4 +28,5 @@ public interface TBoardDAO {
 
 	public void deleteFile(String fileName);
 
+    void fileAttach(TBAttachDTO f_dto);
 }

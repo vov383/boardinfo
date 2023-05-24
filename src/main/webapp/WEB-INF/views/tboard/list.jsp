@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <%@ include file="../include/js/header.jsp" %>
-
+<script src="${path}/include/js/jquery-3.6.3.min.js"></script>
 <script type="text/javascript">
 $(function () {
 	$("#btnWrite").click(function () {
