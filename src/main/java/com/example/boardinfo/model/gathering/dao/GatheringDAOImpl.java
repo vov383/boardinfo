@@ -1,6 +1,8 @@
 package com.example.boardinfo.model.gathering.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -32,8 +34,12 @@ public class GatheringDAOImpl implements GatheringDAO {
 	}
 
 	@Override
-	public List<GatheringDTO> list() {
-		return sqlSession.selectList("gathering.list");
+	public List<GatheringDTO> list(boolean showAvailable, String[] address1List) {
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("showAvailable", showAvailable);
+		map.put("address1List", address1List);
+		return sqlSession.selectList("gathering.list", map);
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package com.example.boardinfo.controller.gathering;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
@@ -50,9 +52,49 @@ public class GatheringController {
 	
 	
 	@GetMapping("/list.do")
-	public ModelAndView list(ModelAndView mav) {
-		List<GatheringDTO> list = gatheringService.list();
+	public ModelAndView list(HttpServletRequest request, ModelAndView mav) {
+
+		boolean showAvailable = false;
+
+		if(request.getParameter("showAvailable")!=null) {
+			showAvailable = true;
+		}
+
+
+		String[] address1List = request.getParameterValues("address1");
+
+		String[] koreanAddress1 = {"서울", "부산", "대구", "인천", "광주", "대전", "울산",
+		"경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주", "세종"
+		};
+
+		List<String> koreanAddress1List = Stream.of(koreanAddress1).collect(Collectors.toList());
+		List<GatheringDTO> list = null;
+		String[] all = {"all"};
+
+		if(address1List != null){
+			Stream<String> address1Stream = Arrays.stream(address1List);
+			if(address1Stream.noneMatch(s -> s.equals("all"))) {
+				list = gatheringService.list(showAvailable, address1List);
+				mav.addObject("address1List", address1List);
+
+				//선택된 지역 삭제
+				for(String address1 : address1List){
+					koreanAddress1List.remove(address1);
+				}
+
+			}
+			else list = gatheringService.list(showAvailable, all);
+			mav.addObject("address1List", all);
+			}
+
+		else{
+			list = gatheringService.list(showAvailable, all);
+			mav.addObject("address1List", all);
+		}
+
 		mav.addObject("list", list);
+		mav.addObject("showAvailable", showAvailable);
+		mav.addObject("koreanAddress1List", koreanAddress1List);
 		mav.setViewName("/gathering/list");
 		return mav;
 	}

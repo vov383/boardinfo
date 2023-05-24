@@ -175,7 +175,6 @@
     }
 
     #contentsMain{
-      border-top: 2px solid black;
       margin-bottom: 80px;
       flex-grow: 1;
       min-height: 420px;

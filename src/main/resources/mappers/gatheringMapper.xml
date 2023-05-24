@@ -17,10 +17,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 	
 	
-	<select id="list" resultType="gatheringDTO"> 
+	<select id="list" resultType="gatheringDTO">
 	select gathering_id, writer_id, post_date, title, gathering_date,
 	address1, address2, place_name, maxpeople, view_count
 	from gathering
+	where
+	<trim suffixOverrides="and">
+	<foreach item="address1" collection="address1List">
+	    <choose>
+			<when test="address1=='all'">
+	    		1=1 and
+			</when>
+			<otherwise>
+				address1 like #{address1}||'%' and
+			</otherwise>
+		</choose>
+	</foreach>
+	<if test="showAvailable==true">
+	gathering_date <![CDATA[>]]> (sysdate+(3/24))
+	</if>
+	</trim>
+
 	order by gathering_id desc
 	</select>
 	

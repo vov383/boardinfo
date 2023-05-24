@@ -206,6 +206,24 @@
   </style>
 
 
+  <script>
+
+    $(function(){
+
+      $("#showAvailable").change(function(){
+        document.formGatheringSearch.submit();
+      });
+
+      $("input[name='address1']").change(function(){
+        document.formGatheringSearch.submit();
+      });
+
+    });
+
+
+  </script>
+
+
 </head>
 <body>
 
@@ -220,30 +238,63 @@
   </div>
   <div id="contentsMain">
     <div id="filter">
+      <form name="formGatheringSearch" action="${path}/gathering/list.do">
       <div>
-        <input type="checkbox">모집중만 보기
+        <c:choose>
+          <c:when test="${showAvailable!=null && showAvailable==true}">
+            <input type="checkbox" name="showAvailable" id="showAvailable" value="y" checked>
+          </c:when>
+          <c:otherwise>
+            <input type="checkbox" name="showAvailable" id="showAvailable" value="y">
+          </c:otherwise>
+        </c:choose>
+        <label for="showAvailable">모집중만 보기</label>
       </div>
       <div>
         <h3>지역</h3>
         <ul>
-        <li><input type="checkbox">전체</li>
-        <li><input type="checkbox">서울</li>
-        <li><input type="checkbox">부산</li>
-        <li><input type="checkbox">대구</li>
-        <li><input type="checkbox">인천</li>
-        <li><input type="checkbox">광주</li>
-        <li><input type="checkbox">대전</li>
-        <li><input type="checkbox">울산</li>
-        <li><input type="checkbox">경기</li>
-        <li><input type="checkbox">강원</li>
-        <li><input type="checkbox">충북</li>
-        <li><input type="checkbox">충남</li>
-        <li><input type="checkbox">전북</li>
-        <li><input type="checkbox">전남</li>
-        <li><input type="checkbox">경북</li>
-        <li><input type="checkbox">경남</li>
-        <li><input type="checkbox">제주</li>
-        <li><input type="checkbox">세종</li>
+          <c:forEach var="address1" items="address1List" varStatus="status">
+            <li>
+              <input type="checkbox" name="address1" id="${status.index}"
+            </li>
+          </c:forEach>
+          <li></li>
+        <li><input type="checkbox" name="address1" id="all" value="all">
+          <label for="all">전체</label></li>
+        <li><input type="checkbox" name="address1" id="seoul" value="서울">
+          <label for="seoul">서울</label></li>
+        <li><input type="checkbox" name="address1" id="busan" value="부산">
+          <label for="busan">부산</label></li>
+        <li><input type="checkbox" name="address1" id="daegu" value="대구">
+          <label for="daegu">대구</label></li>
+        <li><input type="checkbox" name="address1" id="incheon" value="인천">
+          <label for="incheon">인천</label></li>
+        <li><input type="checkbox" name="address1" id="gwangju" value="광주">
+          <label for="gwangju">광주</label></li>
+        <li><input type="checkbox" name="address1" id="daejun" value="대전">
+          <label for="daejun">대전</label></li>
+        <li><input type="checkbox" name="address1" id="ulsan" value="울산">
+          <label for="ulsan">울산</label></li>
+        <li><input type="checkbox" name="address1" id="gyeonggi" value="경기">
+          <label for="gyeonggi">경기</label></li>
+        <li><input type="checkbox" name="address1" id="gangwon" value="강원">
+          <label for="gangwon">강원</label></li>
+        <li><input type="checkbox" name="address1" id="chungbuk" value="충북">
+          <label for="chungbuk">충북</label></li>
+        <li><input type="checkbox" name="address1" id="chungnam" value="충남">
+          <label for="chungnam">충남</label></li>
+        <li><input type="checkbox" name="address1" id="junbuk" value="전북">
+          <label for="junbuk">전북</label></li>
+        <li><input type="checkbox" name="address1" id="junnam" value="전남">
+          <label for="junnam">전남</label></li>
+        <li><input type="checkbox" name="address1" id="gyeongbuk" value="경북">
+          <label for="gyeongbuk">경북</label></li>
+        <li><input type="checkbox" name="address1" id="gyeongnam" value="경남">
+          <label for="gyeongnam">경남</label></li>
+        <li><input type="checkbox" name="address1" id="jeju" value="제주">
+          <label for="jeju">제주</label></li>
+        <li><input type="checkbox" name="address1" id="sejong" value="세종">
+          <label for="sejong">세종</label></li>
         </ul>
       </div>
       <div>
@@ -258,6 +309,7 @@
           </div>
         </div>
       </div>
+      </form>
     </div>
 
     <div id="listArea">
