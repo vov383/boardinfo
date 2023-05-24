@@ -34,7 +34,7 @@ public class ImageUploadController {
 			String fileName=upload.getOriginalFilename();
 			//파일을 바이트 배열로 변환
 			byte[] bytes=upload.getBytes();
-			String uploadPath="C:\\Work\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\spring02\\resources\\images\\";
+			String uploadPath="C:\\Users\\dbtjr\\IdeaProjects\\board-info\\target\\boardinfo-1.0.0-BUILD-SNAPSHOT\\resources\\images\\";
 			out = new FileOutputStream(new File(uploadPath+fileName));
 			//서버로 업로드
 			out.write(bytes);

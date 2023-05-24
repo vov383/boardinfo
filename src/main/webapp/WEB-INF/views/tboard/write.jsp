@@ -19,29 +19,33 @@
 </script>
 
 <script type="text/javascript">
-function checkImageType(fileName) {
-	var pattern=/jpg|png|gif/i; //정규표현식(i는 대소문자 무시)
-	return fileName.match(pattern); //규칙에 맞으면 true가 리턴
-}
-function getOriginalName(fileName) {
-	if(checkImageType(fileName)){ //이미지 파일이면 skip
-		return;
-	}
-	var idx=fileName.indexOf("_")+1;//uuid를 제외한 파일이름만 뽑음
-	return fileName.substr(idx);
-}
-function getImageLink(fileName){
-	if(!checkImageType(fileName)){
-		return;
-	}
-	//2023\04\18/855bc706-94a2-49aa-b952-529afe83d695
-	var front=fileName.substr(0,12);//연월일 경로(0~11번째까지 자르고)
-	var end=fileName.substr(14);//14번째 문자열앞의 s_제거 (s_는 썸네일 파일에 붙은 것)
-	//2023\04\18/s_855bc706-94a2-49aa-b952-529afe83d695_grape.jpg
-	return front+end;
-}
-
 $(function() {
+	//목록 버튼
+	$("#btnList").click(function(){
+		location.href="${path}/tboard/list.do";
+	});
+	//저장 버튼
+	$("#btnSave").click(function() {
+		var title = $("#title").val();
+		if (title == "") {
+			alert("제목을 입력하세요.");
+			$("#title").focus();
+			return;
+		}
+		var str = "";
+		//uploadedList 영역에 클래스 이름이 file인 히든 타입의 태그를 각각 반복시켜 (each함수)
+		$("#uploadedList .file").each(function(i) {
+			console.log(i);
+			//hidden태그 구성
+			str += "<input type='hidden' name='files["+i+"]' value='"
+					+ $(this).val() + "'>";
+		});
+		//폼에 hidden 태그를 붙임
+		$("#form1").append(str);
+		document.form1.action="${path}/tboard/insert.do";
+		document.form1.submit();
+	});
+
 	//파일을 마우스로 드래그해서 업로드 영역에 올릴 때 파일이 열리는 기본효과 막는 처리
 	$(".fileDrop").on("dragenter dragover", function(e) {
 		e.preventDefault(); //얘가 막는 처리
@@ -57,69 +61,38 @@ $(function() {
 		var formData = new FormData();
 		formData.append("file", file);
 		$.ajax({
-			url: "${path}/tbFiles/attachAjax",
+			url: "${path}/upload/uploadAjax",
 			data: formData,
 			dataType: "text",
 			processData: false,
 			contentType: false,
 			type: "post",
 			success: function(data) {
-
-				//data : 업로드한 파일 정보와 Http 상태 코드
+				//data : 업로드한 파일 정보와 Http
 				var fileInfo = getFileInfo(data);
 				console.log(fileInfo);
 
-				var html="<a href='" + fileInfo.getLink + "'>"
+				var html="<div><a href='" + fileInfo.getLink + "'>"
 						+ fileInfo.fileName + "</a><br>"
 						+ "<img src='"+fileInfo.getLink+"'>";
 				html += "<input type='hidden' class='file' value='"
 						+ fileInfo.fullName +"'>";
+				html+="<a href='#' class='file_del' data-src='"
+						+this+"'>[삭제]</a></div>";
 
 				$("#uploadedList").append(html);
 			}
 		});
 	});
-	//목록 버튼
-	$("#btnList").click(function(){
-		location.href="${path}/tboard/list.do";
-	});
-
-	//저장 버튼
-	$("#btnSave").click(function() {
-		var title = $("#title").val();
-		var description = $("#description").val();
-		if (title == "") {
-			alert("제목을 입력하세요.");
-			$("#title").focus();
-			return;
-		}
-		var category = document.getElementsByName("category").values();
-		if(category =="n"){
-			document.getElementById("price").innerHTML = 0;
-		}
-
-		var str = "";
-		//uploadedList 영역에 클래스 이름이 file인 히든 타입의 태그를 각각 반복시켜 (each함수)
-		$("#uploadedList .file").each(function(i) {
-			console.log(i);
-			//hidden태그 구성
-			str += "<input type='hidden' name='files["+i+"]' value='"
-					+ $(this).val() + "'>";
-		});
-		//폼에 hidden 태그를 붙임
-		$("#form1").append(str);
-		document.form1.action="${path}/tboard/insert.do";
-		document.form1.submit();
-	});
 
 	//첨부파일 삭제
 	//id가 uploadedList인 태그의 class가 file_del인 태그 클릭
 	$("#uploadedList").on("click",".file_del",function(e){
-		var that=$(this); //this는  클릭한 태그
+		var that=$(this); //this는 현재 클릭한 태그
 //data: {fileName: $(this).attr("data-src") },
 		$.ajax({
 			type: "post",
-			url: "${path}/tbFiles/deleteFile",
+			url: "${path}/upload/deleteFile",
 			data: "fileName="+	$(this).attr("data-src"),
 			dataType: "text",
 			success: function(result){
@@ -131,30 +104,10 @@ $(function() {
 		});
 	});
 });
-//첨부파일 리스트를 출력하는 함수
-function listAttach(){
-	$.ajax({
-		type: "post",
-		url: "${path}/tbaord/getAttach/${dto.tb_num}",
-		success: function(list){
-// Controller에서 List<String>타입으로 넘어온 값을 처리하기 위해 json으로 처리
-			// list : json
-			//console.log(list);
-			$(list).each(function(){
-				var fileInfo=getFileInfo(this);
-				//console.log(fileInfo);
-				var html="<div><a href='"+fileInfo.getLink+"'>"
-					+fileInfo.fileName+"</a>&nbsp;&nbsp;";
-				<c:if test="${sessionScope.seurid == dto.create_user}">
-				</c:if>
-				html+="<a href='#' class='file_del' data-src='"
-						+this+"'>[삭제]</a></div>";
-				$("#uploadedList").append(html);
-			});
-		}
-	});
-}
 
+function nanumSelected() {
+	$("#price").innerText = "0";
+}
 </script>
 <style type="text/css">
 .fileDrop {
@@ -176,7 +129,7 @@ function listAttach(){
 			<label for="s">판매</label> <br>
 			<input type="radio" id="b" name="category" value="b">
 			<label for="b">구매</label> <br>
-			<input type="radio" id="n" name="category" value="n">
+			<input type="radio" id="n" name="category" value="n" onclick="nanumSelected()">
 			<label for="n">나눔</label> <br>
 		</div>
 		제목 : <input type="text" id="title" name="title"> <br>
@@ -197,7 +150,7 @@ function listAttach(){
 	</form>
 	<script>
   var editConfig = {
-    filebrowserUploadUrl: "${path}/ckeditor/fileAttach.do", // Specify the upload URL
+    filebrowserUploadUrl: "${path}/ckeditor/imageUpload.do", // Specify the upload URL
 //    filebrowserUploadMethod: "form", // Use the form-based upload method
   }
 
