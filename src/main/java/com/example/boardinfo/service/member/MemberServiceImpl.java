@@ -72,8 +72,9 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int mbidCheck(String userid) {
-		return memberDao.mbidCheck(userid);
+	public boolean checkDuplicateId(String userid) {
+		String existingMember = memberDao.selectMemberById(userid);
+	    return existingMember != null;
 	}
 
 }
