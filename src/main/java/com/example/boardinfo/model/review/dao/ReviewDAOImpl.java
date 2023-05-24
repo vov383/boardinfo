@@ -2,6 +2,7 @@ package com.example.boardinfo.model.review.dao;
 
 import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.review.dto.TestDTO;
+import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -21,11 +22,18 @@ public class ReviewDAOImpl implements ReviewDAO {
         return sqlSession.selectList("review.reviewList");
     }
 
-    //리뷰 입력 테스트
+    //리뷰 입력
     @Override
     public void create(ReviewDTO reviewDTO) {
 
         sqlSession.insert("review.reviewInsertPage", reviewDTO);
+    }
+
+    //리뷰 Blob 테스트
+    @Override
+    public void create(TestDTO testdto) {
+
+        sqlSession.insert("review.reviewBlob", testdto);
     }
 
 /*

@@ -2,6 +2,7 @@ package com.example.boardinfo.service.review;
 
 import com.example.boardinfo.model.review.dao.ReviewDAO;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
+import com.example.boardinfo.model.review.dto.TestDTO;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,12 +54,21 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 
-/*	@Transactional
+	@Transactional
+	@Override // 덮어쓰기 의미
+	public void create(TestDTO testdto){
+
+		System.out.println("Blob : " + testdto.getBlob());
+		reviewDAO.create(testdto);
+	}
+
+	/*	@Transactional
 	@Override // 덮어쓰기 의미
 	public void create(TestDTO testdto){
 
 		System.out.println("test 1 : " + testdto.getTest1());
 		reviewDAO.create(testdto);
-	}*/
+	}
+*/
 
 }
