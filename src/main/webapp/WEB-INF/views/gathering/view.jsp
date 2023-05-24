@@ -20,8 +20,8 @@
 
     .hAddr {
       position:absolute;
-      left:10px;
-      top:10px;
+      right:10px;
+      bottom:10px;
       border-radius: 2px;
       background:#fff;
       background:rgba(255,255,255,0.8);
@@ -50,36 +50,36 @@
     }
     
     
-        #postInfo{
-	      text-align: right;
-	      padding-bottom: 5px;
-    	  }
+     #postInfo{
+	   text-align: right;
+	   padding-bottom: 5px;
+     }
     	  
-    	  #postInfo > span{
-    	  padding: 0 10px;
-    	  border-right: 1px solid black;
-    	  }
+      #postInfo > span{
+	      padding: 0 10px;
+	      border-right: 1px solid black;
+      }
     	  
-    	  #postInfo > span:last-of-type{
-    	  border:  none;
-    	  }
+      #postInfo > span:last-of-type{
+	      border:  none;
+      }
     
-        #postUpper{
-            display: flex;
-            border-top: 2px solid black;
+      #postUpper{
+	      display: flex;
+	      border-top: 2px solid black;
+      }
+
+      #postUpper > div:first-of-type{
+	       padding: 30px 0;
         }
 
-        #postUpper > div:first-of-type{
-            padding: 30px 0;
-        }
-
-        #map{
-            width: 400px;
-            height: 280px;
-            border: 1px solid black;
-            text-align: center;
-            line-height: 257px;
-            overflow: hidden;
+      #map{
+	        width: 400px;
+	        height: 280px;
+	        border: 1px solid black;
+	        text-align: center;
+	        line-height: 257px;
+	        overflow: hidden;
         }
 
         #profileArea{

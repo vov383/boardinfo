@@ -22,6 +22,10 @@
     #postUpper > div:first-of-type{
       padding: 30px 0;
     }
+    
+    .map_wrap{
+      position: relative;
+    }
 
     #tmpDiv, #map{
       width: 400px;
@@ -29,6 +33,12 @@
       border: 1px solid black;
       text-align: center;
       line-height: 280px;
+    }
+    
+    #tmpDiv{
+      background-color: white;
+      position: absolute;
+      z-index: 10;
     }
 
     #map{
@@ -161,10 +171,6 @@
     }
 
 
-    .map_wrap {
-      position:relative;
-    }
-
     .title {
       font-weight:bold;
       display:block;
@@ -172,8 +178,8 @@
 
     .hAddr {
       position:absolute;
-      left:10px;
-      top:10px;
+      right:10px;
+      bottom:10px;
       border-radius: 2px;
       background:#fff;
       background:rgba(255,255,255,0.8);
@@ -293,6 +299,7 @@
     	
     	
     	let maxPeople = $("#maxPeople");
+    	
     	if(isNaN(maxPeople.val())){
     		alert('모임에 초대할 최대 인원을 선택해주세요.');
     		maxPeople.val(2);
@@ -381,14 +388,13 @@
       <div id="postUpper">
         <div>
           <div class="map_wrap">
+          <div id="tmpDiv"><span>장소를 입력하세요.</span></div>
             <div id="map"></div>
             <div class="hAddr">
               <span class="title">주소정보</span>
               <span id="centerAddr"></span>
             </div>
           </div>
-            <!--<div id="tmpDiv"><span>장소를 입력하세요.</span></div>-->
-
           <script>
 
             let mapContainer = document.getElementById('map'); // 지도를 표시할 div
@@ -424,7 +430,7 @@
               mapOption =
                       {
                         center: new kakao.maps.LatLng(lat, lng), // 지도의 중심좌표
-                        level: 1 // 지도의 확대 레벨
+                        level: 3 // 지도의 확대 레벨
                       };
 
               // 지도를 생성합니다
@@ -463,9 +469,18 @@
             function displayCenterInfo(result, status) {
               if (status === kakao.maps.services.Status.OK) {
                     infoDiv.innerHTML = result[0].address.address_name;
-
-                    var content = '<div id="infoWindow"><span>'+result[0].address.address_name+
-                            ' ' + $("#place_name").val() + '</span></div>';
+                    
+                    var content = "";
+                    
+                    if($("#place_name").val()!=""){
+                    	content = '<div id="infoWindow"><span>'+$("#place_name").val() + '</span></div>';
+                    }
+                    
+                    else{
+                    	content = '<div id="infoWindow"><span>'+result[0].address.address_name+
+                        ' ' + $("#place_name").val() + '</span></div>';	
+                    }
+                    
                     var position = new kakao.maps.LatLng(lat, lng);
                     var customOverlay = new kakao.maps.CustomOverlay({
                       position: position,

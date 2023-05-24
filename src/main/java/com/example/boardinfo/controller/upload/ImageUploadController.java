@@ -40,14 +40,13 @@ public class ImageUploadController {
 			String fileName=upload.getOriginalFilename();
 			//파일을 바이트 배열로 변환
 			byte[] bytes=upload.getBytes();
-			String uploadPath = "D:\\sj\\board_info_진짜\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\boardinfo\\resources\\uploaded_images\\";
-			//String uploadPath="C:\\Work\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\boardinfo\\resources\\uploaded_images\\";
+			String uploadPath = request.getSession().getServletContext().getRealPath("/resources/uploaded_image/");
 			out = new FileOutputStream(new File(uploadPath+fileName));
 			//서버로 업로드
 			out.write(bytes);
 			
 			//서버=>클라이언트로 텍스트 전송
-			String fileUrl=request.getContextPath()+"/uploaded_images/"+fileName;
+			String fileUrl=request.getContextPath()+"/uploaded_image/"+fileName;
 			
 			map = new HashMap<String, Object>();
 			map.put("filename", fileName);

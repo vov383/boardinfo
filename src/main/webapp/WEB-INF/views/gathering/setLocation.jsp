@@ -84,6 +84,15 @@
   </style>
 
   <script>
+  
+  
+  $(function(){
+	  
+	  if($("#locationFull", opener.document).val()!=""){
+		 let location = $("#locationFull", opener.document).val();
+		 $("#address").text(location);
+	  }
+  });
 
     function sendData(){
       window.opener.document.getElementById("address1").value = $("#address1").val();
@@ -93,13 +102,21 @@
       window.opener.document.getElementById("lat").value = $("#lat").val();
       window.opener.document.getElementById("lng").value = $("#lng").val();
       window.opener.document.getElementById("locationFull").value = $("#address").text();
+      $("#tmpDiv",opener.document).css("display", "none"); 
 
+      
       let lat = $("#lat").val();
       let lng = $("#lng").val()
 
       window.opener.makeMap(lat, lng);
       window.close();
     }
+    
+    
+    function closeWindow(){
+    	if(confirm("위치 선택을 취소하고 창을 닫으시겠습니까?")) window.close();
+    }
+    
 
   </script>
 
@@ -128,18 +145,20 @@
   <input type="hidden" id="address1" type="text" value="">
   
   <!-- 구 -->  
-  <input id="address2" type="text" value="">
+  <input type="hidden" id="address2" type="text" value="">
   
   <!-- 기타주소 -->
   <input type="hidden" id="address3" type="text" value="">
    
   <!-- 건물명 --> 
-  <input type="hidden" id="place_name" type="text" value="">
+  <input id="place_name" type="text" value="">
     
   <!-- 출력주소 -->  
-  <div id="address">위치를 검색하거나 직접 지도를 클릭하여 선택하세요.</div>
+  <div id="address">
+  위치를 검색하거나 직접 지도를 클릭하여 선택하세요.
+  </div>
   <button type="button" id="btn-submit" onclick="sendData()">확인</button>
-  <button type="button" id="btn-reset">취소</button>
+  <button type="button" id="btn-reset" onclick="closeWindow()">취소</button>
     
   <!-- 위도 -->  
   <input type="hidden" id="lat" name="lat">
@@ -154,17 +173,34 @@
   // 마커를 담을 배열
   let markers = [];
   let mapContainer = document.getElementById("map"); //지도를 표시할 div
-  let mapOption = {
-    center: new window.kakao.maps.LatLng(37.4989347355231, 127.032854329609),
-    level: 3 //지도의 확대 레벨
-  };
+  
+  let lat;
+  let lng;
+  
+  if($("#lat",opener.document).val()!=''){
+	lat = $("#lat", opener.document).val();
+	lng = $("#lng", opener.document).val();
+  }
+  
+  else {
+	  lat = 37.4989347355231;
+	  lng = 127.032854329609;
+  }
+  
+ 
+	let mapOption = {
+			    center: new window.kakao.maps.LatLng(lat, lng),
+			    level: 3 //지도의 확대 레벨
+			  };  
+
+  
   // 지도를 생성한다.
   let map = new kakao.maps.Map(mapContainer, mapOption);
 
   //마커 생성
   const markerPosition = new window.kakao.maps.LatLng(
-          38.2313466,
-          128.2139293
+          lat,
+          lng
   );
 
 
@@ -183,13 +219,21 @@
   mainMarker.setZIndex(3);
 
   var geocoder = new kakao.maps.services.Geocoder();
-
+  
+  
+  //이미 이전에 검색한 내용이 있다면 채워주기
+  if($("#lat",opener.document).val()!=''){
+	    printAndInput(markerPosition, true);
+	  }
+  
+    
+  
   kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
 
     let latlng = mouseEvent.latLng;
 
     mainMarker.setPosition(latlng);
-    printAndInput(latlng);
+    printAndInput(latlng, false);
 
   });
 
@@ -398,12 +442,22 @@
 
 
   
-  function printAndInput(location){
+  function printAndInput(location, getFromMother){
     searchDetailAddrFromCoords(location, function(result, status){
       if (status === kakao.maps.services.Status.OK) {
         let content = '<div style="display: flex; flex-direction: column;">' + result[0].address.address_name;
 
-        let building_name = result[0].road_address?.building_name;
+        
+        let building_name = "";
+
+        if(getFromMother == true && $("#place_name",opener.document).val()!=''){
+        	building_name = $("#place_name", opener.document).val();
+        }
+        
+        else{
+        	building_name = result[0].road_address?.building_name;	
+        }
+        
         if(building_name!=null) content += '<div>' + building_name + '</div>';
         else content+= '</div>';
 
@@ -421,7 +475,6 @@
         		+ address.main_address_no + 
         		(address.sub_address_no == '' || address.sub_address_no == null ? '' : ('-' + address.sub_address_no)));
         $("#place_name").val(building_name);
-        
         $("#address").text(
                 building_name==null? result[0].address.address_name : result[0].address.address_name + ' ' + building_name
         );
