@@ -56,8 +56,8 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public int mbidCheck(String userid) {
-		return sqlSession.selectOne("member.mbidCheck",userid);
+	public String selectMemberById(String userid) {
+		return sqlSession.selectOne("member.selectMemberById",userid);
 	}
 
 

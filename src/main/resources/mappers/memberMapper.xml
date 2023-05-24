@@ -28,10 +28,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where userid=#{userid} 
 	</select>
 	
-	<select id="mbidCheck" parameterType="String" resultType="int">
-		select count(*) 
-		from member 
-		where userid = #{userid}
+	<select id="selectMemberById" resultType="com.example.boardinfo.model.member.dto.MemberDTO" >
+		SELECT * 
+		FROM member 
+		WHERE userid = #{userid}
 	</select>
 	
 	

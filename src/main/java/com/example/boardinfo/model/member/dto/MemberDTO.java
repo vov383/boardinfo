@@ -69,6 +69,18 @@ public class MemberDTO {
 	public MemberDTO() {
 	
 	}
+	public MemberDTO(String profile, String name, String userid, String passwd, String nickname, String email,
+			String hp, Date join_date) {
+		super();
+		this.profile = profile;
+		this.name = name;
+		this.userid = userid;
+		this.passwd = passwd;
+		this.nickname = nickname;
+		this.email = email;
+		this.hp = hp;
+		this.join_date = join_date;
+	}
 	
 	
 	

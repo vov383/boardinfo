@@ -24,10 +24,22 @@ $(function(){
 			$("#passwd").focus();
 			return;
 		}
+		$("#passwd").keyup(function(event){
+		      if(window.event.keyCode === 13){
+				$("#btnLogin").click();
+			}
+		});
+		
 		document.form1.action="${path}/member/login_check.do";
 		document.form1.submit();
 	});
 });
+
+function login_check() {
+    if (window.event.keyCode === 13) {
+      $("#btnLogin").click();
+    }
+  }
 
 </script>
 </head>
@@ -43,13 +55,13 @@ $(function(){
   <div class="form-group">
    <label for="pwd">Password : </label>
    <input type="password" class="form-control" id="passwd" 
-   placeholder="비밀번호를 입력하세요." name="passwd">
+   placeholder="비밀번호를 입력하세요." name="passwd" onkeyup="login_check()" >
   </div>
   <div class="form-check">
    <input type="checkbox" class="form-check-input" id="pwdCheck">
     <label class="form-check-label" for="pwdCheck">ID 저장</label>
   </div>
-  <button type="button" class="btn btn-primary" name="btnLogin" id="btnLogin" >로그인</button>
+  <button type="button" class="btn btn-primary" name="btnLogin" id="btnLogin"  >로그인</button>
   <c:if test="${param.message == 'nologin' }">
 				<div style="color:red;">
 					로그인 하신 후 사용하세요.

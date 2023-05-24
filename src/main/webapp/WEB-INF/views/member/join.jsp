@@ -11,31 +11,35 @@
 <%@ include file="../include/js/header.jsp" %>
 <script type="text/javascript">
 
-$('#userid').keyup(function() {
-	var userid= $('#userid').val();
-
-	$.ajax({
-		url: "${path}/id_check.do",
-		type : "post",
-		data : param,
-		dataType : 'json',
-		success : function(result) {
-			if(result ==1){
-				$("#id_feedback").html('이미 사용중인 아이디입니다.');
-				$("#id_feedback").attr('color','#dc3545');
-			}else{
-				$("#id_feedback").html('사용할 수 있는 아이디입니다.');
-				$("#id_feedback").attr('color','2fb380');
-			}
-		},
-		error : function () {
-			alert("오류 입니다.");
-		}
-		
-	});
-});
-
-
+$(function() {
+    $("#btnIdCheck").click(function() {
+      var userid = $("#userid").val();
+      if (userid == "") {
+        alert("아이디를 입력하세요.");
+        $("#userid").focus();
+        return;
+      }
+      $.ajax({
+        url: "${path}/member/check_id.do",
+        type: "POST",
+        data: {
+          userid: userid
+        },
+        success: function(result) {
+          if (result == "duplicate") {
+            alert("이미 사용 중인 아이디입니다.");
+            $("#userid").val("");
+            $("#userid").focus();
+          } else if (result == "available") {
+            alert("사용 가능한 아이디입니다.");
+          }
+        },
+        error: function() {
+          alert("서버와의 통신에 실패했습니다.");
+        }
+      });
+    });
+  });
 
 
 function check() {
@@ -134,6 +138,7 @@ id="name" type="text">
 <div class="form-group">
 아이디 <input class="form-control" placeholder="아이디" name="userid" 
 id="userid" type="text">
+<div id="id_feedback" ></div>
 <button type="button" class="btn btn-dark button" id="btnIdCheck">중복확인</button>
 </div>
 <div class="form-group">
