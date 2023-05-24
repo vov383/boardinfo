@@ -1,0 +1,189 @@
+@charset "UTF-8";
+
+    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 100;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.otf) format('opentype');}
+
+    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 300;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype');}
+
+    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 400;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype');}
+
+    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 500;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.otf) format('opentype');}
+
+    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 700;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.otf) format('opentype');}
+
+    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 900;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');}
+
+    * {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 15px;
+    }
+
+    html, body{
+      margin: 0 0;
+      padding: 0 0;
+      min-height: 100%;
+    }
+
+    div, input, span{
+      box-sizing: border-box;
+    }
+
+    #header{
+      width: 100%;
+      margin: 0 auto;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background-color: white;
+      z-index: 450;
+      border-bottom: 1px solid #D9D9D9;      
+    }
+
+    #header-upper-box{
+      background-color: #FFC61A;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 77px;
+    }
+    
+    #header-upper-box > div{
+	 display: flex;
+     justify-content: space-between;
+     align-items: center;
+     height: 77px;
+     flex-basis: 1120px;
+     max-width: 1120px;
+    }
+
+    #header-left{
+      display: flex;
+      align-items: center;
+    }
+
+    #header-right {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 15px;
+    }
+
+    form[name="gameSearch"] > div:first-of-type{
+      background-color: white;
+      position: relative;
+      width: 320px;
+      height: 34px;
+      padding: 2px 10px;
+      border: 2px black solid;
+      border-radius: 20px;
+    }
+
+    form[name="gameSearch"] img{
+      width: 20px;
+      position: absolute;
+      top: 5px;
+      right: 12px;
+      margin: 0;
+      -webkit-user-drag: none;
+    }
+
+    #header-right input:first-of-type{
+      width: 270px;
+      height: 25px;
+      padding-left: 20px;
+      border: none;
+      font-size: 16px;
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .sign{
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: bold;
+      color: black;
+    }
+
+    #signIn{
+      margin: 0 30px;
+    }
+
+    .nav{
+      margin: 0 auto;
+      max-width: 1120px;
+      display: flex;
+    }
+
+    .menu {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 45px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .menu li {
+      display: inline-block;
+      flex: 0 0 25%;
+      max-width: 25%;
+      height: 100%;
+      line-height: 45px;
+    }
+
+    .toMenu{
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      color: black;
+      margin-right: 20px;
+    }
+
+    .toMenu > img{
+      margin-left: -4px;
+      -webkit-user-drag: none;
+    }
+
+    #contents{
+      display: flex;
+      flex-direction: column;
+      margin: auto;
+      max-width: 1120px;
+      min-height: 100%;
+      padding: 129px 0 0 0;
+      font-size: 16px;
+    }
+
+    #contentsHeader{
+      margin: 0;
+      padding-top: 32px;
+      padding-bottom: 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    #contentsHeader h2{
+      font-size: 1.9em;
+      margin-top: 0;
+      margin-bottom: 5px;
+    }
+
+    #contentsLocation{
+      margin-bottom: 30px;
+    }
+
+    #contentsMain{
+      border-top: 2px solid black;
+      margin-bottom: 80px;
+      flex-grow: 1;
+      min-height: 420px;
+    }
+
+    #gameSearchDiv{
+        margin-top: 6px;
+        background-color: white;
+        border: 1px solid black;
+    }
+

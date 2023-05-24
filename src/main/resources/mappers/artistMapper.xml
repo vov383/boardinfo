@@ -34,10 +34,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 	
 	<select id="getAuto" resultType="artistDto">
-	<bind name="query" value="'%'+query+'%'"/>
 		select artist
 		from artist
-		where artist like #{query}
+		where upper(artist) like upper(#{input})||'%'
 		order by artist
 	</select>
 	
