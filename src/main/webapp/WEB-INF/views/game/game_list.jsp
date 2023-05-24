@@ -19,14 +19,28 @@
 </header>
 
 <main>
-	<br><br><br><br><br>
+	<div id="contents">
+		<div id="contentsHeader">
+			<h2>게임목록</h2>
+		</div>
+		<div id="contentsLocation">
+			홈&gt 게임목록&gt 전체게임목록
+			<a href="${path}/game/write.do" style="float: right">게임등록</a>
+		</div>
+		<div id="contentsMain">
 
-	<div align="center">
-		<a href="${path}/game/write.do">insert</a>
-	</div>
-
-	<div align="center">
+	<div class="tableDiv">
 		<table>
+
+			<colgroup>
+				<col width="9%"/>
+				<col width="15%"/>
+				<col width="35%"/>
+				<col width="9%"/>
+				<col width="9%"/>
+				<col width="9%"/>
+				<col width="9%"/>
+			</colgroup>
 			
 			<thead>
 				
@@ -53,7 +67,7 @@
 					<td>${row.gnum}</td><!-- 리뷰와 연동되면 순위 ${row.g_rank} -->
 					<td>이미지 자리</td>
 					<td>
-						<a href="${path}/game/view.do?gnum=${row.gnum}">${row.gametitle}(${row.gametitle_eng})</a>
+						<a href="${path}/game/view.do?gnum=${row.gnum}">${row.gametitle}<br>(${row.gametitle_eng})</a>
 					</td>
 					<td>${row.release_year}</td>
 					<td>리뷰목록</td><!-- 리뷰와 연동되면 그쪽으로 link -->
@@ -65,6 +79,10 @@
 			
 			</tbody>
 		</table>
+	</div>
+
+	</div>
+
 	</div>
 
 </main>

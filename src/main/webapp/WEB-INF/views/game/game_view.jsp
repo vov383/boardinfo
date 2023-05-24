@@ -20,13 +20,43 @@
 
    <main>
 
-	<div align="center">
+	   <div id="contents">
+		   <div id="contentsHeader">
+			   <h2>게임정보</h2>
+		   </div>
+		   <div id="contentsLocation">
+			   홈&gt 게임정보&gt gametitle
+		   </div>
+		   <div id="contentsMain">
+
+
+	<div class="tableDiv">
 		
 		<table>
-			
+
+			<colgroup>
+				<col width="25%"/>
+				<col width="25%"/>
+				<col width="25%"/>
+				<col width="25%"/>
+			</colgroup>
+
+			<thead>
+
+			<tr>
+				<th>랭킹자리</th>
+				<th></th>
+				<th>보드게임긱링크</th>
+				<th>수정하기버튼</th>
+			</tr>
+
+			</thead>
+
+			<tbody>
+
 			<tr>
 				<td rowspan="10">사진자리</td>
-				<td colspan="3">${dto.gnum}. ${dto.gametitle}</td>
+				<td colspan="3"><h2>${dto.gametitle}</h2></td>
 			</tr>
 			
 			<tr>
@@ -34,15 +64,15 @@
 			</tr>
 			
 			<tr>
-				<td>인원<br>${dto.players}</td>
-				<td>시간<br>${dto.playtime}</td>
-				<td>연령<br>${dto.ages}</td>
+				<td>인원 : <h4>${dto.players}</h4></td>
+				<td>시간 : <h4>${dto.playtime}</h4></td>
+				<td>연령 : <h4>${dto.ages}</h4></td>
 			</tr>
 			
 			<tr>
-				<td>제작연도<br>${dto.release_year}</td>
-				<td>bgg랭크<br>${dto.bggrank}</td>
-				<td>게임난이도<br>${dto.bgg_game_score}</td>
+				<td>제작연도 : <h4>${dto.release_year}</h4></td>
+				<td>bgg랭크 : <h4>${dto.bggrank}</h4></td>
+				<td>게임난이도 : <h4>${dto.bgg_game_score}</h4></td>
 			</tr>
 			
 			<tr>
@@ -70,10 +100,16 @@
 				<td>상품게시판과 연결되면 연결</td>
 				<td>컬렉션과 연결되면 연결</td>
 			</tr>
+
+			</tbody>
 			
 		</table>
 		
 	</div>
+
+		   </div>
+	   </div>
+
 
    </main>
 

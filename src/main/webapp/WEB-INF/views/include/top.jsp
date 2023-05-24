@@ -12,7 +12,7 @@
       <form name="gameSearch" id="gameSearch" method="get" action="${path}/game/searchAll.do">
         <div>
           <input name="gameKeyword" id="gameKeyword" placeholder="보드게임 찾기" autocomplete="off">
-          <input type="hidden"><%--form 안에 input태그가 하나뿐이면 onkeyup이벤트가 먹지않아 빈 input 추가--%>
+          <input type="hidden">
           <img src="${path}/images/search.png" onclick="searchAll()">
           <div id="gameSearchDiv"></div>
         </div>
@@ -58,8 +58,10 @@ $(document).ready(function(){
               $(result).each(function(index, item) {
                 var gametitle = item.gametitle;
                 var gametitle_eng = item.gametitle_eng;
+                var gnum = item.gnum;
+                console.log(gnum);
                 console.log(gametitle);
-                gameSearchDiv.append("<div class='searched'>" + gametitle + "(" + gametitle_eng + ")</div>");
+                gameSearchDiv.append("<div class='searched'><a href='${path}/game/view.do?gnum=" + gnum + "'>" + gametitle + "<br>(" + gametitle_eng + ")</div>");
               });
             } else {
               gameSearchDiv.hide(); // 값이 없을 경우 숨기기
@@ -73,39 +75,7 @@ $(document).ready(function(){
       }
   });
 });
-function gameSearch() {
-  if(Event.keyCode === '13'){
-    searchAll();
-  }else{
-    var input = $("#gameKeyword").val();
-    $.ajax({
-      type: "post",
-      url: "${path}/game/autoGame.do/"+input,
-      contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-      dataType: "json",
-      success: function(result) {
-        var gameSearchDiv = $('#gameSearchDiv');
-        gameSearchDiv.empty(); // 기존 내용 비우기
 
-        if (result.length > 0) {
-          gameSearchDiv.css('max-height', '250px').show(); // 값이 있을 경우 높이 설정하고 보이기
-          $(result).each(function(index, item) {
-            var gametitle = item.gametitle;
-            var gametitle_eng = item.gametitle_eng;
-            console.log(gametitle);
-            gameSearchDiv.append("<div class='searched'>" + gametitle + "(" + gametitle_eng + ")</div>");
-          });
-        } else {
-          gameSearchDiv.hide(); // 값이 없을 경우 숨기기
-        }
-      },
-      error: function() {
-        console.log("에러..");
-      }
-    });
-    if(input=="")	$('#gameSearchDiv').empty();
-  }
-}
 
 
 

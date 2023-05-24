@@ -19,12 +19,24 @@
    </header>
 
    <main>
+       <div id="contents">
+           <div id="contentsHeader">
+               <h2>게임정보</h2>
+           </div>
+           <div id="contentsLocation">
+               홈&gt 게임정보&gt 게임정보
+           </div>
+           <div id="contentsMain">
+
 
 	<div align="center">
 		<h1><a href="${path}/sample/sample.do" style="color: black;">SAMPLE CLICK</a></h1>
 		<h1><a href="${path}/game/gamelist.do" style="color: black;">gamelist</a></h1>
 	</div>
 
+
+           </div>
+       </div>
    </main>
 
    <footer>
