@@ -42,6 +42,10 @@ public class GatheringServiceImpl implements GatheringService {
 		
 		for (GatheringDTO dto : list) {
 			
+			//제주특별시, 세종특별시 두글자 처리
+			dto.setAddress1(dto.getAddress1().substring(1));
+			
+			//광역시가 아닌 경우 구까지는 안나오게 처리
 			if(dto.getAddress2()!=null && !dto.getAddress2().equals("")) {
 				String address2 = dto.getAddress2() + " ";
 				int num = address2.indexOf(" ", 3);
