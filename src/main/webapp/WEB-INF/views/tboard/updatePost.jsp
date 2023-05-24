@@ -84,12 +84,12 @@ $(function(){ //자동으로 실행되는 코드
 			$("#title").focus();
 			return;
 		}
-		if (description == "") {
-			alert("설명을 입력하세요.");
-			$("#description").focus();
+		if(CKEDITOR.instances.description.getData().length < 1){
+			alert("모임 소개글을 입력해 주세요.");
+			$("#cke_description").focus();
 			return;
 		}
-		
+
 		//첨부파일 이름들을 폼에 추가
 		var str="";
 		// uploadedList 내부의 .file 태그 각각 반복
@@ -141,21 +141,32 @@ function listAttach(){
 </script>
 </head>
 <body>
-<h2>게시물 수정 페이지</h2>
-	<button type="button" id="btnList">목록</button>
-	
-	<form name="form1" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="tb_num" id="tb_num" value="${dto.tb_num}">
-		<div id="category">
-			말머리를 선택하세요 <br>
+<%@include file="../include/top.jsp" %>
+<div id="contents">
+	<div id="contentsHeader">
+		<h2>게시물 수정 페이지</h2>
+		<button type="button" id="btnList">목록</button>
+	</div>
+	<script>
+		var editConfig = {
+			filebrowserUploadUrl: "${path}/ckeditor/fileAttach.do", // Specify the upload URL
+//    filebrowserUploadMethod: "form", // Use the form-based upload method
+		}
+		CKEDITOR.replace("editor", editConfig);
+	</script>
+	<div id="contentsMain">
+		<form name="form1" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="tb_num" id="tb_num" value="${dto.tb_num}">
+			<div id="category">
+				말머리를 선택하세요 <br>
 				<c:if test= "${dto.category == s}">
 					<input type="radio" id="s" name="category" value="s" checked>
 				</c:if>
-				  <input type="radio" id="s" name="category" value="s">
+				<input type="radio" id="s" name="category" value="s">
 				<label for="s">판매</label> <br>
 				<c:if test= "${dto.category == b}">
 					<input type="radio" id="b" name="category" value="b" checked>
-				</c:if> 
+				</c:if>
 				<input type="radio" id="b" name="category" value="b">
 				<label for="b">구매</label> <br>
 				<c:if test= "${dto.category == n}">
@@ -168,33 +179,31 @@ function listAttach(){
 				</c:if>
 				<input type="radio" id="f" name="category" value="f">
 				<label for="f">거래완료</label> <br>
-		</div>
-		제목 : <input type="text" id="title" name="title" value="${dto.title}"> <br> 
-		가격 : <input type="text" id="price" name="price" value="${dto.price}"> <br>
-		<div> 제품의 사진을 등록해주세요
-		<input type="file" id="attach_pic" name="attach_pic">
-			<div class="fileDrop"></div>
-			<div id="uploadedList"></div>
-		</div>
-		<div style="width: 500px; text-align: center;">
-		</div>
-		<br>
-		<input type="hidden" name="description" id="description">
-		<button type="button" id="btnUpdate">수정완료</button>
-		<br>
-		<button type="button" id="btnDelete">삭제</button>
-		<div>
-		내용 <br>
-		<textarea id="editor" name="editor">${dto.description }</textarea>
-		</div>	
-	</form>
-	<script>
-  var editConfig = {
-    filebrowserUploadUrl: "${path}/ckeditor/fileAttach.do", // Specify the upload URL
-//    filebrowserUploadMethod: "form", // Use the form-based upload method
-  }
-  CKEDITOR.replace("editor", editConfig);
-  
-</script>
+			</div>
+			제목 : <input type="text" id="title" name="title" value="${dto.title}"> <br>
+			가격 : <input type="text" id="price" name="price" value="${dto.price}"> <br>
+			<div> 제품의 사진을 등록해주세요
+				<input type="file" id="attach_pic" name="attach_pic">
+				<div class="fileDrop"></div>
+				<div id="uploadedList"></div>
+			</div>
+			<div style="width: 500px; text-align: center;">
+			</div>
+			<br>
+			<button type="button" id="btnUpdate">수정완료</button>
+			<br>
+			<button type="button" id="btnDelete">삭제</button>
+			내용 <br>
+			<textarea id="description" name="description">${dto.description }</textarea>
+			<script>
+				CKEDITOR.replace("description",{
+					filebrowserUploadUrl : "${path}/imageUpload.do"
+				});
+			</script>
+		</form>
+	</div>
+</div>
+
+<%@include file="../include/footer.jsp" %>
 </body>
 </html>
