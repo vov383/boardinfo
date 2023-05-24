@@ -186,4 +186,11 @@
         background-color: white;
         border: 1px solid black;
     }
+    #footer{
+        position: absolute;
+        width: 1440px;
+        height: 172px;
+
+        background: #3D3D43;
+    }
 

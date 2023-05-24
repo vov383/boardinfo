@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <%@ include file="../include/js/header.jsp"%>
+
 <script src="${path}/include/js/common.js"></script>
 
 <script src="${path}/include/js/jquery-3.6.3.min.js"></script>
@@ -15,7 +16,7 @@
 
 <!-- 카카오 지도 api -->
 <script type="text/javascript"
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f3f4e2f575e10d4aa2065b836299303b">
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=83bd252a3e6211b5beeb7719f8c676f1">
 </script>
 
 <script type="text/javascript">
@@ -32,6 +33,12 @@ $(function() {
 			$("#title").focus();
 			return;
 		}
+		if(CKEDITOR.instances.description.getData().length < 1){
+			alert("모임 소개글을 입력해 주세요.");
+			$("#cke_description").focus();
+			return;
+		}
+
 		var str = "";
 		//uploadedList 영역에 클래스 이름이 file인 히든 타입의 태그를 각각 반복시켜 (each함수)
 		$("#uploadedList .file").each(function(i) {
@@ -121,45 +128,46 @@ function nanumSelected() {
 </head>
 <body>
 <%@include file="../include/top.jsp" %>
-<h2>글쓰기 페이지</h2>
-	<button type="button" id="btnList">목록</button>
+<div id="contents">
+	<div id="contentsHeader">
+		<h2>글쓰기 페이지</h2>
+		<button type="button" id="btnList">목록</button>
+	</div>
+	<div id="contentsMain">
+		<form name="form1" method="post" enctype="multipart/form-data">
+			<div id="category">
+				말머리를 선택하세요 <br>
+				<input type="radio" id="s" name="category" value="s" checked="checked">
+				<label for="s">판매</label> <br>
+				<input type="radio" id="b" name="category" value="b">
+				<label for="b">구매</label> <br>
+				<input type="radio" id="n" name="category" value="n" onclick="nanumSelected()">
+				<label for="n">나눔</label> <br>
+			</div>
+			제목 : <input type="text" id="title" name="title"> <br>
+			가격 : <input type="text" id="price" name="price"> <br>
 
-	<form name="form1" method="post" enctype="multipart/form-data">
-		<div id="category">
-			말머리를 선택하세요 <br>
-			<input type="radio" id="s" name="category" value="s" checked="checked">
-			<label for="s">판매</label> <br>
-			<input type="radio" id="b" name="category" value="b">
-			<label for="b">구매</label> <br>
-			<input type="radio" id="n" name="category" value="n" onclick="nanumSelected()">
-			<label for="n">나눔</label> <br>
-		</div>
-		제목 : <input type="text" id="title" name="title"> <br>
-		가격 : <input type="text" id="price" name="price"> <br>
-
-		<input type="file" id="attach_pic" name="attach_pic">
+			<input type="file" id="attach_pic" name="attach_pic">
 			<div class="fileDrop"></div>
 			<div id="uploadedList"></div>
-		</div>
-		<div style="width: 500px; text-align: center;">
-			<button type="button" id="btnSave">작성완료</button>
-		</div>
-		<br>
-		<div>
+			<br>
+
 			내용 <br>
 			<textarea id="description" name="description"></textarea>
-		</div>
-	</form>
-	<script>
-	var editConfig = {
-    	filebrowserUploadUrl: "${path}/ckeditor/imageUpload.do", // Specify the upload URL
-		// filebrowserUploadMethod: "form", // Use the form-based upload method
-  }
+			<script>
+				CKEDITOR.replace("description",{
+					filebrowserUploadUrl : "${path}/imageUpload.do"
+				});
+			</script>
+			거래장소
+			<div style="width: 500px; text-align: center;">
+				<button type="button" id="btnSave">작성완료</button>
+			</div>
+		</form>
+	</div>
+</div>
 
-	CKEDITOR.replace("description", editConfig);
-	</script>
-
-	<!-- 지도 -->
 <%@include file="../include/footer.jsp" %>
+
 </body>
 </html>

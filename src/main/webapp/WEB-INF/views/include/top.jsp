@@ -9,7 +9,7 @@
   <div id="header-upper-box">
   <div>
     <div id="header-left">
-      <a href="#" title="보드인포"><img src="${path}/images/boardinfo_logo.png" width="170px"></a>
+      <a href="${path}/" title="보드인포"><img src="${path}/images/boardinfo_logo.png" width="170px"></a>
     </div>
     <div id="header-right">
 
@@ -44,7 +44,7 @@
       <li><a href="${path}/game/gamelist.do" class="toMenu" title="게임정보">게임정보<img src="${path}/images/dropdown.png" width="34px"></a></li>
       <li><a href="#" class="toMenu" title="커뮤니티">커뮤니티<img src="${path}/images/dropdown.png" width="34px"></a></li>
       <li><a href="#" class="toMenu" title="오프모임">오프모임<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="중고장터">중고장터<img src="${path}/images/dropdown.png" width="34px"></a></li>
+      <li><a href="${path}/tboard/list.do" class="toMenu" title="중고장터">중고장터<img src="${path}/images/dropdown.png" width="34px"></a></li>
     </ul>
   </div>
 </div>
