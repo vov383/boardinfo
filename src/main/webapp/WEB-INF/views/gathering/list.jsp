@@ -215,6 +215,11 @@
       });
 
       $("input[name='address1']").change(function(){
+    	  
+    	  if($(this).val()!='전체'){
+    		  $("input[name='address1']:input[value='전체']").prop("checked", false);
+    	  }
+    	  
         document.formGatheringSearch.submit();
       });
 
@@ -253,12 +258,23 @@
       <div>
         <h3>지역</h3>
         <ul>
-          <c:forEach var="address1" items="address1List" varStatus="status">
+          <c:forEach var="address1" items="${address1List}" varStatus="status">
             <li>
-              <input type="checkbox" name="address1" id="${status.index}"
+              <input type="checkbox" name="address1" id="${status.index}" value="${address1}" checked="checked">
+              <label for="${status.index}">${address1}</label>
             </li>
           </c:forEach>
-          <li></li>
+
+
+          <c:forEach var="address1" items="${koreanAddress1List}" varStatus="status">
+            <li>
+              <input type="checkbox" name="address1" id="${status.index+fn:length(address1List)}" value="${address1}">
+              <label for="${status.index+fn:length(address1List)}">${address1}</label>
+            </li>
+          </c:forEach>
+
+                    
+         <!-- 
         <li><input type="checkbox" name="address1" id="all" value="all">
           <label for="all">전체</label></li>
         <li><input type="checkbox" name="address1" id="seoul" value="서울">
@@ -295,14 +311,16 @@
           <label for="jeju">제주</label></li>
         <li><input type="checkbox" name="address1" id="sejong" value="세종">
           <label for="sejong">세종</label></li>
+           -->
+
         </ul>
       </div>
       <div>
-        <h3>기간</h3>
+        <h3>모임날짜</h3>
         <div>
-        <input type="date">
+        <input type="date" name="from">
         <span>~</span>
-        <input type="date">
+        <input type="date" name="to">
           <div>
             <button type="button" id="dateResetBtn">초기화</button>
             <button type="button" id="dateSubmitBtn">검색</button>

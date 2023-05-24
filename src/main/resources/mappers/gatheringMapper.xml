@@ -22,21 +22,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	address1, address2, place_name, maxpeople, view_count
 	from gathering
 	where
-	<trim suffixOverrides="and">
+	
+	
+	<trim suffixOverrides="or">
 	<foreach item="address1" collection="address1List">
 	    <choose>
-			<when test="address1=='all'">
-	    		1=1 and
+			<when test="address1=='전체'">
+	    		1=1 
 			</when>
 			<otherwise>
-				address1 like #{address1}||'%' and
+				address1 like #{address1}||'%' or
 			</otherwise>
 		</choose>
 	</foreach>
-	<if test="showAvailable==true">
-	gathering_date <![CDATA[>]]> (sysdate+(3/24))
-	</if>
 	</trim>
+	
+	<if test="showAvailable==true">
+	and gathering_date <![CDATA[>]]> (sysdate+(3/24))
+	</if>
+	
+	
+	<if test="from!=null">
+	and gathering_date <![CDATA[>]]>= #{from}
+	</if>
+	
+	<if test="to!=null">
+	and gathering_date <![CDATA[<]]>= #{to}
+	</if>
+	
+	
 
 	order by gathering_id desc
 	</select>

@@ -1,5 +1,6 @@
 package com.example.boardinfo.controller.gathering;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.boardinfo.controller.chat.ChatController;
@@ -52,10 +55,22 @@ public class GatheringController {
 	
 	
 	@GetMapping("/list.do")
-	public ModelAndView list(HttpServletRequest request, ModelAndView mav) {
-
+	public ModelAndView list(HttpServletRequest request, ModelAndView mav,
+			@RequestParam(value="from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate from,
+			@RequestParam(value="to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate to
+			) {
+		
+		
+		if(from!=null && to!=null) {
+			
+			if(from.isAfter(to)) {
+				from=to;
+			}
+		}
+		
+		
 		boolean showAvailable = false;
-
+		
 		if(request.getParameter("showAvailable")!=null) {
 			showAvailable = true;
 		}
@@ -69,12 +84,12 @@ public class GatheringController {
 
 		List<String> koreanAddress1List = Stream.of(koreanAddress1).collect(Collectors.toList());
 		List<GatheringDTO> list = null;
-		String[] all = {"all"};
+		String[] all = {"전체"};
 
 		if(address1List != null){
 			Stream<String> address1Stream = Arrays.stream(address1List);
-			if(address1Stream.noneMatch(s -> s.equals("all"))) {
-				list = gatheringService.list(showAvailable, address1List);
+			if(address1Stream.noneMatch(s -> s.equals("전체"))) {
+				list = gatheringService.list(showAvailable, address1List, from, to);
 				mav.addObject("address1List", address1List);
 
 				//선택된 지역 삭제
@@ -83,12 +98,15 @@ public class GatheringController {
 				}
 
 			}
-			else list = gatheringService.list(showAvailable, all);
-			mav.addObject("address1List", all);
+			else {
+				list = gatheringService.list(showAvailable, all, from, to);
+				mav.addObject("address1List", all);
+			}
+			
 			}
 
 		else{
-			list = gatheringService.list(showAvailable, all);
+			list = gatheringService.list(showAvailable, all, from, to);
 			mav.addObject("address1List", all);
 		}
 
