@@ -84,12 +84,12 @@ $(function(){ //자동으로 실행되는 코드
 			$("#title").focus();
 			return;
 		}
-		if (description == "") {
-			alert("설명을 입력하세요.");
-			$("#description").focus();
+		if(CKEDITOR.instances.description.getData().length < 1){
+			alert("모임 소개글을 입력해 주세요.");
+			$("#cke_description").focus();
 			return;
 		}
-		
+
 		//첨부파일 이름들을 폼에 추가
 		var str="";
 		// uploadedList 내부의 .file 태그 각각 반복
@@ -190,14 +190,16 @@ function listAttach(){
 			<div style="width: 500px; text-align: center;">
 			</div>
 			<br>
-			<input type="hidden" name="description" id="description">
 			<button type="button" id="btnUpdate">수정완료</button>
 			<br>
 			<button type="button" id="btnDelete">삭제</button>
-			<div>
-				내용 <br>
-				<textarea id="editor" name="editor">${dto.description }</textarea>
-			</div>
+			내용 <br>
+			<textarea id="description" name="description">${dto.description }</textarea>
+			<script>
+				CKEDITOR.replace("description",{
+					filebrowserUploadUrl : "${path}/imageUpload.do"
+				});
+			</script>
 		</form>
 	</div>
 </div>
