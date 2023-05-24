@@ -107,6 +107,7 @@ $(function() {
 
 function nanumSelected() {
 	$("#price").innerText = "0";
+	$("#price").attr("readonly");
 }
 </script>
 <style type="text/css">
@@ -119,7 +120,8 @@ function nanumSelected() {
 </style>
 </head>
 <body>
-	<h2>글쓰기 페이지</h2>
+<%@include file="../include/top.jsp" %>
+<h2>글쓰기 페이지</h2>
 	<button type="button" id="btnList">목록</button>
 
 	<form name="form1" method="post" enctype="multipart/form-data">
@@ -149,15 +151,15 @@ function nanumSelected() {
 		</div>
 	</form>
 	<script>
-  var editConfig = {
-    filebrowserUploadUrl: "${path}/ckeditor/imageUpload.do", // Specify the upload URL
-//    filebrowserUploadMethod: "form", // Use the form-based upload method
+	var editConfig = {
+    	filebrowserUploadUrl: "${path}/ckeditor/imageUpload.do", // Specify the upload URL
+		// filebrowserUploadMethod: "form", // Use the form-based upload method
   }
 
-  CKEDITOR.replace("description", editConfig);
-  </script>
+	CKEDITOR.replace("description", editConfig);
+	</script>
 
 	<!-- 지도 -->
-
+<%@include file="../include/footer.jsp" %>
 </body>
 </html>

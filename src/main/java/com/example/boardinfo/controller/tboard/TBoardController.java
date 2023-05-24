@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
+import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -83,10 +84,13 @@ public class TBoardController {
 		//이름이 없기 때문에 session에서 id를 가져와야 한다.
 //		String create_user = (String)session.getAttribute("userid");
 		dto.setCreate_user("testuser");
-				
+
 		//레코드 저장
 		tboardService.insert(dto);
-		
+		TBAttachDTO f_dto = new TBAttachDTO();
+
+		tboardService.fileAttach(f_dto);
+
 		//게시물 목록 갱신처리
 		return "redirect:/tboard/list.do";
 	}
