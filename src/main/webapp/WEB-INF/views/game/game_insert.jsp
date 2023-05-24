@@ -21,7 +21,16 @@
 	</header>
 
 	<main>
-		<br><br><br><br><br>
+		<div id="contents">
+			<div id="contentsHeader">
+				<h2>게임등록</h2>
+			</div>
+			<div id="contentsLocation">
+				홈&gt 게임정보&gt 게임등록
+			</div>
+			<div id="contentsMain">
+
+
 
 	<div align="center">
 	
@@ -280,6 +289,9 @@
 
 	</form>
 	
+	</div>
+
+	</div>
 	</div>
 
 	</main>
