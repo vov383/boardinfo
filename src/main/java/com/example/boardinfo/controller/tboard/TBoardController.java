@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.boardinfo.model.tboard.dto.TBoardDTO;
@@ -76,21 +77,27 @@ public class TBoardController {
 	}
 	
 	@RequestMapping("insert.do")
-	public String insert(@ModelAttribute TBoardDTO dto) 
+	public String insert(@ModelAttribute TBoardDTO dto, HttpSession session)
 			throws Exception{
 		//modelAttribute 는 생략해도 되지만.. 써주는 것도 좋음
 		//로그인 한 사람만 들어올 수 있으니까 HttpSession 써야함
-		
-		//이름이 없기 때문에 session에서 id를 가져와야 한다.
-//		String create_user = (String)session.getAttribute("userid");
-		dto.setCreate_user("testuser");
 
+		if(session.getAttribute("userid")== null){
+			return "member/login";
+		}else{
+			//이름이 없기 때문에 session에서 id를 가져와야 한다.
+			String create_user = (String)session.getAttribute("userid");
+			dto.setCreate_user(create_user);
+		}
 		//레코드 저장
 		tboardService.insert(dto);
-		TBAttachDTO f_dto = new TBAttachDTO();
 
-		tboardService.fileAttach(f_dto);
+//		if(file.getBytes().length() < 1){
+//
+//		}
+//		TBAttachDTO f_dto = new TBAttachDTO();
 
+//		tboardService.fileAttach(f_dto);
 		//게시물 목록 갱신처리
 		return "redirect:/tboard/list.do";
 	}
