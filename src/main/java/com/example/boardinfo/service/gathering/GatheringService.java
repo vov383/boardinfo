@@ -9,8 +9,6 @@ public interface GatheringService {
 	public boolean addPost(GatheringDTO dto);
 	public boolean deletePost();
 	public boolean editPost();
-	public List<GatheringDTO> list();
 	public GatheringDTO view(int gathering_id, boolean updateViewCount);
-
-
+	List<GatheringDTO> list(boolean showAvailable, String[] address1List);
 }

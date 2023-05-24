@@ -8,7 +8,7 @@ public interface GatheringDAO {
 	public int addPost(GatheringDTO dto);
 	public int deletePost();
 	public int editPost();
-	public List<GatheringDTO> list();
+	public List<GatheringDTO> list(boolean showAvailable, String[] address1List);
 	public GatheringDTO view(int gathering_id);
 	public void updateViewCount(int gathering_id);
 

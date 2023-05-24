@@ -37,14 +37,14 @@ public class GatheringServiceImpl implements GatheringService {
 	}
 
 	@Override
-	public List<GatheringDTO> list() {
-		List<GatheringDTO> list = gatheringDao.list();
+	public List<GatheringDTO> list(boolean showAvailable, String[] address1List) {
+		List<GatheringDTO> list = gatheringDao.list(showAvailable, address1List);
 		
 		for (GatheringDTO dto : list) {
 			
 			//제주특별시, 세종특별시 두글자 처리
-			dto.setAddress1(dto.getAddress1().substring(1));
-			
+			dto.setAddress1(dto.getAddress1().substring(0, 2));
+
 			//광역시가 아닌 경우 구까지는 안나오게 처리
 			if(dto.getAddress2()!=null && !dto.getAddress2().equals("")) {
 				String address2 = dto.getAddress2() + " ";
