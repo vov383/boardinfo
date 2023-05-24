@@ -357,7 +357,7 @@
 </head>
 
 
-<body>
+<%--<body>
 <div id="header">
 
     <div id="header-upper-box">
@@ -389,7 +389,20 @@
 </div>
 
 <div id="contents">
+    <div id="contentsMain">--%>
+
+
+<body>
+<%@include file="../include/top.jsp" %>
+<div id="contents">
+    <div id="contentsHeader">
+        <h2>모임모집</h2>
+    </div>
+    <div id="contentsLocation">
+        홈&gt 오프모임&gt 모임모집
+    </div>
     <div id="contentsMain">
+
         <form name="reviewdetail" method="post" action="${path}/review/reviewdetail.do">
             <table border="1" width="700px">
                 <script>console.log(<c:out value="${list}"></c:out>) </script>
@@ -411,7 +424,17 @@
                 </tr>
             </table>
         </form>
+
+
+
     </div>
+</div>
+!!!F;O;O;T;E;R 첨부해주세요
+<%@include file="../include/footer.jsp" %>
+</body>
+
+
+<%--    </div>
 </div>
 
 <footer>
@@ -421,5 +444,5 @@
     </div>
 </footer>
 
-</body>
+</body>--%>
 </html>
