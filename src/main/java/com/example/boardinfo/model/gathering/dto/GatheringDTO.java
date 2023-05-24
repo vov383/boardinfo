@@ -2,26 +2,36 @@ package com.example.boardinfo.model.gathering.dto;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class GatheringDTO {
 	
 	private int gathering_id;
 	private String writer_id;
+
 	private Date post_date;
 	private Date update_date;
 	private String title;
 	private String description;
 	private String img_url;
+	@DateTimeFormat(pattern="yyy-MM-dd'T'HH:mm")
 	private Date gathering_date;
 	private int fee;
 	private String address1;
 	private String address2;
 	private String address3;
 	private String place_name;
+	private double lat;
+	private double lng;
 	private int maxPeople;
-	private int permit_system;
+	private String attendSystem;
+	private String note;
+	private String question;
 	private String status;
 	private int club_id;
 	private int is_public;
+	private int view_count;
+	
 	public int getGathering_id() {
 		return gathering_id;
 	}
@@ -106,11 +116,23 @@ public class GatheringDTO {
 	public void setMaxPeople(int maxPeople) {
 		this.maxPeople = maxPeople;
 	}
-	public int getPermit_system() {
-		return permit_system;
+	public String getAttendSystem() {
+		return attendSystem;
 	}
-	public void setPermit_system(int permit_system) {
-		this.permit_system = permit_system;
+	public void setAttendSystem(String attendSystem) {
+		this.attendSystem = attendSystem;
+	}
+	public String getNote() {
+		return note;
+	}
+	public void setNote(String note) {
+		this.note = note;
+	}
+	public String getQuestion() {
+		return question;
+	}
+	public void setQuestion(String question) {
+		this.question = question;
 	}
 	public String getStatus() {
 		return status;
@@ -130,16 +152,29 @@ public class GatheringDTO {
 	public void setIs_public(int is_public) {
 		this.is_public = is_public;
 	}
-	@Override
-	public String toString() {
-		return "GatheringDTO [gathering_id=" + gathering_id + ", writer_id=" + writer_id + ", post_date=" + post_date
-				+ ", update_date=" + update_date + ", title=" + title + ", description=" + description + ", img_url="
-				+ img_url + ", gathering_date=" + gathering_date + ", fee=" + fee + ", address1=" + address1
-				+ ", address2=" + address2 + ", address3=" + address3 + ", place_name=" + place_name + ", maxPeople="
-				+ maxPeople + ", permit_system=" + permit_system + ", status=" + status + ", club_id=" + club_id
-				+ ", is_public=" + is_public + "]";
+	public double getLat() {
+		return lat;
+	}
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+	public double getLng() {
+		return lng;
+	}
+	public void setLng(double lng) {
+		this.lng = lng;
+	}
+	public int getView_count() {
+		return view_count;
+	}
+	public void setView_count(int view_count) {
+		this.view_count = view_count;
 	}
 	
+	
+	
+	
 
+	
 
 }

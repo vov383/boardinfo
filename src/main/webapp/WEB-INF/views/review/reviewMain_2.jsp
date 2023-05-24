@@ -60,7 +60,7 @@
 <div id="Tab1" class="tabcontent">
     <table style="table-layout:fixed;">
         <tr><!-- 첫번째 줄 시작 -->
-            <h5>첫번째 탭 내용 : Game Review</h5>
+            <h5>Game Review</h5>
             <th>카테고리</th>
             <th>&#x1f495</th> <%--하트--%>
             <th>제목</th>
@@ -75,12 +75,11 @@
             <td>${vo.category}</td>
             <td>${vo.good}</td>
             <td>${vo.title}</td>
-            <td>regNum : ${vo.regNum}</td>
             <td>${vo.nickName}</td>
             <td>${vo.createDate}</td>
             <td>${vo.views}</td>
-            <td>댓글 연결 예정</td>
-            <td>게임 연결 예정</td>
+            <td>/댓글 연결 예정/</td>
+            <td>-게임 연결 예정-</td>
         </tr>
         </c:forEach>
     </table>
@@ -90,7 +89,7 @@
 <div id="Tab2" class="tabcontent">
     <table style="table-layout:fixed;">
         <tr><!-- 첫번째 줄 시작 -->
-            <h1>두번째 탭 내용 : Gathering Review</h1>
+            <h1>Gathering Review</h1>
             <th>카테고리</th>
             <th>&#x1f495</th> <%--하트--%>
             <th>제목</th>
@@ -104,12 +103,11 @@
             <td>${vo.category}</td>
             <td>${vo.good}</td>
             <td>${vo.title}</td>
-            <td>regNum : ${vo.regNum}</td>
             <td>${vo.nickName}</td>
             <td>${vo.createDate}</td>
             <td>${vo.views}</td>
-            <td>댓글 연결 예정</td>
-            <td>게임 연결 예정</td>
+            <td>/댓글 연결 예정/</td>
+            <td>-게임 연결 예정-</td>
         </tr>
         </c:forEach>
 

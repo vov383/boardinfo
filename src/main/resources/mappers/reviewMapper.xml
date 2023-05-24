@@ -7,13 +7,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="review">
 
 	<!-- 리뷰 DB -->
-	<select id="reviewList" resultType="reviewDto">
+	<select id="reviewList" resultType="com.example.boardinfo.model.review.dto.ReviewDTO">
 		SELECT
 			R.REG_NUM
 			 , M.NICKNAME
 			 , R.CATEGORY
 			 , R.VIEWS
-			 , R.GNUM
+			 , G.GAMETITLE
 			 , R.GATHERING_ID
 			 , R.TITLE
 			 , R.FUN_SCORE
@@ -23,26 +23,49 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			 , R.GOOD
 			 , R.DEL
 			 , R.CREATE_USER
-			 , R.CREATE_DATE
+
+			 , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD') AS CREATEDATE
 			 , R.UPDATE_USER
 			 , R.UPDATE_DATE
 		FROM REVIEW R
 		   , MEMBER M
+		   , GAME G
 		WHERE R.CREATE_USER = M.USERID
+		  AND R.GNUM = G.GNUM
+		  AND G.GAMETITLE = G.GAMETITLE
 	</select>
 
 
+	<!-- 리뷰 입력 -->
+	<insert id="reviewInsertPage" parameterType="hashMap">
+		INSERT INTO REVIEW (
+		                    REG_NUM
+		                    , CATEGORY, GNUM
+		                    , GATHERING_ID, TITLE
+							, REVIEW_SCORE, GAME_SCORE, REVIEW_DETAIL
+							, CREATE_USER
+							)
+		VALUES(2305230001
+		       /*to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(REG_NUM, 7)) + 1 from review where REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'),5, 0)*/
+		   	  ,#{category}
+			  ,#{gnum}
+			  ,#{gatheringId}
+			  ,#{title}
+			  ,#{reviewScore}
+			  ,#{gameScore}
+			  ,#{reviewDetail}
+			  ,#{createUser}
+			  )
+	</insert>
+
+
+	<!--<insert id="reviewInTest" parameterType="hashMap">
+		INSERT INTO REVIEW_IN_TEST (TEST1)
+		    VALUES(#{test1})
+	</insert>-->
+
 
 </mapper>
-
-
-
-
-
-
-
-
-
 
 
 

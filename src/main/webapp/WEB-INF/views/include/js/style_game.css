@@ -12,7 +12,7 @@ body {
 table {
 	border-collapse: separate;
 	border-spacing: 0;
-	width: 100%;
+	width: 80%;
 }
 
 th, td {
@@ -62,7 +62,7 @@ tr:last-child td:last-child {
   position: relative;
   border-radius: 15px;
   background-color: #fff;
-  box-shadow: 0 0 16px 3px rgba(0 0 0 / 15%);
+  box-shadow: 0 0 8px 3px rgb(0 0 0);
   cursor: pointer;
   margin: 15px;
 }
@@ -111,4 +111,11 @@ tr:last-child td:last-child {
 	cursor: pointer;
 }
 
-
+#artistSuggestions, #designerSuggestions, #publisherSuggestions{
+	width: 300px;
+	background-color: white;
+	overflow-y: auto;
+}
+.input_game {
+	width: 300px;
+}

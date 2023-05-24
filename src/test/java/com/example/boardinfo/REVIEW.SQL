@@ -1,7 +1,7 @@
 -- 리뷰 테이블 SQL
 CREATE TABLE REVIEW                                         -- 게임 및 모임 후기
 (
-    REG_NUM       NUMBER                       NOT NULL
+    REG_NUM       NUMBER        NOT NULL
         CONSTRAINT REVIEW_PK
             PRIMARY KEY,                                    -- 리뷰 테이블 PK
     CATEGORY      VARCHAR2(100)                NOT NULL,    -- GAME 리뷰 OR 모임 리뷰
@@ -13,7 +13,7 @@ CREATE TABLE REVIEW                                         -- 게임 및 모임
     REVIEW_SCORE  NUMBER(3, 1) DEFAULT 0,                   -- 리뷰 점수
     GAME_SCORE    NUMBER(3, 1) DEFAULT 0,                   -- 게임 난이도
     REVIEW_DETAIL BLOB,                                     -- 리뷰 내용 (사진 포함)
-    GOOD          VARCHAR2(10) DEFAULT 'N',                 -- 좋아요 여부 (기본값 : N)
+    GOOD          NUMBER DEFAULT 0,                 -- 좋아요 여부 (기본값 : N)
     DEL           VARCHAR2(10) DEFAULT 'N'     NOT NULL,    -- 삭제 여부 (기본값 : N)
     CREATE_USER   VARCHAR2(100)                NOT NULL,    -- 작성자 → 회원 테이블의 PK와 조인 예정
     CREATE_DATE   DATE         DEFAULT SYSDATE NOT NULL,    -- 작성 일자
@@ -96,100 +96,6 @@ COMMENT ON COLUMN CHOICE_GAME.UPDATE_USER    IS '수정자';
 COMMENT ON COLUMN CHOICE_GAME.UPDATE_DATE    IS '수정 일자';
 
 
--- ---------------------- REVIEW 시퀀스 ----------------------
--- 시퀀스 생성
-CREATE SEQUENCE REVIEW_REG_NUM_SEQ
-    INCREMENT BY 1
-    START WITH 23051600001
-    MAXVALUE 99999999999
-    MINVALUE 1
-    NOCYCLE
-;
-
--- 시퀀스 삭제
-DROP SEQUENCE REVIEW_REG_NUM_SEQ;
-
--- 시퀀스 생성 확인
-SELECT REVIEW_REG_NUM_SEQ.NEXTVAL FROM DUAL;
-
--- 날짜별 시퀀스 생성
-CREATE OR REPLACE TRIGGER REVIEW_REG_NUM_TRG
-    BEFORE INSERT ON REVIEW
-    FOR EACH ROW
-DECLARE
-    l_seq NUMBER;
-BEGIN
-    IF TO_CHAR(SYSDATE, 'YYYY-MM-DD') <> TO_CHAR(:NEW.CREATE_DATE, 'YYYY-MM-DD') THEN
-        SELECT REVIEW_REG_NUM_SEQ.NEXTVAL INTO l_seq FROM DUAL;
-    ELSE
-        SELECT REVIEW_REG_NUM_SEQ.CURRVAL INTO l_seq FROM DUAL;
-    END IF;
-    :NEW.REG_NUM := l_seq;
-END;
-
-
--- ---------------------- REPLY_COMMENTS 시퀀스 ----------------------
--- 시퀀스 생성
-CREATE SEQUENCE REPLY_REG_NUM_SEQ
-    INCREMENT BY 1
-    START WITH 23051600001
-    MAXVALUE 99999999999
-    MINVALUE 1
-    NOCYCLE
-;
-
--- 시퀀스 삭제
-DROP SEQUENCE REPLY_REG_NUM_SEQ;
-
--- 시퀀스 생성 확인
-SELECT REPLY_REG_NUM_SEQ.NEXTVAL FROM DUAL;
-
--- 날짜별 시퀀스 생성
-CREATE OR REPLACE TRIGGER REPLY_REG_NUM_TRG
-    BEFORE INSERT ON REPLY_COMMENTS
-    FOR EACH ROW
-DECLARE
-    l_seq NUMBER;
-BEGIN
-    IF TO_CHAR(SYSDATE, 'YYYY-MM-DD') <> TO_CHAR(:NEW.CREATE_DATE, 'YYYY-MM-DD') THEN
-        SELECT REVIEW_REG_NUM_SEQ.NEXTVAL INTO l_seq FROM DUAL;
-    ELSE
-        SELECT REVIEW_REG_NUM_SEQ.CURRVAL INTO l_seq FROM DUAL;
-    END IF;
-    :NEW.REPLY_REG_NUM := l_seq;
-END;
-
-
--- ---------------------- CHOICE_GAME 시퀀스 ----------------------
--- 시퀀스 생성
-CREATE SEQUENCE CHOICE_REG_NUM_SEQ
-    INCREMENT BY 1
-    START WITH 23051600001
-    MAXVALUE 99999999999
-    MINVALUE 1
-    NOCYCLE
-;
-
--- 시퀀스 삭제
-DROP SEQUENCE CHOICE_REG_NUM_SEQ;
-
--- 시퀀스 생성 확인
-SELECT CHOICE_REG_NUM_SEQ.NEXTVAL FROM DUAL;
-
--- 날짜별 시퀀스 생성
-CREATE OR REPLACE TRIGGER CHOICE_REG_NUM_TRG
-    BEFORE INSERT ON CHOICE_GAME
-    FOR EACH ROW
-DECLARE
-    l_seq NUMBER;
-BEGIN
-    IF TO_CHAR(SYSDATE, 'YYYY-MM-DD') <> TO_CHAR(:NEW.CREATE_DATE, 'YYYY-MM-DD') THEN
-        SELECT REVIEW_REG_NUM_SEQ.NEXTVAL INTO l_seq FROM DUAL;
-    ELSE
-        SELECT REVIEW_REG_NUM_SEQ.CURRVAL INTO l_seq FROM DUAL;
-    END IF;
-    :NEW.CHOICE_REG_NUM := l_seq;
-END;
 
 
 

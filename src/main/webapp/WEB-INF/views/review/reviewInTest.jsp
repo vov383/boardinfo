@@ -9,18 +9,34 @@
         <meta charset="utf-8">
         <title>Review In Test</title>
         <%@ include file="../include/js/header.jsp" %>
+        <%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>--%>
+        <script type="text/javascript">
+
+            // $(document).ready(function() {
+            //     //새 게임 등록 버튼클릭
+            //     $("#btnSave").click(function () {
+            //         //null값확인, 자료형확인필요함 -> 정규식응용
+            //         alert("asdsadasd");
+            //         document.testform.submit();
+            //     });
+            // });
+
+            function btnSaveClick() {
+                alert("asdsadasd");
+                        document.testform.submit();
+            }
+        </script>
    </head>
 
    <body>
 
-   <h3> Review In Test </h3>
-   <%@ page import="java.sql.*" %>
+   <h3> Review In Test  11111 </h3>
 
-   <form action="./test2.jsp">
+   <form name="testform" method="post" action="${path}/review/reviewInTestInsertPage.do">
 
-       <p>ID : <input type="text" name="category"></p>
+       <p>ID : <input type="text" name="test1"></p>
 
-       <button type="submit">값 보내기</button>
+       <button type="button" id="btnsave" onclick="btnSaveClick()">값 보내기</button>
 
    </form>
 
