@@ -11,12 +11,20 @@ public interface ReviewService {
 	//리뷰 테이블
 	public List<ReviewDTO> reviewlist();
 
-	// 리뷰 입력 테스트
+	// 리뷰 입력
 	public void create(ReviewDTO reviewDTO);
 
-	/*public List<ReviewDTO> reviewDetail();*/
-/*
+	// 리뷰 입력
+	public void create(TestDTO testdto);
 
+
+
+	/*public List<ReviewDTO> reviewDetail();*/
+
+
+
+
+/*
 	// 댓글 및 답글 테이블
 	public List<ReplyCommentsDTO> replycommentslist();
 

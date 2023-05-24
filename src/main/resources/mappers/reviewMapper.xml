@@ -35,7 +35,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		  AND G.GAMETITLE = G.GAMETITLE
 	</select>
 
-
 	<!-- 리뷰 입력 -->
 	<insert id="reviewInsertPage" parameterType="hashMap">
 		INSERT INTO REVIEW (
@@ -45,8 +44,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 							, REVIEW_SCORE, GAME_SCORE, REVIEW_DETAIL
 							, CREATE_USER
 							)
-		VALUES(2305230001
-		       /*to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(REG_NUM, 7)) + 1 from review where REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'),5, 0)*/
+		VALUES(
+		       to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(REG_NUM, 7)) + 1 from review where REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'),5, 0)
 		   	  ,#{category}
 			  ,#{gnum}
 			  ,#{gatheringId}
@@ -56,6 +55,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			  ,#{reviewDetail}
 			  ,#{createUser}
 			  )
+	</insert>
+
+
+	<insert id="reviewBlob" parameterType="hashMap">
+		INSERT INTO REVIEW_IN_TEST (TEST1, BLOB)
+		    VALUES(#{test1}
+		    		,#{blob})
 	</insert>
 
 

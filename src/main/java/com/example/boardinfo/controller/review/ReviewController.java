@@ -1,6 +1,7 @@
 package com.example.boardinfo.controller.review;
 
 import com.example.boardinfo.model.review.dto.ReviewDTO;
+import com.example.boardinfo.model.review.dto.TestDTO;
 import com.example.boardinfo.service.review.ReviewService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,6 +16,7 @@ public class ReviewController {
 	@Inject
 	ReviewService reviewservice;
 
+	// 리뷰 리스트 페이지
 	@RequestMapping("reviewlist.do")
 	public ModelAndView revewlist(ModelAndView mav) {
 		mav.setViewName("review/gameReviewMain");
@@ -24,6 +26,13 @@ public class ReviewController {
 		return mav;
 	}
 
+	// 리뷰 상세 페이지
+	@RequestMapping("reviewdetail.do")
+	public ModelAndView revewDetail(ModelAndView mav) {
+		mav.setViewName("review/reviewDetail");
+		mav.addObject("list", reviewservice.reviewlist());
+		return mav;
+	}
 
 	// 리뷰 입력할 페이지
 	@RequestMapping("reviewInsert.do")
@@ -40,6 +49,22 @@ public class ReviewController {
 		reviewservice.create(reviewDTO);
 		return "/review/gameReviewMain";
 	}
+
+    // Blob Test, 입력P
+    @RequestMapping("reviewBlobInsert.do")
+    public String insert(@ModelAttribute TestDTO testdto){
+        return "/review/ReviewBlobInsert";
+    }
+
+    // Blob Test, 저장P
+    @RequestMapping("reviewBlobInsertPage.do")
+    public String insertPage(@ModelAttribute TestDTO testdto){
+        reviewservice.create(testdto);
+        return "/review/ReviewBlobInsert";
+    }
+
+
+
 
 
 	/*

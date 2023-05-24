@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>커뮤니티 - 게임리뷰</title>
+  <title>커뮤니티 - 리뷰작성</title>
 <%@ include file="../include/js/header.jsp" %>
 
   <style>
@@ -44,7 +44,7 @@
       top: 0;
       background-color: white;
       z-index: 450;
-      border-bottom: 1px solid #D9D9D9;
+      border-bottom: 1px solid #D9D9D9;      
     }
 
     #header-upper-box{
@@ -54,7 +54,7 @@
       align-items: center;
       height: 77px;
     }
-
+    
     #header-upper-box > div{
 	 display: flex;
      justify-content: space-between;
@@ -328,27 +328,23 @@
       bottom: 0;
       clear: both;
     }
-
-
+    
+    
     footer > div{
       width: 100%;
       max-width: 1120px;
     }
-
-
-    table{border-collapse:collapse; background-color:#fff8e1}
-    tr, td{border-color: #ffffff; border-style: solid;}
-    tr:nth-child(1n+2){background-color: #ffffff;}
-
-/*    !*짝수줄만 배경색을 다르게*!
-    tr:nth-child(2n+0){background-color: #ffffaf;}*/
-
-
   </style>
+
+  <script type="text/javascript">
+  function btnSaveClick() {
+  alert("asdsadasd"); // 테스트
+  document.reviewInsertSave.submit();
+  }
+  </script>
 
 </head>
 
-<%--
 <body>
 <div id="header">
 
@@ -369,7 +365,7 @@
     </div>
   </div>
   </div>
-
+  
   <div class="nav">
     <ul class="menu">
       <li><a href="#" class="toMenu" title="게임정보">게임정보<img src="${path}/images/dropdown.png" width="34px"></a></li>
@@ -382,68 +378,22 @@
 
 <div id="contents">
   <div id="contentsHeader">
-    <h2>게임리뷰</h2>
+    <h2>Blob 입력 테스트</h2>
   </div>
   <div id="contentsLocation">
-    홈 &gt 커뮤니티 &gt 게임리뷰
+    홈 &gt 커뮤니티 &gt 리뷰 작성
   </div>
-  <div id="contentsMain">
-    --%>
 
-
-<body>
-<%@include file="../include/top.jsp" %>
-<div id="contents">
-  <div id="contentsHeader">
-    <h2>모임모집</h2>
-  </div>
-  <div id="contentsLocation">
-    홈&gt 오프모임&gt 모임모집
-  </div>
   <div id="contentsMain">
 
-    <form name="reviewlist" method="post" action="${path}/review/reviewlist.do">
-      <table style="table-layout:fixed;">
-        <tr><!-- 첫번째 줄 시작 -->
-          <th style="width: 200px;">카테고리</th>
-          <th style="width: 200px;">&#x1f495</th> <%--하트--%>
-          <th style="width: 200px;">제목</th>
-          <th style="width: 200px;">닉네임</th>
-          <th style="width: 200px;">등록일자</th>
-          <th style="width: 200px;">조회수</th>
-          <th style="width: 200px;">댓글</th>
-          <th style="width: 200px;">게임</th>
-        </tr>
-        <script>console.log(<c:out value="${list}"></c:out>) </script>
-        <c:forEach items="${list}" var="vo">
-          <tr>
-            <td style="width: 200px; text-align: center;">${vo.category}</td>
-            <td style="width: 200px; text-align: center;">${vo.good}</td>
-            <td style="width: 200px; text-align: center;"><A href = "${path}/review/reviewdetail.do">${vo.title}</A></td>
-            <td style="width: 200px; text-align: center;">${vo.nickName}</td>
-            <td style="width: 200px; text-align: center;">${vo.createDate}</td>
-            <td style="width: 200px; text-align: center;">${vo.views}</td>
-            <td style="width: 200px; text-align: center;">/댓글 연결 예정/</td>
-            <td style="width: 200px; text-align: center;">${vo.gametitle}</td>
+    <form name="reviewInsertSave" method="get" action="${path}/review/reviewBlobInsertPage.do">
 
-          </tr>
-        </c:forEach>
-      </table>
+      <p>리뷰작성 test1 : <input type="text" name="test1"></p>
+      <p>리뷰작성 Blob : <input type="text" name="blob"></p>
+
+      <button type="button" id="btnsave" onclick="btnSaveClick()">값 보내기</button>
+
     </form>
-
-
-  </div>
-</div>
-!!!F;O;O;T;E;R 첨부해주세요
-<%@include file="../include/footer.jsp" %>
-</body>
-
-
-
-
-
-    <%--
-
   </div>
 </div>
 
@@ -454,10 +404,5 @@
   </div>
 </footer>
 
-</body>--%>
+</body>
 </html>
-
-
-
-
-
