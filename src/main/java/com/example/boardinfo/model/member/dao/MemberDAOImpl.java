@@ -56,8 +56,13 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public String selectMemberById(String userid) {
+	public MemberDTO selectMemberById(String userid) {
 		return sqlSession.selectOne("member.selectMemberById",userid);
+	}
+
+	@Override
+	public MemberDTO selectMemberByNick(String nickname) {
+		return sqlSession.selectOne("member.selectMemberByNick", nickname);
 	}
 
 
