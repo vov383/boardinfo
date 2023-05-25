@@ -5,3 +5,4 @@
 /.project
 /.springBeans
 /boardinfo.iml
+/src/main/webapp/WEB-INF/spring/root-context.xml

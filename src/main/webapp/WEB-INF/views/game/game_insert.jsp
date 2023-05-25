@@ -352,32 +352,33 @@
 					//data: 업로드한 파일 정보와 Http 상태 코드
 					var fileInfo=getFileInfo(data);
 					console.log(fileInfo);
-					var html="<a href='"+fileInfo.getLink+"'>"+fileInfo.fileName+"</a><br>";
+					var html="<div><a href='"+fileInfo.getLink+"'>"+fileInfo.fileName+"</a><br>";
 					html += "<img src='${path}/upload/displayFile?fileName="+data+"'>";
 					html += "<span data-src="+data+">[삭제]</span></div>";
-					html += "<input type='hidden' class='file' value='"+fileInfo.fullName+"'>";
+					html += "<input type='hidden' class='file' value='"+fileInfo.fullName+"'></div>";
 					$("#uploadedList").append(html);
 				}
 			});
 		});
 
-		<%--//첨부파일 삭제 함수--%>
-		<%--$("#uploadedList").on("click","span",--%>
-		<%--		function(event){//내부적으로 span태그가 클릭되면 삭제--%>
-		<%--			var that=$(this);//this는 현재 클릭한 태그, 즉 span태그--%>
-		<%--			$.ajax({--%>
-		<%--				url: "${path}/upload/deleteFile",--%>
-		<%--				type: "post",--%>
-		<%--				data: {fileName: $(this).attr("data-src")},--%>
-		<%--				dataType: "text",--%>
-		<%--				success: function(result){--%>
-		<%--					if(result=="deleted"){--%>
-		<%--						that.parent("div").remove();//파일삭제되면 행전체<div>를 삭제 처리--%>
-		<%--						//that은 span태그를 의미하는데 그 부모인 div태그를 지운다는 뜻--%>
-		<%--					}--%>
-		<%--				}--%>
-		<%--			});--%>
-		<%--});--%>
+		//첨부파일 삭제 함수
+		$("#uploadedList").on("click","span",
+				function(event){//내부적으로 span태그가 클릭되면 삭제
+					var that=$(this);//this는 현재 클릭한 태그, 즉 span태그
+					$.ajax({
+						url: "${path}/upload/deleteFile",
+						type: "post",
+						data: {fileName: $(this).attr("data-src")},
+						dataType: "text",
+						success: function(result){
+							if(result=="deleted"){
+								that.parent("div").remove();//파일삭제되면 행전체<div>를 삭제 처리
+								//that은 span태그를 의미하는데 그 부모인 div태그를 지운다는 뜻
+
+							}
+						}
+					});
+		});
 
 
 

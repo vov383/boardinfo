@@ -6,9 +6,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
 <mapper namespace="game">
 	<select id="gameList" resultType="gameDto">
-		select * 
-		from game
-		order by gnum
+		select g.gnum, g.gametitle, g.gametitle_eng, g.viewcount, g.release_year, ga.fullname gamephoto_url
+from game g,
+        (select gnum, fullname
+          from (
+                  select row_number() over(partition by gnum order by regdate desc) rnum, gnum, fullname
+                  from game_attach
+                  ) a
+        where rnum = 1) ga
+where g.gnum = ga.gnum(+)
+order by gnum
 	</select>
 	
 	<insert id="gameInsert">
@@ -26,18 +33,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
 	
 	<select id="view" resultType="gameDto">
-	 	select gnum, exnum, renum, bggnum, gametitle, gametitle_eng, players, 
-	 		   playtime, ages, language,gamephoto_url, release_year, bgg_game_score,
-	 		   bggrank, write_date, viewcount
-	      from game
-	     where gnum=#{gnum}
+	 	select g.gnum, exnum, renum, bggnum, gametitle, gametitle_eng, players,
+	 		   playtime, ages, language, release_year, bgg_game_score,
+	 		   bggrank, write_date, viewcount, ga.fullname gamephoto_url
+		from game g,
+        		(select gnum, fullname
+                from (
+                        select row_number() over(partition by gnum order by regdate desc) rnum, gnum, fullname
+                        from game_attach
+                      	) a
+                where rnum = 1) ga
+        where g.gnum = ga.gnum(+) and g.gnum=#{gnum}
 	</select>
 
 	<select id="getAuto" resultType="gameDto">
-		select *
+		select gnum, gametitle, gametitle_eng
 		from game
 		where gametitle like #{input}||'%'
-
 	</select>
 
 	<!--첨부파일 정보 저장-->
@@ -45,6 +57,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into game_attach (fullname, gnum)
 		values (#{fullName}, seq_game.currval)
 	</insert>
+
+	<delete id="deleteFile">
+		delete from game_attach where fullName=#{fileName}
+	</delete>
 	
 </mapper>
 

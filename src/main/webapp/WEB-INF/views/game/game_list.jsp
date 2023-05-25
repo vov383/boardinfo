@@ -65,12 +65,27 @@
 				<tr>
 					
 					<td>${row.gnum}</td><!-- 리뷰와 연동되면 순위 ${row.g_rank} -->
-					<td>이미지 자리</td>
+					<td>
+						<c:choose>
+							<c:when test="${row.gamephoto_url != null}">
+								<img src="${path}/uploadfiles/${row.gamephoto_url}">
+							</c:when>
+							<c:otherwise>
+								빈 이미지 추가요망
+							</c:otherwise>
+						</c:choose>
+					</td>
 					<td>
 						<a href="${path}/game/view.do?gnum=${row.gnum}">${row.gametitle}<br>(${row.gametitle_eng})</a>
 					</td>
 					<td>${row.release_year}</td>
-					<td>리뷰목록</td><!-- 리뷰와 연동되면 그쪽으로 link -->
+					<td>
+						<div class='searched'>
+							<span><img src="${path}/uploadfiles/${row.gamephoto_url}" width="50px" height="50px"></span>
+							<a href='#'>gametitle<br>gametitle_eng</a>
+						</div>
+					</td>
+					<!-- <td>리뷰목록</td>리뷰와 연동되면 그쪽으로 link -->
 					<td>판매물품</td><!-- 거래와 연동되면 그쪽으로 link -->
 					<td>${row.viewcount}</td>
 					

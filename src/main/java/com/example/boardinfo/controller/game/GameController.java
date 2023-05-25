@@ -108,9 +108,7 @@ public class GameController {
 		return list;
 	}
 
-//	@RequestMapping("photoupload.do")
-//	public String photoupload
-	
+
 	
 	
 }

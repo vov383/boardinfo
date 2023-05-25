@@ -7,6 +7,7 @@ import java.io.InputStream;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 
+import com.example.boardinfo.service.game.GameService;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,9 @@ public class AjaxUploadController {
 	
 	@Inject
 	TBoardService tboardService;
+	@Inject
+	GameService gameService;
+
 	
 	//upload 디렉토리 설정
 	@Resource(name = "uploadPath") //servlet-context에 설정된 id값과 맞춤
@@ -112,23 +116,25 @@ public class AjaxUploadController {
 		
 		MediaType mType = MediaUtils.getMediaType(formatName);
 		
-		if(mType != null) { //이미지파일이면
+		if(mType != null) { //이미지파일이면 front + end = 원본파일명
 			String front = fileName.substring(0, 12);
 			String end = fileName.substring(14);
 			new File(uploadPath + (front + end).replace(
 					'/', File.pathSeparatorChar)).delete();
 		}
 		
-		//기타종류 원본파일
+		//기타종류 원본파일(이미지면 썸네일 삭제)
 		new File(uploadPath + fileName.replace(
 				'/', File.pathSeparatorChar)).delete();
 		
 		//레코드 삭제 기능 추가
-//		tboardService.deleteFile(fileName);
+		tboardService.deleteFile(fileName);
+		gameService.deleteFile(fileName);
 		
 		return new ResponseEntity<String>("deleted", HttpStatus.OK);
 		// 여기 deleted 는 uploadAjax.jsp 에서 
 		// ajax success에 정의해놓은 result=="deleted" 다.
 	}
-	
+
+
 }
