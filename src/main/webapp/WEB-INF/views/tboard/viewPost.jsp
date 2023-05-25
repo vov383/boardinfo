@@ -27,8 +27,9 @@ $(function() {
 			data: param,
 			success: function(){
 				alert("댓글이 등록되었습니다.");
+				// 댓글 목록 출력
 				listReply();
-				//listReply2(); //댓글 목록 출력
+				//listReply2();
 			}
 		});
 	});
@@ -40,6 +41,9 @@ $(function() {
 	$("#btnList").click(function() {
 		location.href="${path}/tboard/list.do";
 	});
+	$("#btnMoveLogin").click(function (){
+		location.href="${path}/member/member_login.do?message=nologin";
+	});
 });
 
 //댓글 목록 출력 함수
@@ -48,6 +52,7 @@ function listReply(){
 		type: "get",
 		url: "${path}/tbComment/list.do?tb_num=${dto.tb_num}",
 		success: function(result){
+			// console.log("result가 잘 나오는지"+result);
 			//result : responseText 응답텍스트(html)
 			$("#listReply").html(result);
 		}
@@ -112,9 +117,8 @@ function listReply(){
 			<input type="hidden" id="tb_num" name="tb_num" value="${dto.tb_num}">
 			<textarea name="content" id="content" rows="5" cols="60"></textarea>
 			<br>
-			<button type="button" id="btnCommentInsert">댓글 작성 완료</button>
 			<c:choose>
-                <c:when test="${sessionScope.userid != null }">
+                <c:when test="${sessionScope.userid != null}">
                     <button type="button" id="btnCommentInsert">댓글 등록</button>
                 </c:when>
                 <c:otherwise>
@@ -127,6 +131,7 @@ function listReply(){
 		</form>
 	</div>
 	<div id="listReply"></div>
+
 </div>
 <%@include file="../include/footer.jsp" %>
 </body>
