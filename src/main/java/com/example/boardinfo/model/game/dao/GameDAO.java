@@ -11,4 +11,5 @@ public interface GameDAO {
 	public void increaseViewcnt(int gnum) throws Exception;
 	public Object view(int gnum) throws Exception;
     public List<GameDTO> getAutoGame(String input);
+    public void addAttach(String fullName);
 }

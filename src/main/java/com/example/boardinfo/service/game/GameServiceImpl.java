@@ -128,6 +128,14 @@ public class GameServiceImpl implements GameService {
         designerDao.insert_designer_mapping(dnum);
       }
     }
+
+    //attach 테이블에 레코드 추가
+    String[] files=dto.getFiles();//첨부파일 이름 배열
+    if(files==null) return; //첨부파일이 없으면 skip
+    for(String name : files) {
+      gameDao.addAttach(name);//attach테이블에 insert
+    }
+
   }
 
   public void increaseViewcnt(int gnum, HttpSession session) throws Exception {
@@ -137,8 +145,8 @@ public class GameServiceImpl implements GameService {
       update_time = (long) session.getAttribute("update_time_" + gnum);
     }
     long current_time = System.currentTimeMillis();
-    // 일정 시간(5초)이 경과한 후 조회수 증가 처리
-    if (current_time - update_time > 24 * 60 * 60 * 100) {// 24*60*60*100(하루)
+    // 일정 시간이 경과한 후 조회수 증가 처리
+    if (current_time - update_time > 24 * 60 * 60 * 1000) {// 24*60*60*100(하루)
       // 조회수 증가 처리
       gameDao.increaseViewcnt(gnum);
       // 조회수를 올린 시간 저장

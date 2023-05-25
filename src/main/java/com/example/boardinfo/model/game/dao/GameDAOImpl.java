@@ -37,4 +37,8 @@ public class GameDAOImpl implements GameDAO {
 	public List<GameDTO> getAutoGame(String input){
 		return sqlSession.selectList("game.getAuto", input);
 	}
+
+	public void addAttach(String fullName){
+		sqlSession.insert("game.addAttach", fullName);
+	}
 }

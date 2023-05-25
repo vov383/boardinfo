@@ -39,6 +39,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where gametitle like #{input}||'%'
 
 	</select>
+
+	<!--첨부파일 정보 저장-->
+	<insert id="addAttach">
+		insert into game_attach (fullname, gnum)
+		values (#{fullName}, seq_game.currval)
+	</insert>
 	
 </mapper>
 

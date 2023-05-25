@@ -11,7 +11,7 @@
 <title>BOARDINFO</title>
 <%@ include file="../include/js/header.jsp"%>
 <link rel="stylesheet" href="${path}/include/js/style_game.css">
-
+	<script src="${path}/include/js/common.js"></script>
 </head>
 
 <body>
@@ -34,7 +34,7 @@
 
 	<div align="center">
 	
-	<form name="gameform" method="post" action="${path}/game/insert.do">
+	<form name="gameform" id="gameform" method="post" action="${path}/game/insert.do">
 
 		<table>
 
@@ -58,7 +58,13 @@
 			<tr>
 
 				<td>사진</td>
-				<td><input type="file" name="gamephoto_url" id="gamephoto"></td>
+				<td>
+					<%--파일을 업로드할 영역--%>
+					<div class="fileDrop" style="border: #0b0b0b">파일 끌어놓는 자리</div>
+
+					<%--파일을 출력할 영역--%>
+					<div id="uploadedList"></div>
+				</td>
 
 			</tr>
 
@@ -304,10 +310,78 @@
 	//새 게임 등록 버튼클릭
 		$("#btnGameInsert").click(function() {
 			//null값확인, 자료형확인필요함 -> 정규식응용
+
+			//사진업로드
+			var str="";
+			//uploadedList영역에 클래스 이름이 file인 히든타입의 태그를 각각 반복
+			$("#uploadedList .file").each(function(i){
+				console.log(i);
+				//hidden태그 구성
+				str += "<input type='hidden' name='files["+i+"]' value='"
+						+ $(this).val()+"'>";
+			});
+			//폼에 hidden 태그를 붙임
+			$("#gameform").append(str);
+
+
+
 			document.gameform.submit();
 		});
-		
-	//category항목 리스트에서 선택할수 있게하는 기능
+
+		//파일을 마우스로 드래그해서 업로드 영역에 올릴때 파일이 열리는 기본효과 막는 처리
+		$(".fileDrop").on("dragenter dragover", function(e) {
+			e.preventDefault();
+		});
+		//마우스로 파일을 드롭할 때 파일이 열리는 기본 효과 막음
+		$(".fileDrop").on("drop", function(e){
+			e.preventDefault();
+			//첫번째 첨부 파일
+			var files=e.originalEvent.dataTransfer.files;
+			var file=files[0];
+			//폼 데이터에 첨부파일 추가
+			var formData=new FormData();
+			formData.append("file",file);
+			$.ajax({
+				url: "${path}/upload/uploadAjax",
+				data: formData,
+				dataType: "text",
+				processData: false,
+				contentType: false,
+				type: "post",
+				success: function(data){
+					//data: 업로드한 파일 정보와 Http 상태 코드
+					var fileInfo=getFileInfo(data);
+					console.log(fileInfo);
+					var html="<a href='"+fileInfo.getLink+"'>"+fileInfo.fileName+"</a><br>";
+					html += "<img src='${path}/upload/displayFile?fileName="+data+"'>";
+					html += "<span data-src="+data+">[삭제]</span></div>";
+					html += "<input type='hidden' class='file' value='"+fileInfo.fullName+"'>";
+					$("#uploadedList").append(html);
+				}
+			});
+		});
+
+		<%--//첨부파일 삭제 함수--%>
+		<%--$("#uploadedList").on("click","span",--%>
+		<%--		function(event){//내부적으로 span태그가 클릭되면 삭제--%>
+		<%--			var that=$(this);//this는 현재 클릭한 태그, 즉 span태그--%>
+		<%--			$.ajax({--%>
+		<%--				url: "${path}/upload/deleteFile",--%>
+		<%--				type: "post",--%>
+		<%--				data: {fileName: $(this).attr("data-src")},--%>
+		<%--				dataType: "text",--%>
+		<%--				success: function(result){--%>
+		<%--					if(result=="deleted"){--%>
+		<%--						that.parent("div").remove();//파일삭제되면 행전체<div>를 삭제 처리--%>
+		<%--						//that은 span태그를 의미하는데 그 부모인 div태그를 지운다는 뜻--%>
+		<%--					}--%>
+		<%--				}--%>
+		<%--			});--%>
+		<%--});--%>
+
+
+
+		//category항목 리스트에서 선택할수 있게하는 기능
 		var selectedCategories = [];
 
 		//서버로 보낼 카테고리의 배열에 값을 넣는 함수
