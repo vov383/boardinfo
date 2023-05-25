@@ -24,7 +24,7 @@ th, td {
 }
 
 th {
-	background: #42444e;
+	background-color: #1432B1;
 	color: #fff;
 	text-align: left;
 }
@@ -47,7 +47,7 @@ td:first-child {
 }
 
 tr:nth-child(even) td {
-	background: #eaeaed;
+	background: #D9D9D9;
 }
 
 tr:last-child td:first-child {
@@ -66,7 +66,7 @@ tr:last-child td:last-child {
   position: relative;
   border-radius: 15px;
   background-color: #fff;
-  box-shadow: 0 0 8px 3px rgb(0 0 0);
+  box-shadow: 0 0 4px 2px rgb(0 0 0);
   cursor: pointer;
   margin: 15px;
 }
@@ -79,7 +79,7 @@ tr:last-child td:last-child {
   left: 2px;
   transform: translateY(-50%);
   border-radius: 50%;
-  background: #f03d3d;
+  background: #F9841A;
 }
 
 #toggleCategory, #toggleMechanic {

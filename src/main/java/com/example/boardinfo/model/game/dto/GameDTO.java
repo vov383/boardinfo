@@ -1,5 +1,6 @@
 package com.example.boardinfo.model.game.dto;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class GameDTO {
@@ -27,6 +28,9 @@ public class GameDTO {
 	private String publisher; //제작사
 	private String artist; //아트웍담당
 	private String mechanic; //게임 메카니즘
+
+	//사진테이블의 자료를 사용하는 용도의 배열
+	private String[] files;
 	
 	//테이블에 없을것들 일단 적어놨지만 나중에 dto가 아닌 map으로 값 넘길수도 있음.
 	private double g_rate; //게임 평점
@@ -37,12 +41,7 @@ public class GameDTO {
 	//getter setter tostring 생성자
 	public GameDTO() {}
 
-
-	public GameDTO(int gnum, int exnum, String renum, int bggnum, String gametitle, String gametitle_eng,
-			String players, String playtime, String ages, String language, String gamephoto_url, int release_year,
-			float bgg_game_score, int bggrank, Date write_date, int viewcount, String designer, String gamecategory,
-			String publisher, String artist, String mechanic, double g_rate, double l_rate, int g_rank) {
-		super();
+	public GameDTO(int gnum, int exnum, String renum, int bggnum, String gametitle, String gametitle_eng, String players, String playtime, String ages, String language, String gamephoto_url, int release_year, float bgg_game_score, int bggrank, Date write_date, int viewcount, String designer, String gamecategory, String publisher, String artist, String mechanic, String[] files, double g_rate, double l_rate, int g_rank) {
 		this.gnum = gnum;
 		this.exnum = exnum;
 		this.renum = renum;
@@ -64,23 +63,42 @@ public class GameDTO {
 		this.publisher = publisher;
 		this.artist = artist;
 		this.mechanic = mechanic;
+		this.files = files;
 		this.g_rate = g_rate;
 		this.l_rate = l_rate;
 		this.g_rank = g_rank;
 	}
 
-
 	@Override
 	public String toString() {
-		return "GameDTO [gnum=" + gnum + ", exnum=" + exnum + ", renum=" + renum + ", bggnum=" + bggnum + ", gametitle="
-				+ gametitle + ", gametitle_eng=" + gametitle_eng + ", players=" + players + ", playtime=" + playtime
-				+ ", ages=" + ages + ", language=" + language + ", gamephoto_url=" + gamephoto_url + ", release_year="
-				+ release_year + ", bgg_game_score=" + bgg_game_score + ", bggrank=" + bggrank + ", write_date="
-				+ write_date + ", viewcount=" + viewcount + ", designer=" + designer + ", gamecategory=" + gamecategory
-				+ ", publisher=" + publisher + ", artist=" + artist + ", mechanic=" + mechanic + ", g_rate=" + g_rate
-				+ ", l_rate=" + l_rate + ", g_rank=" + g_rank + "]";
+		return "GameDTO{" +
+				"gnum=" + gnum +
+				", exnum=" + exnum +
+				", renum='" + renum + '\'' +
+				", bggnum=" + bggnum +
+				", gametitle='" + gametitle + '\'' +
+				", gametitle_eng='" + gametitle_eng + '\'' +
+				", players='" + players + '\'' +
+				", playtime='" + playtime + '\'' +
+				", ages='" + ages + '\'' +
+				", language='" + language + '\'' +
+				", gamephoto_url='" + gamephoto_url + '\'' +
+				", release_year=" + release_year +
+				", bgg_game_score=" + bgg_game_score +
+				", bggrank=" + bggrank +
+				", write_date=" + write_date +
+				", viewcount=" + viewcount +
+				", designer='" + designer + '\'' +
+				", gamecategory='" + gamecategory + '\'' +
+				", publisher='" + publisher + '\'' +
+				", artist='" + artist + '\'' +
+				", mechanic='" + mechanic + '\'' +
+				", files=" + Arrays.toString(files) +
+				", g_rate=" + g_rate +
+				", l_rate=" + l_rate +
+				", g_rank=" + g_rank +
+				'}';
 	}
-
 
 	public int getGnum() {
 		return gnum;
@@ -321,6 +339,11 @@ public class GameDTO {
 		this.g_rank = g_rank;
 	}
 
+	public String[] getFiles() {
+		return files;
+	}
 
-
+	public void setFiles(String[] files) {
+		this.files = files;
+	}
 }
