@@ -179,15 +179,22 @@
       flex-grow: 1;
       min-height: 420px;
     }
-
+    /*top 검색창 검색결과 전체 감싸는 div*/
     #gameSearchDiv{
         margin-top: 6px;
         background-color: white;
         border: 1px solid black;
+        overflow-y: auto;
     }
+    /*top 검색창 검색결과 개별 감싸는 div*/
+    .searched{
+        height: 50px;
+        padding: 2px;
+    }
+
     #footer{
         position: absolute;
-        width: 1440px;
+        width: 100%;
         height: 172px;
 
         background: #3D3D43;

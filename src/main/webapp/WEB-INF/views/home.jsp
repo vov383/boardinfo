@@ -9,24 +9,9 @@
         <meta charset="utf-8">
         <title>BOARDINFO</title>
         <%@ include file="include/js/header.jsp" %>
-        <%@ include file="include/top.jsp" %>
    </head>
 
    <body>
-
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        
-
 
     <header>
         <%@include file="include/top.jsp" %>
@@ -34,6 +19,7 @@
 
     <main>
 
+        <br><br><br><br><br>
 
 	<div align="center">
 		<h1><a href="${path}/sample/sample.do" style="color: black;">SAMPLE CLICK</a></h1>
