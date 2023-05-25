@@ -15,7 +15,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select count(*) from tb_comments
 		where tb_num = #{tb_num}
 	</select>
-	
+
+	<!-- 댓글C -->
 	<insert id="insertComment">
 		insert into tb_comments 
 			(reply_reg_num, tb_num,
@@ -24,20 +25,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			(seq_tb_comments.nextval, #{tb_num}, #{content}, #{create_user})
 	</insert>
 
+	<!-- 댓글R (dto 반환함) -->
 	<select id="getComment" resultType="tbCommentDto">
 		select * from tb_comments
 		where reply_reg_num = #{reply_reg_num}
 	</select>
-
+	<!-- 댓글U -->
 	<update id="updateComment">
 		update tb_comments set content = #{content}
 		where reply_reg_num = #{reply_reg_num}
 	</update>
 
+	<!-- 댓글D -->
 	<delete id="deleteComment">
 		update tb_comments set del = 'Y'
 		where reply_reg_num = #{reply_reg_num}
 	</delete>
+
+	<!-- 대댓글C -->
+	<insert id="insertChildComment">
+		insert into tb_comments
+		(reply_reg_num, reply_parent_reg_num, tb_num,
+		 content, create_user)
+		values
+			(seq_tb_comments.nextval, #{reply_reg_num},
+			 #{tb_num}, #{content}, #{create_user})
+	</insert>
 </mapper>
 
 

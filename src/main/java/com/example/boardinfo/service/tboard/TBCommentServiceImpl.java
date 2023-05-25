@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.example.boardinfo.model.tboard.dao.TBoardDAO;
 import org.springframework.stereotype.Service;
 
 import com.example.boardinfo.model.tboard.dao.TBCommentDAO;
@@ -30,8 +31,8 @@ public class TBCommentServiceImpl implements TBCommentService {
 	}
 
 	@Override
-	public void insertChilComment(TBCommentDTO dto) {
-
+	public void insertChilComment(TBCommentDTO re_dto) {
+		tbcommentDao.insertChilComment(re_dto);
 	}
 
 	@Override

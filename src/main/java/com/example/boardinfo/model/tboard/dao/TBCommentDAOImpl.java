@@ -33,9 +33,8 @@ public class TBCommentDAOImpl implements TBCommentDAO {
 	}
 
 	@Override
-	public void insertChilComment(TBCommentDTO dto) {
-		// TODO Auto-generated method stub
-
+	public void insertChilComment(TBCommentDTO re_dto) {
+		sqlSession.insert("tbComment.insertChildComment", re_dto);
 	}
 
 	@Override
