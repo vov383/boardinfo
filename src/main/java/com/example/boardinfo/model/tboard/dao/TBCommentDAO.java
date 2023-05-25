@@ -10,6 +10,8 @@ public interface TBCommentDAO {
 	public void insertComment(TBCommentDTO re_dto);
 	public void insertChilComment(TBCommentDTO dto);
 	
-	public void updateComment(TBCommentDTO dto);
+	public void updateComment(int reply_reg_num,String content);
 	public void deleteComment(int reply_reg_num);
+
+    TBCommentDTO getCommentObject(int replyRegNum);
 }

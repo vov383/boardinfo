@@ -6,7 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
 <mapper namespace="tbComment">
 	<select id="getCommentList" resultType="tbCommentDto">
-		select * from tb_comments 
+		select * from tb_comments
 		where tb_num = #{tb_num}
 		order by create_date desc
 	</select>
@@ -23,6 +23,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		values
 			(seq_tb_comments.nextval, 1, #{tb_num}, #{content}, #{create_user})
 	</insert>
+
+	<select id="getComment" resultType="tbCommentDto">
+		select * from tb_comments
+		where reply_reg_num = #{reply_reg_num}
+	</select>
+
+	<update id="updateComment">
+		update tb_comments set content = #{content}
+		where reply_reg_num = #{reply_reg_num}
+	</update>
+
+	<delete id="deleteComment">
+		update tb_comments set del = 'Y'
+		where reply_reg_num = #{reply_reg_num}
+	</delete>
 </mapper>
 
 

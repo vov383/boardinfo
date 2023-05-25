@@ -103,7 +103,7 @@ $(function(){ //자동으로 실행되는 코드
 		});
 		//폼에 hidden 태그들을 붙임
 		$("#form1").append(str);
-		document.form1.action="${path}/board/update.do";
+		document.form1.action="${path}/tboard/update.do";
 		document.form1.submit();
 	});
 	
@@ -147,13 +147,7 @@ function listAttach(){
 		<h2>게시물 수정 페이지</h2>
 		<button type="button" id="btnList">목록</button>
 	</div>
-	<script>
-		var editConfig = {
-			filebrowserUploadUrl: "${path}/ckeditor/fileAttach.do", // Specify the upload URL
-//    filebrowserUploadMethod: "form", // Use the form-based upload method
-		}
-		CKEDITOR.replace("editor", editConfig);
-	</script>
+
 	<div id="contentsMain">
 		<form name="form1" method="post" enctype="multipart/form-data">
 			<input type="hidden" name="tb_num" id="tb_num" value="${dto.tb_num}">

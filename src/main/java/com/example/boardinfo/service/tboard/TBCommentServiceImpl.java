@@ -35,15 +35,18 @@ public class TBCommentServiceImpl implements TBCommentService {
 	}
 
 	@Override
-	public void updateComment(TBCommentDTO dto) {
-		// TODO Auto-generated method stub
-
+	public void updateComment(int reply_reg_num, String content) {
+		tbcommentDao.updateComment(reply_reg_num, content);
 	}
 
 	@Override
 	public void deleteComment(int reply_reg_num) {
-		// TODO Auto-generated method stub
+		tbcommentDao.deleteComment(reply_reg_num);
+	}
 
+	@Override
+	public TBCommentDTO getCommentObject(int reply_reg_num) {
+		return tbcommentDao.getCommentObject(reply_reg_num);
 	}
 
 }
