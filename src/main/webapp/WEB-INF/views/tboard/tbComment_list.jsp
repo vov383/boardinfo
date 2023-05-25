@@ -50,7 +50,7 @@
 							</c:choose>
 						</div>
 						<div class="childReplyInputArea">
-							<form method="post" name="childReplyForm" action="${path}/tbComment/">
+							<form method="post" name="childReplyForm" action="${path}/tbComment/childCommentInsert.do">
 								<textarea name="childComment" id="childComment" cols="3" rows="60"></textarea>
 								<button type="submit">작성 완료</button>
 
@@ -91,6 +91,7 @@
 	function childReplyInsert(tb_num) {
 		const childReplyElement = document.getElementsByClassName("childReplyInputArea");
 		childReplyElement.style.display = "block";
+
 	}
 </script>
 </body>

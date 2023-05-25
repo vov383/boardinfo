@@ -18,10 +18,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<insert id="insertComment">
 		insert into tb_comments 
-			(reply_reg_num, reply_parent_reg_num, tb_num, 
+			(reply_reg_num, tb_num,
 			content, create_user) 
 		values
-			(seq_tb_comments.nextval, 1, #{tb_num}, #{content}, #{create_user})
+			(seq_tb_comments.nextval, #{tb_num}, #{content}, #{create_user})
 	</insert>
 
 	<select id="getComment" resultType="tbCommentDto">
