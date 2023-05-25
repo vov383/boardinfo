@@ -70,10 +70,17 @@ public class MemberServiceImpl implements MemberService {
 		session.invalidate();
 		
 	}
-
+	
+	//중복확인
 	@Override
 	public boolean checkDuplicateId(String userid) {
-		String existingMember = memberDao.selectMemberById(userid);
+		MemberDTO existingMember = memberDao.selectMemberById(userid);
+	    return existingMember != null;
+	}
+
+	@Override
+	public boolean checkDuplicateNick(String nickname) {
+		MemberDTO existingMember = memberDao.selectMemberByNick(nickname);
 	    return existingMember != null;
 	}
 
