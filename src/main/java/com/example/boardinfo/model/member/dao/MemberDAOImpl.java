@@ -31,7 +31,7 @@ public class MemberDAOImpl implements MemberDAO {
 	public boolean loginCheck(MemberDTO dto) {
 		String name=sqlSession.selectOne("member.login_check",dto);
 		// 조건식 ? true일 때의 값 : false일 때의 값
-		return (name==null) ? false : true; 
+		return name != null;
 	}
 
 	@Override

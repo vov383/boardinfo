@@ -33,8 +33,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 	
 	<select id="list" resultType="mechanicDto">
-		select * from mechanic
-	</select>	
+		select mnum, mechanic from mechanic
+	</select>
+
+	<select id="view" resultType="mechanicDto">
+		select m.mnum, m.mechanic
+		from mechanic m, game_mechanic gm
+		where m.mnum = gm.mnum and gm.gnum = #{gnum}
+	</select>
+
+
+
 </mapper>
 
 

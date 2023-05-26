@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.http.MediaType;
 
 public class MediaUtils {
-	private static Map<String,MediaType> mediaMap;
+	private static final Map<String,MediaType> mediaMap;
 	//클래스를 로딩할 때 제일 먼저 실행되는 코드
 	static {
 		mediaMap = new HashMap<>();

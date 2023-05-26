@@ -70,8 +70,8 @@
 			<tr>
 				<td rowspan="10" id="td_photo">
 					<c:choose>
-						<c:when test="${dto.gamephoto_url != null}">
-							<img class="img_photo" src="${path}/resources/uploaded_game${dto.gamephoto_url}" width="250px" height="250px" border="1px">
+						<c:when test="${map.dto.gamephoto_url != null}">
+							<img class="img_photo" src="${path}/resources/uploaded_game${map.dto.gamephoto_url}" width="250px" height="250px" border="1px">
 						</c:when>
 						<c:otherwise>
 							빈 이미지 추가요망
@@ -79,43 +79,68 @@
 					</c:choose>
 
 				</td>
-				<td colspan="3"><h2>${dto.gametitle}</h2></td>
+				<td colspan="3"><h2>${map.dto.gametitle}</h2></td>
 			</tr>
 
 			<tr>
-				<td colspan="3">${dto.gametitle_eng}</td>
+				<td colspan="3">${map.dto.gametitle_eng}</td>
 			</tr>
 
 			<tr>
-				<td>인원 : <h4>${dto.players}</h4></td>
-				<td>시간 : <h4>${dto.playtime}</h4></td>
-				<td>연령 : <h4>${dto.ages}</h4></td>
+				<td>인원 : <h4>${map.dto.players}</h4></td>
+				<td>시간 : <h4>${map.dto.playtime}</h4></td>
+				<td>연령 : <h4>${map.dto.ages}</h4></td>
 			</tr>
 
 			<tr>
-				<td>제작연도 : <h4>${dto.release_year}</h4></td>
-				<td>bgg랭크 : <h4>${dto.bggrank}</h4></td>
-				<td>게임난이도 : <h4>${dto.bgg_game_score}</h4></td>
+				<td>제작연도 : <h4>${map.dto.release_year}</h4></td>
+				<td>bgg랭크 : <h4>${map.dto.bggrank}</h4></td>
+				<td>게임난이도 : <h4>${map.dto.bgg_game_score}</h4></td>
 			</tr>
 
 			<tr>
-				<td colspan="3">아티스트:추가요망</td>
+				<td colspan="3">
+					아티스트명 :
+					<c:forEach var="artist" items="${map.alist}">
+						<a href="${path}/game/search.do?sort=artist&num=${artist.anum}">${artist.artist}</a>
+					</c:forEach>
+				</td>
 			</tr>
 
 			<tr>
-				<td colspan="3">카테고리:추가요망</td>
+				<td colspan="3">
+					카테고리 :
+					<c:forEach var="category" items="${map.clist}">
+						<a href="${path}/game/search.do?sort=category&num=${category.cnum}">${category.gamecategory}</a>
+					</c:forEach>
+				</td>
 			</tr>
 
 			<tr>
-				<td colspan="3">디자이너:추가요망</td>
+				<td colspan="3">
+					디자이너 :
+					<c:forEach var="designer" items="${map.dlist}">
+						<a href="${path}/game/search.do?sort=designer&num=${designer.dnum}">${designer.designer}</a>
+					</c:forEach>
+				</td>
 			</tr>
 
 			<tr>
-				<td colspan="3">메카닉:추가요망</td>
+				<td colspan="3">
+					메카닉 :
+					<c:forEach var="mechanic" items="${map.mlist}">
+						<a href="${path}/game/search.do?sort=mechanic&num=${mechanic.mnum}">${mechanic.mechanic}</a>
+					</c:forEach>
+				</td>
 			</tr>
 
 			<tr>
-				<td colspan="3">퍼블리셔:추가요망</td>
+				<td colspan="3">
+					퍼블리셔 :
+					<c:forEach var="publisher" items="${map.plist}">
+						<a href="${path}/game/search.do?sort=publisher&num=${publisher.pnum}">${publisher.publisher}</a>
+					</c:forEach>
+				</td>
 			</tr>
 
 			<tr>
