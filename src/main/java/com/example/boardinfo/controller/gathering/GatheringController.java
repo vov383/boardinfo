@@ -9,18 +9,15 @@ import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
+import com.example.boardinfo.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.boardinfo.controller.chat.ChatController;
@@ -40,7 +37,9 @@ public class GatheringController {
 	public String addForm() {
 		return "gathering/addForm";
 	}
-	
+
+
+	//로그인필요
 	@PostMapping("/add.do")
 	public String add(@ModelAttribute GatheringDTO dto) {
 		gatheringService.addPost(dto);
@@ -53,66 +52,60 @@ public class GatheringController {
 		return "gathering/setLocation";
 	}	
 	
-	
+
 	@GetMapping("/list.do")
 	public ModelAndView list(HttpServletRequest request, ModelAndView mav,
 			@RequestParam(value="from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate from,
-			@RequestParam(value="to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate to
+			@RequestParam(value="to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate to,
+			@RequestParam(value="curPage", required=false, defaultValue="1") int curPage,
+			@RequestParam(value="address1", required=false) String[] address1List
 			) {
-		
-		
+
+		boolean showAvailable = false;
+
+		if(request.getParameter("showAvailable")!=null) showAvailable = true;
+
 		if(from!=null && to!=null) {
-			
 			if(from.isAfter(to)) {
 				from=to;
 			}
 		}
 		
-		
-		boolean showAvailable = false;
-		
-		if(request.getParameter("showAvailable")!=null) {
-			showAvailable = true;
-		}
-
-
-		String[] address1List = request.getParameterValues("address1");
-
 		String[] koreanAddress1 = {"서울", "부산", "대구", "인천", "광주", "대전", "울산",
 		"경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주", "세종"
 		};
 
 		List<String> koreanAddress1List = Stream.of(koreanAddress1).collect(Collectors.toList());
 		List<GatheringDTO> list = null;
-		String[] all = {"전체"};
 
+		//선택된 지역이 있다면 리스트에서 빼주기
 		if(address1List != null){
-			Stream<String> address1Stream = Arrays.stream(address1List);
-			if(address1Stream.noneMatch(s -> s.equals("전체"))) {
-				list = gatheringService.list(showAvailable, address1List, from, to);
-				mav.addObject("address1List", address1List);
-
-				//선택된 지역 삭제
-				for(String address1 : address1List){
-					koreanAddress1List.remove(address1);
-				}
-
+			//선택된 지역 삭제
+			for(String address1 : address1List){
+			koreanAddress1List.remove(address1);
 			}
-			else {
-				list = gatheringService.list(showAvailable, all, from, to);
-				mav.addObject("address1List", all);
-			}
-			
-			}
-
-		else{
-			list = gatheringService.list(showAvailable, all, from, to);
-			mav.addObject("address1List", all);
 		}
 
+		//선택된 지역이 없다면 빼주지 x
+		else {
+			String[] all = {"전체"};
+			address1List = all;
+		}
+
+		logger.info("address1List : " + address1List.toString());
+		int count = gatheringService.countList(showAvailable, address1List, from, to);
+		Pager pager = new Pager(count, curPage, 15);
+		int start = pager.getPageBegin();
+		int end = pager.getPageEnd();
+		list = gatheringService.list(showAvailable, address1List, from, to, start, end);
+		mav.addObject("address1List", address1List);
 		mav.addObject("list", list);
 		mav.addObject("showAvailable", showAvailable);
 		mav.addObject("koreanAddress1List", koreanAddress1List);
+		mav.addObject("from", from);
+		mav.addObject("to",to);
+		mav.addObject("curPage", curPage);
+		mav.addObject("page", pager);
 		mav.setViewName("/gathering/list");
 		return mav;
 	}
@@ -124,7 +117,8 @@ public class GatheringController {
 			) {
 		
 		boolean updateViewCount = true;
-		
+
+		/* 일단 제외시켜놨음~~~ 커뮤니티 특성상 굳이 조회수 증가를 막을 필요가 있을까 싶음
 		if(cookie!=null) {
 			
 			String gatheringViewCookie = cookie.getValue();
@@ -141,11 +135,47 @@ public class GatheringController {
 			else {
 				response.addCookie(new Cookie("gatheringView", "["+gathering_id+"]"));
 			}
+
+		 */
 		
 		mav.setViewName("/gathering/view");
 		mav.addObject("dto", gatheringService.view(gathering_id, updateViewCount));
 		return mav;
 	}
-	
+
+
+	//로그인필요-해당회원인지 확인해야 함
+	@RequestMapping("edit/{gathering_id}")
+	public ModelAndView edit(@PathVariable int gathering_id, ModelAndView mav){
+		mav.setViewName("/gathering/editForm");
+		GatheringDTO dto = gatheringService.view(gathering_id, false);
+		mav.addObject("dto", dto);
+		System.out.println(dto.toString());
+		return mav;
+	}
+
+
+
+	//로그인필요
+	@ResponseBody
+	@RequestMapping ("/addReply.do")
+	public boolean addReply(@ModelAttribute GatheringReplyDTO dto, HttpSession session){
+		//dto.setCreator_id((String)session.getAttribute("userid"));
+		dto.setCreator_id("kim123");
+		boolean result = gatheringService.addReply(dto);
+
+		return result;
+	}
+
+
+	@ResponseBody
+	@RequestMapping ("getReplies")
+	public Map<String, Object> getReplies(@RequestParam int gathering_id){
+		List<GatheringReplyDTO> list = gatheringService.getReplies(gathering_id);
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		return map;
+	}
+
 
 }
