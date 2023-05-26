@@ -157,9 +157,11 @@ public class GameServiceImpl implements GameService {
   public GameDTO view(int gnum) throws Exception {
     GameDTO dto = gameDao.view(gnum);
     String str = dto.getGamephoto_url();
-    String front = str.substring(0, 12);
-    String end = str.substring(14);
-    dto.setGamephoto_url(front+end);
+    if(str != null) {
+      String front = str.substring(0, 12);
+      String end = str.substring(14);
+      dto.setGamephoto_url(front+end);
+    }
     return dto;
   }
   

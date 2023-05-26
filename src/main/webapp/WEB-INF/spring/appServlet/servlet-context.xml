@@ -23,7 +23,7 @@
 		up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
 	<resources location="/resources/uploaded_image/" mapping="/uploaded_image/**"/>
-	
+	<resources location="/resources/game/" mapping="/uploadgames/**"/>
 	<!-- ck에디터 업로드 이미지 첨부파일 경로  -->
 	<resources mapping="/ckimg/**" location="/resources/ckimg/" />
 	
