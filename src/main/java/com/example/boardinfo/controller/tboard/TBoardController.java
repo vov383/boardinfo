@@ -77,8 +77,11 @@ public class TBoardController {
 	}
 	
 	@RequestMapping("insert.do")
-	public String insert(@ModelAttribute TBoardDTO dto, HttpSession session)
+	public String insert(
+			@RequestParam(value = "files", required = false) MultipartFile[] files,
+			@ModelAttribute TBoardDTO dto, HttpSession session)
 			throws Exception{
+
 		//modelAttribute 는 생략해도 되지만.. 써주는 것도 좋음
 		//로그인 한 사람만 들어올 수 있으니까 HttpSession 써야함
 
@@ -91,13 +94,20 @@ public class TBoardController {
 		}
 		//레코드 저장
 		tboardService.insert(dto);
+		if (files != null && files.length > 0) {
+			// Files were attached
+			TBAttachDTO f_dto = new TBAttachDTO();
+			for (MultipartFile file : files) {
 
-//		if(file.getBytes().length() < 1){
+				tboardService.fileAttach(f_dto);
+
+			}
+		} else {
+
+		}
 //
 //		}
-//		TBAttachDTO f_dto = new TBAttachDTO();
 
-//		tboardService.fileAttach(f_dto);
 		//게시물 목록 갱신처리
 		return "redirect:/tboard/list.do";
 	}
@@ -136,7 +146,7 @@ public class TBoardController {
 		
 	}
 	@RequestMapping("update.do")
-	public String update(TBoardDTO dto, HttpSession session) 
+	public String update(TBoardDTO dto)
 			throws Exception{
 		tboardService.update(dto);
 		return "redirect:/tboard/list.do";
@@ -148,8 +158,7 @@ public class TBoardController {
 			@RequestParam("tb_num") int tb_num){
 		return tboardService.getAttach(tb_num);
 	}
-			
-	
+
 	@RequestMapping("delete.do")
 	public String delete(int tb_num, HttpSession session) {
 		tboardService.delete(tb_num);

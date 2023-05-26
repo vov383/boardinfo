@@ -4,17 +4,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>글쓰기 - 모임모집</title>
-  
+  <title>글수정 - 모임모집</title>
+
 <%@ include file="../include/js/header.jsp" %>
 
-
   <style>
-  
+
       #contentsMain{
       border-top: 2px solid black;
       }
-  
+
      #postUpper{
       display: flex;
     }
@@ -35,7 +34,7 @@
       text-align: center;
       line-height: 280px;
     }
-    
+
     #tmpDiv{
       background-color: white;
       position: absolute;
@@ -164,8 +163,8 @@
       bottom: 0;
       clear: both;
     }
-    
-    
+
+
     footer > div{
       width: 100%;
       max-width: 1120px;
@@ -205,7 +204,7 @@
       display: block;
       line-height: 16px;
       max-width: 300px;
-      word-break: break-all;      
+      word-break: break-all;
     }
 
 
@@ -252,7 +251,7 @@
     		window.scrollTo(0, 0);
     		return;
     	}
-    	
+
 
     	let locationFull = $("#locationFull").val();
     	if(locationFull==''){
@@ -261,23 +260,23 @@
     		return;
     	}
 
-    	
+
     	let offerdate = $("#gathering_date").val();
-    	
+
     	if(offerdate==''){
     		alert('모임 날짜를 선택해주세요.');
     		$("#gathering_date").focus();
     		window.scrollTo(0, 50);
     		return;
     	}
-    	
+
     	let index = offerdate.indexOf('T');
     	offerdate = offerdate.substr(0, index) + ' ' + offerdate.substr(index+1);
-    	
+
     	let date1 = new Date();
     	date1.setMinutes(date1.getMinutes() + 30);
     	let minDate = getFormatDate(date1);
-    	
+
     	let date2 = new Date();
     	date2.setDate(date2.getDate() + 60);
     	date2.setMinutes(23);
@@ -288,35 +287,35 @@
     		alert('현재로부터 최소 30분 이후의 일정만 만들 수 있습니다.');
     		$("#gathering_date").focus();
     		window.scrollTo(0, 50);
-    		return;  		
+    		return;
     	}
-    	
+
     	if(offerdate > maxDate){
     		alert('모임 날짜는 2개월 이내까지 설정 가능합니다.');
     		$("#gathering_date").focus();
     		window.scrollTo(0, 50);
-    		return;  		
+    		return;
     	}
-    	
-    	
+
+
     	let maxPeople = $("#maxPeople");
-    	
+
     	if(isNaN(maxPeople.val())){
     		alert('모임에 초대할 최대 인원을 선택해주세요.');
     		maxPeople.val(2);
     		maxPeople.focus();
     		window.scrollTo(0, 50);
-    		return;  	    		
+    		return;
     	}
-    	
+
     	else if(maxPeople.val() < 2 || maxPeople.val() > 30){
     		alert('설정 가능한 참석 인원은 최소 2명, 최대 30명입니다.');
     		maxPeople.focus();
     		window.scrollTo(0, 50);
-    		return;  	    		
+    		return;
     	}
-    	
-    	
+
+
     	if($("#permit").is(':checked')){
     		let question = $("#question").val().trim();
     		$("#question").val(question);
@@ -326,22 +325,22 @@
         		window.scrollTo(0, 100);
         		return;
     		}
-    		
+
     	}
-    	
-    	
+
+
     	if(CKEDITOR.instances.description.getData().length < 1){
     		alert("모임 소개글을 입력해 주세요.");
     		$("#cke_description").focus();
     		return;
     		}
 
-    	
+
     	document.gatheringAddForm.submit();
-    	
+
     }
-    
-    
+
+
     function getFormatDate(date){
     	var year = date.getFullYear();
     	var month = (1+date.getMonth());
@@ -354,22 +353,22 @@
     	minute = minute >= 10? minute : '0' + minute;
     	return year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
     }
-    
+
 
 	function locationSearch(){
-    	
+
     	let top = screen.availHeight/2 - 290;
 		if(top < 0) top = 0;
 
 		let left = screen.availWidth/2 - 410;
 		if(left < 0) left = 0
-		
+
     	window.open("${path}/gathering/locationSearch.do", "날짜검색 - 모임모집", "left="+left+", top="+top+", width=820, height=580");
     }
 
   </script>
-  
-  
+
+
 
 
 </head>
@@ -377,12 +376,13 @@
 
 <%@include file="../include/top.jsp" %>
 
+
 <div id="contents">
   <div id="contentsHeader">
     <h2>모임모집</h2>
   </div>
   <div id="contentsLocation">
-    홈 &gt 오프모임 &gt 모임모집  
+    홈 &gt 오프모임 &gt 모임모집
   </div>
   <div id="contentsMain">
     <form name="gatheringAddForm" method="post" action="${path}/gathering/add.do">
@@ -470,18 +470,18 @@
             function displayCenterInfo(result, status) {
               if (status === kakao.maps.services.Status.OK) {
                     infoDiv.innerHTML = result[0].address.address_name;
-                    
+
                     var content = "";
-                    
+
                     if($("#place_name").val()!=""){
                     	content = '<div id="infoWindow"><span>'+$("#place_name").val() + '</span></div>';
                     }
-                    
+
                     else{
                     	content = '<div id="infoWindow"><span>'+result[0].address.address_name+
-                        ' ' + $("#place_name").val() + '</span></div>';	
+                        ' ' + $("#place_name").val() + '</span></div>';
                     }
-                    
+
                     var position = new kakao.maps.LatLng(lat, lng);
                     var customOverlay = new kakao.maps.CustomOverlay({
                       position: position,
@@ -502,26 +502,27 @@
         </div>
         <div>
           <div class="labelAndItem"><span>제목</span>
-          <input class="flex" name="title" id="title"></div>
+          <input class="flex" name="title" id="title" value="${dto.title}"></div>
           <div class="labelAndItem"><span>장소</span>
-            <input class="flex" disabled id="locationFull">
-	          <input type="hidden" name="address1" id="address1">
-	          <input type="hidden" name="address2" id="address2">
-	          <input type="hidden" name="address3" id="address3">
-	          <input type="hidden" name="place_name" id="place_name">
-	          <input type="hidden" name="lat" id="lat">
-	          <input type="hidden" name="lng" id="lng">
+            <input class="flex" disabled id="locationFull"
+            ${dto.address1+' '+dto.address2+' '+dto.address3+ ' '+dto.place_name}>
+	          <input type="hidden" name="address1" id="address1" value="${dto.address1}">
+	          <input type="hidden" name="address2" id="address2" value="${dto.address2}">
+	          <input type="hidden" name="address3" id="address3" value="${dto.address3}">
+	          <input type="hidden" name="place_name" id="place_name" value="${dto.place_name}">
+	          <input type="hidden" name="lat" id="lat" value="${dto.lat}">
+	          <input type="hidden" name="lng" id="lng" value="${dto.lng}">
             <button type="button" id="locationSearchBtn" onclick="locationSearch()">검색</button></div>
           <div class="labelAndItem"><span>일시</span>
-           <input type="datetime-local" name="gathering_date" id="gathering_date">
+           <input type="datetime-local" name="gathering_date" id="gathering_date" value="${dto.gathering_date}">
            <span class="flex" style="text-align: right;">*30분 이후 ~ 2개월 이내만 가능</span>
           </div>
           <div class="labelAndItem">
             <span>유의사항</span>
-            <input class="flex" placeholder="예시) 각자 게임 하나씩 가져오기로 해요~" name="note"></div>
+            <input class="flex" placeholder="예시) 각자 게임 하나씩 가져오기로 해요~" name="note" value="${dto.note}"></div>
           <div class="labelAndItem">
             <span>최대인원</span>
-            <input type="number" min="2" max="30" value="2" name="maxPeople" id="maxPeople"><span>명</span>
+            <input type="number" min="2" max="30" value="${dto.maxPeople}" name="maxPeople" id="maxPeople"><span>명</span>
             <span class="flex" style="text-align: right;">*최소 2명~최대 30명</span>
           </div>
           <div class="labelAndItem">
@@ -535,23 +536,26 @@
               </div>
               <div id="hiddenQuestion">
                 <div>보드인에게 묻고 싶은 질문을 입력하세요. (참가신청 시 제출)</div>
-                <input name="question" id="question" placeholder="예시) 가장 좋아하는 게임은 무엇인가요?">
+                <input name="question" id="question" placeholder="예시) 가장 좋아하는 게임은 무엇인가요?"
+                       value="${dto.question}">
               </div>
             </div>
           </div>
       </div>
+        -->
       </div>
       <div id="postMain">
         <div>
           <button type="button" id="btn-attachGame">게임첨부</button>
         </div>
-        <textarea id="description" name="description" placeholder="모임을 자유롭게 소개해보세요."></textarea>
+        <textarea id="description" name="description" placeholder="모임을 자유롭게 소개해보세요.">
+        </textarea>
         <script>
         CKEDITOR.replace("description",{
         	filebrowserUploadUrl : "${path}/imageUpload.do"
         });
         </script>
-        
+
         <ul>
           <li>참가인원이 모두 모이면 '모집완료', 모임시간이 되면 '모임종료'로 변경됩니다.</li>
           <li>소외되는 보드인 없이 모두가 즐거운 모임이 될 수 있게 노력해주세요.</li>

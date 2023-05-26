@@ -12,6 +12,7 @@ public interface MemberDAO {
 	public void updateMember(MemberDTO dto);
 	public void deleteMember(String userid);
 	public MemberDTO viewMember(String userid);
-	public String selectMemberById(String userid);
+	public MemberDTO selectMemberById(String userid);
+	public MemberDTO selectMemberByNick(String nickname);
 	
 }

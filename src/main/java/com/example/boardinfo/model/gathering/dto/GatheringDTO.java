@@ -31,6 +31,7 @@ public class GatheringDTO {
 	private int club_id;
 	private int is_public;
 	private int view_count;
+	private int reply_count;
 	
 	public int getGathering_id() {
 		return gathering_id;
@@ -170,11 +171,42 @@ public class GatheringDTO {
 	public void setView_count(int view_count) {
 		this.view_count = view_count;
 	}
-	
-	
-	
-	
 
-	
+	public int getReply_count() {
+		return reply_count;
+	}
 
+	public void setReply_count(int reply_count) {
+		this.reply_count = reply_count;
+	}
+
+	@Override
+	public String toString() {
+		return "GatheringDTO{" +
+				"gathering_id=" + gathering_id +
+				", writer_id='" + writer_id + '\'' +
+				", post_date=" + post_date +
+				", update_date=" + update_date +
+				", title='" + title + '\'' +
+				", description='" + description + '\'' +
+				", img_url='" + img_url + '\'' +
+				", gathering_date=" + gathering_date +
+				", fee=" + fee +
+				", address1='" + address1 + '\'' +
+				", address2='" + address2 + '\'' +
+				", address3='" + address3 + '\'' +
+				", place_name='" + place_name + '\'' +
+				", lat=" + lat +
+				", lng=" + lng +
+				", maxPeople=" + maxPeople +
+				", attendSystem='" + attendSystem + '\'' +
+				", note='" + note + '\'' +
+				", question='" + question + '\'' +
+				", status='" + status + '\'' +
+				", club_id=" + club_id +
+				", is_public=" + is_public +
+				", view_count=" + view_count +
+				", reply_count=" + reply_count +
+				'}';
+	}
 }

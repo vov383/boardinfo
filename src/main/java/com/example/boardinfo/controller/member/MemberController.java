@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,7 +22,7 @@ public class MemberController {
 	
 	@Inject
 	MemberService memberService;
-		
+	
 		//회원리스트
 		@RequestMapping("member_list.do")
 		public String memberList(Model model) {
@@ -75,10 +74,23 @@ public class MemberController {
 			return mav;
 		}
 		
+		//아이디 중복확인 
 		@RequestMapping("check_id.do")
 		@ResponseBody
-		public String checkId(@RequestParam("userid") String userid) {
+		public String checkId(@RequestParam String userid) {
 			boolean isDuplicate = memberService.checkDuplicateId(userid);
+		    	if (isDuplicate) {
+		    		return "duplicate";
+		    	} else 
+		    	{
+		    		return "available";
+		    	}
+		}
+		//닉네임 중복확인 
+		@RequestMapping("check_nick.do")
+		@ResponseBody
+		public String check_nick(@RequestParam String nickname) {
+			boolean isDuplicate = memberService.checkDuplicateNick(nickname);
 		    	if (isDuplicate) {
 		    		return "duplicate";
 		    	} else 

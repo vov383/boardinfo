@@ -15,20 +15,60 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			 #{maxPeople},#{attendSystem},#{note},#{question}, #{address1}, #{address2}, #{address3},
 			 #{place_name}, #{lat}, #{lng})
 	</insert>
+
+
+	<select id="countList" resultType="int">
+		select count(*)
+		from gathering
+
+	<where>
+    <trim prefixOverrides="and">
+		<trim suffixOverrides="or">
+			<foreach item="address1" collection="address1List">
+				<choose>
+					<when test="address1=='전체'"></when>
+					<otherwise>
+						address1 like #{address1}||'%' or
+					</otherwise>
+				</choose>
+			</foreach>
+		</trim>
+
+		<if test="showAvailable==true">
+			and gathering_date <![CDATA[>]]> (sysdate+(3/24))
+		</if>
+
+
+		<if test="from!=null">
+			and trunc(gathering_date, 'DD') <![CDATA[>]]>= #{from}
+		</if>
+
+		<if test="to!=null">
+			and trunc(gathering_date, 'DD') <![CDATA[<]]>= #{to}
+		</if>
+	</trim>
+	</where>
+	</select>
 	
 	
 	<select id="list" resultType="gatheringDTO">
-	select gathering_id, writer_id, post_date, title, gathering_date,
-	address1, address2, place_name, maxpeople, view_count
-	from gathering
-	where
-	
-	
-	<trim suffixOverrides="or">
-	<foreach item="address1" collection="address1List">
-	    <choose>
+		select *
+		from
+		(
+		select a.*, rownum rn
+		from
+		(select gathering_id, writer_id, post_date, title, gathering_date,
+		address1, address2, place_name, maxpeople, view_count,
+		(select count(*)
+		from gathering_reply
+		where gathering_id = g.gathering_id) as reply_count
+		from gathering g
+		<where>
+	    <trim prefixOverrides="and">
+		<trim suffixOverrides="or">
+			<foreach item="address1" collection="address1List">
+		    <choose>
 			<when test="address1=='전체'">
-	    		1=1 
 			</when>
 			<otherwise>
 				address1 like #{address1}||'%' or
@@ -43,19 +83,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	<if test="from!=null">
-	and gathering_date <![CDATA[>]]>= #{from}
+	and trunc(gathering_date, 'DD') <![CDATA[>]]>= #{from}
 	</if>
 	
 	<if test="to!=null">
-	and gathering_date <![CDATA[<]]>= #{to}
+	and trunc(gathering_date, 'DD') <![CDATA[<]]>= #{to}
 	</if>
-	
-	
-
-	order by gathering_id desc
+	</trim>
+	</where>
+	)a
+	)
+	where rn between #{start} and #{end}
 	</select>
-	
-	
+
+
 	<select id="view" resultType="gatheringDTO">
 	select * from gathering
 	where gathering_id = #{gathering_id}
@@ -67,8 +108,65 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	set view_count = view_count+1
 	where gathering_id = #{gathering_id}
 	</update>
-	
-	
+
+	<select id="getTargetReplyOrder" resultType="int">
+		select nvl(
+		(select min(inner_order) from gathering_reply
+		where parent_reply = #{parent_reply} and depth <![CDATA[<]]>= #{depth}
+		and inner_order <![CDATA[>]]> #{inner_order}
+		)
+		,
+		(
+		select max(inner_order)+1
+		from gathering_reply
+		where parent_reply = #{parent_reply}
+		)
+		)
+   	from dual
+	</select>
+
+	<select id="getReply" resultType="gatheringReplyDTO">
+		select reply_id, parent_reply, depth, inner_order
+		from gathering_reply
+		where reply_id = #{mother_reply}
+	</select>
+
+	<select id="getLast" resultType="int">
+		select count(*)
+		from gathering_reply
+		where gathering_id = #{gathering_id}
+	</select>
+
+	<update id="replyOrderUpdate">
+		update gathering_reply
+		set inner_order = inner_order + 1
+		where parent_reply = #{parent_reply} and inner_order >= (#{inner_order})
+	</update>
+
+	<insert id="addReply" parameterType="gatheringReplyDTO">
+		insert into gathering_reply
+		(reply_id, gathering_id, parent_reply, inner_order, depth, reply_text, creator_id)
+		values
+			(nvl((select max(reply_id) from gathering_reply)+1,1), #{gathering_id},
+			 <choose>
+				<when test="parent_reply == null">
+					nvl((select max(reply_id) from gathering_reply)+1,1)
+				</when>
+				<otherwise>
+					#{parent_reply}
+				</otherwise>
+			 </choose>
+			 , #{inner_order}, #{depth}, #{reply_text}, #{creator_id})
+	</insert>
+
+	<select id="getReplies" resultType="gatheringReplyDTO">
+		select reply_id, parent_reply, inner_order, depth, reply_text,
+		       creator_id, create_date as create_date
+		from gathering_reply
+		where gathering_id = #{gathering_id}
+		order by parent_reply, inner_order
+	</select>
+
 </mapper>
 
 

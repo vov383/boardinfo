@@ -189,6 +189,41 @@
       padding-right: 0;
     }
 
+    #paginationArea{
+      display: flex;
+      margin: 20px auto 0 auto;
+    }
+
+    .pageItem{
+      width: 35px;
+      height: 35px;
+      border-radius: 10px;
+      line-height: 35px;
+      text-align: center;
+      margin: 0 3px;
+      font-size: 1.2em;
+    }
+
+    .pageItem:hover{
+      cursor: pointer;
+    }
+
+    .pageItem:not(#curPage):hover{
+      background-color: #D9D9D9;
+    }
+
+    #curPage{
+      border: 2px solid #1432B1;
+      color: #1432B1;
+      line-height: 31px;
+    }
+    /*
+    #curPage:hover{
+      background-color: #1432B1;
+      color: white;
+    }
+    */
+
     footer{
       font-size: 15px;
       color: #DFDFDF;
@@ -223,7 +258,46 @@
         document.formGatheringSearch.submit();
       });
 
+      $("input[name='from']").change(function(){
+
+        let to = $("input[name='to']");
+
+        if(to.val()!=''){
+          if($(this).val() > to.val()){
+            to.val($(this).val());
+          }
+        }
+      });
+
+
+      $("input[name='to']").change(function(){
+
+        let from = $("input[name='from']");
+
+        if(from.val()!=''){
+          if($(this).val() < from.val()){
+            from.val($(this).val());
+          }
+        }
+      });
+
+
+      $("#dateResetBtn").click(function(){
+
+        $("input[name='from']").val('');
+        $("input[name='to']").val('');
+        document.formGatheringSearch.submit();
+
+      });
+
+
     });
+
+
+    function list(curPage){
+      let queryString = $("form[name='formGatheringSearch']").serialize() + '&curPage=' + curPage;
+      location.href="${path}/gathering/list.do?" + queryString;
+    }
 
 
   </script>
@@ -318,12 +392,12 @@
       <div>
         <h3>모임날짜</h3>
         <div>
-        <input type="date" name="from">
+        <input type="date" name="from" value="${from}">
         <span>~</span>
-        <input type="date" name="to">
+        <input type="date" name="to" value="${to}">
           <div>
             <button type="button" id="dateResetBtn">초기화</button>
-            <button type="button" id="dateSubmitBtn">검색</button>
+            <button type="submit" id="dateSubmitBtn">검색</button>
           </div>
         </div>
       </div>
@@ -367,18 +441,40 @@
             <span>${post.writer_id}</span>
             <span><fmt:formatDate value="${post.post_date}" pattern="yyyy-MM-dd"/></span>
             <span>조회 ${post.view_count}</span>
-            <span>댓글 12</span>
+            <span>댓글 ${post.reply_count}</span>
           </div>
         </div>     	
       	</c:forEach>
-
-
       </div>
 
-
-
+      <div id="paginationArea">
+        <c:if test="${page.curPage > 1}">
+          <div class="pageItem" onclick="list(1)">&lt&lt</div>
+        </c:if>
+        <c:if test="${page.curBlock > 1}">
+          <div class="pageItem" onclick="list(${page.prevBlock})">&lt</div>
+        </c:if>
+        <c:forEach var="num" begin="${page.blockStart}" end="${page.blockEnd}">
+          <c:choose>
+            <c:when test="${num == page.curPage}">
+              <div id="curPage" class="pageItem" onclick="list(${num})">${num}</div>
+            </c:when>
+            <c:otherwise>
+              <div class="pageItem" onclick="list(${num})">${num}</div>
+            </c:otherwise>
+          </c:choose>
+        </c:forEach>
+        <c:if test="${page.curBlock < page.totBlock}">
+          <div class="pageItem" onclick="list(${page.nextBlock})">&gt</div>
+        </c:if>
+        <c:if test="${page.curPage < page.totPage}">
+          <div class="pageItem" onclick="list(${page.totPage})">&gt&gt</div>
+        </c:if>
+      </div>
 
     </div>
+
+
   </div>
 </div>
 
