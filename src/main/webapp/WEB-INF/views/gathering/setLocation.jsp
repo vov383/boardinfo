@@ -151,7 +151,7 @@
   <input type="hidden" id="address3" type="text" value="">
    
   <!-- 건물명 --> 
-  <input id="place_name" type="text" value="">
+  <input type="hidden" id="place_name" type="text" value="">
     
   <!-- 출력주소 -->  
   <div id="address">

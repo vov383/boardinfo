@@ -80,6 +80,7 @@
 	        text-align: center;
 	        line-height: 257px;
 	        overflow: hidden;
+            position: relative;
         }
 
         #profileArea{
@@ -181,13 +182,27 @@
             font-weight: bold;
         }
 
-        .reply > div:first-of-type > div > span{
+        .reply > div:first-of-type > div > span:first-of-type{
             padding-right: 10px;
             margin-right: 10px;
         }
 
+        .addRe_reply > a{
+            text-decoration: none;
+            color: black;
+        }
+
         form[name="replyForm"]{
             text-align: right;
+        }
+
+        .re-replyForm{
+            padding: 15px 20px 10px 20px;
+        }
+
+        [class*="re-reply"]{
+            background-color: #F5F5F5;
+            padding-top: 10px;
         }
 
         textarea{
@@ -198,7 +213,7 @@
             resize: none;
         }
 
-        button[id*="btn-"]{
+        button[id*="btn-"], button[class*="btn-"]{
             width: 82px;
             height: 34px;
             font-size: 16px;
@@ -207,12 +222,18 @@
             cursor: pointer;
         }
 
-        #btn-GoList{
+        #btn-GoList, #btn-Edit, #btn-Delete{
             border: 1px solid black;
             background-color: white;
         }
 
-        #btn-addReply{
+        #btn-Delete{
+            margin: 0 5px;
+        }
+
+
+
+        .btn-AddReply{
             background-color: #1432B1;
             border: 0;
             color: white;
@@ -236,6 +257,139 @@
     <script>
 
 
+        $(function(){
+
+            getReplies();
+
+            $(document).on("click", ".btn-AddReply", function() {
+
+                let form = $(this).closest("form");
+                let reply_text = form.find('textarea[name="reply_text"]');
+                reply_text.val(reply_text.val().trim());
+                if(reply_text.val()=='') return;
+
+                let queryString = form.serialize()+"&gathering_id="+"${dto.gathering_id}";
+
+                $.ajax({
+                    type: "get",
+                    url : "${path}/gathering/addReply.do",
+                    data : queryString,
+                    success: function(result){
+                       if(result){
+                           reply_text.val("");
+                           getReplies();
+                       }
+                       else alert("댓글 달기 실패");
+                    },
+                    error: function(){
+                       alert("댓글 달기 실패");
+                    }
+                });
+
+
+
+            });
+
+        });
+
+
+        function getReplies(){
+
+            $.ajax({
+                type: "get",
+                url : "${path}/gathering/getReplies.do",
+                data : {gathering_id : "${dto.gathering_id}"},
+                success: function(result){
+                    let list = result.list;
+                    if(list!=null && list.length > 0){
+
+                        let repliesContainer = $("#replies");
+                        repliesContainer.empty();
+
+                        for(let i=0; i<list.length; i++){
+                            let reply = $("<div>").addClass("reply").attr("id", list[i].reply_id);
+
+                            let writer = $("<span>").text(list[i].creator_id);
+                            let text= $("<div>").text(list[i].reply_text);
+
+                            if(list[i].depth > 0) {
+                                reply.addClass("re-reply");
+                                writer.html("<img width='10px' style='margin-right: 7px;' " +
+                                    "src='${path}/images/re_reply.png'>" + writer.text());
+                                writer.css("padding-left", (list[i].depth * 18) + "px");
+                                text.css("padding-left", (list[i].depth * 18) + "px");
+                            }
+
+                            let bigDiv = $("<div>");
+                            let smallDiv = $("<div>");
+                            let addReplySpan = $("<span>").addClass("addRe_reply");
+                            let link = $("<a>").prop("href",
+                                "javascript:showRe_reply(" + list[i].reply_id + ","
+                                + list[i].parent_reply + ", "
+                                + list[i].inner_order + ")").text("답글");
+
+                            let date = new Date(list[i].create_date);
+                            let formattedDate = new Date(date + 3240 * 10000)
+                                .toISOString().replace('T', ' ').replace(/\..*/,'');
+
+                            let span = $("<span>").text(formattedDate);
+                            let img = $("<img>").attr({
+                                src : "${path}/images/reply_arrow.png",
+                                width : "15px"
+                            });
+
+
+                            addReplySpan.append(img, link);
+                            smallDiv.append(span, addReplySpan);
+                            bigDiv.append(writer, smallDiv);
+                            reply.append(bigDiv, text);
+
+                            repliesContainer.append(reply);
+                        }
+
+                        }
+
+                    $("#countReplies").text(list.length==null ? 0 : list.length);
+
+                }, error: function(){
+                    $("#countReplies").text(0);
+                }
+            });
+        }
+
+        function showRe_reply(reply_id){
+            $("form[class='re-replyForm']").remove();
+
+            let re_reply_form = $("<form>").addClass("re-replyForm")
+                .attr({
+                    name: "replyForm",
+                    action: "${path}/gathering/addReply.do"
+                });
+
+            let textArea = $("<textarea>").attr({
+                name: "reply_text"
+            });
+
+            let input = $("<input>").attr({
+                type: "hidden",
+                name: "mother_reply",
+                value: reply_id
+            });
+
+          let button = $("<button>").attr({
+                type: "button",
+                class: "btn-AddReply"
+            }).text("댓글쓰기");
+
+            re_reply_form.append(textArea, input, button);
+            $("#" + reply_id).append(re_reply_form);
+
+        }
+
+        function deletePost(){
+
+        }
+
     </script>
 
 
@@ -254,17 +408,19 @@
     		<div id="postInfo">
     		<span>
 	    		<fmt:formatDate value="${dto.post_date}" pattern="yyyy-MM-dd HH:mm"/>
-			</span><span>조회 ${dto.view_count}</span><span>댓글 3</span>
+			</span><span>조회 ${dto.view_count}</span>
     		</div>
             <div id="postUpper">
+                <div>
                  <div class="map_wrap">
-					  <div id="map" style="position:relative;overflow:hidden;"></div>
-				  	<div class="hAddr">
+					  <div id="map"></div>
+    				  	<div class="hAddr">
 					    <span class="title">주소정보</span>
 					    <span id="centerAddr"></span>
 				   </div>
 				 </div>
-				 
+                </div>
+
 				 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=aaa4a3ee6e039439424a544717323d1a&libraries=services"></script>
 <script>
 
@@ -273,7 +429,7 @@
   var mapOption =
           {
             center: new kakao.maps.LatLng("${dto.lat}", "${dto.lng}"), // 지도의 중심좌표
-            level: 1 // 지도의 확대 레벨
+            level: 3 // 지도의 확대 레벨
           };
 
   // 지도를 생성합니다
@@ -305,7 +461,7 @@
     mapOption =
             {
               center: new kakao.maps.LatLng(lat, lan), // 지도의 중심좌표
-              level: 1 // 지도의 확대 레벨
+              level: 3 // 지도의 확대 레벨
             };
 
     // 지도를 생성합니다
@@ -327,7 +483,6 @@
     searchDetailAddrFromCoords(map.getCenter(), displayCenterInfo);
   }
 
-
   function searchDetailAddrFromCoords(coords, callback) {
     // 좌표로 법정동 상세 주소 정보를 요청합니다
     geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
@@ -338,8 +493,14 @@
     if (status === kakao.maps.services.Status.OK) {
         infoDiv.innerHTML = result[0].address.address_name;
 
-        var content = '<div id="infoWindow"><span>'+result[0].address.address_name+
-                ' ' + "${dto.place_name}" + '</span></div>';
+        let content = "";
+
+        if("${dto.place_name}"!=null && "${dto.place_name}"!=""){
+            content = "<div id='infoWindow'><span>" + "${dto.place_name}" + "</span></div>";
+        }
+        else
+            content = '<div id="infoWindow"><span>'+result[0].address.address_name + '</span></div>';
+
         var position = new kakao.maps.LatLng("${dto.lat}", "${dto.lng}");
         var customOverlay = new kakao.maps.CustomOverlay({
           position: position,
@@ -382,8 +543,6 @@
                         		</c:otherwise>
                         	</c:choose>
 
-                        
-                        
                         </li>
                         <li>2/${dto.maxPeople}명 참가중<img src="${path}/images/more.png" width="30px"
                                          style="vertical-align: middle; padding-bottom: 2px;"></li>
@@ -400,58 +559,22 @@
 
             <div id="replyArea">
                 <div id="replyUpper">
-                    <span>댓글[3]</span>
+                    <span>댓글[<span id="countReplies"></span>]</span>
                     <span>이 모임에 대해 궁금한 사항이 있으면 댓글을 달아보세요.</span>
+                    <button type="button" id="btn-Edit"
+                            onclick='location.href="${path}/gathering/edit/${dto.gathering_id}"'>수정
+                    </button>
+                    <button type="button" id="btn-Delete"
+                            onclick="deletePost()">삭제
+                    </button>
                     <button type="button" id="btn-GoList">목록</button>
                 </div>
                 <div id="replies">
-
-                    <div class="reply">
-                        <div>
-                            <span>귤선생</span>
-                            <div>
-                                <span>2023.05.15&nbsp&nbsp07:02:14</span>
-                                <img src="${path}/images/reply_arrow.png" width="15px;">답글
-                            </div>
-                        </div>
-                        <div>
-                            우와 ㅠㅠㅠㅠ 너무 가고 싶은데 시간이 안되는 게 아쉽네요 ㅠㅠㅠㅠㅠ
-                        </div>
-                    </div>
-
-                    <div class="reply">
-                        <div>
-                            <span>귤선생</span>
-                            <div>
-                                <span>2023.05.15&nbsp&nbsp07:02:14</span>
-                                <img src="${path}/images/reply_arrow.png" width="15px;">답글
-                            </div>
-                        </div>
-                        <div>
-                            우와 ㅠㅠㅠㅠ 너무 가고 싶은데 시간이 안되는 게 아쉽네요 ㅠㅠㅠㅠㅠ
-                        </div>
-                    </div>
-
-                    <div class="reply">
-                        <div>
-                            <span>귤선생</span>
-                            <div>
-                                <span>2023.05.15&nbsp&nbsp07:02:14</span>
-                                <img src="${path}/images/reply_arrow.png" width="15px;">답글
-                            </div>
-                        </div>
-                        <div>
-                            우와 ㅠㅠㅠㅠ 너무 가고 싶은데 시간이 안되는 게 아쉽네요 ㅠㅠㅠㅠㅠ
-                        </div>
-                    </div>
-
-
-
-
                 </div>
-                <form name="replyForm">
-                    <textarea></textarea>
-                    <button type="button" id="btn-addReply">댓글쓰기</button>
+                <form name="replyForm" action="${path}/gathering/addReply.do">
+                    <textarea name="reply_text"></textarea>
+                    <input type="hidden" name="gathering_id" value="${dto.gathering_id}">
+                    <button type="button" class="btn-AddReply">댓글쓰기</button>
                 </form>
             </div>
     </div>

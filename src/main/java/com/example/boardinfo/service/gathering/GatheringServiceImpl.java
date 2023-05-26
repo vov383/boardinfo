@@ -6,10 +6,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 import org.springframework.stereotype.Service;
 
 import com.example.boardinfo.model.gathering.dao.GatheringDAO;
 import com.example.boardinfo.model.gathering.dto.GatheringDTO;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -38,9 +40,9 @@ public class GatheringServiceImpl implements GatheringService {
 
 	@Override
 	public List<GatheringDTO> list(boolean showAvailable, String[] address1List
-			, LocalDate from, LocalDate to) {
+			, LocalDate from, LocalDate to, int start, int end) {
 		List<GatheringDTO> list = 
-				gatheringDao.list(showAvailable, address1List, from, to);
+				gatheringDao.list(showAvailable, address1List, from, to, start, end);
 		
 		for (GatheringDTO dto : list) {
 			
@@ -72,14 +74,10 @@ public class GatheringServiceImpl implements GatheringService {
 	public GatheringDTO view(int gathering_id, boolean updateViewCount) {
 		
 		
-		/* 일단 막아놓자 커뮤니티에서는 조회수 계속 올라가는 편이 자연스러운것 같기도 함
 		if(updateViewCount) {
-		*/
 			gatheringDao.updateViewCount(gathering_id);
-		/*	
 		}
-		*/
-		GatheringDTO dto = gatheringDao.view(gathering_id);
+			GatheringDTO dto = gatheringDao.view(gathering_id);
 		
 		//status 세팅
 		LocalDate now = LocalDate.now();
@@ -93,8 +91,44 @@ public class GatheringServiceImpl implements GatheringService {
 		return dto;
 		
 	}
-	
-	
-	
 
+
+	@Transactional
+	@Override
+	public boolean addReply(GatheringReplyDTO dto) {
+
+		boolean result = false;
+
+		//대댓글이 아닌 일반 댓글인 경우
+		if(dto.getMother_reply()==null){
+			dto.setDepth(0);
+			int target = gatheringDao.getTargetReplyOrder(dto);
+			dto.setInner_order(target);
+		}
+
+		//대댓글인 경우
+		else{
+			GatheringReplyDTO mother = gatheringDao.getReply(dto.getMother_reply());
+			System.out.println("mother : " + mother);
+			dto.setDepth(mother.getDepth()+1);
+			dto.setParent_reply(mother.getParent_reply());
+			int target = gatheringDao.getTargetReplyOrder(mother);
+			dto.setInner_order(target);
+			System.out.println("target : " + target);
+			gatheringDao.replyOrderUpdate(dto.getParent_reply(), dto.getInner_order());
+		}
+
+		if(gatheringDao.addReply(dto) >= 1) result = true;
+		return result;
+	}
+
+	@Override
+	public List<GatheringReplyDTO> getReplies(int gatheringId) {
+		return gatheringDao.getReplies(gatheringId);
+	}
+
+	@Override
+	public int countList(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to) {
+		return gatheringDao.countList(showAvailable, address1List, from, to);
+	}
 }
