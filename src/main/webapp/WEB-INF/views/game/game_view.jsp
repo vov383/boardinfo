@@ -71,7 +71,7 @@
 				<td rowspan="10" id="td_photo">
 					<c:choose>
 						<c:when test="${dto.gamephoto_url != null}">
-							<img class="img_photo" src="${path}/uploadfiles/${dto.gamephoto_url}" width="250px" height="250px" border="1px">
+							<img class="img_photo" src="${path}/resources/uploaded_game${dto.gamephoto_url}" width="250px" height="250px" border="1px">
 						</c:when>
 						<c:otherwise>
 							빈 이미지 추가요망
