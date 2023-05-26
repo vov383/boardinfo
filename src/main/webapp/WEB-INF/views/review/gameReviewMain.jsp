@@ -346,53 +346,18 @@
 
   </style>
 
+
+
+
 </head>
-
-<%--
-<body>
-<div id="header">
-
-  <div id="header-upper-box">
-  <div>
-    <div id="header-left">
-      <a href="#" title="보드인포"><img src="${path}/images/boardinfo_logo.png" width="170px"></a>
-    </div>
-    <div id="header-right">
-      <form name="gameSearch" id="gameSearch" method="get">
-        <div>
-          <input type="text" name="gameKeyword" placeholder="보드게임 찾기">
-          <img src="${path}/images/search.png">
-        </div>
-      </form>
-      <a href="#" title="로그인" class="sign" id="signIn">로그인</a>
-      <a href="#" title="회원가입" class="sign" id="signUp">회원가입</a>
-    </div>
-  </div>
-  </div>
-
-  <div class="nav">
-    <ul class="menu">
-      <li><a href="#" class="toMenu" title="게임정보">게임정보<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="커뮤니티">커뮤니티<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="오프모임">오프모임<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="중고장터">중고장터<img src="${path}/images/dropdown.png" width="34px"></a></li>
-    </ul>
-  </div>
-</div>
-
-<div id="contents">
-  <div id="contentsHeader">
-    <h2>게임리뷰</h2>
-  </div>
-  <div id="contentsLocation">
-    홈 &gt 커뮤니티 &gt 게임리뷰
-  </div>
-  <div id="contentsMain">
-    --%>
 
 
 <body>
 <%@include file="../include/top.jsp" %>
+
+
+
+
 <div id="contents">
   <div id="contentsHeader">
     <h2>모임모집</h2>
@@ -402,6 +367,14 @@
   </div>
   <div id="contentsMain">
 
+    <%--검색--%>
+    <div class="searchBox">
+      <input type="text" placeholder="제목 및 내용을 검색하세요.">
+      <button type="button" id="search" onclick="searchFu()">검색</button>
+      <input type="button" id="button1" onclick="button1_click();" value="버튼1" />
+    </div>
+
+    <%--본문--%>
     <form name="reviewlist" method="post" action="${path}/review/reviewlist.do">
       <table style="table-layout:fixed;">
         <tr><!-- 첫번째 줄 시작 -->
@@ -414,12 +387,12 @@
           <th style="width: 200px;">댓글</th>
           <th style="width: 200px;">게임</th>
         </tr>
-        <script>console.log(<c:out value="${list}"></c:out>) </script>
+
         <c:forEach items="${list}" var="vo">
           <tr>
             <td style="width: 200px; text-align: center;">${vo.category}</td>
             <td style="width: 200px; text-align: center;">${vo.good}</td>
-            <td style="width: 200px; text-align: center;"><A href = "${path}/review/reviewdetail.do">${vo.title}</A></td>
+            <td style="width: 200px; text-align: center;">${vo.title}</td>
             <td style="width: 200px; text-align: center;">${vo.nickName}</td>
             <td style="width: 200px; text-align: center;">${vo.createDate}</td>
             <td style="width: 200px; text-align: center;">${vo.views}</td>
@@ -434,27 +407,30 @@
 
   </div>
 </div>
-!!!F;O;O;T;E;R 첨부해주세요
+<%--!!!F;O;O;T;E;R 첨부해주세요--%>
 <%@include file="../include/footer.jsp" %>
+
+
+
+<script>
+  console.log(<c:out value="${list}"></c:out>)
+
+  /*검색 스크립트*/
+  function searchFu() {
+    alert("fwjehqofq");
+  }
+
+  /*버튼 안눌려서 테스트*/
+  function button1_click() {
+    console.log("버튼1을 누르셨습니다.");
+  }
+
+
+</script>
+
+
 </body>
 
-
-
-
-
-    <%--
-
-  </div>
-</div>
-
-<footer>
-  <div>
-    서울특별시 강남구 테헤란로14길 6 남도빌딩 2,3F<br>
-    KH정보교육원 TEAM BOARDINFO
-  </div>
-</footer>
-
-</body>--%>
 </html>
 
 
