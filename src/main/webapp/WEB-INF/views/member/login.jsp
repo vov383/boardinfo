@@ -79,7 +79,7 @@ function login_check() {
 			</c:if>
  </form>
  <div class="dropdown-divider"></div>
-  <a class="dropdown-item" href="#">메인으로</a>
+  <a class="dropdown-item" href="${path}/">메인으로</a>
   <a class="dropdown-item" href="${path}/member/member_join.do">회원가입</a>
   <a class="dropdown-item" href="#">아이디 찾기</a>
   <a class="dropdown-item" href="#">비밀번호 찾기</a>

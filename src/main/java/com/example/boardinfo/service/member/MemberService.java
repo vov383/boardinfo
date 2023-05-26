@@ -17,5 +17,6 @@ public interface MemberService {
 	public MemberDTO viewMember(String userid);
 	public void logout(HttpSession session);
 	public boolean checkDuplicateId(String userid);
+	public boolean checkDuplicateNick(String nickname);
 	
 }

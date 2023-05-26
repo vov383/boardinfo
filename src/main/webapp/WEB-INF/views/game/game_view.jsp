@@ -10,6 +10,19 @@
         <title>BOARDINFO</title>
         <%@ include file="../include/js/header.jsp" %>
         <link rel="stylesheet" href="${path}/include/js/style_game.css">
+
+		<style>
+
+			#td_photo {
+				position: relative;
+			}
+			.img_photo {
+				position: absolute;
+				top: 0;
+			}
+
+		</style>
+
    </head>
 
    <body>
@@ -31,7 +44,7 @@
 
 
 	<div class="tableDiv">
-		
+
 		<table>
 
 			<colgroup>
@@ -55,46 +68,56 @@
 			<tbody>
 
 			<tr>
-				<td rowspan="10">사진자리</td>
+				<td rowspan="10" id="td_photo">
+					<c:choose>
+						<c:when test="${dto.gamephoto_url != null}">
+							<img class="img_photo" src="${path}/uploadfiles/${dto.gamephoto_url}" width="250px" height="250px" border="1px">
+						</c:when>
+						<c:otherwise>
+							빈 이미지 추가요망
+						</c:otherwise>
+					</c:choose>
+
+				</td>
 				<td colspan="3"><h2>${dto.gametitle}</h2></td>
 			</tr>
-			
+
 			<tr>
 				<td colspan="3">${dto.gametitle_eng}</td>
 			</tr>
-			
+
 			<tr>
 				<td>인원 : <h4>${dto.players}</h4></td>
 				<td>시간 : <h4>${dto.playtime}</h4></td>
 				<td>연령 : <h4>${dto.ages}</h4></td>
 			</tr>
-			
+
 			<tr>
 				<td>제작연도 : <h4>${dto.release_year}</h4></td>
 				<td>bgg랭크 : <h4>${dto.bggrank}</h4></td>
 				<td>게임난이도 : <h4>${dto.bgg_game_score}</h4></td>
 			</tr>
-			
+
 			<tr>
 				<td colspan="3">아티스트:추가요망</td>
 			</tr>
-			
+
 			<tr>
 				<td colspan="3">카테고리:추가요망</td>
 			</tr>
-			
+
 			<tr>
 				<td colspan="3">디자이너:추가요망</td>
 			</tr>
-			
+
 			<tr>
 				<td colspan="3">메카닉:추가요망</td>
 			</tr>
-			
+
 			<tr>
 				<td colspan="3">퍼블리셔:추가요망</td>
 			</tr>
-			
+
 			<tr>
 				<td>후기게시판과 연결되면 연결</td>
 				<td>상품게시판과 연결되면 연결</td>
@@ -102,9 +125,9 @@
 			</tr>
 
 			</tbody>
-			
+
 		</table>
-		
+
 	</div>
 
 		   </div>
