@@ -48,4 +48,5 @@ public class MechanicDAOImpl implements MechanicDAO {
     return sqlSession.selectList("mechanic.list");
   }
 
+  public List<MechanicDTO> view(int gnum) { return sqlSession.selectList("mechanic.view", gnum); }
 }

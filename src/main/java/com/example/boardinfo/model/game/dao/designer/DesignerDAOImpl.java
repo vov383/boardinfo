@@ -41,8 +41,10 @@ public class DesignerDAOImpl implements DesignerDAO {
 	}
 
 	public List<DesignerDTO> getAutoDesigner(String input){
-		List<DesignerDTO> list = sqlSession.selectList("designer.getAuto", input);
-		System.out.println(list);
-		return list;
+		return sqlSession.selectList("designer.getAuto", input);
+	}
+
+	public List<DesignerDTO> view(int gnum) {
+		return sqlSession.selectList("designer.view", gnum);
 	}
 }

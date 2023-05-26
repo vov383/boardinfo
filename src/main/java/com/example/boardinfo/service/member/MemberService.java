@@ -8,15 +8,15 @@ import com.example.boardinfo.model.member.dto.MemberDTO;
 
 public interface MemberService {
 
-	public List<MemberDTO> list();
-	public void insertMember(MemberDTO dto);
-	public boolean loginCheck(MemberDTO dto, HttpSession session);
-	public boolean checkPw(String userid, String passwd);
-	public void updateMember(MemberDTO dto);
-	public void deleteMember(String userid);
-	public MemberDTO viewMember(String userid);
-	public void logout(HttpSession session);
-	public boolean checkDuplicateId(String userid);
-	public boolean checkDuplicateNick(String nickname);
+	List<MemberDTO> list();
+	void insertMember(MemberDTO dto);
+	boolean loginCheck(MemberDTO dto, HttpSession session);
+	boolean checkPw(String userid, String passwd);
+	void updateMember(MemberDTO dto);
+	void deleteMember(String userid);
+	MemberDTO viewMember(String userid);
+	void logout(HttpSession session);
+	boolean checkDuplicateId(String userid);
+	boolean checkDuplicateNick(String nickname);
 	
 }

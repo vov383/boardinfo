@@ -39,6 +39,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where upper(designer) like upper(#{input})||'%'
 		order by designer
 	</select>
+
+	<select id="view" resultType="designerDto">
+		select d.dnum, d.designer
+		from designer d, game_designer gd
+		where d.dnum = gd.dnum and gd.gnum = #{gnum}
+	</select>
 	
 </mapper>
 

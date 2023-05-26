@@ -34,7 +34,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @RequestMapping("ckeditor/*")
 public class CkeUploadController {
 	//로깅
-	private static Logger logger = 
+	private static final Logger logger =
 			LoggerFactory.getLogger(CkeUploadController.class);
 
 	//upload 디렉토리 설정

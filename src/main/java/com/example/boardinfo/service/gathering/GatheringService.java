@@ -8,14 +8,14 @@ import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 
 public interface GatheringService {
 	
-	public boolean addPost(GatheringDTO dto);
-	public boolean deletePost();
-	public boolean editPost();
-	public GatheringDTO view(int gathering_id, boolean updateViewCount);
-	public List<GatheringDTO> list(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to, int start, int end);
-	public boolean addReply(GatheringReplyDTO dto);
+	boolean addPost(GatheringDTO dto);
+	boolean deletePost();
+	boolean editPost();
+	GatheringDTO view(int gathering_id, boolean updateViewCount);
+	List<GatheringDTO> list(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to, int start, int end);
+	boolean addReply(GatheringReplyDTO dto);
 
-	public List<GatheringReplyDTO> getReplies(int gatheringId);
+	List<GatheringReplyDTO> getReplies(int gatheringId);
 
-    public int countList(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to);
+    int countList(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to);
 }

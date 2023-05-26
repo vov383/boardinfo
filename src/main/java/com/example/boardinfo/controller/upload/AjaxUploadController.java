@@ -3,6 +3,7 @@ package com.example.boardinfo.controller.upload;
 import java.io.File; 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -29,7 +30,7 @@ import com.example.boardinfo.util.UploadFileUtils;
 public class AjaxUploadController {
 
 	//로깅
-	private static Logger logger = 
+	private static final Logger logger =
 			LoggerFactory.getLogger(AjaxUploadController.class);
 	
 	@Inject
@@ -87,7 +88,7 @@ public class AjaxUploadController {
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 			headers.add("Content-Disposition", "attachment; filename=\""
 					+ new String(
-							fileName.getBytes("utf-8"), "iso-8859-1")+"\"");
+							fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1)+"\"");
 			
 			//바이트 배열(내용), 헤더, 상태코드 3개를 묶어서 전달
 			entity = new ResponseEntity<byte[]>(
