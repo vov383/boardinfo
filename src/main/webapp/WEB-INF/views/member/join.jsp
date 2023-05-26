@@ -12,6 +12,7 @@
 <script type="text/javascript">
 var isIdChecked = false;  // 아이디 중복 확인 여부를 체크하는 변수
 var isNickChecked = false;// 닉네임 중복 확인 여부를 체크하는 변수
+
 $(function() {
     $("#btnIdCheck").click(function() {
       var userid = $("#userid").val();
@@ -77,7 +78,21 @@ $(function() {
       });
     });
   });
-
+function login_check() {
+    if (window.event.keyCode === 13) {
+      $("#btnJoin").click();
+    }
+  }
+function duplication_check() {
+    if (window.event.keyCode === 13) {
+      $("#btnIdCheck").click();
+    }
+  }
+function duplication_check2() {
+    if (window.event.keyCode === 13) {
+      $("#btnNickCheck").click();
+    }
+  }
 function check() {
 	//이름 체크
 	var name = $("#name").val();
@@ -165,6 +180,7 @@ function check() {
 		$("#hp").focus();
 		return;
 	}
+	
 	document.form1.action="${path}/member/member_insert.do";
 	document.form1.submit();
 	alert("정상적으로 회원가입 되었습니다.")
@@ -174,24 +190,26 @@ function check() {
 </head>
 <body>
 <div class="container">
-<h2>회원등록</h2>
+<div align="center">
+<a href="${path}/"><img alt="로고" src="../resources/uploaded_image/boardinfo_logo.png"></a>
+</div>
 <form name="form1" method="post">
 <div class="form-group">
 프로필 <input class="form-control" name="profile" id="profile" type="file">
 </div>
 <div class="form-group">
 이름 <input class="form-control" placeholder="이름" name="name" 
-id="name" type="text">
+id="name" type="text" onkeyup="login_check()">
 </div>
 <div class="form-group" >
 아이디 <input class="form-control" placeholder="아이디" name="userid" 
-id="userid" type="text"maxlength='15'> 
+id="userid" type="text"maxlength='15' onkeyup="duplication_check()"> 
 <div align="right">
 <button type="button" class="btn btn-dark button" id="btnIdCheck" >중복확인</button>
 </div>
 <div class="form-group">
 닉네임 <input class="form-control" placeholder="닉네임" name="nickname" 
-id="nickname" type="text">
+id="nickname" type="text" onkeyup="duplication_check2()">
 <div align="right">
 <button type="button" class="btn btn-dark button" id="btnNickCheck" >중복확인</button>
 </div>
@@ -199,23 +217,23 @@ id="nickname" type="text">
 </div>
 <div class="form-group">
 비밀번호 <input class="form-control" placeholder="비밀번호" name="passwd" 
-id="passwd" type="password">
+id="passwd" type="password" onkeyup="login_check()">
 <div class="form-group">
 비밀번호 확인 <input class="form-control" placeholder="비밀번호 확인" name="passwd2" 
-id="passwd2" type="password">
+id="passwd2" type="password" >
 </div>
 </div>
 <div class="form-group">
 이메일 <input class="form-control" placeholder="이메일" name="email" 
-id="email" type="text">
+id="email" type="text" onkeyup="login_check()">
 </div>
 <div class="form-group">
 휴대폰 <input class="form-control" placeholder="-빼고 입력하세요." name="hp" 
-id="hp" type="tel" maxlength='12'>
+id="hp" type="tel" maxlength='12' onkeyup="login_check()">
 </div>
 <div align="right">
 <input type="button" class="btn btn-lg btn-success btn-block" 
-onclick="check()" value="확인">
+onclick="check()" value="확인" name="btnJoin" id="btnJoin">
 </div>
 </form>
 
