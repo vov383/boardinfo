@@ -11,6 +11,18 @@
         <%@ include file="../include/js/header.jsp" %>
         <link rel="stylesheet" href="${path}/include/js/style_game.css">
 
+		<style>
+
+			#td_photo {
+				position: relative;
+			}
+			.img_photo {
+				position: absolute;
+				top: 0;
+			}
+
+		</style>
+
    </head>
 
    <body>
@@ -56,7 +68,15 @@
 			<tbody>
 
 			<tr>
-				<td rowspan="10">사진자리
+				<td rowspan="10" id="td_photo">
+					<c:choose>
+						<c:when test="${dto.gamephoto_url != null}">
+							<img class="img_photo" src="${path}/resources/uploaded_game${dto.gamephoto_url}" width="250px" height="250px" border="1px">
+						</c:when>
+						<c:otherwise>
+							빈 이미지 추가요망
+						</c:otherwise>
+					</c:choose>
 
 				</td>
 				<td colspan="3"><h2>${dto.gametitle}</h2></td>

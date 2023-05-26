@@ -154,8 +154,15 @@ public class GameServiceImpl implements GameService {
     }
   }
 
-  public Object view(int gnum) throws Exception {
-    return gameDao.view(gnum);
+  public GameDTO view(int gnum) throws Exception {
+    GameDTO dto = gameDao.view(gnum);
+    String str = dto.getGamephoto_url();
+    if(str != null) {
+      String front = str.substring(0, 12);
+      String end = str.substring(14);
+      dto.setGamephoto_url(front+end);
+    }
+    return dto;
   }
   
   public List<CategoryDTO> categorylist() {
@@ -176,4 +183,10 @@ public class GameServiceImpl implements GameService {
   public List<GameDTO> getAutoGame(String input){
     return gameDao.getAutoGame(input);
   }
+
+  public void deleteFile(String fileName){
+    gameDao.delteFile(fileName);
+  }
+
+
 }

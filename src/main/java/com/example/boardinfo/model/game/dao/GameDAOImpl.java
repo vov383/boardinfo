@@ -30,7 +30,7 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.update("game.increaseViewcnt", gnum);
 	}
 	
-	public Object view(int gnum) throws Exception {
+	public GameDTO view(int gnum) throws Exception {
 		return sqlSession.selectOne("game.view", gnum);
 	}
 
@@ -41,4 +41,9 @@ public class GameDAOImpl implements GameDAO {
 	public void addAttach(String fullName){
 		sqlSession.insert("game.addAttach", fullName);
 	}
+	public void delteFile(String fileName){
+		sqlSession.delete("game.deleteFile", fileName);
+	}
+
+
 }
