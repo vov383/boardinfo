@@ -9,7 +9,6 @@
         <meta charset="utf-8">
         <title>BOARDINFO</title>
         <%@ include file="include/js/header.jsp" %>
-        <%@ include file="include/top.jsp" %>
    </head>
 
    <body>

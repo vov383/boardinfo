@@ -1,6 +1,8 @@
 package com.example.boardinfo.model.member.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -34,8 +36,17 @@ public class MemberDAOImpl implements MemberDAO {
 
 	@Override
 	public boolean checkPw(String userid, String passwd) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean result=false;
+		
+		Map<String,String> map=new HashMap<>();
+		map.put("userid", userid);
+		map.put("passwd", passwd);
+		int count=sqlSession.selectOne("member.checkPw", map);
+		//비번이 맞으면(1), 틀리면(0) 리턴
+		if(count==1) {
+			result=true;
+		}
+		return result;
 	}
 
 	@Override
