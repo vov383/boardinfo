@@ -49,5 +49,5 @@ public class ArtistDAOImpl implements ArtistDAO {
 	public List<ArtistDTO> view(int gnum){
 		return sqlSession.selectList("artist.view", gnum);
 	}
-	
+
 }

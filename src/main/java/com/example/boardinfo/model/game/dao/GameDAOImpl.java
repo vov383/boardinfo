@@ -1,6 +1,7 @@
 package com.example.boardinfo.model.game.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -45,5 +46,8 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.delete("game.deleteFile", fileName);
 	}
 
+	public List<GameDTO> gamelist(Map<String, Object> map) {
 
+		return sqlSession.selectList("game.filteredList", map);
+	}
 }

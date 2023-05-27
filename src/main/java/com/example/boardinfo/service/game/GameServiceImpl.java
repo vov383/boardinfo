@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import com.example.boardinfo.model.game.dto.designer.DesignerDTO;
 import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
+import com.example.boardinfo.util.BggParser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -177,8 +178,9 @@ public class GameServiceImpl implements GameService {
   @Transactional
   public Map<String, Object> view(int gnum) throws Exception {
     Map<String, Object> map = new HashMap<>();
-
+    //game테이블 데이터
     GameDTO dto = gameDao.view(gnum);
+    //사진
     String str = dto.getGamephoto_url();
     if(str != null) {
       String front = str.substring(0, 12);
@@ -191,12 +193,26 @@ public class GameServiceImpl implements GameService {
     List<MechanicDTO> mlist = mechanicDao.view(gnum);
     List<PublisherDTO> plist = publisherDao.view(gnum);
 
+    int bggnum = dto.getBggnum();
+
+    BggParser bggParser = new BggParser();
+    bggParser.setBgg_thumbnail(bggnum);
+    bggParser.setBgg_rank(bggnum);
+    bggParser.setBgg_rate(bggnum);
+    bggParser.setBgg_weight(bggnum);
+
+
     map.put("dto",dto);
     map.put("alist", alist);
     map.put("clist", clist);
     map.put("dlist", dlist);
     map.put("mlist", mlist);
     map.put("plist", plist);
+
+    map.put("bgg_thumbnail", bggParser.getBgg_thumbnail());
+    map.put("bgg_rank", bggParser.getBgg_rank());
+    map.put("bgg_rate", bggParser.getBgg_rate());
+    map.put("bgg_weight", bggParser.getBgg_weight());
 
     return map;
   }
@@ -231,4 +247,12 @@ public class GameServiceImpl implements GameService {
   }
 
 
+  //아티스트,카테고리,디자이너,메카닉,퍼블리셔 개별 항목에 대응하는 게임목록 출력
+  public Map<String, Object> gamelist(String filter,int num){
+    Map<String, Object> map = new HashMap<>();
+    map.put("filter",filter);
+    map.put("num", num);
+    map.put("list", gameDao.gamelist(map));
+    return map;
+  }
 }

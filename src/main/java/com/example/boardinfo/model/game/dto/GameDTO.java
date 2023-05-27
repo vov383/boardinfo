@@ -33,8 +33,10 @@ public class GameDTO {
 
 	//사진테이블의 자료를 사용하는 용도의 배열
 	private String[] files;
+
 	
 	//테이블에 없을것들 일단 적어놨지만 나중에 dto가 아닌 map으로 값 넘길수도 있음.
+	//변수명이 이상해서 db엎을때 제대로 다시 작성할것.
 	private double g_rate; //게임 평점
 	private double l_rate; //게임 난이도
 	private int g_rank; //게임순위

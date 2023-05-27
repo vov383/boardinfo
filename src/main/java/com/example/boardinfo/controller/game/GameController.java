@@ -113,10 +113,11 @@ public class GameController {
 	}
 
 	@GetMapping ("search.do")
-	public ModelAndView sortGame(ModelAndView mav, @RequestParam("sort") String sort, @RequestParam("num") int num){
-		//여기부터 sort는 테이블명으로 받았고 num은 각 테이블의 pk
+	public ModelAndView sortGame(ModelAndView mav, @RequestParam("filter") String filter, @RequestParam("num") int num){
 
-
+		mav.setViewName("game/game_filteredList");
+		mav.addObject("map", gameService.gamelist(filter,num));
+		logger.info("map : " + gameService.gamelist(filter,num));
 		return mav;
 	}
 
