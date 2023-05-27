@@ -29,7 +29,7 @@ $(function(){
 });
 
 
-var sock = new SockJS('http://localhost:80/boardinfo/chatting');
+var sock = new SockJS('http://localhost:8098/chatting');
 sock.onmessage = onMessage;
 sock.onclose = onClose;
 sock.onopen = onOpen;

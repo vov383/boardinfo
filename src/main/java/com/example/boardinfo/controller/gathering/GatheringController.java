@@ -1,6 +1,10 @@
 package com.example.boardinfo.controller.gathering;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -58,12 +62,14 @@ public class GatheringController {
 			@RequestParam(value="from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate from,
 			@RequestParam(value="to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate to,
 			@RequestParam(value="curPage", required=false, defaultValue="1") int curPage,
-			@RequestParam(value="address1", required=false) String[] address1List
-			) {
+			@RequestParam(value="address1", required=false) String[] address1List,
+			@RequestParam(value="option", required=false) String option,
+			@RequestParam(value="keyword", required = false) String keyword) {
 
 		boolean showAvailable = false;
 
 		if(request.getParameter("showAvailable")!=null) showAvailable = true;
+		if(option==null) option = "all";
 
 		if(from!=null && to!=null) {
 			if(from.isAfter(to)) {
@@ -97,7 +103,7 @@ public class GatheringController {
 		Pager pager = new Pager(count, curPage, 15);
 		int start = pager.getPageBegin();
 		int end = pager.getPageEnd();
-		list = gatheringService.list(showAvailable, address1List, from, to, start, end);
+		list = gatheringService.list(showAvailable, address1List, from, to, start, end, option, keyword);
 		mav.addObject("address1List", address1List);
 		mav.addObject("list", list);
 		mav.addObject("showAvailable", showAvailable);
@@ -106,6 +112,8 @@ public class GatheringController {
 		mav.addObject("to",to);
 		mav.addObject("curPage", curPage);
 		mav.addObject("page", pager);
+		mav.addObject("option", option);
+		mav.addObject("keyword", keyword);
 		mav.setViewName("/gathering/list");
 		return mav;
 	}
@@ -137,9 +145,11 @@ public class GatheringController {
 			}
 
 		 */
-		
+
 		mav.setViewName("/gathering/view");
-		mav.addObject("dto", gatheringService.view(gathering_id, updateViewCount));
+		GatheringDTO dto = gatheringService.view(gathering_id, updateViewCount);
+		System.out.println(dto.toString());
+		mav.addObject("dto", dto);
 		return mav;
 	}
 
@@ -147,13 +157,27 @@ public class GatheringController {
 	//로그인필요-해당회원인지 확인해야 함
 	@RequestMapping("edit/{gathering_id}")
 	public ModelAndView edit(@PathVariable int gathering_id, ModelAndView mav){
-		mav.setViewName("/gathering/editForm");
+		mav.setViewName("gathering/editForm");
 		GatheringDTO dto = gatheringService.view(gathering_id, false);
+
+		LocalDateTime post_date = dto.getPost_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		String formattedDateTime = post_date.format(formatter);
+		mav.addObject("minDate", formattedDateTime);
 		mav.addObject("dto", dto);
-		System.out.println(dto.toString());
+
+		System.out.println(dto.getGathering_date());
+		System.out.println(dto.getGathering_date().toString());
 		return mav;
 	}
 
+
+	//로그인필요-해당회원인지 확인해야 함
+	@RequestMapping("update.do")
+	public String edit(@ModelAttribute GatheringDTO dto){
+		gatheringService.update(dto);
+		return "redirect:/gathering/list.do";
+	}
 
 
 	//로그인필요

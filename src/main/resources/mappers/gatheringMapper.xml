@@ -8,10 +8,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<insert id="addPost">
 		insert into gathering
-			(gathering_id, writer_id, post_date, title, description, gathering_date,
+			(gathering_id, writer_id, post_date, title, gathering_content, gathering_date,
 			maxpeople, attendsystem, note, question, address1, address2, address3, place_name, lat, lng)
 		values 
-			(gathering_id_seq.nextval,'kim123',sysdate,#{title},#{description},#{gathering_date},
+			(gathering_id_seq.nextval,'kim123',sysdate,#{title},#{gathering_content},#{gathering_date},
 			 #{maxPeople},#{attendSystem},#{note},#{question}, #{address1}, #{address2}, #{address3},
 			 #{place_name}, #{lat}, #{lng})
 	</insert>
@@ -78,7 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</trim>
 	
 	<if test="showAvailable==true">
-	and gathering_date <![CDATA[>]]> (sysdate+(3/24))
+	and (sysdate + 1/48 ) <![CDATA[<]]> gathering_date
 	</if>
 	
 	
@@ -89,19 +89,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<if test="to!=null">
 	and trunc(gathering_date, 'DD') <![CDATA[<]]>= #{to}
 	</if>
+
+		<if test="keyword!=null">
+			<choose>
+				<when test="option.equals('title')">
+					and Lower(title) like lower('%'||#{keyword}||'%')
+				</when>
+				<when test="option.equals('gathering_content')">
+					and Lower(gathering_content) like lower('%'||#{keyword}||'%')
+				</when>
+				<otherwise>
+					and (Lower(title) like lower('%'||#{keyword}||'%')
+					or Lower(gathering_content) like lower('%'||#{keyword}||'%'))
+				</otherwise>
+			</choose>
+		</if>
 	</trim>
 	</where>
+		order by gathering_id desc;
 	)a
 	)
 	where rn between #{start} and #{end}
-	</select>
 
+	</select>
 
 	<select id="view" resultType="gatheringDTO">
 	select * from gathering
 	where gathering_id = #{gathering_id}
 	</select>
-	
 	
 	<update id="viewCount">
 	update gathering
@@ -166,6 +181,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where gathering_id = #{gathering_id}
 		order by parent_reply, inner_order
 	</select>
+
+
+	<update id="update">
+		update gathering
+		set update_date = sysdate, title = #{title}, gathering_date = #{gathering_date},
+		address1 = #{address1}, address2 = #{address2}, address3 = #{address3},
+		place_name = #{place_name}, maxpeople = #{maxPeople},
+		attendsystem = #{attendSystem}, note = #{note}, gathering_content = #{gathering_content},
+		lat = #{lat}, lng=#{lng},
+		<choose>
+			<when test="attendSystem.equals('p')">
+				question = #{question}
+			</when>
+			<otherwise>
+				question = ''
+			</otherwise>
+		</choose>
+		where gathering_id = #{gathering_id}
+	</update>
+
+
 
 </mapper>
 
