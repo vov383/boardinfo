@@ -102,7 +102,10 @@
       window.opener.document.getElementById("lat").value = $("#lat").val();
       window.opener.document.getElementById("lng").value = $("#lng").val();
       window.opener.document.getElementById("locationFull").value = $("#address").text();
-      $("#tmpDiv",opener.document).css("display", "none"); 
+
+      if($("#tmpDiv",opener.document)){
+        $("#tmpDiv",opener.document).css("display", "none");
+      }
 
       
       let lat = $("#lat").val();
@@ -161,10 +164,10 @@
   <button type="button" id="btn-reset" onclick="closeWindow()">취소</button>
     
   <!-- 위도 -->  
-  <input type="hidden" id="lat" name="lat">
+  <input  id="lat" name="lat">
     
   <!-- 경도 -->  
-  <input type="hidden" id="lng" name="lng">
+  <input id="lng" name="lng">
   </div>
 
 

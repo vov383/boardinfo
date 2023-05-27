@@ -12,10 +12,12 @@ public interface GatheringService {
 	public boolean deletePost();
 	public boolean editPost();
 	public GatheringDTO view(int gathering_id, boolean updateViewCount);
-	public List<GatheringDTO> list(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to, int start, int end);
+	public List<GatheringDTO> list(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to, int start, int end, String searchOption, String keyword);
 	public boolean addReply(GatheringReplyDTO dto);
 
 	public List<GatheringReplyDTO> getReplies(int gatheringId);
 
     public int countList(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to);
+
+	public boolean update(GatheringDTO dto);
 }

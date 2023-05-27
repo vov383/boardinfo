@@ -38,7 +38,7 @@ public class GatheringDAOImpl implements GatheringDAO {
 	@Override
 	public List<GatheringDTO> list(boolean showAvailable, String[] address1List,
 								   LocalDate from, LocalDate to,
-								   int start, int end) {
+								   int start, int end, String option, String keyword) {
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("showAvailable", showAvailable);
@@ -47,6 +47,8 @@ public class GatheringDAOImpl implements GatheringDAO {
 		map.put("to", to);
 		map.put("start", start);
 		map.put("end", end);
+		map.put("option", option);
+		map.put("keyword", keyword);
 		return sqlSession.selectList("gathering.list", map);
 	}
 
@@ -110,5 +112,10 @@ public class GatheringDAOImpl implements GatheringDAO {
 		map.put("from", from);
 		map.put("to", to);
 		return sqlSession.selectOne("gathering.countList", map);
+	}
+
+	@Override
+	public int update(GatheringDTO dto) {
+		return sqlSession.update("gathering.update", dto);
 	}
 }

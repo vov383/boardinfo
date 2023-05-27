@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +22,7 @@
       padding: 0;
     }
 
-    #filter div{
+    #filter > form > div{
       padding: 13px 20px;
       border-bottom: 1px solid #D9D9D9;
     }
@@ -76,12 +76,12 @@
       flex-direction: column;
     }
 
-    form[name="gatheringSearchForm"]{
+    #keywordForm{
       margin: 0 auto;
     }
 
 
-    form[name="gatheringSearchForm"] select{
+    #keywordForm select{
       width: 110px;
       height: 33px;
       margin-right: 5px;
@@ -90,7 +90,7 @@
 
     }
 
-    form[name="gatheringSearchForm"] input[type="text"]{
+    #keywordForm input[type="text"]{
       padding-left: 8px;
       width: 300px;
       height: 33px;
@@ -137,14 +137,14 @@
       font-weight: bold;
       font-size: 17px;
       color: black;
-      text-decoration: none;      
+      text-decoration: none;
     }
-    
+
     .title:hover{
-    text-decoration: underline;
+      text-decoration: underline;
     }
-    
-    
+
+
     .numPeople{
       margin-left: 7px;
       font-weight: bold;
@@ -243,18 +243,23 @@
 
   <script>
 
+    window.onpageshow = function (event) {
+      $("form[name='FormGatheringSearch']").find("input").attr("disabled", false);
+    }
+
     $(function(){
+
 
       $("#showAvailable").change(function(){
         document.formGatheringSearch.submit();
       });
 
       $("input[name='address1']").change(function(){
-    	  
-    	  if($(this).val()!='전체'){
-    		  $("input[name='address1']:input[value='전체']").prop("checked", false);
-    	  }
-    	  
+
+        if($(this).val()!='전체'){
+          $("input[name='address1']:input[value='전체']").prop("checked", false);
+        }
+
         document.formGatheringSearch.submit();
       });
 
@@ -295,9 +300,32 @@
 
 
     function list(curPage){
+      //queryString이 비어있는 경우는 어떡하지?
       let queryString = $("form[name='formGatheringSearch']").serialize() + '&curPage=' + curPage;
       location.href="${path}/gathering/list.do?" + queryString;
     }
+
+
+    function searchByKeyword(){
+      let keyword = $("#newKeyword");
+      keyword.val(keyword.val().trim());
+      if(keyword.val()=='') return;
+
+      else{
+
+        let data = {
+          'option': $("#newOption").val(),
+          'keyword': $("#newKeyword").val()
+        };
+
+        $("#oldKeyword").attr("disabled", true);
+        $("#oldOption").attr("disabled", true);
+        let queryString = $("form[name='formGatheringSearch']").serialize() + '&' + $.param(data);
+        location.href = "${path}/gathering/list.do?" + queryString;
+      }
+
+    }
+
 
 
   </script>
@@ -318,133 +346,119 @@
   <div id="contentsMain">
     <div id="filter">
       <form name="formGatheringSearch" action="${path}/gathering/list.do">
-      <div>
-        <c:choose>
-          <c:when test="${showAvailable!=null && showAvailable==true}">
-            <input type="checkbox" name="showAvailable" id="showAvailable" value="y" checked>
-          </c:when>
-          <c:otherwise>
-            <input type="checkbox" name="showAvailable" id="showAvailable" value="y">
-          </c:otherwise>
-        </c:choose>
-        <label for="showAvailable">모집중만 보기</label>
-      </div>
-      <div>
-        <h3>지역</h3>
-        <ul>
-          <c:forEach var="address1" items="${address1List}" varStatus="status">
-            <li>
-              <input type="checkbox" name="address1" id="${status.index}" value="${address1}" checked="checked">
-              <label for="${status.index}">${address1}</label>
-            </li>
-          </c:forEach>
-
-
-          <c:forEach var="address1" items="${koreanAddress1List}" varStatus="status">
-            <li>
-              <input type="checkbox" name="address1" id="${status.index+fn:length(address1List)}" value="${address1}">
-              <label for="${status.index+fn:length(address1List)}">${address1}</label>
-            </li>
-          </c:forEach>
-
-                    
-         <!-- 
-        <li><input type="checkbox" name="address1" id="all" value="all">
-          <label for="all">전체</label></li>
-        <li><input type="checkbox" name="address1" id="seoul" value="서울">
-          <label for="seoul">서울</label></li>
-        <li><input type="checkbox" name="address1" id="busan" value="부산">
-          <label for="busan">부산</label></li>
-        <li><input type="checkbox" name="address1" id="daegu" value="대구">
-          <label for="daegu">대구</label></li>
-        <li><input type="checkbox" name="address1" id="incheon" value="인천">
-          <label for="incheon">인천</label></li>
-        <li><input type="checkbox" name="address1" id="gwangju" value="광주">
-          <label for="gwangju">광주</label></li>
-        <li><input type="checkbox" name="address1" id="daejun" value="대전">
-          <label for="daejun">대전</label></li>
-        <li><input type="checkbox" name="address1" id="ulsan" value="울산">
-          <label for="ulsan">울산</label></li>
-        <li><input type="checkbox" name="address1" id="gyeonggi" value="경기">
-          <label for="gyeonggi">경기</label></li>
-        <li><input type="checkbox" name="address1" id="gangwon" value="강원">
-          <label for="gangwon">강원</label></li>
-        <li><input type="checkbox" name="address1" id="chungbuk" value="충북">
-          <label for="chungbuk">충북</label></li>
-        <li><input type="checkbox" name="address1" id="chungnam" value="충남">
-          <label for="chungnam">충남</label></li>
-        <li><input type="checkbox" name="address1" id="junbuk" value="전북">
-          <label for="junbuk">전북</label></li>
-        <li><input type="checkbox" name="address1" id="junnam" value="전남">
-          <label for="junnam">전남</label></li>
-        <li><input type="checkbox" name="address1" id="gyeongbuk" value="경북">
-          <label for="gyeongbuk">경북</label></li>
-        <li><input type="checkbox" name="address1" id="gyeongnam" value="경남">
-          <label for="gyeongnam">경남</label></li>
-        <li><input type="checkbox" name="address1" id="jeju" value="제주">
-          <label for="jeju">제주</label></li>
-        <li><input type="checkbox" name="address1" id="sejong" value="세종">
-          <label for="sejong">세종</label></li>
-           -->
-
-        </ul>
-      </div>
-      <div>
-        <h3>모임날짜</h3>
+        <input type="hidden" name="option" id="oldOption" value="${option}">
+        <input type="hidden" name="keyword" id="oldKeyword" value="${keyword}">
         <div>
-        <input type="date" name="from" value="${from}">
-        <span>~</span>
-        <input type="date" name="to" value="${to}">
           <div>
-            <button type="button" id="dateResetBtn">초기화</button>
-            <button type="submit" id="dateSubmitBtn">검색</button>
+          <c:choose>
+            <c:when test="${showAvailable!=null && showAvailable==true}">
+              <input type="checkbox" name="showAvailable" id="showAvailable" value="y" checked>
+            </c:when>
+            <c:otherwise>
+              <input type="checkbox" name="showAvailable" id="showAvailable" value="y">
+            </c:otherwise>
+          </c:choose>
+          <label for="showAvailable">모집중만 보기</label>
           </div>
         </div>
-      </div>
+        <div>
+          <h3>지역</h3>
+          <ul>
+            <c:forEach var="address1" items="${address1List}" varStatus="status">
+              <li>
+                <input type="checkbox" name="address1" id="${status.index}" value="${address1}" checked="checked">
+                <label for="${status.index}">${address1}</label>
+              </li>
+            </c:forEach>
+
+
+            <c:forEach var="address1" items="${koreanAddress1List}" varStatus="status">
+              <li>
+                <input type="checkbox" name="address1" id="${status.index+fn:length(address1List)}" value="${address1}">
+                <label for="${status.index+fn:length(address1List)}">${address1}</label>
+              </li>
+            </c:forEach>
+          </ul>
+        </div>
+        <div>
+          <h3>모임날짜</h3>
+          <div>
+            <input type="date" name="from" value="${from}">
+            <span>~</span>
+            <input type="date" name="to" value="${to}">
+            <div>
+              <button type="button" id="dateResetBtn">초기화</button>
+              <button type="submit" id="dateSubmitBtn">검색</button>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
 
     <div id="listArea">
+      <form name="keywordSearchForm" id="keywordForm">
+        <select name="option" id="newOption">
+        <c:choose>
+          <c:when test="${option=='title'}">
+            <option value="all">전체</option>
+            <option value="title" selected>제목</option>
+            <option value="gathering_content">내용</option>
+            <option value="writer">글쓴이</option>
+          </c:when>
+          <c:when test="${option=='gathering_content'}">
+            <option value="all">전체</option>
+            <option value="title" selected>제목</option>
+            <option value="gathering_content" selected>내용</option>
+            <option value="writer">글쓴이</option>
+          </c:when>
+          <c:when test="${option=='writer'}">
+            <option value="all">전체</option>
+            <option value="title">제목</option>
+            <option value="gathering_content">내용</option>
+            <option value="writer" selected>글쓴이</option>
+          </c:when>
+          <c:otherwise>
+            <option value="all" selected>전체</option>
+            <option value="title">제목</option>
+            <option value="gathering_content">내용</option>
+            <option value="writer">글쓴이</option>
+          </c:otherwise>
+        </c:choose>
 
-      <form name="gatheringSearchForm">
-        <select>
-          <option>전체</option>
-          <option>제목</option>
-          <option>내용</option>
-          <option>글쓴이</option>
         </select>
-        <input type="text" name="keyword">
-        <button type="button" id="gatheringSearchBtn">검색</button>
+        <input type="text" name="keyword" id="newKeyword" value="${keyword}">
+        <button type="button" id="gatheringSearchBtn" onclick="searchByKeyword()">검색</button>
       </form>
 
       <div id="gatheringList">
-      
-      	<c:forEach var="post" items="${list}">
-		 <div class="gatheringPost">
-          <div class="postUpper">
-            <div class="profile">
-              <span class="status">${post.status}</span>
-              <span>
+        <c:forEach var="post" items="${list}">
+          <div class="gatheringPost">
+            <div class="postUpper">
+              <div class="profile">
+                <span class="status">${post.status}</span>
+                <span>
               <a class="title" href="${path}/gathering/view/${post.gathering_id}">${post.title}</a>
               </span>
-              <span class="numPeople">(3/${post.maxPeople}명)</span>
-            </div>
-            <div class="detail">
-              <span class="location"><img src="${path}/images/location_pin.png" width="18px">${post.address1} ${post.address2}</span>
-              <span class="dateTime">
+                <span class="numPeople">(3/${post.maxPeople}명)</span>
+              </div>
+              <div class="detail">
+                <span class="location"><img src="${path}/images/location_pin.png" width="18px">${post.address1} ${post.address2}</span>
+                <span class="dateTime">
 	              <img src="${path}/images/date.png" width="18px">
-	              <fmt:formatDate value="${post.gathering_date}" pattern="M.d a h:mm"/>
+                  <fmt:parseDate value="${post.gathering_date}"
+                                 pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both"/>
+	              <fmt:formatDate value="${parsedDateTime}" pattern="M.d a h:mm"/>
 	          </span>
+              </div>
+            </div>
+            <div class="postLower">
+              <span>${post.writer_id}</span>
+              <span><fmt:formatDate value="${post.post_date}" pattern="yyyy-MM-dd"/></span>
+              <span>조회 ${post.view_count}</span>
+              <span>댓글 ${post.reply_count}</span>
             </div>
           </div>
-          <div class="postLower">
-            <span>${post.writer_id}</span>
-            <span><fmt:formatDate value="${post.post_date}" pattern="yyyy-MM-dd"/></span>
-            <span>조회 ${post.view_count}</span>
-            <span>댓글 ${post.reply_count}</span>
-          </div>
-        </div>     	
-      	</c:forEach>
+        </c:forEach>
       </div>
 
       <div id="paginationArea">
