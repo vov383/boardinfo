@@ -25,22 +25,17 @@
 	<dependencies>
 
 
-
-		<!--mongoDB
+        <!-- MongoDB 관련 -->
 		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongodb-driver-sync</artifactId>
-			<version>4.9.1</version>
+		    <groupId>org.mongodb</groupId>
+		    <artifactId>mongo-java-driver</artifactId>
+		    <version>3.6.4</version>
 		</dependency>
-
-
 		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-mongodb</artifactId>
-			<version>4.1.0</version>
+		    <groupId>org.springframework.data</groupId>
+		    <artifactId>spring-data-mongodb</artifactId>
+		    <version>2.0.10.RELEASE</version>
 		</dependency>
-		-->
-
 
 
 		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
