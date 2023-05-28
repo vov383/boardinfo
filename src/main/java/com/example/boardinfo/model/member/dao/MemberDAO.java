@@ -5,13 +5,14 @@ import java.util.List;
 import com.example.boardinfo.model.member.dto.MemberDTO;
 
 public interface MemberDAO {
-	public List<MemberDTO> list();
-	public void insertMember(MemberDTO dto);
-	public boolean loginCheck(MemberDTO dto);
-	public boolean checkPw(String userid, String passwd);
-	public void updateMember(MemberDTO dto);
-	public void deleteMember(String userid);
-	public MemberDTO viewMember(String userid);
-	public String selectMemberById(String userid);
+	List<MemberDTO> list();
+	void insertMember(MemberDTO dto);
+	boolean loginCheck(MemberDTO dto);
+	boolean checkPw(String userid, String passwd);
+	void updateMember(MemberDTO dto);
+	void deleteMember(String userid);
+	MemberDTO viewMember(String userid);
+	MemberDTO selectMemberById(String userid);
+	MemberDTO selectMemberByNick(String nickname);
 	
 }

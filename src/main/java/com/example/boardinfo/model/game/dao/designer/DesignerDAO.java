@@ -6,10 +6,11 @@ import java.util.List;
 
 public interface DesignerDAO {
 
-	public int check_designer(String designer);
-	public void insert_designer(String designer);
-	public void insert_designer_mapping();
-	public int designernum(String designer);
-	public void insert_designer_mapping(int dnum);
-    public List<DesignerDTO> getAutoDesigner(String input);
+	int check_designer(String designer);
+	void insert_designer(String designer);
+	void insert_designer_mapping();
+	int designernum(String designer);
+	void insert_designer_mapping(int dnum);
+    List<DesignerDTO> getAutoDesigner(String input);
+	List<DesignerDTO> view(int gnum);
 }

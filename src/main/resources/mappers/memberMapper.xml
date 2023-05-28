@@ -34,6 +34,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE userid = #{userid}
 	</select>
 	
+	<select id="selectMemberByNick" resultType="com.example.boardinfo.model.member.dto.MemberDTO" >
+		SELECT * 
+		FROM member 
+		WHERE nickname = #{nickname}
+	</select>
+	
+	 <select id="checkPw" resultType="int">
+	  select count(*) from member
+	  where userid=#{userid} and passwd=#{passwd}
+	 </select>
 	
 </mapper>
 

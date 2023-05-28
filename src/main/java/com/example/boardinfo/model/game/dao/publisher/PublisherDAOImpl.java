@@ -41,8 +41,8 @@ public class PublisherDAOImpl implements PublisherDAO {
 	}
 
 	public List<PublisherDTO> getAutoPublisher(String input){
-		List<PublisherDTO> list = sqlSession.selectList("publisher.getAuto", input);
-		System.out.println(list);
-		return list;
+		return sqlSession.selectList("publisher.getAuto", input);
 	}
+
+	public List<PublisherDTO> view(int gnum) { return sqlSession.selectList("publisher.view", gnum); }
 }

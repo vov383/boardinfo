@@ -30,7 +30,7 @@
    <c:otherwise>
     <!-- 로그인한 상태 -->
     ${sessionScope.name}님이 로그인중입니다.
-    <a href="${path}/member/view.do?userid=${sessionScope.userid}">회원정보</a> |
+    <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a> |
     <a href="${path}/member/logout.do">로그아웃</a> 
    </c:otherwise>
   </c:choose>
@@ -70,14 +70,15 @@ $(document).ready(function(){
             gameSearchDiv.empty(); // 기존 내용 비우기
 
             if (result.length > 0) {
-              gameSearchDiv.css('max-height', '250px').show(); // 값이 있을 경우 높이 설정하고 보이기
+              gameSearchDiv.css('max-height', '300px').show(); // 값이 있을 경우 높이 설정하고 보이기
               $(result).each(function(index, item) {
                 var gametitle = item.gametitle;
                 var gametitle_eng = item.gametitle_eng;
                 var gnum = item.gnum;
                 console.log(gnum);
                 console.log(gametitle);
-                gameSearchDiv.append("<div class='searched'><a href='${path}/game/view.do?gnum=" + gnum + "'>" + gametitle + "<br>(" + gametitle_eng + ")</div>");
+                gameSearchDiv.append("<div class='searched'><a href='${path}/game/view.do?gnum=" + gnum + "'>" + gametitle + " <br>(" + gametitle_eng + ")</a></div>");
+
               });
             } else {
               gameSearchDiv.hide(); // 값이 없을 경우 숨기기

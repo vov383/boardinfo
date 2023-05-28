@@ -10,6 +10,8 @@
 <title>회원 가입</title>
 <%@ include file="../include/js/header.jsp" %>
 <script type="text/javascript">
+var isIdChecked = false;  // 아이디 중복 확인 여부를 체크하는 변수
+var isNickChecked = false;// 닉네임 중복 확인 여부를 체크하는 변수
 
 $(function() {
     $("#btnIdCheck").click(function() {
@@ -30,8 +32,11 @@ $(function() {
             alert("이미 사용 중인 아이디입니다.");
             $("#userid").val("");
             $("#userid").focus();
+            isIdChecked = false;
           } else if (result == "available") {
             alert("사용 가능한 아이디입니다.");
+            isIdChecked = true;
+            document.form1.userid.readOnly = true;
           }
         },
         error: function() {
@@ -41,8 +46,62 @@ $(function() {
     });
   });
 
-
+$(function() {
+    $("#btnNickCheck").click(function() {
+      var nickname = $("#nickname").val();
+      if (nickname == "") {
+        alert("닉네임을 입력하세요.");
+        $("#nickname").focus();
+        return;
+      }
+      $.ajax({
+        url: "${path}/member/check_nick.do",
+        type: "POST",
+        data: {
+          nickname: nickname
+        },
+        success: function(result) {
+          if (result == "duplicate") {
+            alert("이미 사용 중인 닉네임입니다.");
+            $("#nickname").val("");
+            $("#nickname").focus();
+            isNickChecked = false;
+          } else if (result == "available") {
+            alert("사용 가능한 닉네임입니다.");
+            isNickChecked = true;
+            document.form1.nickname.readOnly = true;
+          }
+        },
+        error: function() {
+          alert("서버와의 통신에 실패했습니다.");
+        }
+      });
+    });
+  });
+function login_check() {
+    if (window.event.keyCode === 13) {
+      $("#btnJoin").click();
+    }
+  }
+function duplication_check() {
+    if (window.event.keyCode === 13) {
+      $("#btnIdCheck").click();
+    }
+  }
+function duplication_check2() {
+    if (window.event.keyCode === 13) {
+      $("#btnNickCheck").click();
+    }
+  }
 function check() {
+	//이름 체크
+	var name = $("#name").val();
+	if(name==""){
+		alert("이름은 필수 입력입니다.");
+		$("#name").focus();
+		return;
+	}
+	
 	//아이디 체크
 	var userid = $("#userid").val();
 	if(userid==""){
@@ -57,6 +116,12 @@ function check() {
 		alert("아이디는 영문소문자, 숫자를 포함해 4~15 사이로 입력하세요.");
 		$("#userid").focus();
 		return;
+	}
+	//아이디 중복체크
+	if (!isIdChecked) {
+	    alert("아이디 중복 확인을 해주세요.");
+	    $("#userid").focus();
+	    return;
 	}
 	
 	//비밀번호 체크
@@ -79,13 +144,11 @@ function check() {
 		$("#passwd2").focus();
 		return;
 	}
-	
-	//이름 체크
-	var name = $("#name").val();
-	if(name==""){
-		alert("이름은 필수 입력입니다.");
-		$("#name").focus();
-		return;
+	// 닉네임 중복확인
+	if (!isNickChecked) {
+	    alert("닉네임 중복 확인을 해주세요.");
+	    $("#nickname").focus();
+	    return;
 	}
 	//이름 정규식
 	var exp3 = /^[가-힣]+$/;
@@ -122,47 +185,56 @@ function check() {
 	document.form1.submit();
 	alert("정상적으로 회원가입 되었습니다.")
 }
+
 </script>
 </head>
 <body>
 <div class="container">
-<h2>회원등록</h2>
+<div align="center">
+<a href="${path}/"><img alt="로고" src="../resources/uploaded_image/boardinfo_logo.png"></a>
+</div>
 <form name="form1" method="post">
 <div class="form-group">
 프로필 <input class="form-control" name="profile" id="profile" type="file">
 </div>
 <div class="form-group">
 이름 <input class="form-control" placeholder="이름" name="name" 
-id="name" type="text">
+id="name" type="text" onkeyup="login_check()">
 </div>
-<div class="form-group">
+<div class="form-group" >
 아이디 <input class="form-control" placeholder="아이디" name="userid" 
-id="userid" type="text">
-<div id="id_feedback" ></div>
-<button type="button" class="btn btn-dark button" id="btnIdCheck">중복확인</button>
-</div>
-<div class="form-group">
-비밀번호 <input class="form-control" placeholder="비밀번호" name="passwd" 
-id="passwd" type="password">
-<div class="form-group">
-비밀번호 확인 <input class="form-control" placeholder="비밀번호 확인" name="passwd2" 
-id="passwd2" type="password">
+id="userid" type="text"maxlength='15' onkeyup="duplication_check()"> 
+<div align="right">
+<button type="button" class="btn btn-dark button" id="btnIdCheck" >중복확인</button>
 </div>
 <div class="form-group">
 닉네임 <input class="form-control" placeholder="닉네임" name="nickname" 
-id="nickname" type="text">
+id="nickname" type="text" onkeyup="duplication_check2()">
+<div align="right">
+<button type="button" class="btn btn-dark button" id="btnNickCheck" >중복확인</button>
+</div>
+</div>
+</div>
+<div class="form-group">
+비밀번호 <input class="form-control" placeholder="비밀번호" name="passwd" 
+id="passwd" type="password" onkeyup="login_check()">
+<div class="form-group">
+비밀번호 확인 <input class="form-control" placeholder="비밀번호 확인" name="passwd2" 
+id="passwd2" type="password" >
 </div>
 </div>
 <div class="form-group">
 이메일 <input class="form-control" placeholder="이메일" name="email" 
-id="email" type="text">
+id="email" type="text" onkeyup="login_check()">
 </div>
 <div class="form-group">
 휴대폰 <input class="form-control" placeholder="-빼고 입력하세요." name="hp" 
-id="hp" type="tel" maxlength='12'>
+id="hp" type="tel" maxlength='12' onkeyup="login_check()">
 </div>
+<div align="right">
 <input type="button" class="btn btn-lg btn-success btn-block" 
-onclick="check()" value="확인">
+onclick="check()" value="확인" name="btnJoin" id="btnJoin">
+</div>
 </form>
 
 </div>

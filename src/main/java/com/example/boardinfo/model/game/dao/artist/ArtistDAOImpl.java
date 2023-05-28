@@ -43,9 +43,11 @@ public class ArtistDAOImpl implements ArtistDAO {
 	}
 	
 	public List<ArtistDTO> getAutoArtist(String input){
-		List<ArtistDTO> list = sqlSession.selectList("artist.getAuto", input);
-		System.out.println(list);
-	    return list;
+	    return sqlSession.selectList("artist.getAuto", input);
 	}
-	
+
+	public List<ArtistDTO> view(int gnum){
+		return sqlSession.selectList("artist.view", gnum);
+	}
+
 }

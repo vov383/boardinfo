@@ -9,13 +9,13 @@ import java.util.List;
 public interface ReviewService {
 
 	//리뷰 테이블
-	public List<ReviewDTO> reviewlist();
+    List<ReviewDTO> reviewlist();
 
 	// 리뷰 입력
-	public void create(ReviewDTO reviewDTO);
+    void create(ReviewDTO reviewDTO);
 
 	// 리뷰 입력
-	public void create(TestDTO testdto);
+    void create(TestDTO testdto);
 
 
 

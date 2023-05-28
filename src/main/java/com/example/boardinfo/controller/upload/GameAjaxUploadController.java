@@ -1,14 +1,8 @@
 package com.example.boardinfo.controller.upload;
 
-import java.io.File; 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
-import javax.annotation.Resource;
-import javax.inject.Inject;
-
 import com.example.boardinfo.service.game.GameService;
+import com.example.boardinfo.util.MediaUtils;
+import com.example.boardinfo.util.UploadFileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,53 +16,55 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.boardinfo.service.tboard.TBoardService;
-import com.example.boardinfo.util.MediaUtils;
-import com.example.boardinfo.util.UploadFileUtils;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Controller
-public class AjaxUploadController {
+public class GameAjaxUploadController {
 
 	//로깅
 	private static final Logger logger =
-			LoggerFactory.getLogger(AjaxUploadController.class);
+			LoggerFactory.getLogger(GameAjaxUploadController.class);
 	
-	@Inject
-	TBoardService tboardService;
 	@Inject
 	GameService gameService;
 
 	
-	//upload 디렉토리 설정
-	@Resource(name = "uploadPath") //servlet-context에 설정된 id값과 맞춤
-	String uploadPath;
-	
-	@RequestMapping(value = "upload/uploadAjax", method = RequestMethod.GET)
-	public String uploadAjax() {
-		return "/upload/uploadAjax";
-	}
-	
+////	//upload 디렉토리 설정
+////	@Resource(name = "uploadPath") //servlet-context에 설정된 id값과 맞춤
+////	String uploadPath;
+//
+//	@RequestMapping(value = "upload/uploadAjax", method = RequestMethod.GET)
+//	public String uploadAjax() {
+//		return "/upload/uploadAjax";
+//	}
+//
 	@ResponseBody //객체를 json형식으로 return can (서버 => 클라이언트) 
 	// 그 역은 @RequestBody
-	@RequestMapping(value = "/upload/uploadAjax", 
+	@RequestMapping(value = "/uploadgame/uploadAjax",
 			method = RequestMethod.POST, 
 			produces = "text/plain;charset=utf-8") //한글이 깨지지 않도록 보완처리
 	// ResponseEntity : 업로드한 파일 정보와 Http 상태 코드를 함께 리턴
-	public ResponseEntity<String> uploadAjax(MultipartFile file) 
+	public ResponseEntity<String> uploadAjax(HttpServletRequest request, MultipartFile file)
 			throws Exception {
-		
+		String uploadPath = request.getSession().getServletContext().getRealPath("/resources/uploaded_game");
 		return new ResponseEntity<String>(UploadFileUtils.uploadFile(
 				uploadPath, file.getOriginalFilename(), 
 				file.getBytes()), HttpStatus.OK);
 	}
 	
 	@ResponseBody
-	@RequestMapping("/upload/displayFile")
-	public ResponseEntity<byte[]> displayFile(String fileName) 
+	@RequestMapping("/uploadgame/displayFile")
+	public ResponseEntity<byte[]> displayFile(HttpServletRequest request, String fileName)
 			throws Exception{
 		//서버의 파일을 다운로드하기 위한 스트림
 		InputStream in = null;
 		ResponseEntity<byte[]> entity = null;
+		String uploadPath = request.getSession().getServletContext().getRealPath("/resources/uploaded_game");
 		
 		try {
 			//확장자 검사
@@ -107,8 +103,8 @@ public class AjaxUploadController {
 	}
 	
 	@ResponseBody //뷰로 리턴하지 않고 데이터를 리턴 json 같이..
-	@RequestMapping(value = "/upload/deleteFile")
-	public ResponseEntity<String> deleteFile(String fileName){
+	@RequestMapping(value = "/uploadgame/deleteFile")
+	public ResponseEntity<String> deleteFile(HttpServletRequest request, String fileName){
 		logger.info("fileName:"+fileName);
 		
 		//확장자 검사
@@ -116,24 +112,26 @@ public class AjaxUploadController {
 				fileName.substring(fileName.lastIndexOf('.') + 1);
 		
 		MediaType mType = MediaUtils.getMediaType(formatName);
+		String uploadPath = request.getSession().getServletContext().getRealPath("/resources/uploaded_game");
 		
 		if(mType != null) { //이미지파일이면 front + end = 원본파일명
 			String front = fileName.substring(0, 12);
 			String end = fileName.substring(14);
+			logger.info("checkroooooot : " + uploadPath + (front + end).replace(
+					'/', File.separatorChar));
 			new File(uploadPath + (front + end).replace(
-					'/', File.pathSeparatorChar)).delete();
+					'/', File.separatorChar)).delete();
 		}
 		
 		//기타종류 원본파일(이미지면 썸네일 삭제)
 		new File(uploadPath + fileName.replace(
-				'/', File.pathSeparatorChar)).delete();
+				'/', File.separatorChar)).delete();
 		
 		//레코드 삭제 기능 추가
-		tboardService.deleteFile(fileName);
 		gameService.deleteFile(fileName);
 		
 		return new ResponseEntity<String>("deleted", HttpStatus.OK);
-		// 여기 deleted 는 uploadAjax.jsp 에서 
+		// 여기 deleted 는
 		// ajax success에 정의해놓은 result=="deleted" 다.
 	}
 

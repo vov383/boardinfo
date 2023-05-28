@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,7 +22,7 @@ public class MemberController {
 	
 	@Inject
 	MemberService memberService;
-		
+	
 		//회원리스트
 		@RequestMapping("member_list.do")
 		public String memberList(Model model) {
@@ -66,18 +65,16 @@ public class MemberController {
 		}
 		
 		@RequestMapping("logout.do")
-		public ModelAndView logout(HttpSession session, ModelAndView mav) {
+		public String logout(HttpSession session) {
 			//세션초기화
 			memberService.logout(session);
-			//login.jsp로 이동
-			mav.setViewName("member/login");
-			mav.addObject("message", "logout");
-			return mav;
+			return "redirect:/?=message=logout";
 		}
 		
+		//아이디 중복확인 
 		@RequestMapping("check_id.do")
 		@ResponseBody
-		public String checkId(@RequestParam("userid") String userid) {
+		public String checkId(@RequestParam String userid) {
 			boolean isDuplicate = memberService.checkDuplicateId(userid);
 		    	if (isDuplicate) {
 		    		return "duplicate";
@@ -85,6 +82,38 @@ public class MemberController {
 		    	{
 		    		return "available";
 		    	}
+		}
+		//닉네임 중복확인 
+		@RequestMapping("check_nick.do")
+		@ResponseBody
+		public String check_nick(@RequestParam String nickname) {
+			boolean isDuplicate = memberService.checkDuplicateNick(nickname);
+		    	if (isDuplicate) {
+		    		return "duplicate";
+		    	} else 
+		    	{
+		    		return "available";
+		    	}
+		}
+		//회원 상세정보 
+		@RequestMapping("member_view.do")
+		public String view(@RequestParam String userid, Model model) {
+			//모델에 자료 저장
+			model.addAttribute("dto", memberService.viewMember(userid));
+			return "member/view";
+		}
+		//회원 상세정보 페이지 비밀번호 체크
+		@RequestMapping("pass_check.do")
+		public String checkPw(MemberDTO dto, Model model) {
+			//비밀번호 체크
+			boolean result=memberService.checkPw(dto.getUserid(), dto.getPasswd());
+			if(result) {//비번이 맞으면
+				return "member/edit";
+			}else {//비번이 틀리면
+				model.addAttribute("dto", dto);
+				model.addAttribute("message", "비밀번호를 확인하세요.");
+				return "member/view";
+			}
 		}
 		
 		

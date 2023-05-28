@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 public class TuploadAjaxController {
 
     //로깅
-    private static Logger logger =
+    private static final Logger logger =
             LoggerFactory.getLogger(AjaxUploadController.class);
 
 

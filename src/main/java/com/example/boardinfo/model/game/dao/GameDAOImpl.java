@@ -1,6 +1,7 @@
 package com.example.boardinfo.model.game.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -30,11 +31,23 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.update("game.increaseViewcnt", gnum);
 	}
 	
-	public Object view(int gnum) throws Exception {
+	public GameDTO view(int gnum) throws Exception {
 		return sqlSession.selectOne("game.view", gnum);
 	}
 
 	public List<GameDTO> getAutoGame(String input){
 		return sqlSession.selectList("game.getAuto", input);
+	}
+
+	public void addAttach(String fullName){
+		sqlSession.insert("game.addAttach", fullName);
+	}
+	public void delteFile(String fileName){
+		sqlSession.delete("game.deleteFile", fileName);
+	}
+
+	public List<GameDTO> gamelist(Map<String, Object> map) {
+
+		return sqlSession.selectList("game.filteredList", map);
 	}
 }
