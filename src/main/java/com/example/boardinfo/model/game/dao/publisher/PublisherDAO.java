@@ -6,10 +6,11 @@ import java.util.List;
 
 public interface PublisherDAO {
 
-	public int check_publisher(String publisher);
-	public void insert_publisher(String publisher);
-	public void insert_publisher_mapping();
-	public int publishernum(String publisher);
-	public void insert_publisher_mapping(int pnum);
-    public List<PublisherDTO> getAutoPublisher(String input);
+	int check_publisher(String publisher);
+	void insert_publisher(String publisher);
+	void insert_publisher_mapping();
+	int publishernum(String publisher);
+	void insert_publisher_mapping(int pnum);
+    List<PublisherDTO> getAutoPublisher(String input);
+    List<PublisherDTO> view(int gnum);
 }

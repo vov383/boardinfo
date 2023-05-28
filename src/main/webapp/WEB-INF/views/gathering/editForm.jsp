@@ -1,20 +1,22 @@
+<%@ page import="com.example.boardinfo.model.gathering.dto.GatheringDTO" %>
+<%@ page import="java.util.Date" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>글수정 - 모임모집</title>
 
-<%@ include file="../include/js/header.jsp" %>
+  <%@ include file="../include/js/header.jsp" %>
 
   <style>
 
-      #contentsMain{
+    #contentsMain{
       border-top: 2px solid black;
-      }
+    }
 
-     #postUpper{
+    #postUpper{
       display: flex;
     }
 
@@ -27,18 +29,12 @@
       background-color: yellow;
     }
 
-    #tmpDiv, #map{
+    #map{
       width: 400px;
       height: 280px;
       border: 1px solid black;
       text-align: center;
       line-height: 280px;
-    }
-
-    #tmpDiv{
-      background-color: white;
-      position: absolute;
-      z-index: 10;
     }
 
     #map{
@@ -96,7 +92,6 @@
     #hiddenQuestion{
       display: flex;
       flex-direction: column;
-      visibility: hidden;
     }
 
     #postMain{
@@ -110,7 +105,7 @@
       text-align: center;
     }
 
-    #description{
+    #gathering_content{
       padding: 20px;
       height: 300px;
       resize: none;
@@ -216,7 +211,19 @@
   <script>
 
     $(function(){
-        $('input[name=attendSystem]').change(function(){
+
+      if("${attendSystem}"=='p'){
+        $("input[name=attendSystem][value='p']").attr("checked", "true");
+      }
+
+      else{
+        $("input[name=attendSystem][value='o']").attr("checked", "true");
+        $("#hiddenQuestion").css("visibility", "hidden");
+
+      }
+
+
+      $('input[name=attendSystem]').change(function(){
 
         if($("input[name=attendSystem]:checked").val()=="p"){
           $("#hiddenQuestion").css("visibility", "visible");
@@ -229,141 +236,135 @@
 
       });
 
-      /*
-      let t = document.getElementById('locationFull');
-      t.addEventListener('input', function(event){
-        alert('바뀜');
-        $("#tmpDiv").css("display","none");
-        $("#Map").css("display", "block");
-        makeMap($("#lat").val(), $("#lng").val());
-      });
-       */
-
 
     });
 
     function add(){
-    	let title = $("#title").val().trim();
-    	$("#title").val(title);
-    	if(title==''){
-    		alert('제목을 입력하세요');
-    		$("#title").focus();
-    		window.scrollTo(0, 0);
-    		return;
-    	}
+      let title = $("#title").val().trim();
+      $("#title").val(title);
+      if(title==''){
+        alert('제목을 입력하세요');
+        $("#title").focus();
+        window.scrollTo(0, 0);
+        return;
+      }
 
 
-    	let locationFull = $("#locationFull").val();
-    	if(locationFull==''){
-    		alert('검색 버튼을 눌러 장소를 선택해주세요.');
-    		window.scrollTo(0, 0);
-    		return;
-    	}
+      let locationFull = $("#locationFull").val();
+      if(locationFull==''){
+        alert('검색 버튼을 눌러 장소를 선택해주세요.');
+        window.scrollTo(0, 0);
+        return;
+      }
 
 
-    	let offerdate = $("#gathering_date").val();
+      let offerdate = $("#gathering_date").val();
 
-    	if(offerdate==''){
-    		alert('모임 날짜를 선택해주세요.');
-    		$("#gathering_date").focus();
-    		window.scrollTo(0, 50);
-    		return;
-    	}
+      if(offerdate==''){
+        alert('모임 날짜를 선택해주세요.');
+        $("#gathering_date").focus();
+        window.scrollTo(0, 50);
+        return;
+      }
 
-    	let index = offerdate.indexOf('T');
-    	offerdate = offerdate.substr(0, index) + ' ' + offerdate.substr(index+1);
+      let index = offerdate.indexOf('T');
+      offerdate = offerdate.substr(0, index) + ' ' + offerdate.substr(index+1);
 
-    	let date1 = new Date();
-    	date1.setMinutes(date1.getMinutes() + 30);
-    	let minDate = getFormatDate(date1);
+      //수정 시 최소 날짜는 오늘 날짜가 아닌 최초 업로드 일자를 기준으로 판단
+      let minDate = "${minDate}";
+      alert("오퍼" + offerdate);
+      alert("최초" + minDate);
 
-    	let date2 = new Date();
-    	date2.setDate(date2.getDate() + 60);
-    	date2.setMinutes(23);
-    	date2.setHours(59);
-    	let maxDate = getFormatDate(date2);
+      //일단 최대 날짜는 '오늘' 기준으로 했는데 이것도 업로드 기준으로 바꿀지 고민중!
+      //안그러면 계속해서 업데이트하려고 할 수도 있다
+      let date2 = new Date();
+      date2.setDate(date2.getDate() + 60);
+      date2.setMinutes(23);
+      date2.setHours(59);
+      let maxDate = getFormatDate(date2);
 
-    	if(offerdate < minDate){
-    		alert('현재로부터 최소 30분 이후의 일정만 만들 수 있습니다.');
-    		$("#gathering_date").focus();
-    		window.scrollTo(0, 50);
-    		return;
-    	}
+      if(offerdate < minDate){
+        alert('최초 게시일로부터 최소 30분 이후의 일정만 만들 수 있습니다.');
+        $("#gathering_date").focus();
+        window.scrollTo(0, 50);
+        return;
+      }
 
-    	if(offerdate > maxDate){
-    		alert('모임 날짜는 2개월 이내까지 설정 가능합니다.');
-    		$("#gathering_date").focus();
-    		window.scrollTo(0, 50);
-    		return;
-    	}
-
-
-    	let maxPeople = $("#maxPeople");
-
-    	if(isNaN(maxPeople.val())){
-    		alert('모임에 초대할 최대 인원을 선택해주세요.');
-    		maxPeople.val(2);
-    		maxPeople.focus();
-    		window.scrollTo(0, 50);
-    		return;
-    	}
-
-    	else if(maxPeople.val() < 2 || maxPeople.val() > 30){
-    		alert('설정 가능한 참석 인원은 최소 2명, 최대 30명입니다.');
-    		maxPeople.focus();
-    		window.scrollTo(0, 50);
-    		return;
-    	}
+      if(offerdate > maxDate){
+        alert('모임 날짜는 오늘로부터 2개월 이내까지 설정 가능합니다.');
+        $("#gathering_date").focus();
+        window.scrollTo(0, 50);
+        return;
+      }
 
 
-    	if($("#permit").is(':checked')){
-    		let question = $("#question").val().trim();
-    		$("#question").val(question);
-    		if(question == ''){
-    			alert('승인제를 선택하셨습니다.\n모임을 신청하려는 보드인들에게 묻고 싶은 질문을 입력해주세요.');
-    			$("#question").focus();
-        		window.scrollTo(0, 100);
-        		return;
-    		}
+      let maxPeople = $("#maxPeople");
 
-    	}
+      if(isNaN(maxPeople.val())){
+        alert('모임에 초대할 최대 인원을 선택해주세요.');
+        maxPeople.val(2);
+        maxPeople.focus();
+        window.scrollTo(0, 50);
+        return;
+      }
 
-
-    	if(CKEDITOR.instances.description.getData().length < 1){
-    		alert("모임 소개글을 입력해 주세요.");
-    		$("#cke_description").focus();
-    		return;
-    		}
+      else if(maxPeople.val() < 2 || maxPeople.val() > 30){
+        alert('설정 가능한 참석 인원은 최소 2명, 최대 30명입니다.');
+        maxPeople.focus();
+        window.scrollTo(0, 50);
+        return;
+      }
 
 
-    	document.gatheringAddForm.submit();
+      if($("#permit").is(':checked')){
+        let question = $("#question").val().trim();
+        $("#question").val(question);
+        if(question == ''){
+          alert('승인제를 선택하셨습니다.\n모임을 신청하려는 보드인들에게 묻고 싶은 질문을 입력해주세요.');
+          $("#question").focus();
+          window.scrollTo(0, 100);
+          return;
+        }
+
+      }
+
+
+      if(CKEDITOR.instances.gathering_content.getData().length < 1){
+        alert("모임 소개글을 입력해 주세요.");
+        $("#cke_gathering_content").focus();
+        return;
+      }
+
+
+      document.gatheringEditForm.submit();
 
     }
 
 
     function getFormatDate(date){
-    	var year = date.getFullYear();
-    	var month = (1+date.getMonth());
-    	month = month >= 10? month: '0'+month;
-    	var day = date.getDate();
-    	day = day >= 10? day : '0' + day;
-    	var hour = date.getHours();
-    	hour = hour >= 10? hour : '0' + hour;
-    	var minute = date.getMinutes();
-    	minute = minute >= 10? minute : '0' + minute;
-    	return year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
+      var year = date.getFullYear();
+      var month = (1+date.getMonth());
+      month = month >= 10? month: '0'+month;
+      var day = date.getDate();
+      day = day >= 10? day : '0' + day;
+      var hour = date.getHours();
+      hour = hour >= 10? hour : '0' + hour;
+      var minute = date.getMinutes();
+      minute = minute >= 10? minute : '0' + minute;
+      return year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
     }
 
 
-	function locationSearch(){
+    function locationSearch(){
 
-    	let top = screen.availHeight/2 - 290;
-		if(top < 0) top = 0;
+      let top = screen.availHeight/2 - 290;
+      if(top < 0) top = 0;
 
-		let left = screen.availWidth/2 - 410;
-		if(left < 0) left = 0
+      let left = screen.availWidth/2 - 410;
+      if(left < 0) left = 0
 
-    	window.open("${path}/gathering/locationSearch.do", "날짜검색 - 모임모집", "left="+left+", top="+top+", width=820, height=580");
+      window.open("${path}/gathering/locationSearch.do",
+              "날짜검색 - 모임모집", "left="+left+", top="+top+", width=820, height=580");
     }
 
   </script>
@@ -385,11 +386,10 @@
     홈 &gt 오프모임 &gt 모임모집
   </div>
   <div id="contentsMain">
-    <form name="gatheringAddForm" method="post" action="${path}/gathering/add.do">
+    <form name="gatheringEditForm" method="post" action="${path}/gathering/update.do">
       <div id="postUpper">
         <div>
           <div class="map_wrap">
-          <div id="tmpDiv"><span>장소를 입력하세요.</span></div>
             <div id="map"></div>
             <div class="hAddr">
               <span class="title">주소정보</span>
@@ -397,13 +397,15 @@
             </div>
           </div>
           <script>
+            let lat = "${dto.lat}";
+            let lng = "${dto.lng}";
 
             let mapContainer = document.getElementById('map'); // 지도를 표시할 div
 
             let mapOption =
                     {
-                      center: new kakao.maps.LatLng(37.4989347355231, 127.032854329609), // 지도의 중심좌표
-                      level: 1 // 지도의 확대 레벨
+                      center: new kakao.maps.LatLng(lat, lng), // 지도의 중심좌표
+                      level: 3 // 지도의 확대 레벨
                     };
 
             // 지도를 생성합니다
@@ -421,7 +423,17 @@
 
             let infoDiv = document.getElementById('centerAddr');
 
-            let lat, lng;
+            let markerPosition = new window.kakao.maps.LatLng(lat, lng);
+            mainMarker = new window.kakao.maps.Marker({
+              position: markerPosition,
+              image: markerImage
+            });
+
+            mainMarker.setMap(map);
+            mainMarker.setZIndex(3);
+
+            // 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
+            searchDetailAddrFromCoords(map.getCenter(), displayCenterInfo);
 
 
             function makeMap(getLat, getLng){
@@ -431,14 +443,14 @@
               mapOption =
                       {
                         center: new kakao.maps.LatLng(lat, lng), // 지도의 중심좌표
-                        level: 3 // 지도의 확대 레벨
+                        level: 4// 지도의 확대 레벨
                       };
 
               // 지도를 생성합니다
               map = new kakao.maps.Map(mapContainer, mapOption);
 
               //마커 생성
-              let markerPosition = new window.kakao.maps.LatLng(lat, lng);
+              markerPosition = new window.kakao.maps.LatLng(lat, lng);
 
               //마커 생성
               mainMarker = new window.kakao.maps.Marker({
@@ -469,29 +481,29 @@
             //지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
             function displayCenterInfo(result, status) {
               if (status === kakao.maps.services.Status.OK) {
-                    infoDiv.innerHTML = result[0].address.address_name;
+                infoDiv.innerHTML = result[0].address.address_name;
 
-                    var content = "";
+                var content = "";
 
-                    if($("#place_name").val()!=""){
-                    	content = '<div id="infoWindow"><span>'+$("#place_name").val() + '</span></div>';
-                    }
+                if($("#place_name").val()!=""){
+                  content = '<div id="infoWindow"><span>'+$("#place_name").val() + '</span></div>';
+                }
 
-                    else{
-                    	content = '<div id="infoWindow"><span>'+result[0].address.address_name+
-                        ' ' + $("#place_name").val() + '</span></div>';
-                    }
+                else{
+                  content = '<div id="infoWindow"><span>'+result[0].address.address_name+
+                          ' ' + $("#place_name").val() + '</span></div>';
+                }
 
-                    var position = new kakao.maps.LatLng(lat, lng);
-                    var customOverlay = new kakao.maps.CustomOverlay({
-                      position: position,
-                      content: content,
-                      xAnchor: 0.5, // 커스텀 오버레이의 x축 위치입니다. 1에 가까울수록 왼쪽에 위치합니다. 기본값은 0.5 입니다
-                      yAnchor: 2.6 // 커스텀 오버레이의 y축 위치입니다. 1에 가까울수록 위쪽에 위치합니다. 기본값은 0.5 입니다
-                    });
+                var position = new kakao.maps.LatLng(lat, lng);
+                var customOverlay = new kakao.maps.CustomOverlay({
+                  position: position,
+                  content: content,
+                  xAnchor: 0.5, // 커스텀 오버레이의 x축 위치입니다. 1에 가까울수록 왼쪽에 위치합니다. 기본값은 0.5 입니다
+                  yAnchor: 2.6 // 커스텀 오버레이의 y축 위치입니다. 1에 가까울수록 위쪽에 위치합니다. 기본값은 0.5 입니다
+                });
 
-                    customOverlay.setMap(map);
-                    map.setCenter(customOverlay.getPosition());
+                customOverlay.setMap(map);
+                map.setCenter(customOverlay.getPosition());
               }
             }
 
@@ -501,21 +513,43 @@
 
         </div>
         <div>
+          <%
+            GatheringDTO dto = (GatheringDTO) request.getAttribute("dto");
+            String locationFull = "";
+
+            String address1 = dto.getAddress1();
+            String address2 = dto.getAddress2();
+            String address3 = dto.getAddress3();
+            String place_name = dto.getPlace_name();
+
+            if(address2!=null && !address2.equals(""))
+              locationFull = address1 + " " + address2;
+            else locationFull = address1;
+
+            if(address3!=null && !address3.equals(""))
+              locationFull = locationFull + " " + address3;
+
+            if(place_name!=null && !place_name.equals(""))
+              locationFull = locationFull + " " + place_name;
+          %>
+
+          <input type="hidden" name="writer_id" value="${dto.writer_id}">
+          <input type="hidden" name="gathering_id" value="${dto.gathering_id}">
           <div class="labelAndItem"><span>제목</span>
-          <input class="flex" name="title" id="title" value="${dto.title}"></div>
+            <input class="flex" name="title" id="title" value="${dto.title}"></div>
           <div class="labelAndItem"><span>장소</span>
             <input class="flex" disabled id="locationFull"
-            ${dto.address1+' '+dto.address2+' '+dto.address3+ ' '+dto.place_name}>
-	          <input type="hidden" name="address1" id="address1" value="${dto.address1}">
-	          <input type="hidden" name="address2" id="address2" value="${dto.address2}">
-	          <input type="hidden" name="address3" id="address3" value="${dto.address3}">
-	          <input type="hidden" name="place_name" id="place_name" value="${dto.place_name}">
-	          <input type="hidden" name="lat" id="lat" value="${dto.lat}">
-	          <input type="hidden" name="lng" id="lng" value="${dto.lng}">
+                   value = "<%=locationFull%>">
+            <input type="hidden" name="address1" id="address1" value="${dto.address1}">
+            <input type="hidden" name="address2" id="address2" value="${dto.address2}">
+            <input type="hidden" name="address3" id="address3" value="${dto.address3}">
+            <input type="hidden" name="place_name" id="place_name" value="${dto.place_name}">
+            <input type="hidden" name="lat" id="lat" value="${dto.lat}">
+            <input type="hidden" name="lng" id="lng" value="${dto.lng}">
             <button type="button" id="locationSearchBtn" onclick="locationSearch()">검색</button></div>
           <div class="labelAndItem"><span>일시</span>
-           <input type="datetime-local" name="gathering_date" id="gathering_date" value="${dto.gathering_date}">
-           <span class="flex" style="text-align: right;">*30분 이후 ~ 2개월 이내만 가능</span>
+            <input type="datetime-local" name="gathering_date" id="gathering_date" value="${dto.gathering_date}">
+            <span class="flex" style="text-align: right;">*30분 이후 ~ 2개월 이내만 가능</span>
           </div>
           <div class="labelAndItem">
             <span>유의사항</span>
@@ -529,7 +563,7 @@
             <span>참가방식</span>
             <div class="flex">
               <div>
-                <input type="radio" name="attendSystem" value="o" checked id="order">
+                <input type="radio" name="attendSystem" value="o" id="order">
                 <label for="order">선착순</label>
                 <input type="radio" name="attendSystem" value="p" id="permit">
                 <label for="permit">승인제</label>
@@ -541,19 +575,19 @@
               </div>
             </div>
           </div>
-      </div>
-        -->
+        </div>
       </div>
       <div id="postMain">
         <div>
           <button type="button" id="btn-attachGame">게임첨부</button>
         </div>
-        <textarea id="description" name="description" placeholder="모임을 자유롭게 소개해보세요.">
+        <textarea id="gathering_content" name="gathering_content" placeholder="모임을 자유롭게 소개해보세요.">
+          ${dto.gathering_content}
         </textarea>
         <script>
-        CKEDITOR.replace("description",{
-        	filebrowserUploadUrl : "${path}/imageUpload.do"
-        });
+          CKEDITOR.replace("gathering_content",{
+            filebrowserUploadUrl : "${path}/imageUpload.do"
+          });
         </script>
 
         <ul>
@@ -562,7 +596,7 @@
           <li>모임에서 사이트 운영정책에 어긋나는 행위를 하는 경우 이용재제가 가해질 수 있습니다.</li>
         </ul>
         <div>
-          <button type="button" id="btn-submit" onclick="add()">등록</button>
+          <button type="button" id="btn-submit" onclick="add()">수정</button>
           <button type="button" id="btn-reset">돌아가기</button>
         </div>
 

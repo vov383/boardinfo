@@ -30,7 +30,7 @@
    <c:otherwise>
     <!-- 로그인한 상태 -->
     ${sessionScope.name}님이 로그인중입니다.
-    <a href="${path}/member/view.do?userid=${sessionScope.userid}">회원정보</a> |
+    <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a> |
     <a href="${path}/member/logout.do">로그아웃</a> 
    </c:otherwise>
   </c:choose>

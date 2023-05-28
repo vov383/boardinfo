@@ -23,7 +23,9 @@ public class GameDTO {
 	private int viewcount; //조회수 나중에 주간랭킹같은것 구현 고려
 	
 	//따로 테이블 만들어서 관리.
-	private String designer; //디자이너 nn 모르면 정보없음입력
+	//게임등록시 값이 여러개일 경우 ',' 를 기준으로 spilt 할 수있게 문자열로 받은 다음
+	//서비스에서 각 테이블로 배열로 값을 보냄.
+	private String designer; //디자이너
 	private String gamecategory; //게임카테고리
 	private String publisher; //제작사
 	private String artist; //아트웍담당
@@ -31,8 +33,10 @@ public class GameDTO {
 
 	//사진테이블의 자료를 사용하는 용도의 배열
 	private String[] files;
+
 	
 	//테이블에 없을것들 일단 적어놨지만 나중에 dto가 아닌 map으로 값 넘길수도 있음.
+	//변수명이 이상해서 db엎을때 제대로 다시 작성할것.
 	private double g_rate; //게임 평점
 	private double l_rate; //게임 난이도
 	private int g_rank; //게임순위

@@ -44,4 +44,6 @@ public class CategoryDAOImpl implements CategoryDAO {
   public List<CategoryDTO> list() {
     return sqlSession.selectList("category.list");
   }
+
+  public List<CategoryDTO> view(int gnum) { return  sqlSession.selectList("category.view", gnum); }
 }

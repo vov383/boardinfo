@@ -17,7 +17,7 @@ public class ChatHandler extends TextWebSocketHandler {
 	private static final org.slf4j.Logger logger = 
 			LoggerFactory.getLogger(ChatController.class);
 
-	private List<WebSocketSession> sessionList = new ArrayList<WebSocketSession>();
+	private final List<WebSocketSession> sessionList = new ArrayList<WebSocketSession>();
 	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {

@@ -40,6 +40,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE nickname = #{nickname}
 	</select>
 	
+	 <select id="checkPw" resultType="int">
+	  select count(*) from member
+	  where userid=#{userid} and passwd=#{passwd}
+	 </select>
 	
 </mapper>
 

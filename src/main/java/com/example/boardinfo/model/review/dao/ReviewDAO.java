@@ -8,13 +8,13 @@ import java.util.List;
 public interface ReviewDAO {
 
 	// 리뷰 테이블
-	public List<ReviewDTO> reviewlist();
+    List<ReviewDTO> reviewlist();
 
 	// 리뷰 입력
-	public void create(ReviewDTO reviewDTO);
+    void create(ReviewDTO reviewDTO);
 
 	// 리뷰 Blob 입력 테스트
-	public void create(TestDTO testdto);
+    void create(TestDTO testdto);
 
 	/*// 리뷰 입력 테스트
 	public void create(TestDTO testdto);*/

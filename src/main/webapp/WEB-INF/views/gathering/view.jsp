@@ -461,7 +461,7 @@
     mapOption =
             {
               center: new kakao.maps.LatLng(lat, lan), // 지도의 중심좌표
-              level: 3 // 지도의 확대 레벨
+              level: 4 // 지도의 확대 레벨
             };
 
     // 지도를 생성합니다
@@ -532,7 +532,10 @@
                     <div id="title">${dto.title}</div>
                     <ul>
                         <li>장소:&nbsp&nbsp${dto.address1} ${dto.address2} ${dto.address3} ${dto.place_name}</li>
-                        <li>일시:&nbsp&nbsp<fmt:formatDate value="${dto.post_date}" pattern="yyyy.M.dd a h:mm"/></li>
+                        <li>일시:&nbsp&nbsp
+                            <fmt:parseDate value="${dto.gathering_date}"
+                                           pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both"/>
+                            <fmt:formatDate value="${parsedDateTime}" pattern="yyyy.M.dd a h:mm"/>
                         <li>유의사항:&nbsp&nbsp
                         	<c:choose>
                         		<c:when test="${dto.note==null || dto.note == ''}">
@@ -554,7 +557,7 @@
                 </div>
             </div>
             <div id="postMain">
-            ${dto.description}
+            ${dto.gathering_content}
             </div>
 
             <div id="replyArea">

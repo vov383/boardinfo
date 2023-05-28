@@ -6,11 +6,11 @@ import com.example.boardinfo.model.game.dto.mechanic.MechanicDTO;
 
 public interface MechanicDAO {
 
-	public int check_mechanic(String mechanic);
-	public void insert_mechanic(String mechanic);
-	public void insert_mechanic_mapping();
-	public int mechanicnum(String mechanic);
-	public void insert_mechanic_mapping(int mnum);
-    public List<MechanicDTO> list();
-    
+	int check_mechanic(String mechanic);
+	void insert_mechanic(String mechanic);
+	void insert_mechanic_mapping();
+	int mechanicnum(String mechanic);
+	void insert_mechanic_mapping(int mnum);
+    List<MechanicDTO> list();
+    List<MechanicDTO> view(int gnum);
 }

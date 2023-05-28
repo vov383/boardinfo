@@ -1,16 +1,18 @@
 package com.example.boardinfo.model.game.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.example.boardinfo.model.game.dto.GameDTO;
 
 public interface GameDAO {
 
-	public List<GameDTO> gamelist();
-	public void gameinsert(GameDTO dto);
-	public void increaseViewcnt(int gnum) throws Exception;
-	public GameDTO view(int gnum) throws Exception;
-    public List<GameDTO> getAutoGame(String input);
-    public void addAttach(String fullName);
-    public void delteFile(String fileName);
+	List<GameDTO> gamelist();
+	void gameinsert(GameDTO dto);
+	void increaseViewcnt(int gnum) throws Exception;
+	GameDTO view(int gnum) throws Exception;
+    List<GameDTO> getAutoGame(String input);
+    void addAttach(String fullName);
+    void delteFile(String fileName);
+	List<GameDTO> gamelist(Map<String, Object> map);
 }

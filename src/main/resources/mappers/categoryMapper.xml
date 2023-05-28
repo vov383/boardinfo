@@ -36,6 +36,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="list" resultType="categoryDto">
 		select * from category
 	</select>
+
+	<select id="view" resultType="categoryDto">
+		select c.cnum, c.gamecategory
+		from category c, game_category gc
+		where c.cnum = gc.cnum and gc.gnum = #{gnum}
+	</select>
 	
 </mapper>
 
