@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/mvc"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:websocket="http://www.springframework.org/schema/websocket"
-	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xmlns:beans="http://www.springframework.org/schema/beans"
+			 xmlns:context="http://www.springframework.org/schema/context"
+			 xmlns:aop="http://www.springframework.org/schema/aop"
+			 xmlns:tx="http://www.springframework.org/schema/tx"
+			 xmlns:websocket="http://www.springframework.org/schema/websocket"
+			 xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+		http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing 
 		infrastructure -->
@@ -24,11 +26,8 @@
 	<resources mapping="/resources/**" location="/resources/" />
 	<resources location="/resources/uploaded_image/" mapping="/uploaded_image/**"/>
 	<!-- ck에디터 업로드 이미지 첨부파일 경로  -->
-	<resources mapping="/ckimg/**" location="/resources/ckimg/" />
-	
 	<resources location="/WEB-INF/views/include/" mapping="/include/**" />
 	<resources location="/WEB-INF/views/images/" mapping="/images/**" />
-	<resources location="/WEB-INF/views/json/" mapping="/json/**" />
 	<resources location="/WEB-INF/views/ckeditor/" mapping="/ckeditor/**" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
@@ -58,7 +57,20 @@
 	
 	<!-- aop의 설정으로 Proxy 객체를 자동으로 생성 -->
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
-	
+
+
+	<!-- 몽고DB 환경설정
+	<mongo:db-factory
+		id="mongoDbFactory"
+		host="localhost"
+		port="27017"
+		dbname="board-info"/>
+
+	<beans:bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<beans:constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+	</beans:bean>
+	-->
+
 	
 	<!-- 웹소켓 핸들러 등록 -->
 	<websocket:handlers>

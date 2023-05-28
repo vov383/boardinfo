@@ -1,7 +1,7 @@
 package com.example.boardinfo.service.gathering;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -40,9 +40,9 @@ public class GatheringServiceImpl implements GatheringService {
 
 	@Override
 	public List<GatheringDTO> list(boolean showAvailable, String[] address1List
-			, LocalDate from, LocalDate to, int start, int end) {
+			, LocalDate from, LocalDate to, int start, int end, String searchOption, String keyword) {
 		List<GatheringDTO> list = 
-				gatheringDao.list(showAvailable, address1List, from, to, start, end);
+				gatheringDao.list(showAvailable, address1List, from, to, start, end, searchOption, keyword);
 		
 		for (GatheringDTO dto : list) {
 			
@@ -58,8 +58,8 @@ public class GatheringServiceImpl implements GatheringService {
 			}
 			
 			//status 세팅
-			LocalDate now = LocalDate.now();
-			LocalDate gathering_date = dto.getGathering_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			LocalDateTime now = LocalDateTime.now();
+			LocalDateTime gathering_date = dto.getGathering_date();
 			if(now.isAfter(gathering_date)) {
 				dto.setStatus("모임종료");
 			}
@@ -72,17 +72,14 @@ public class GatheringServiceImpl implements GatheringService {
 
 	@Override
 	public GatheringDTO view(int gathering_id, boolean updateViewCount) {
-		
-		
 		if(updateViewCount) {
 			gatheringDao.updateViewCount(gathering_id);
 		}
 			GatheringDTO dto = gatheringDao.view(gathering_id);
 		
 		//status 세팅
-		LocalDate now = LocalDate.now();
-		LocalDate gathering_date = dto.getGathering_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		if(now.isAfter(gathering_date)) {
+		LocalDateTime now = LocalDateTime.now();
+		if(now.isAfter(dto.getGathering_date())) {
 			dto.setStatus("모임종료");
 		}
 		
@@ -131,4 +128,13 @@ public class GatheringServiceImpl implements GatheringService {
 	public int countList(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to) {
 		return gatheringDao.countList(showAvailable, address1List, from, to);
 	}
+
+	@Override
+	public boolean update(GatheringDTO dto) {
+		int num = gatheringDao.update(dto);
+		if(num > 1) return true;
+		else return false;
+	}
+
+
 }
