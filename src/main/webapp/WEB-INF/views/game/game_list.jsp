@@ -57,6 +57,48 @@
 				</tr>
 				
 			</thead>
+
+			<tfoot>
+
+			<tr>
+
+				<td colspan="7" align="center">
+
+					<c:if test="${map.pager.curBlock > 1}">
+						<a href="#" onclick="list('1')">[처음]</a>
+					</c:if>
+					<c:if test="${map.pager.curBlock > 1}">
+						<a href="#" onclick="list('${map.pager.prevPage}')">
+							[이전]</a>
+					</c:if>
+					<c:forEach var="num"
+							   begin="${map.pager.blockStart}"
+							   end="${map.pager.blockEnd}">
+						<c:choose>
+							<c:when test="${num == map.pager.curPage}">
+								<!-- 현재 페이지인 경우 하이퍼링크 제거 -->
+								<span style="color:red;">${num}</span>
+							</c:when>
+							<c:otherwise>
+								<a href="#" onclick="list('${num}')">${num}</a>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+					<c:if test="${map.pager.curBlock < map.pager.totBlock}">
+						<a href="#"
+						   onclick="list('${map.pager.nextPage}')">[다음]</a>
+					</c:if>
+					<c:if test="${map.pager.curPage < map.pager.totPage}">
+						<a href="#"
+						   onclick="list('${map.pager.totPage}')">[끝]</a>
+					</c:if>
+
+				</td>
+
+			</tr>
+
+			</tfoot>
+
 			
 			<tbody>
 			
@@ -68,10 +110,18 @@
 					<td>
 						<c:choose>
 							<c:when test="${row.gamephoto_url != null}">
-								<img src="${path}/resources/uploaded_game${row.gamephoto_url}">
+								<img alt="저장된 이미지파일이 없음" src="${path}/resources/uploaded_game${row.gamephoto_url}">
 							</c:when>
 							<c:otherwise>
-								빈 이미지 추가요망
+								<c:choose>
+									<c:when test="${row.bggnum != null}">
+										<img class="img_photo" src="${row.bgg_thumbnail}" width="100px" height="100px" border="1px">
+									</c:when>
+									<c:otherwise>
+										이미지를 등록해주세요
+									</c:otherwise>
+								</c:choose>
+
 							</c:otherwise>
 						</c:choose>
 					</td>
@@ -88,71 +138,9 @@
 			
 			</tbody>
 
-			<tfoot>
-
-				<tr>
-
-					<td colspan="7" align="center">
-						<c:if test="${map.pager.curBlock > 1}">
-							<a href="#" onclick="list('1')">[처음]</a>
-						</c:if>
-						<c:if test="${map.pager.curBlock > 1}">
-							<a href="#" onclick="list('${map.pager.prevPage}')">
-								[이전]</a>
-						</c:if>
-						<c:forEach var="num"
-								   begin="${map.pager.blockBegin}"
-								   end="${map.pager.blockEnd}">
-							<c:choose>
-								<c:when test="${num == map.pager.curPage}">
-									<!-- 현재 페이지인 경우 하이퍼링크 제거 -->
-									<span style="color:red;">${num}</span>
-								</c:when>
-								<c:otherwise>
-									<a href="#" onclick="list('${num}')">${num}</a>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-						<c:if test="${map.pager.curBlock < map.pager.totBlock}">
-							<a href="#"
-							   onclick="list('${map.pager.nextPage}')">[다음]</a>
-						</c:if>
-						<c:if test="${map.pager.curPage < map.pager.totPage}">
-							<a href="#"
-							   onclick="list('${map.pager.totPage}')">[끝]</a>
-						</c:if>
-
-					</td>
-
-				</tr>
-
-			</tfoot>
 
 		</table>
-		<div id="paginationArea">
-			<c:if test="${map.pager.curPage > 1}">
-				<div class="pageItem" onclick="list(1)">&lt&lt</div>
-			</c:if>
-			<c:if test="${map.pager.curBlock > 1}">
-				<div class="pageItem" onclick="list(${map.pager.prevBlock})">&lt</div>
-			</c:if>
-			<c:forEach var="num" begin="${map.pager.blockStart}" end="${map.pager.blockEnd}">
-				<c:choose>
-					<c:when test="${num == map.pager.curPage}">
-						<div id="curPage" class="pageItem" onclick="list(${num})">${num}</div>
-					</c:when>
-					<c:otherwise>
-						<div class="pageItem" onclick="list(${num})">${num}</div>
-					</c:otherwise>
-				</c:choose>
-			</c:forEach>
-			<c:if test="${map.pager.curBlock < map.pager.totBlock}">
-				<div class="pageItem" onclick="list(${map.pager.nextBlock})">&gt</div>
-			</c:if>
-			<c:if test="${map.pager.curPage < map.pager.totPage}">
-				<div class="pageItem" onclick="list(${map.pager.totPage})">&gt&gt</div>
-			</c:if>
-		</div>
+
 
 	</div>
 

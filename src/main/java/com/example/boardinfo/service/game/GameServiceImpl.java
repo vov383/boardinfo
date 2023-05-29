@@ -10,10 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.example.boardinfo.controller.game.GameController;
 import com.example.boardinfo.model.game.dto.designer.DesignerDTO;
 import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
 import com.example.boardinfo.util.BggParser;
 import com.example.boardinfo.util.Pager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +36,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Service
 public class GameServiceImpl implements GameService {
-
+  private static final Logger logger=
+          LoggerFactory.getLogger(GameServiceImpl.class);
   @Inject
   GameDAO gameDao;
   @Inject
@@ -50,15 +54,27 @@ public class GameServiceImpl implements GameService {
   @Override
   public Map<String, Object> gamelist(int curPage) {
     int count = gameDao.countList();
+
     Pager pager = new Pager(count, curPage, 10);
     int start = pager.getPageBegin();
     int end = pager.getPageEnd();
+
     Map<String, Object> map = new HashMap<>();
     map.put("start",start);
     map.put("end",end);
+
     List<GameDTO> list = gameDao.gamelist(map);
+
+    for(GameDTO dto : list){
+      int bggnum = dto.getBggnum();
+      BggParser bggParser = new BggParser();
+      bggParser.setBgg_thumbnail(bggnum);
+      dto.setBgg_thumbnail(bggParser.getBgg_thumbnail());
+    }
+
     map.put("list",list);
     map.put("pager",pager);
+
     return map;
   }
 
@@ -259,11 +275,33 @@ public class GameServiceImpl implements GameService {
 
 
   //아티스트,카테고리,디자이너,메카닉,퍼블리셔 개별 항목에 대응하는 게임목록 출력
-  public Map<String, Object> filteredGamelist(String filter,int num){
+  public Map<String, Object> filteredGamelist(String filter,int num, int curPage){
     Map<String, Object> map = new HashMap<>();
     map.put("filter",filter);
     map.put("num", num);
-    map.put("list", gameDao.gamelist(map));
+
+    int count = gameDao.countList(map);
+
+    Pager pager = new Pager(count, curPage, 10);
+    int start = pager.getPageBegin();
+    int end = pager.getPageEnd();
+    map.put("start",start);
+    map.put("end",end);
+
+    List<GameDTO> list = gameDao.filteredGamelist(map);
+
+    for(GameDTO dto : list){
+      int bggnum = dto.getBggnum();
+      BggParser bggParser = new BggParser();
+      bggParser.setBgg_thumbnail(bggnum);
+      logger.info("과연 : " + dto );
+      dto.setBgg_thumbnail(bggParser.getBgg_thumbnail());
+    }
+
+    map.put("count", count);
+    map.put("list", list);
+    map.put("pager", pager);
+
     return map;
   }
 }

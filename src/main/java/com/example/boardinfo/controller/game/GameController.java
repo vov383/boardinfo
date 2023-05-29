@@ -38,8 +38,6 @@ public class GameController {
 	@RequestMapping("gamelist.do")
 	public ModelAndView gamelist(ModelAndView mav, @RequestParam(required = false, defaultValue = "1") int curPage) {
 
-
-
 		mav.setViewName("game/game_list");
 		mav.addObject("map", gameService.gamelist(curPage));
 		return mav;
@@ -116,11 +114,11 @@ public class GameController {
 	}
 
 	@GetMapping ("search.do")
-	public ModelAndView sortGame(ModelAndView mav, @RequestParam("filter") String filter, @RequestParam("num") int num){
+	public ModelAndView sortGame(ModelAndView mav, @RequestParam("filter") String filter, @RequestParam("num") int num,
+								 @RequestParam(required = false, defaultValue = "1") int curPage) {
 
 		mav.setViewName("game/game_filteredList");
-		mav.addObject("map", gameService.filteredGamelist(filter,num));
-		logger.info("map : " + gameService.filteredGamelist(filter,num));
+		mav.addObject("map", gameService.filteredGamelist(filter, num, curPage));
 		return mav;
 	}
 
