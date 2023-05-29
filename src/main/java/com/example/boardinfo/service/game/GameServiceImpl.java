@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import com.example.boardinfo.model.game.dto.designer.DesignerDTO;
 import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
 import com.example.boardinfo.util.BggParser;
+import com.example.boardinfo.util.Pager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +48,18 @@ public class GameServiceImpl implements GameService {
   PublisherDAO publisherDao;
 
   @Override
-  public List<GameDTO> gamelist() {
-    return gameDao.gamelist();
+  public Map<String, Object> gamelist(int curPage) {
+    int count = gameDao.countList();
+    Pager pager = new Pager(count, curPage, 10);
+    int start = pager.getPageBegin();
+    int end = pager.getPageEnd();
+    Map<String, Object> map = new HashMap<>();
+    map.put("start",start);
+    map.put("end",end);
+    List<GameDTO> list = gameDao.gamelist(map);
+    map.put("list",list);
+    map.put("pager",pager);
+    return map;
   }
 
   @Transactional
@@ -248,7 +259,7 @@ public class GameServiceImpl implements GameService {
 
 
   //아티스트,카테고리,디자이너,메카닉,퍼블리셔 개별 항목에 대응하는 게임목록 출력
-  public Map<String, Object> gamelist(String filter,int num){
+  public Map<String, Object> filteredGamelist(String filter,int num){
     Map<String, Object> map = new HashMap<>();
     map.put("filter",filter);
     map.put("num", num);

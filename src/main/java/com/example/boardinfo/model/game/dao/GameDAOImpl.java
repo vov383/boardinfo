@@ -16,10 +16,12 @@ public class GameDAOImpl implements GameDAO {
 	
 	@Inject
 	SqlSession sqlSession;
+
+	public int countList() { return sqlSession.selectOne("game.gameListCount");}
 	
 	@Override
-	public List<GameDTO> gamelist(){
-		return sqlSession.selectList("game.gameList");
+	public List<GameDTO> gamelist(Map<String, Object> map){
+		return sqlSession.selectList("game.gameList", map);
 	}
 	
 	@Override
@@ -46,7 +48,7 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.delete("game.deleteFile", fileName);
 	}
 
-	public List<GameDTO> gamelist(Map<String, Object> map) {
+	public List<GameDTO> filteredGamelist(Map<String, Object> map) {
 
 		return sqlSession.selectList("game.filteredList", map);
 	}
