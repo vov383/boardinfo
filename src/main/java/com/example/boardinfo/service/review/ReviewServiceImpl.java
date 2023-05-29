@@ -3,6 +3,7 @@ package com.example.boardinfo.service.review;
 import com.example.boardinfo.model.review.dao.ReviewDAO;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.review.dto.TestDTO;
+import com.example.boardinfo.model.review.dto.reviewSerchDTO;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,18 +18,19 @@ public class ReviewServiceImpl implements ReviewService {
     ReviewDAO reviewDAO;
 
 	@Override // 덮어쓰기 의미
-	public List<ReviewDTO> reviewlist(){
-
-		List<ReviewDTO> list = reviewDAO.reviewlist();
+	public List<ReviewDTO> reviewlist(reviewSerchDTO reviewserchDTO){
+		List<ReviewDTO> list = reviewDAO.reviewlist(reviewserchDTO);
 		System.out.println("vo : " + new Gson().toJson(list));
 
 		return list;
 	}
 
+	//리뷰 입력
 	@Transactional
-	@Override // 덮어쓰기 의미
-	public void create(ReviewDTO reviewDTO){
+	@Override
+	public void reviewCreate(ReviewDTO reviewDTO){
 
+/*
 		System.out.println("testtesttesttesttesttesttesttesttesttest");
 		System.out.println("reviewDTO.getRegNum() : " + reviewDTO.getRegNum());
 		System.out.println("reviewDTO.getCategory() : " + reviewDTO.getCategory());
@@ -48,14 +50,24 @@ public class ReviewServiceImpl implements ReviewService {
 		System.out.println("reviewDTO.getUpdateUser() : " + reviewDTO.getUpdateUser());
 		System.out.println("reviewDTO.getUpdateDate() : " + reviewDTO.getUpdateDate());
 		System.out.println("testtesttesttesttesttesttesttesttesttest");
+*/
+
+		reviewDAO.reviewCreate(reviewDTO);
+	}
+
+	//리뷰 수정
+	@Transactional
+	@Override
+	public void reviewUpdate(ReviewDTO reviewDTO){
 
 
-		reviewDAO.create(reviewDTO);
+		System.out.println("reviewUpdate : " + new Gson().toJson(reviewDTO));
+		reviewDAO.reviewUpdate(reviewDTO);
 	}
 
 
 	@Transactional
-	@Override // 덮어쓰기 의미
+	@Override
 	public void create(TestDTO testdto){
 
 		System.out.println("Blob : " + testdto.getBlob());
