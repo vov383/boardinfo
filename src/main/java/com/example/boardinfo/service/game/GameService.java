@@ -16,7 +16,7 @@ import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
 
 public interface GameService {
 
-  List<GameDTO> gamelist();
+  Map<String, Object> gamelist(int curPage);
   void gameinsert(GameDTO dto);
   void increaseViewcnt(int gnum, HttpServletRequest request, HttpServletResponse response) throws Exception;
   Map<String, Object> view(int gnum) throws Exception;
@@ -27,5 +27,5 @@ public interface GameService {
   List<PublisherDTO> getAutoPublisher(String input);
   List<GameDTO> getAutoGame(String input);
   void deleteFile(String fileName);
-  Map<String, Object> gamelist(String filter,int num);
+  Map<String, Object> filteredGamelist(String filter,int num);
 }
