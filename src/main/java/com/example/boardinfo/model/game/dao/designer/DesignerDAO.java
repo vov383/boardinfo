@@ -3,6 +3,7 @@ package com.example.boardinfo.model.game.dao.designer;
 import com.example.boardinfo.model.game.dto.designer.DesignerDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DesignerDAO {
 

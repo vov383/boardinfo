@@ -1,6 +1,7 @@
 package com.example.boardinfo.model.game.dao.mechanic;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 

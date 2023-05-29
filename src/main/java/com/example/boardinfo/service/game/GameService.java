@@ -28,4 +28,6 @@ public interface GameService {
   List<GameDTO> getAutoGame(String input);
   void deleteFile(String fileName);
   Map<String, Object> filteredGamelist(String filter,int num, int curPage);
+  GameDTO updateView(int gnum);
+  void gameupdate(GameDTO dto);
 }

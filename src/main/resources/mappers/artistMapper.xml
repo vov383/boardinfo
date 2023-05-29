@@ -41,9 +41,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="view" resultType="artistDto">
-		select a.anum, a.artist
-		from artist a, game_artist ga
-		where a.anum = ga.anum and ga.gnum = #{gnum}
+			select a.anum, a.artist
+			from artist a, game_artist ga
+			where a.anum = ga.anum and ga.gnum = #{gnum}
 	</select>
 	
 </mapper>

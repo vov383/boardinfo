@@ -12,6 +12,38 @@
 <%@ include file="../include/js/header.jsp"%>
 <link rel="stylesheet" href="${path}/include/js/style_game.css">
 
+<style>
+
+	#paginationArea{
+		display: flex;
+		margin: 20px auto 0 auto;
+	}
+
+	.pageItem{
+		width: 35px;
+		height: 35px;
+		border-radius: 10px;
+		line-height: 35px;
+		text-align: center;
+		margin: 0 3px;
+		font-size: 1.2em;
+	}
+
+	.pageItem:hover{
+		cursor: pointer;
+	}
+
+	.pageItem:not(#curPage):hover{
+		background-color: #D9D9D9;
+	}
+
+	#curPage{
+		border: 2px solid #1432B1;
+		color: #1432B1;
+		line-height: 31px;
+	}
+
+</style>
 </head>
 
 <header>
@@ -64,34 +96,30 @@
 
 				<td colspan="7" align="center">
 
-					<c:if test="${map.pager.curBlock > 1}">
-						<a href="#" onclick="list('1')">[처음]</a>
-					</c:if>
-					<c:if test="${map.pager.curBlock > 1}">
-						<a href="#" onclick="list('${map.pager.prevPage}')">
-							[이전]</a>
-					</c:if>
-					<c:forEach var="num"
-							   begin="${map.pager.blockStart}"
-							   end="${map.pager.blockEnd}">
-						<c:choose>
-							<c:when test="${num == map.pager.curPage}">
-								<!-- 현재 페이지인 경우 하이퍼링크 제거 -->
-								<span style="color:red;">${num}</span>
-							</c:when>
-							<c:otherwise>
-								<a href="#" onclick="list('${num}')">${num}</a>
-							</c:otherwise>
-						</c:choose>
-					</c:forEach>
-					<c:if test="${map.pager.curBlock < map.pager.totBlock}">
-						<a href="#"
-						   onclick="list('${map.pager.nextPage}')">[다음]</a>
-					</c:if>
-					<c:if test="${map.pager.curPage < map.pager.totPage}">
-						<a href="#"
-						   onclick="list('${map.pager.totPage}')">[끝]</a>
-					</c:if>
+					<div id="paginationArea">
+						<c:if test="${map.pager.curPage > 1}">
+							<div class="pageItem" onclick="list(1)">&lt&lt</div>
+						</c:if>
+						<c:if test="${map.pager.curPage > 1}">
+							<div class="pageItem" onclick="list(${map.pager.prevPage})">&lt</div>
+						</c:if>
+						<c:forEach var="num" begin="${map.pager.blockStart}" end="${map.pager.blockEnd}">
+							<c:choose>
+								<c:when test="${num == map.pager.curPage}">
+									<div id="curPage" class="pageItem" onclick="list(${num})">${num}</div>
+								</c:when>
+								<c:otherwise>
+									<div class="pageItem" onclick="list(${num})">${num}</div>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+						<c:if test="${map.pager.curPage < map.pager.totPage}">
+							<div class="pageItem" onclick="list(${map.pager.nextPage})">&gt</div>
+						</c:if>
+						<c:if test="${map.pager.curPage < map.pager.totPage}">
+							<div class="pageItem" onclick="list(${map.pager.totPage})">&gt&gt</div>
+						</c:if>
+					</div>
 
 				</td>
 

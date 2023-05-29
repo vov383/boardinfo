@@ -1,6 +1,7 @@
 package com.example.boardinfo.model.game.dao.category;
 
 import java.util.List;
+import java.util.Map;
 
 import com.example.boardinfo.model.game.dto.category.CategoryDTO;
 

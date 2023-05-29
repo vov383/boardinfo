@@ -3,6 +3,7 @@ package com.example.boardinfo.model.game.dao.publisher;
 import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PublisherDAO {
 

@@ -41,9 +41,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="view" resultType="designerDto">
-		select d.dnum, d.designer
-		from designer d, game_designer gd
-		where d.dnum = gd.dnum and gd.gnum = #{gnum}
+			select d.dnum, d.designer
+			from designer d, game_designer gd
+			where d.dnum = gd.dnum and gd.gnum = #{gnum}
 	</select>
 	
 </mapper>
