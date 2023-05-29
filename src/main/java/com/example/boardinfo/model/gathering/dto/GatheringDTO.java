@@ -2,10 +2,20 @@ package com.example.boardinfo.model.gathering.dto;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+
+import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 public class GatheringDTO {
 	
@@ -36,6 +46,9 @@ public class GatheringDTO {
 	private int is_public;
 	private int view_count;
 	private int reply_count;
+
+	
+
 
 	public int getGathering_id() {
 		return gathering_id;
@@ -258,4 +271,7 @@ public class GatheringDTO {
 				", reply_count=" + reply_count +
 				'}';
 	}
+	
+	
+	
 }

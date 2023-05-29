@@ -32,6 +32,7 @@
         <h1><a href="${path}/chat/goChat.do" style="color: black;">sjTest</a></h1>
         <h1><a href="${path}/gathering/list.do" style="color: black;">모임리스트</a></h1>
         <h1><a href="${path}/gathering/add.do" style="color: black;">모임만들기</a></h1>
+        <h1><a href="${path}/mongo/insert.do" style="color: black;">테스트insert</a></h1>
         
         <br>
         <h1><a href="${path}/review/reviewlist.do" style="color: black;">Review List</a></h1>
