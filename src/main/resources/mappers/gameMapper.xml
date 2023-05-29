@@ -5,16 +5,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
 <mapper namespace="game">
+
+	<select id="gameListCount" resultType="int">
+		select count(*)
+		from game
+	</select>
+
 	<select id="gameList" resultType="gameDto">
-		select g.gnum, g.gametitle, g.gametitle_eng, g.viewcount, g.release_year, ga.fullname gamephoto_url
-		  from game g,
-        	   (select gnum, fullname
-          		  from (select row_number() over(partition by gnum order by regdate desc) rnum, gnum, fullname
-                  		  from game_attach
-                  	   ) a
-        		 where rnum = 1) ga
-		 where g.gnum = ga.gnum(+)
-		 order by gnum
+		select *
+		from (select a.*, rownum rn
+				from (select g.gnum, g.gametitle, g.gametitle_eng, g.viewcount, g.release_year, ga.fullname gamephoto_url
+						from game g,
+    		    			(select gnum, fullname
+    		    			   from (select row_number() over(partition by gnum order by regdate desc) rnum, gnum, fullname
+    		    		        	   from game_attach
+    		    		        	) a
+    		    			  where rnum = 1
+    		    			) ga
+				 	  where g.gnum = ga.gnum(+)
+				 	  order by gnum
+				 	 )a
+			 )
+		where rn between #{start} and #{end}
 	</select>
 	
 	<insert id="gameInsert">

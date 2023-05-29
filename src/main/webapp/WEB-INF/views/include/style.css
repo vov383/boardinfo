@@ -183,7 +183,6 @@
     #gameSearchDiv{
         margin-top: 6px;
         background-color: white;
-        border: 1px solid black;
         overflow-y: auto;
     }
     /*top 검색창 검색결과 개별 감싸는 div*/
