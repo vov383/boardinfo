@@ -1,11 +1,14 @@
 package com.example.boardinfo.service.tboard;
 
-import java.util.List;    
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
+import com.example.boardinfo.util.Pager;
 import org.springframework.stereotype.Service;
 
 import com.example.boardinfo.model.tboard.dao.TBoardDAO;
@@ -18,8 +21,26 @@ public class TBoardServiceImpl implements TBoardService {
 	TBoardDAO tboardDao;
 	
 	@Override
-	public List<TBoardDTO> list(String select_category, String search_option, String keyword, int start, int end) {
-		return tboardDao.list(select_category, search_option, keyword, start, end);
+	public Map<String, Object> list(String select_category, String search_option, String keyword, int curPage) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("select_category", select_category);
+		map.put("search_option", search_option);
+		map.put("keyword", "%"+keyword+"%");
+
+		int count = tboardDao.countArticle(map);
+
+		Pager pager = new Pager(count, curPage, 10);
+		int start = pager.getPageBegin();
+		int end = pager.getPageEnd();
+
+		map.put("start", start);
+		map.put("end", end);
+
+		List<TBoardDTO> list = tboardDao.list(map);
+		map.put("list", list);
+		map.put("pager", pager);
+
+		return map;
 	}
 
 	@Override
@@ -49,9 +70,12 @@ public class TBoardServiceImpl implements TBoardService {
 
 	@Override
 	public int countArticle(String select_category, String search_option, String keyword) {
-		return tboardDao.countArticle(select_category, search_option, keyword);
+		Map<String, Object> map = new HashMap<>();
+		map.put("select_category", select_category);
+		map.put("search_option", search_option);
+		map.put("keyword", "%"+keyword+"%");
+		return tboardDao.countArticle(map);
 	}
-
 	@Override
 	public void increaseViewCount(int tb_num, HttpSession session) {
 		long update_time=0;

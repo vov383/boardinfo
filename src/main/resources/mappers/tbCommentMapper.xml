@@ -32,13 +32,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	<!-- 댓글U -->
 	<update id="updateComment">
-		update tb_comments set content = #{content}
+		update tb_comments set content = #{content},
+		   	update_date = sysdate, update_user = #{create_user}
 		where reply_reg_num = #{reply_reg_num}
 	</update>
 
 	<!-- 댓글D -->
 	<delete id="deleteComment">
-		update tb_comments set del = 'Y'
+		update tb_comments set del = 'Y',
+			update_date = sysdate, update_user = #{update_user}
 		where reply_reg_num = #{reply_reg_num}
 	</delete>
 

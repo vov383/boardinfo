@@ -9,9 +9,13 @@ public interface TBCommentDAO {
 	int getCommentCount(int tb_num);
 	void insertComment(TBCommentDTO re_dto);
 	void insertChilComment(TBCommentDTO re_dto);
-	
-	void updateComment(int reply_reg_num, String content);
+
+	void insertChildComment(TBCommentDTO re_dto);
+
+	void updateComment(int reply_reg_num, String content, String update_user);
 	void deleteComment(int reply_reg_num);
+
+    void deleteComment(int reply_reg_num, String update_user);
 
     TBCommentDTO getCommentObject(int replyRegNum);
 }
