@@ -14,6 +14,17 @@
 	<script src="${path}/include/js/common.js"></script>
 </head>
 
+<style>
+	#fileDrop {
+		float: right;
+		width: 80px;
+		height: 80px;
+		border: 1px solid black;
+		margin-right: 50px;
+		text-align: center;
+	}
+</style>
+
 <body>
 
 	<header>
@@ -57,13 +68,14 @@
 
 			<tr>
 
-				<td>사진</td>
 				<td>
+					<div style="float: left;">사진</div>
 					<%--파일을 업로드할 영역--%>
-					<div class="fileDrop" style="border: #0b0b0b">파일 끌어놓는 자리</div>
-
+					<div class="fileDrop" id="fileDrop"><p>Drop Images!!</p><p>사진업로드</p></div>
+				</td>
+				<td>
 					<%--파일을 출력할 영역--%>
-					<div id="uploadedList"></div>
+					<span id="uploadedList"></span>
 				</td>
 
 			</tr>
