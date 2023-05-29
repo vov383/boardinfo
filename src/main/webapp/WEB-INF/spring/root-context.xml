@@ -4,9 +4,13 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
 	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-2.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<bean id="dataSource"
@@ -33,6 +37,42 @@
 		/> <property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl" /> 
 		<property name="username" value="java" /> <property name="password" value="java1234" 
 		/> </bean> -->
+		
+	<!-- mongo 관련-->
+    <mongo:mongo-client id="mongoClient"
+	host="localhost" 
+	port="27017" 
+	credentials="boardinfo:1234@board-info">
+        <mongo:client-options
+	connections-per-host="8"
+	threads-allowed-to-block-for-connection-multiplier="4"
+	connect-timeout="1000"
+	max-wait-time="1500"
+	socket-keep-alive="true"
+	socket-timeout="1500"
+        />
+    </mongo:mongo-client>
+ 
+ 	<bean id="mongoTemplate" 
+		class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg ref="mongoClient" />
+	    <constructor-arg name="databaseName" value="board-info" />
+	</bean>
+	
+	
+	<!-- websocket -->
+	<websocket:handlers>
+	<websocket:mapping handler="chatHandler" path="/chatting" /> 
+	<websocket:handshake-interceptors>
+  
+    <bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
+    </websocket:handshake-interceptors>
+	<websocket:sockjs />
+	</websocket:handlers>
+	<bean id="chatHandler" class="com.example.boardinfo.controller.chat.ChatHandler"/>    
+    
+    
+	
 	<!-- SqlSessionFactory 객체 주입 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
@@ -44,6 +84,8 @@
 		destroy-method="clearCache">
 		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
 	</bean>
+	
+	
 	
 	<!-- 트랜잭션 관련 설정 -->
 	<bean id="transactionManager" 
