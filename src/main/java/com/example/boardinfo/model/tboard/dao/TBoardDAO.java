@@ -1,15 +1,14 @@
 package com.example.boardinfo.model.tboard.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
 import com.example.boardinfo.model.tboard.dto.TBoardDTO;
 
 public interface TBoardDAO {	
-	List<TBoardDTO> list(String select_category,
-                         String search_option, String keyword,
-                         int start, int end);
-	
+	List<TBoardDTO> list(Map<String, Object> map);
+
 	void insert(TBoardDTO dto);
 	
 	TBoardDTO viewPost(int tb_num);
@@ -17,8 +16,7 @@ public interface TBoardDAO {
 	void update(TBoardDTO dto);
 	void delete(int tb_num);
 
-	int countArticle(String select_category,
-                     String search_option, String keyword);
+	int countArticle(Map<String, Object> map);
 
 	void increaseViewcnt(int tb_num);
 

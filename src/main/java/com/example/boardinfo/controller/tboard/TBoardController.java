@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.boardinfo.model.tboard.dto.TBoardDTO;
-import com.example.boardinfo.service.tboard.Pager;
 import com.example.boardinfo.service.tboard.TBCommentService;
 import com.example.boardinfo.service.tboard.TBoardService;
 
@@ -49,30 +48,26 @@ public class TBoardController {
 		//레코드 갯수 계산
 		int count=tboardService.countArticle(
 				select_category, search_option, keyword);
-		System.out.println("총 게시물 갯수 :"+count);
-		Pager pager = new Pager(count, curPage);
-		int start = pager.getPageBegin();
-		int end = pager.getPageEnd();
-		List<TBoardDTO> list = tboardService.list(
-				select_category, search_option, keyword, start, end);
+//		logger.info("총 게시물 갯수 :"+count);
+
+		Map<String, Object> map = tboardService.list(
+				select_category, search_option, keyword, curPage);
 		ModelAndView mav=new ModelAndView();
-		System.out.println("리스트 : "+list);
-		Map<String, Object> map = new HashMap<>();
-		map.put("select_category", select_category);
-		map.put("search_option", search_option);
-		map.put("keyword", keyword);
-		map.put("pager", pager);
+//		logger.info("맵 : "+map);
 		map.put("count", count);
-		map.put("list", list);
+
 		mav.setViewName("tboard/list");
 		mav.addObject("map", map);
-		System.out.println("맵 데이터 : "+map);
+//		logger.info("맵 데이터 : "+map);
 		return mav;
 	}
 	
 	@RequestMapping("write.do")
-	public String write() {
+	public String write(HttpSession session) {
 		//글쓰기 폼 페이지로 이동
+		if(session.getAttribute("userid") == null){
+			return "member/login";
+		}
 		return "tboard/write";
 	}
 	
