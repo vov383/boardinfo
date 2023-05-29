@@ -338,43 +338,18 @@
 
   <script type="text/javascript">
   function btnSaveClick() {
-  alert("asdsadasd"); // 테스트
+  /*alert("버튼 잘 눌리는지 테스트"); // 테스트*/
   document.reviewInsertSave.submit();
   }
   </script>
 
+  <%-- 체크 에디터 라이브러리 --%>
+  <script src="${path}/ckeditor/ckeditor.js"></script>
+
 </head>
 
 <body>
-<div id="header">
-
-  <div id="header-upper-box">
-  <div>
-    <div id="header-left">
-      <a href="#" title="보드인포"><img src="${path}/images/boardinfo_logo.png" width="170px"></a>
-    </div>
-    <div id="header-right">
-      <form name="gameSearch" id="gameSearch" method="get">
-        <div>
-          <input type="text" name="gameKeyword" placeholder="보드게임 찾기">
-          <img src="${path}/images/search.png">
-        </div>
-      </form>
-      <a href="#" title="로그인" class="sign" id="signIn">로그인</a>
-      <a href="#" title="회원가입" class="sign" id="signUp">회원가입</a>
-    </div>
-  </div>
-  </div>
-  
-  <div class="nav">
-    <ul class="menu">
-      <li><a href="#" class="toMenu" title="게임정보">게임정보<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="커뮤니티">커뮤니티<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="오프모임">오프모임<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="중고장터">중고장터<img src="${path}/images/dropdown.png" width="34px"></a></li>
-    </ul>
-  </div>
-</div>
+<%@include file="../include/top.jsp" %>
 
 <div id="contents">
   <div id="contentsHeader">
@@ -386,29 +361,38 @@
 
   <div id="contentsMain">
 
+<%-- 수정하지 않은 insert 페이지 --%>
     <form name="reviewInsertSave" method="get" action="${path}/review/reviewinsertsave.do">
 
       <p>카테고리 : <input type="text" name="category"></p>
       <p>제목 : <input type="text" name="title"></p>
-      <p>임시입력_gnum, 게임ID : <input type="text" name="gnum"></p>
-      <p>임시입력_gatheringId, 모임ID : <input type="text" name="gatheringId"></p>
-      <p>리뷰점수 : <input type="text" name="reviewScore"></p>
-      <p>난이도 : <input type="text" name="gameScore"></p>
-      <p>임시입력_ID : <input type="text" name="createUser"></p>
-      <p>리뷰작성 : <input type="text" name="reviewDetail"></p>
+      <p>게임ID(임시) : <input type="text" name="gnum"></p>
+      <p>모임ID(임시) : <input type="text" name="gatheringId"></p>
+      <p>별점(임시) : <input type="text" name="reviewScore"></p>
+      <p>작성자ID(임시) : <input type="text" name="createUser"></p>
 
+
+  <%-- 체크 에디터 적용 테스트 --%>
+
+      <p>리뷰작성<textarea name = "reviewDetail" id="reviewDetailID" rows = "5" cols = "80"></textarea>
+        <%--<input type="text" name="reviewDetail">--%></p>
+          <script>
+            //id가 description인 태그에 ckeditor를 적용시킴
+            //이미지 업로드 안됨
+            CKEDITOR.replace("reviewDetailID",{
+              //이미지 업로드 기능을 추가하기위한 코드
+              filebrowserUploadUrl : "${path}/imageUpload.do"
+            });
+          </script>
+          <input type="file" name="file1" id="file1"> <br>
       <button type="button" id="btnsave" onclick="btnSaveClick()">값 보내기</button>
 
     </form>
+
+
   </div>
 </div>
-
-<footer>
-  <div>
-    서울특별시 강남구 테헤란로14길 6 남도빌딩 2,3F<br>
-    KH정보교육원 TEAM BOARDINFO
-  </div>
-</footer>
-
+<%--!!!F;O;O;T;E;R 첨부해주세요--%>
+<%@include file="../include/footer.jsp" %>
 </body>
 </html>

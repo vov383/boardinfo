@@ -30,7 +30,6 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public void reviewCreate(ReviewDTO reviewDTO){
 
-/*
 		System.out.println("testtesttesttesttesttesttesttesttesttest");
 		System.out.println("reviewDTO.getRegNum() : " + reviewDTO.getRegNum());
 		System.out.println("reviewDTO.getCategory() : " + reviewDTO.getCategory());
@@ -50,7 +49,6 @@ public class ReviewServiceImpl implements ReviewService {
 		System.out.println("reviewDTO.getUpdateUser() : " + reviewDTO.getUpdateUser());
 		System.out.println("reviewDTO.getUpdateDate() : " + reviewDTO.getUpdateDate());
 		System.out.println("testtesttesttesttesttesttesttesttesttest");
-*/
 
 		reviewDAO.reviewCreate(reviewDTO);
 	}
@@ -61,9 +59,25 @@ public class ReviewServiceImpl implements ReviewService {
 	public void reviewUpdate(ReviewDTO reviewDTO){
 
 
-		System.out.println("reviewUpdate : " + new Gson().toJson(reviewDTO));
+		/*System.out.println("reviewUpdate : " + new Gson().toJson(reviewDTO));*/
 		reviewDAO.reviewUpdate(reviewDTO);
 	}
+
+	//리뷰 삭제
+	@Transactional
+	@Override
+	public void reviewDel(reviewSerchDTO reviewserchDTO){
+
+		System.out.println("testestestestestestestest");
+		System.out.println("testestestestestestestest");
+		System.out.println("testestestestestestestest");
+		System.out.println("reviewserchDTO : " + new Gson().toJson(reviewserchDTO));
+		reviewDAO.reviewDel(reviewserchDTO);
+	}
+
+
+
+
 
 
 	@Transactional

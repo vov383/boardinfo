@@ -348,7 +348,7 @@
         // 수정, 삭제 화면(편집화면)으로 이동
         function reviewEdit(regNum){
             $("#reviewDetailKey").val(regNum);
-            alert($("#reviewDetailKey").val());
+            /*alert($("#reviewDetailKey").val());*/
             /*alert("클릭 테스트");*/
             document.formReviewEdit.submit();
         }
@@ -376,25 +376,55 @@
     <div id="contentsMain">
 
         <form name="reviewdetail" method="post" action="${path}/review/reviewdetail.do">
-            <table border="1" width="700px">
-                <%--<script>console.log(<c:out value="${list}"></c:out>) </script>--%>
-                <c:forEach items="${list}" var="vo">
-                    <tr>
-                        <%--<td>${vo.regNum}</td>--%>
-                        <td style="width: 200px; text-align: center;">${vo.title}</td>
-                        <td style="width: 200px; text-align: center;">${vo.nickName} ${vo.good} ${vo.views} ${vo.createDate}</td>
-                        <td style="width: 200px; text-align: center;">${vo.gametitle}</td>
-                        <td style="width: 200px; text-align: center;">${vo.reviewDetail}</td>
-                    </tr>
+
+            <%--
+                    <script>
+                        console.log(<c:out value="${list}"></c:out>)
+                        console.log(<c:out value="${vo.title}"></c:out>)
+                        console.log(<c:out value="${vo.nickName}"></c:out>)
+                        console.log(<c:out value="${vo.good}"></c:out>)
+                        console.log(<c:out value="${vo.views}"></c:out>)
+                        console.log(<c:out value="${vo.createDate}"></c:out>)
+                        console.log(<c:out value="${vo.gametitle}"></c:out>)
+                        console.log(<c:out value="${vo.reviewDetail}"></c:out>)
+                    </script>
+--%>
+            <c:forEach items="${list}" var="vo">
+
+            <h1>${vo.title}</h1>
+            <table>
                 <tr>
-                    <td>
-                        <button type="button" onclick="btnReply()">답변</button>
-                        <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정/삭제</button>
-                        <button type="button" onclick="btnList()">목록</button>
-                    </td>
+                    <td>작성자 : </td>
+                    <td>${vo.nickName}</td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td>작성일 : </td>
+                    <td>${vo.createDate}</td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td>&#128366;</td> <%--조회수--%>
+                    <td>${vo.views}</td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td>&#x1f495</td> <%--좋아요--%>
+                    <td>${vo.good}</td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                 </tr>
-                </c:forEach>
+                <tr>
+                    <td>게임</td>
+                    <td>${vo.gametitle}</td>
+                </tr>
             </table>
+            <table>
+                <tr>
+                    <td>리뷰</td>
+                </tr>
+                <tr>
+                    <td>${vo.reviewDetail}</td>
+                </tr>
+            </table>
+                <button type="button" onclick="btnReply()">답변</button>
+                <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정/삭제</button>
+                <button type="button" onclick="btnList()">목록</button>
+
+                </c:forEach>
         </form>
 
 
