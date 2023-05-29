@@ -122,5 +122,18 @@ public class GameController {
 		return mav;
 	}
 
-	
+	@RequestMapping("updateView.do")
+	public ModelAndView updateView(ModelAndView mav, @RequestParam("gnum")int gnum) throws Exception {
+		mav.setViewName("game/game_update");
+		mav.addObject("dto", gameService.updateView(gnum));
+		mav.addObject("clist", gameService.categorylist());
+		mav.addObject("mlist", gameService.mechaniclist());
+		return mav;
+	}
+
+	@RequestMapping("update.do")
+	public String update(@ModelAttribute GameDTO dto) {
+		gameService.gameupdate(dto);
+		return "home";
+	}
 }

@@ -14,17 +14,6 @@
 	<script src="${path}/include/js/common.js"></script>
 </head>
 
-<style>
-	#fileDrop {
-		float: right;
-		width: 80px;
-		height: 80px;
-		border: 1px solid black;
-		margin-right: 50px;
-		text-align: center;
-	}
-</style>
-
 <body>
 
 	<header>
@@ -45,7 +34,7 @@
 
 	<div align="center">
 	
-	<form name="gameform" id="gameform" method="post" action="${path}/game/insert.do">
+	<form name="gameform" id="gameform" method="post" action="${path}/game/update.do">
 
 		<table>
 
@@ -58,7 +47,7 @@
 
 			<tr>
 
-				<th colspan="2">게임 등록</th>
+				<th colspan="2">게임 수정</th>
 
 			</tr>
 
@@ -68,29 +57,22 @@
 
 			<tr>
 
-				<td>
-					<div style="float: left;">사진</div>
-					<%--파일을 업로드할 영역--%>
-					<div class="fileDrop" id="fileDrop"><p>Drop Images!!<br>사진업로드</p></div>
-				</td>
-				<td>
-					<%--파일을 출력할 영역--%>
-					<span id="uploadedList"></span>
-				</td>
-
-			</tr>
-
-			<tr>
-
 			  	<td>게임 이름</td>
-				<td><input name="gametitle" id="gametitle" class="input_game"></td>
+				<td><input name="gametitle" id="gametitle" class="input_game" value="${dto.gametitle}"></td>
 
 			</tr>
 
 			<tr>
 
 				<td>게임 이름(영문)</td>
-				<td><input name="gametitle_eng" id="gametitle_eng" class="input_game"></td>
+				<td><input name="gametitle_eng" id="gametitle_eng" class="input_game" value="${dto.gametitle_eng}"></td>
+
+			</tr>
+
+			<tr>
+				<%--고민해볼 문제지만 이 항목은 관리자만 업데이트가능하게 하면 좋을것 같다.--%>
+				<td>보드게임긱 아이디</td>
+				<td><input name="bggnum" id="bggnum" class="input_game" value="${dto.bggnum}"></td>
 
 			</tr>
 
@@ -102,7 +84,7 @@
 				</td>
 				<td>
 					<div id="selectedDesigner"></div>
-					<input type="hidden" name="designer" id="designer">
+					<input type="hidden" name="designer" id="designer" value="${dto.designer}">
 					<input id="inputDesigner" class="input_game" autocomplete="off">
 					<div id="designerSuggestions"></div>
 				</td>
@@ -118,7 +100,7 @@
 				<td>
 				
 					<div id="selectedCategory"></div>
-					<input type="hidden" name="gamecategory" id="gamecategory">
+					<input type="hidden" name="gamecategory" id="gamecategory" value="${dto.gamecategory}">
 					<input type="checkbox" id="toggleCategory"> 
 					<label for="toggleCategory" class="toggleSwitch"> 
 						<span class="toggleButton"></span>
@@ -143,7 +125,7 @@
 				<c:set var="i" value="0" />
 				<c:set var="j" value="3" />
 				
-					<c:forEach var="item" items="${map.clist}" >
+					<c:forEach var="item" items="${clist}" >
 					
 						<c:if test="${i%j==0}">
       						<tr>
@@ -177,7 +159,7 @@
 				</td>
 				<td>
 					<div id="selectedArtist"></div>
-					<input type="hidden" name="artist" id="artist">
+					<input type="hidden" name="artist" id="artist" value="${dto.artist}">
 					<input id="inputArtist" class="input_game" autocomplete="off">
 					<div id="artistSuggestions"></div>
 				</td>
@@ -193,7 +175,7 @@
 				<td>
 				
 					<div id="selectedMechanic"></div>
-					<input type="hidden" name="mechanic" id="mechanic">
+					<input type="hidden" name="mechanic" id="mechanic" value="${dto.mechanic}">
 					<input type="checkbox" id="toggleMechanic"> 
 					<label for="toggleMechanic" class="toggleSwitch"> 
 					 <span class="toggleButton"></span>
@@ -218,7 +200,7 @@
 				<c:set var="i" value="0" />
 				<c:set var="j" value="3" />
 				
-					<c:forEach var="item" items="${map.mlist}" >
+					<c:forEach var="item" items="${mlist}" >
 					
 						<c:if test="${i%j==0}">
       						<tr>
@@ -251,7 +233,7 @@
 				</td>
 				<td>
 					<div id="selectedPublisher"></div>
-					<input type="hidden" name="publisher" id="publisher">
+					<input type="hidden" name="publisher" id="publisher" value="${dto.publisher}">
 					<input id="inputPublisher" class="input_game" autocomplete="off">
 					<div id="publisherSuggestions"></div>
 				</td>
@@ -261,35 +243,49 @@
 			<tr>
 
 				<td>플레이 인원</td>
-				<td><input name="players" id="players" class="input_game"></td>
+				<td><input name="players" id="players" class="input_game" value="${dto.players}"></td>
 
 			</tr>
 
 			<tr>
 
 				<td>플레이 시간</td>
-				<td><input name="playtime" id="playtime" class="input_game"></td>
+				<td><input name="playtime" id="playtime" class="input_game" value="${dto.playtime}"></td>
 
 			</tr>
 
 			<tr>
 
 				<td>사용연령</td>
-				<td><input name="ages" id="ages" class="input_game"></td>
+				<td><input name="ages" id="ages" class="input_game" value="${dto.ages}"></td>
 
 			</tr>
 
 			<tr>
 
 				<td>발매년도</td>
-				<td><input name="release_year" id="release_year" class="input_game"></td>
+				<td><input name="release_year" id="release_year" class="input_game" value="${dto.release_year}"></td>
 
 			</tr>
 
 			<tr>
 
 				<td>사용언어</td>
-				<td><input name="language" id="language" class="input_game"></td>
+				<td><input name="language" id="language" class="input_game" value="${dto.language}"></td>
+
+			</tr>
+
+			<tr>
+
+				<td>확장</td>
+				<td><input name="expention" id="expention" class="input_game"></td>
+
+			</tr>
+
+			<tr>
+
+				<td>재구현</td>
+				<td><input name="replacement" id="replacement" class="input_game"></td>
 
 			</tr>
 
@@ -319,24 +315,9 @@
 
 	$(document).ready(function() {
 		
-	//새 게임 등록 버튼클릭
+		//새 게임 등록 버튼클릭
 		$("#btnGameInsert").click(function() {
 			//null값확인, 자료형확인필요함 -> 정규식응용
-
-			//사진업로드
-			var str="";
-			//uploadedList영역에 클래스 이름이 file인 히든타입의 태그를 각각 반복
-			$("#uploadedList .file").each(function(i){
-				console.log(i);
-				//hidden태그 구성
-				str += "<input type='hidden' name='files["+i+"]' value='"
-						+ $(this).val()+"'>";
-			});
-			//폼에 hidden 태그를 붙임
-			$("#gameform").append(str);
-
-
-
 			document.gameform.submit();
 		});
 
@@ -393,9 +374,20 @@
 		});
 
 
-
 		//category항목 리스트에서 선택할수 있게하는 기능
 		var selectedCategories = [];
+
+		//이미 가지고있는 category 보여주는 함수
+		var gamecategoryValue = $("#gamecategory").val();
+		if (gamecategoryValue) {
+			selectedCategories = gamecategoryValue.split(",");
+			selectedCategories.forEach(function(category) {
+				$("#selectedCategory").append("<div class='selected-value'>" + category + "</div>");
+				$("#tableCategory td").filter(function() {
+					return $(this).text() === category;
+				}).addClass("selected");
+			});
+		}
 
 		//서버로 보낼 카테고리의 배열에 값을 넣는 함수
 		function updateGameCategoryInput() {
@@ -418,7 +410,6 @@
 					updateGameCategoryInput();
 				}
 			}
-
 		});
 
 		// 테이블 셀 클릭 이벤트 처리
@@ -462,8 +453,20 @@
 		  });
 		
 		
-	//mechanic항목 리스트에서 선택할수 있게하는 기능
+		//mechanic항목 리스트에서 선택할수 있게하는 기능
 		var selectedMechanics = [];
+
+		//이미 가지고있는 mechanic 보여주는 함수
+		var mechanicValue = $("#mechanic").val();
+		if (mechanicValue) {
+			selectedMechanics = mechanicValue.split(",");
+			selectedMechanics.forEach(function(mechanic) {
+				$("#selectedMechanic").append("<div class='selected-value'>" + mechanic + "</div>");
+				$("#tableMechanic td").filter(function() {
+					return $(this).text() === mechanic;
+				}).addClass("selected");
+			});
+		}
 	
 		function updateGameMechanicInput() {
 	 		var mechanicInput = $("#mechanic");
@@ -529,6 +532,9 @@
 		    
 		    updateGameMechanicInput()
 		  });
+
+
+
 		
 		
 		//	artist 검색 자동완성 쿼리 
@@ -559,6 +565,16 @@
 	    });
 
 		var selectedArtists = [];
+
+
+		//이미 가지고있는 artist 보여주는 함수
+		var artistValue = $("#artist").val();
+		if (artistValue) {
+			selectedArtists = artistValue.split(",");
+			selectedArtists.forEach(function(artist) {
+				$("#selectedArtist").append("<div class='selected cursor_pointer'>" + artist + "</div>");
+			});
+		}
 
 		function updateArtistInput() {
 			var artistInput = $("#artist");
@@ -642,6 +658,15 @@
 
 		var selectedDesigners = [];
 
+		//이미 가지고있는 designer 보여주는 함수
+		var designerValue = $("#designer").val();
+		if (designerValue) {
+			selectedDesigners = designerValue.split(",");
+			selectedDesigners.forEach(function(designer) {
+				$("#selectedDesigner").append("<div class='selected cursor_pointer'>" + designer + "</div>");
+			});
+		}
+
 		function updateDesignerInput() {
 			var designerInput = $("#designer");
 			designerInput.val(selectedDesigners.join(","));
@@ -724,6 +749,15 @@
 
 		var selectedPublishers = [];
 
+		//이미 가지고있는 publisher 보여주는 함수
+		var publisherValue = $("#publisher").val();
+		if (publisherValue) {
+			selectedPublishers = publisherValue.split(",");
+			selectedPublishers.forEach(function(publisher) {
+				$("#selectedPublisher").append("<div class='selected cursor_pointer'>" + publisher + "</div>");
+			});
+		}
+
 		function updatePublisherInput() {
 			var publisherInput = $("#publisher");
 			publisherInput.val(selectedPublishers.join(","));
@@ -776,6 +810,7 @@
 			console.log("인풋"+$("#publisher").val());
 		});
 	});
+
 </script>
 
 	<footer>
