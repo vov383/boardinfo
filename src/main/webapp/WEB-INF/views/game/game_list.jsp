@@ -57,10 +57,52 @@
 				</tr>
 				
 			</thead>
+
+			<tfoot>
+
+			<tr>
+
+				<td colspan="7" align="center">
+
+					<c:if test="${map.pager.curBlock > 1}">
+						<a href="#" onclick="list('1')">[처음]</a>
+					</c:if>
+					<c:if test="${map.pager.curBlock > 1}">
+						<a href="#" onclick="list('${map.pager.prevPage}')">
+							[이전]</a>
+					</c:if>
+					<c:forEach var="num"
+							   begin="${map.pager.blockStart}"
+							   end="${map.pager.blockEnd}">
+						<c:choose>
+							<c:when test="${num == map.pager.curPage}">
+								<!-- 현재 페이지인 경우 하이퍼링크 제거 -->
+								<span style="color:red;">${num}</span>
+							</c:when>
+							<c:otherwise>
+								<a href="#" onclick="list('${num}')">${num}</a>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+					<c:if test="${map.pager.curBlock < map.pager.totBlock}">
+						<a href="#"
+						   onclick="list('${map.pager.nextPage}')">[다음]</a>
+					</c:if>
+					<c:if test="${map.pager.curPage < map.pager.totPage}">
+						<a href="#"
+						   onclick="list('${map.pager.totPage}')">[끝]</a>
+					</c:if>
+
+				</td>
+
+			</tr>
+
+			</tfoot>
+
 			
 			<tbody>
 			
-			<c:forEach var="row" items="${list}">
+			<c:forEach var="row" items="${map.list}">
 				
 				<tr>
 					
@@ -68,10 +110,18 @@
 					<td>
 						<c:choose>
 							<c:when test="${row.gamephoto_url != null}">
-								<img src="${path}/resources/uploaded_game${row.gamephoto_url}">
+								<img alt="저장된 이미지파일이 없음" src="${path}/resources/uploaded_game${row.gamephoto_url}">
 							</c:when>
 							<c:otherwise>
-								빈 이미지 추가요망
+								<c:choose>
+									<c:when test="${row.bggnum != null}">
+										<img class="img_photo" src="${row.bgg_thumbnail}" width="100px" height="100px" border="1px">
+									</c:when>
+									<c:otherwise>
+										이미지를 등록해주세요
+									</c:otherwise>
+								</c:choose>
+
 							</c:otherwise>
 						</c:choose>
 					</td>
@@ -87,7 +137,11 @@
 			</c:forEach>
 			
 			</tbody>
+
+
 		</table>
+
+
 	</div>
 
 	</div>
@@ -100,6 +154,12 @@
 	<%@include file="../include/footer.jsp" %>
 </footer>
 
+<script>
+	function list(page) {
+		location.href="${path}/game/gamelist.do?curPage="+page;
+	}
+
+</script>
 
 
 </body>

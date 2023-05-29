@@ -8,6 +8,7 @@ import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 
 public interface GatheringService {
 	
+
 	public boolean addPost(GatheringDTO dto);
 	public boolean deletePost();
 	public boolean editPost();
@@ -20,4 +21,5 @@ public interface GatheringService {
     int countList(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to);
 
 	public boolean update(GatheringDTO dto);
+
 }

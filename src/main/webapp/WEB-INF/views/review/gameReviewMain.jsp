@@ -346,7 +346,23 @@
 
   </style>
 
+  <script>
+    /*검색 스크립트*/
+    function searchFu() {
+      $("#searchTitleHidden").val($("#searchTitle").val());
+      /*alert($("#searchTitleHidden").val());*/
+      document.reviewSearch.submit();
+    }
 
+    /*리뷰 디테일 진입*/
+    function reviewDetail(regNum) {
+      $("#reviewDetailKey").val(regNum);
+      /*alert($("#reviewDetailKey").val());*/
+      document.reviewDetail.submit();
+    }
+
+
+  </script>
 
 
 </head>
@@ -355,23 +371,30 @@
 <body>
 <%@include file="../include/top.jsp" %>
 
+<%--검색 폼--%>
+<form name="reviewSearch" method="post" action="${path}/review/reviewlist.do">
+  <input type="hidden" name="searchTitle" id="searchTitleHidden">
+</form>
 
+<%--디테일 진입 폼--%>
+<form name="reviewDetail" method="post" action="${path}/review/reviewdetail.do">
+  <input type="hidden" name="reviewDetailKey" id="reviewDetailKey">
+</form>
 
 
 <div id="contents">
   <div id="contentsHeader">
-    <h2>모임모집</h2>
+    <h2>커뮤니티</h2>
   </div>
   <div id="contentsLocation">
-    홈&gt 오프모임&gt 모임모집
+    홈&gt 커뮤니티&gt 게임리뷰
   </div>
   <div id="contentsMain">
 
     <%--검색--%>
     <div class="searchBox">
-      <input type="text" placeholder="제목 및 내용을 검색하세요.">
+      <input type="text" id="searchTitle" placeholder="제목 및 내용을 검색하세요.">
       <button type="button" id="search" onclick="searchFu()">검색</button>
-      <input type="button" id="button1" onclick="button1_click();" value="버튼1" />
     </div>
 
     <%--본문--%>
@@ -388,11 +411,14 @@
           <th style="width: 200px;">게임</th>
         </tr>
 
+        <%--<script>
+          console.log(<c:out value="${list}"></c:out>)
+        </script>--%>
         <c:forEach items="${list}" var="vo">
           <tr>
             <td style="width: 200px; text-align: center;">${vo.category}</td>
             <td style="width: 200px; text-align: center;">${vo.good}</td>
-            <td style="width: 200px; text-align: center;">${vo.title}</td>
+            <td style="width: 200px; text-align: center;"><a href="javascript:reviewDetail('${vo.regNum}')">${vo.title}</a></td>
             <td style="width: 200px; text-align: center;">${vo.nickName}</td>
             <td style="width: 200px; text-align: center;">${vo.createDate}</td>
             <td style="width: 200px; text-align: center;">${vo.views}</td>
@@ -409,25 +435,6 @@
 </div>
 <%--!!!F;O;O;T;E;R 첨부해주세요--%>
 <%@include file="../include/footer.jsp" %>
-
-
-
-<script>
-  console.log(<c:out value="${list}"></c:out>)
-
-  /*검색 스크립트*/
-  function searchFu() {
-    alert("fwjehqofq");
-  }
-
-  /*버튼 안눌려서 테스트*/
-  function button1_click() {
-    console.log("버튼1을 누르셨습니다.");
-  }
-
-
-</script>
-
 
 </body>
 

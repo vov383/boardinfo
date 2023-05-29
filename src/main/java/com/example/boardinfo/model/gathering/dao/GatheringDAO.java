@@ -7,6 +7,7 @@ import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 
 public interface GatheringDAO {
+
 	public int addPost(GatheringDTO dto);
 	public int deletePost();
 	public int editPost();

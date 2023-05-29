@@ -5,16 +5,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
 <mapper namespace="game">
+
+	<select id="gameListCount" resultType="int">
+		select count(*)
+		from game
+	</select>
+
 	<select id="gameList" resultType="gameDto">
-		select g.gnum, g.gametitle, g.gametitle_eng, g.viewcount, g.release_year, ga.fullname gamephoto_url
-		  from game g,
-        	   (select gnum, fullname
-          		  from (select row_number() over(partition by gnum order by regdate desc) rnum, gnum, fullname
-                  		  from game_attach
-                  	   ) a
-        		 where rnum = 1) ga
-		 where g.gnum = ga.gnum(+)
-		 order by gnum
+		select *
+		from (select a.*, rownum rn
+				from (select g.gnum,g.bggnum, g.gametitle, g.gametitle_eng, g.viewcount, g.release_year, ga.fullname gamephoto_url
+						from game g,
+    		    			(select gnum, fullname
+    		    			   from (select row_number() over(partition by gnum order by regdate desc) rnum, gnum, fullname
+    		    		        	   from game_attach
+    		    		        	) a
+    		    			  where rnum = 1
+    		    			) ga
+				 	  where g.gnum = ga.gnum(+)
+				 	  order by gnum
+				 	 )a
+			 )
+		where rn between #{start} and #{end}
 	</select>
 	
 	<insert id="gameInsert">
@@ -60,55 +72,96 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		delete from game_attach where fullName=#{fileName}
 	</delete>
 
+	<select id="filteredListCount" resultType="int">
+	<bind name="mappingTable" value="'game_'+filter"/>
+		select count(*)
+		<choose>
+			<when test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
+				from game_category mapping, category filter
+			</when>
+			<otherwise>
+				from ${mappingTable} mapping, ${filter} filter
+			</otherwise>
+		</choose>
+		<where>
+			<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
+				mapping.anum = filter.anum and filter.anum=#{num}
+			</if>
+			<if test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
+				mapping.cnum = filter.cnum and filter.cnum=#{num}
+			</if>
+			<if test="filter != null and 'designer'.equalsIgnoreCase(filter)">
+				mapping.dnum = filter.dnum and filter.dnum=#{num}
+			</if>
+			<if test="filter != null and 'mechanic'.equalsIgnoreCase(filter)">
+				mapping.mnum = filter.mnum and filter.mnum=#{num}
+			</if>
+			<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
+				mapping.pnum = filter.pnum and filter.pnum=#{num}
+			</if>
+		</where>
+
+	</select>
+
+
+
 	<select id="filteredList" resultType="gameDto">
 	<bind name="filterColumn" value="filter+'.'+filter"/>
 	<bind name="mappingTable" value="'game_'+filter"/>
-		 select game.gnum, exnum, renum, bggnum, gametitle, gametitle_eng, players,
-	 		    playtime, ages, language, release_year, bgg_game_score,
-	 		    bggrank, write_date, viewcount,  gamephoto_url, ${filterColumn}
-    	   from
-    	 		(select g.gnum, exnum, renum, bggnum, gametitle, gametitle_eng, players,
-	 		 			playtime, ages, language, release_year, bgg_game_score,
-	 		 			bggrank, write_date, viewcount, ga.fullname gamephoto_url
-    		   	   from game g,
-                    	(select gnum, fullname
-                       	   from (select row_number() over(partition by gnum order by regdate desc) rnum, gnum, fullname
-                                   from game_attach
-                                ) a
-                      	  where rnum = 1
-                        ) ga
-    		  	  where g.gnum = ga.gnum(+)
-    			) game,
-					(select gnum, filter.${filter}
-				<choose>
-					<when test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
-					from game_category mapping, category filter
-					</when>
-					<otherwise>
-					from ${mappingTable} mapping, ${filter} filter
-					</otherwise>
-				</choose>
-				<where>
-					<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
-						mapping.anum = filter.anum and filter.anum=#{num}
-					</if>
-					<if test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
-						mapping.cnum = filter.cnum and filter.cnum=#{num}
-					</if>
-					<if test="filter != null and 'designer'.equalsIgnoreCase(filter)">
-						mapping.dnum = filter.dnum and filter.dnum=#{num}
-					</if>
-					<if test="filter != null and 'mechanic'.equalsIgnoreCase(filter)">
-						mapping.mnum = filter.mnum and filter.mnum=#{num}
-					</if>
-					<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
-						mapping.pnum = filter.pnum and filter.pnum=#{num}
-					</if>
-				</where>
-				) ${filter}
-    	  where game.gnum = ${filter}.gnum
-		order by viewcount desc, game.gnum
+		select *
+		  from (select a.*, rownum rn
+				  from (
+				  select game.gnum, exnum, renum, bggnum, gametitle, gametitle_eng, players,
+	 		    			   playtime, ages, language, release_year, bgg_game_score,
+	 		    			   bggrank, write_date, viewcount,  gamephoto_url, ${filterColumn}
+    	   				from (select g.gnum, exnum, renum, bggnum, gametitle, gametitle_eng, players,
+	 		 						 playtime, ages, language, release_year, bgg_game_score,
+	 		 						 bggrank, write_date, viewcount, ga.fullname gamephoto_url
+    		   	   				from game g,
+                    				 (select gnum, fullname
+                       	   				from (select row_number() over(partition by gnum order by regdate desc) rnum,
+                       	   							 gnum, fullname
+                                   				from game_attach
+                                			 )
+                      	  			   where rnum = 1
+                        			 ) ga
+    		  	  			   where g.gnum = ga.gnum(+)
+    						 ) game,
+							 (select gnum, filter.${filter}
+						<choose>
+							<when test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
+								from game_category mapping, category filter
+							</when>
+							<otherwise>
+								from ${mappingTable} mapping, ${filter} filter
+							</otherwise>
+						</choose>
+						<where>
+							<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
+								mapping.anum = filter.anum and filter.anum=#{num}
+							</if>
+							<if test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
+								mapping.cnum = filter.cnum and filter.cnum=#{num}
+							</if>
+							<if test="filter != null and 'designer'.equalsIgnoreCase(filter)">
+								mapping.dnum = filter.dnum and filter.dnum=#{num}
+							</if>
+							<if test="filter != null and 'mechanic'.equalsIgnoreCase(filter)">
+								mapping.mnum = filter.mnum and filter.mnum=#{num}
+							</if>
+							<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
+								mapping.pnum = filter.pnum and filter.pnum=#{num}
+							</if>
+						</where>
+							 ) ${filter}
+    	  		 		where game.gnum = ${filter}.gnum
+				 		order by viewcount desc, game.gnum
+				 		) a
+			  	)
+		  where rn between #{start} and #{end}
 	</select>
+
+
 	
 </mapper>
 

@@ -4,8 +4,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>커뮤니티 - 리뷰작성</title>
-<%@ include file="../include/js/header.jsp" %>
+  <title>커뮤니티 - 리뷰수정</title>
+  <%@ include file="../include/js/header.jsp" %>
 
   <style>
 
@@ -336,79 +336,69 @@
     }
   </style>
 
-  <script type="text/javascript">
+<%--  <script type="text/javascript">
   function btnSaveClick() {
   alert("asdsadasd"); // 테스트
-  document.reviewInsertSave.submit();
+  document.revieweditsave.submit();
   }
-  </script>
+  </script>--%>
 
 </head>
 
 <body>
-<div id="header">
-
-  <div id="header-upper-box">
-  <div>
-    <div id="header-left">
-      <a href="#" title="보드인포"><img src="${path}/images/boardinfo_logo.png" width="170px"></a>
-    </div>
-    <div id="header-right">
-      <form name="gameSearch" id="gameSearch" method="get">
-        <div>
-          <input type="text" name="gameKeyword" placeholder="보드게임 찾기">
-          <img src="${path}/images/search.png">
-        </div>
-      </form>
-      <a href="#" title="로그인" class="sign" id="signIn">로그인</a>
-      <a href="#" title="회원가입" class="sign" id="signUp">회원가입</a>
-    </div>
-  </div>
-  </div>
-  
-  <div class="nav">
-    <ul class="menu">
-      <li><a href="#" class="toMenu" title="게임정보">게임정보<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="커뮤니티">커뮤니티<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="오프모임">오프모임<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="중고장터">중고장터<img src="${path}/images/dropdown.png" width="34px"></a></li>
-    </ul>
-  </div>
-</div>
+<%@include file="../include/top.jsp" %>
 
 <div id="contents">
   <div id="contentsHeader">
-    <h2>리뷰 작성</h2>
+    <h2>리뷰수정</h2>
   </div>
   <div id="contentsLocation">
-    홈 &gt 커뮤니티 &gt 리뷰 작성
+    홈 &gt 커뮤니티 &gt 리뷰수정
   </div>
 
   <div id="contentsMain">
 
-    <form name="reviewInsertSave" method="get" action="${path}/review/reviewinsertsave.do">
+    <form name="formReviewEditSave" method="post" action="${path}/review/revieweditsave.do">
 
-      <p>카테고리 : <input type="text" name="category"></p>
-      <p>제목 : <input type="text" name="title"></p>
-      <p>임시입력_gnum, 게임ID : <input type="text" name="gnum"></p>
-      <p>임시입력_gatheringId, 모임ID : <input type="text" name="gatheringId"></p>
-      <p>리뷰점수 : <input type="text" name="reviewScore"></p>
-      <p>난이도 : <input type="text" name="gameScore"></p>
-      <p>임시입력_ID : <input type="text" name="createUser"></p>
-      <p>리뷰작성 : <input type="text" name="reviewDetail"></p>
+      <table>
+        <c:forEach items="${list}" var="vo">
+          <script>
+            alert(${list})
+          </script>
+          <tr><td>카테고리 : <input type="text" name="category" placeholder="${vo.category}"></td></tr>
+          <tr><td>카테고리 : <input type="text" name="category"></td></tr>
+          <tr><td>제목 : <input type="text" name="title"></td></tr>
+          <tr><td>임시입력_gnum, 게임ID : <input type="text" name="gnum"></td></tr>
+          <tr><td>임시입력_gatheringId, 모임ID : <input type="text" name="gatheringId"></td></tr>
+          <tr><td>리뷰점수 : <input type="text" name="reviewScore"></td></tr>
+          <tr><td>난이도 : <input type="text" name="gameScore"></td></tr>
+          <tr><td>임시입력_ID : <input type="text" name="createUser"></td></tr>
+          <tr><td>리뷰작성 : <input type="text" name="reviewDetail"></td></tr>
+        </c:forEach>
+      </table>
+
+<%--
+      <table border="1" width="700px">
+      <c:forEach items="${list}" var="vo">
+      <p>카테고리 : <input type="text" name="category" placeholder="${vo.category}"></p>
+      <p>제목 : <input type="text" name="title" placeholder="${vo.title}"></p>
+      <p>임시입력_gnum, 게임ID : <input type="text" name="gnum" placeholder="${vo.gnum}"></p>
+      <p>임시입력_gatheringId, 모임ID : <input type="text" name="gatheringId" placeholder="${vo.gatheringId}"></p>
+      <p>리뷰점수 : <input type="text" name="reviewScore" placeholder="${vo.reviewScore}"></p>
+      <p>난이도 : <input type="text" name="gameScore" placeholder="${vo.gameScore}"></p>
+      <p>임시입력_ID : <input type="text" name="createUser" placeholder="${vo.createUser}"></p>
+      <p>리뷰작성 : <input type="text" name="reviewDetail" placeholder="${vo.reviewDetail}"></p>
 
       <button type="button" id="btnsave" onclick="btnSaveClick()">값 보내기</button>
+      </c:forEach>
+      </table>
+--%>
 
     </form>
+
   </div>
 </div>
-
-<footer>
-  <div>
-    서울특별시 강남구 테헤란로14길 6 남도빌딩 2,3F<br>
-    KH정보교육원 TEAM BOARDINFO
-  </div>
-</footer>
+<%@include file="../include/footer.jsp" %>
 
 </body>
 </html>
