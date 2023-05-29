@@ -1,22 +1,193 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
     
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-
-<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
-<!-- 
-<script type="text/javascript"
-	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"> </script>
- -->
-
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 
-<title>Insert title here</title>
+<title>채팅</title>
+  <%@ include file="../include/js/header.jsp" %>
+
+<style>
+
+	#contentsMain{
+	border-top: 1px solid #D9D9D9;
+	padding-top: 10px;
+	display: flex;
+	}
+	
+	#contentsMain > div{
+	display: flex;
+	flex-direction: column;
+	}
+	
+	#chatRoomListBox{
+	min-width: 300px;
+	margin-right: 20px;
+	flex-grow: 0;
+	}
+	
+	form[name="chatRoomSearch"]{
+	position: relative;
+	margin-bottom: 10px;
+	}
+	
+	form[name="chatRoomSearch"] > input{
+	width: 100%;
+	height: 35px;
+	padding:  0 40px 0 15px; 
+	border: 1px solid #D9D9D9;
+	}
+	
+	form[name="chatRoomSearch"] > img{
+	position: absolute;
+	z-index: 10;
+	top: 7px;
+	right: 15px;
+	}
+	
+	.chatRoom{
+	border: 1px solid #D9D9D9;
+	padding: 12px 10px;
+	}
+	
+	.roomName{
+	display: flex;
+	}
+	
+	.chatRoom h4{
+	size: 15px;
+	margin: 0 5px 0 0;
+	max-width: 200px;
+	padding: 0;
+	}
+	
+	.selectedRoom{
+	background: #D9D9D9;
+	}
+	
+	
+	.lastChatTime{
+	font-size: 12px;
+	line-height: 12px;
+	text-align: right;
+	}
+	
+
+	.chatRoom > div:last-of-type{
+	font-size: 13px;
+	}
+	
+	#msgBox{
+	flex-grow: 1;	
+	}
+	
+	#chatRoomInfo{
+	width: 100%;
+	height: 32px;
+	margin-bottom: 10px;
+	display: flex;
+	justify-content: space-between;
+	}
+	
+	#chatRoomInfo > div:first-child{
+	flex-grow: 1;
+	}
+	
+	#chatRoomInfo > div:first-child > span:first-child{
+	padding-left: 10px;
+	font-size: 20px;
+	font-weight: bold;
+	}
+	
+	#chatRoomInfo > div:first-child > span:nth-child(2) {
+	font-size: 18px;
+	margin-left: 20px;
+	}
+	
+	#chatRoomInfo button{
+	height: 100%;
+	border: 1px solid black;
+	font-size: 16px;
+	font-weight: bold; 
+	background-color: white;
+	width: 112px;
+	}
+	
+	
+	#msgArea{
+	flex-grow: 1;
+	border: 1px solid #D9D9D9;	
+	padding: 20px;
+	height: 500px;
+	overflow: auto;
+	}
+	
+	.message{
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 10px;
+	}
+	
+	.sender{
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 3px;
+	}
+	
+	.message > div:nth-child(2){
+	display: flex;
+	align-items: center;
+	}
+	
+	.yourMessage{
+	background-color: #D9D9D9;
+	padding: 5px;
+	border-radius: 5px;
+	margin-right: 10px;
+	}
+	
+	.yourMessage + span{
+	font-size: 13px;
+	}
+	
+	
+	#msgBox > div:last-child {
+	width: 100%;
+	display: flex;
+	position: relative;
+	}
+	
+	#msg{
+	flex-grow: 1;
+	height: 37px;
+	padding:  0 40px 0 15px; 
+	background-color: #3D3D43;
+	color: white;
+	}
+	
+	#msg::placeholder{
+	color: #D9D9D9;
+	}
+	
+	#sendBtn{
+	width: 40px;
+	position: absolute;
+	z-index: 1;
+	right: 15px;
+	bottom: 3px;
+	}
+	
+	#sendBtn:hover{
+	cursor: pointer;
+	}
+	
+	
+
+</style>
+
 
 <script>
 
@@ -30,11 +201,10 @@ $(function(){
 });
 
 
-var sock = new SockJS('http://localhost:8098/chatting');
+var sock = new SockJS('http://localhost:80/boardinfo/chatting');
 sock.onmessage = onMessage;
 sock.onclose = onClose;
 sock.onopen = onOpen;
-
 
 
 function sendMessage(type){
@@ -64,14 +234,17 @@ function onMessage(msg){
 	//로그인한 클라이언트와 타 클라이언트 분류하기 (css적으로다가)
 	//시간없으니까 그냥 통일시켜
 	if(sender == cur_session){ //내가 보낸 메시지라면
-		var str = "<div><div>"+sender+": "+message+"</div></div>";
-		$("#msgArea").append(str);
+		var str = 
+			"<div class='message'><div class='sender'>"+sender+"</div>"
+			+"<div><div class='yourMessage'>"+message+"</div><span>오후 7:30</span></div>";
 	}
 	
 	else{
-		var str = "<div><div>"+sender+": "+message+"</div></div>";
-		$("#msgArea").append(str);		
+		var str = 
+			"<div class='message'><div class='sender'>"+sender+"</div>"
+			+"<div><div class='yourMessage'>"+message+"</div><span>오후 7:30</span></div>";
 	}
+	$("#msgArea").append(str);	
 	
 	
 }
@@ -99,14 +272,73 @@ function onOpen(evt){
 </head>
 <body>
 
-<h2>임시채팅방</h2>
-<div id="container">
-	<div id="msgArea">
+<%@include file="../include/top.jsp" %>
+
+<div id="contents">
+  <div id="contentsHeader">
+    <h2>채팅</h2>
+  </div>
+  <div id="contentsLocation">
+    홈 &gt 마이페이지 &gt 채팅
+  </div>
+  
+  <div id="contentsMain">
+  
+  <div id="chatRoomListBox">
+	  <form name="chatRoomSearch">
+	  <input name="chatRoomKeyword" placeholder="채팅방 검색">
+	  <img src="${path}/images/search.png" onclick="" width="20px">
+	  </form>
+  <div id="chatRoomList">
+	  <div class="chatRoom selectedRoom">
+	  	<div class="roomName">
+	  		<h4>수원 레드버튼에서 모여요~!</h4><span>(3)</span>
+	  	</div>
+	  	<div class="lastChatTime">오후 4:15</div>
+	  	<div>그럼 저희 테라포밍마스 할까요?</div>
+	  </div>
+	  <div class="chatRoom">
+	  	<div class="roomName">
+	  		<h4>수원 레드버튼에서 모여요~!</h4><span>(3)</span>
+	  	</div>
+	  	<div class="lastChatTime">오후 4:15</div>
+	  	<div>그럼 저희 테라포밍마스 할까요?</div>
+	  </div>
+	  <div class="chatRoom">
+	  	<div class="roomName">
+	  		<h4>수원 레드버튼에서 모여요~!</h4><span>(3)</span>
+	  	</div>
+	  	<div class="lastChatTime">오후 4:15</div>
+	  	<div>그럼 저희 테라포밍마스 할까요?</div>
+	  </div>
+  </div>
+  </div>
+  
+  <div id="msgBox">
+  	<div id="chatRoomInfo">
+  		<div>
+  			<span>수원 레드버튼에서 모여요~!</span>
+  			<span>3명 참가중</span>
+  		</div>
+  		<button type="button">채팅방 나가기</button>
+  	</div>
+  	<div id="msgArea">
+	
 	</div>
-	<input id="msg">
-	<button id="sendBtn">전송</button>
+	<div>
+	<input id="msg" placeholder="텍스트를 입력해주세요.">
+	<img id="sendBtn" src="${path}/images/chatSend.png" onclick="">
+	</div>
+</div>
+  
+  </div>
+
+
+  </div>
 </div>
 
+<%@include file="../include/footer.jsp" %>  
+  
 
 </body>
 </html>

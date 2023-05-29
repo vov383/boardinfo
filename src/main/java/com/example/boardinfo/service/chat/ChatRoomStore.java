@@ -96,7 +96,7 @@ public class ChatRoomStore {
 			chatMessage.setUserId("알림");
 		} 
 		
-		dao.insert(chatMessage);
+		//dao.insert(chatMessage);
 		try {
 			room.send(chatMessage);
 		} catch (Exception e) {
