@@ -106,7 +106,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 	</trim>
 	</where>
-		order by gathering_id desc;
+		order by gathering_id desc
 	)a
 	)
 	where rn between #{start} and #{end}
