@@ -27,5 +27,5 @@ public interface GameService {
   List<PublisherDTO> getAutoPublisher(String input);
   List<GameDTO> getAutoGame(String input);
   void deleteFile(String fileName);
-  Map<String, Object> filteredGamelist(String filter,int num);
+  Map<String, Object> filteredGamelist(String filter,int num, int curPage);
 }

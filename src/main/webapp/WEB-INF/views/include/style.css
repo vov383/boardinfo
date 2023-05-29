@@ -186,9 +186,14 @@
         overflow-y: auto;
     }
     /*top 검색창 검색결과 개별 감싸는 div*/
-    .searched{
+    .searched_top {
         height: 50px;
         padding: 2px;
+        border-bottom: 1px dotted;
+    }
+
+    .searched_top > a {
+        margin: 5px;
     }
 
     #footer{

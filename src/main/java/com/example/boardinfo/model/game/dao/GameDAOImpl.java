@@ -48,6 +48,10 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.delete("game.deleteFile", fileName);
 	}
 
+	public int countList(Map<String, Object> map){
+		return sqlSession.selectOne("game.filteredListCount", map);
+	}
+
 	public List<GameDTO> filteredGamelist(Map<String, Object> map) {
 
 		return sqlSession.selectList("game.filteredList", map);

@@ -223,11 +223,7 @@ public class GameServiceImpl implements GameService {
     int bggnum = dto.getBggnum();
 
     BggParser bggParser = new BggParser();
-    bggParser.setBgg_thumbnail(bggnum);
-    bggParser.setBgg_rank(bggnum);
-    bggParser.setBgg_rate(bggnum);
-    bggParser.setBgg_weight(bggnum);
-
+      bggParser.setBggInfo(bggnum);
 
     map.put("dto",dto);
     map.put("alist", alist);
