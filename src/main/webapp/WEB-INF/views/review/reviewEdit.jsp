@@ -345,12 +345,10 @@
             location.href="${path}/review/reviewlist.do";
         }
 
-        // 수정, 삭제 화면(편집화면)으로 이동
-        function reviewEdit(regNum){
-            $("#reviewDetailKey").val(regNum);
-            alert($("#reviewDetailKey").val());
-            /*alert("클릭 테스트");*/
-            document.formReviewEdit.submit();
+        // 수정하기
+        function btnEdit() {
+            alert("asdsadasd"); // 테스트
+            document.reviewedit.submit();
         }
 
 
@@ -362,10 +360,6 @@
 <body>
 <%@include file="../include/top.jsp" %>
 
-<form name="formReviewEdit" method="post" action="${path}/review/reviewedit.do">
-    <input type="hidden" name="reviewDetailKey" id="reviewDetailKey">
-</form>
-
 <div id="contents">
     <div id="contentsHeader">
         <h2>커뮤니티</h2>
@@ -375,24 +369,23 @@
     </div>
     <div id="contentsMain">
 
-        <form name="reviewdetail" method="post" action="${path}/review/reviewdetail.do">
+        <form name="reviewedit" method="post" action="${path}/review/revieweditsave.do">
             <table border="1" width="700px">
                 <%--<script>console.log(<c:out value="${list}"></c:out>) </script>--%>
                 <c:forEach items="${list}" var="vo">
-                    <tr>
-                        <%--<td>${vo.regNum}</td>--%>
-                        <td style="width: 200px; text-align: center;">${vo.title}</td>
-                        <td style="width: 200px; text-align: center;">${vo.nickName} ${vo.good} ${vo.views} ${vo.createDate}</td>
-                        <td style="width: 200px; text-align: center;">${vo.gametitle}</td>
-                        <td style="width: 200px; text-align: center;">${vo.reviewDetail}</td>
-                    </tr>
-                <tr>
-                    <td>
-                        <button type="button" onclick="btnReply()">답변</button>
-                        <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정/삭제</button>
-                        <button type="button" onclick="btnList()">목록</button>
-                    </td>
-                </tr>
+
+                    <p>카테고리 : <input type="text" name="category" value="${vo.category}"></p>
+                    <p>제목 : <input type="text" name="title" value="${vo.title}"></p>
+                    <p>임시입력_gnum, 게임ID : <input type="text" name="gnum" value="${vo.gnum}"></p>
+                    <p>임시입력_gatheringId, 모임ID : <input type="text" name="gatheringId" value="${vo.gatheringId}"></p>
+                    <p>리뷰점수 : <input type="text" name="reviewScore" value="${vo.reviewScore}"></p>
+                    <p>난이도 : <input type="text" name="gameScore" value="${vo.gameScore}"></p>
+                    <p>임시입력_ID : <input type="text" name="createUser" value="${vo.createUser}"></p>
+                    <p>리뷰작성 : <input type="text" name="reviewDetail" value="${vo.reviewDetail}"></p>
+                    <input type="text" name="regNum" value="${vo.regNum}">
+                    <button type="button" id="btnsave" onclick="btnEdit()">수정하기</button>
+                    <button type="button" id="btnsave" onclick="btnDel()">삭제하기</button>
+                    <button type="button" id="btnsave" onclick="btnList()">목록</button>
                 </c:forEach>
             </table>
         </form>
