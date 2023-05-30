@@ -39,6 +39,18 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     }
 
+    //리뷰 삭제
+    @Override
+    public void reviewDel(reviewSerchDTO reviewserchDTO) {
+
+        sqlSession.update("review.revieweDel", reviewserchDTO);
+
+    }
+
+
+
+
+
 
 
     //리뷰 Blob 테스트

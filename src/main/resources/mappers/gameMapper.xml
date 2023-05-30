@@ -14,7 +14,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="gameList" resultType="gameDto">
 		select *
 		from (select a.*, rownum rn
+
 				from (select g.gnum,g.bggnum, g.gametitle, g.gametitle_eng, g.viewcount, g.release_year, ga.fullname gamephoto_url
+
 						from game g,
     		    			(select gnum, fullname
     		    			   from (select row_number() over(partition by gnum order by regdate desc) rnum, gnum, fullname

@@ -347,8 +347,16 @@
 
         // 수정하기
         function btnEdit() {
-            alert("asdsadasd"); // 테스트
+            /*alert("asdsadasd"); // 테스트*/
             document.reviewedit.submit();
+        }
+
+        // 삭제하기
+        function btnDel(regNum) {
+            $("#reviewDetailKey").val(regNum);
+            alert(regNum)
+            /*alert($("#reviewDetailKey").val());*/
+            document.formreviewdel.submit();
         }
 
 
@@ -359,6 +367,10 @@
 
 <body>
 <%@include file="../include/top.jsp" %>
+
+<form name="formreviewdel" method="post" action="${path}/review/reviewdelsave.do">
+    <input type="hidden" name="reviewDetailKey" id="reviewDetailKey">
+</form>
 
 <div id="contents">
     <div id="contentsHeader">
@@ -376,16 +388,14 @@
 
                     <p>카테고리 : <input type="text" name="category" value="${vo.category}"></p>
                     <p>제목 : <input type="text" name="title" value="${vo.title}"></p>
-                    <p>임시입력_gnum, 게임ID : <input type="text" name="gnum" value="${vo.gnum}"></p>
-                    <p>임시입력_gatheringId, 모임ID : <input type="text" name="gatheringId" value="${vo.gatheringId}"></p>
-                    <p>리뷰점수 : <input type="text" name="reviewScore" value="${vo.reviewScore}"></p>
-                    <p>난이도 : <input type="text" name="gameScore" value="${vo.gameScore}"></p>
-                    <p>임시입력_ID : <input type="text" name="createUser" value="${vo.createUser}"></p>
+                    <p>게임명 : <input type="text" name="gametitle" value="${vo.gametitle}"></p>
+                    <p>닉네임 : <input type="text" name="createUser" value="${vo.nickName}" readonly/></p>
                     <p>리뷰작성 : <input type="text" name="reviewDetail" value="${vo.reviewDetail}"></p>
-                    <input type="text" name="regNum" value="${vo.regNum}">
-                    <button type="button" id="btnsave" onclick="btnEdit()">수정하기</button>
-                    <button type="button" id="btnsave" onclick="btnDel()">삭제하기</button>
-                    <button type="button" id="btnsave" onclick="btnList()">목록</button>
+                    <input type="hidden" name="regNum" value="${vo.regNum}">
+                    <input type="hidden" name="del" value="${vo.del}">
+                    <button type="button" onclick="btnEdit()">수정하기</button>
+                    <button type="button" onclick="btnDel('${vo.regNum}')">삭제하기</button>
+                    <button type="button" onclick="btnList()">목록</button>
                 </c:forEach>
             </table>
         </form>

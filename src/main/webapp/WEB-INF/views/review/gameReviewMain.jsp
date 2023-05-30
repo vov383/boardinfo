@@ -402,11 +402,11 @@
       <table style="table-layout:fixed;">
         <tr><!-- 첫번째 줄 시작 -->
           <th style="width: 200px;">카테고리</th>
-          <th style="width: 200px;">&#x1f495</th> <%--하트--%>
+          <th style="width: 200px;">&#x1f495</th> <%--좋아요--%>
           <th style="width: 200px;">제목</th>
           <th style="width: 200px;">닉네임</th>
           <th style="width: 200px;">등록일자</th>
-          <th style="width: 200px;">조회수</th>
+          <th style="width: 200px;">&#128366;</th> <%--조회수--%>
           <th style="width: 200px;">댓글</th>
           <th style="width: 200px;">게임</th>
         </tr>

@@ -18,4 +18,5 @@ public interface GameDAO {
 	List<GameDTO> filteredGamelist(Map<String, Object> map);
 	int countList(Map<String, Object> map);
     void gameupdate(GameDTO dto);
+
 }
