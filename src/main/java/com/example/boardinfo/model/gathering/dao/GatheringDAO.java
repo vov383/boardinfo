@@ -27,4 +27,6 @@ public interface GatheringDAO {
 	public int update(GatheringDTO dto);
 
 	public void addAttendee(AttendeeDTO dto);
+
+
 }
