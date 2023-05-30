@@ -79,7 +79,8 @@ $(document).ready(function(){
                   var gnum = item.gnum;
                   console.log(gnum);
                   console.log(gametitle);
-                  gameSearchDiv.append("<div class='searched'><a href='${path}/game/view.do?gnum=" + gnum + "'>" + gametitle + " <br>(" + gametitle_eng + ")</a></div>");
+
+                  gameSearchDiv.append("<div class='searched_top'><a href='${path}/game/view.do?gnum=" + gnum + "'>" + gametitle + " <br>(" + gametitle_eng + ")</a></div>");
 
                 });
 

@@ -1,6 +1,5 @@
 package com.example.boardinfo.model.tboard.dao;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,14 +18,7 @@ public class TBoardDAOImpl implements TBoardDAO {
 	SqlSession sqlSession;
 	
 	@Override
-	public List<TBoardDTO> list(String select_category, 
-			String search_option, String keyword, int start, int end) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("select_category", select_category);
-		map.put("search_option", search_option);
-		map.put("keyword", "%"+keyword+"%");
-		map.put("start", start);
-		map.put("end", end);
+	public List<TBoardDTO> list(Map<String, Object> map) {
 		return sqlSession.selectList("tboard.selectBoardList", map);
 	}
 
@@ -52,12 +44,7 @@ public class TBoardDAOImpl implements TBoardDAO {
 	
 	@Override
 	public int countArticle(
-			String select_category, 
-			String search_option, String keyword) {
-		Map<String, String> map = new HashMap<>();
-		map.put("select_category", select_category);
-		map.put("search_option", search_option);
-		map.put("keyword", "%"+keyword+"%");
+			Map<String, Object> map) {
 		return sqlSession.selectOne("tboard.countArticle", map);
 	}
 

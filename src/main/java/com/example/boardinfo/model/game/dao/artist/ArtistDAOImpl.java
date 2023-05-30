@@ -2,6 +2,7 @@ package com.example.boardinfo.model.game.dao.artist;
 
 import java.sql.ClientInfoStatus;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 

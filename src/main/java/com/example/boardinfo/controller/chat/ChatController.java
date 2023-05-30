@@ -19,7 +19,7 @@ public class ChatController {
 			LoggerFactory.getLogger(ChatController.class);
 	
 	@GetMapping("/goChat.do")
-	public String chat(Model model, HttpSession session, @RequestParam String user_id) {
+	public String chat(Model model, HttpSession session, @RequestParam String userId) {
 		
 		/*세션으로부터 userDTO를 구한 다음
 			UserDTO user = (UserDTO) SecurityContextHolder.
@@ -33,9 +33,9 @@ public class ChatController {
 		
 		//로그인 아이디를 model에 담아 뷰로 보냄
 		//model.addAttribute("userid", user.getUsername());
-		model.addAttribute("user_id", user_id);
+		model.addAttribute("userId", userId);
 		//임시방편으로 세션에 아이디 저장
-		session.setAttribute("user_id", user_id);
+		session.setAttribute("userId", userId);
 		
 		
 		return "gathering/chat";

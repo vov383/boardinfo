@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.example.boardinfo.model.tboard.dao.TBoardDAO;
 import org.springframework.stereotype.Service;
 
 import com.example.boardinfo.model.tboard.dao.TBCommentDAO;
@@ -32,17 +31,22 @@ public class TBCommentServiceImpl implements TBCommentService {
 
 	@Override
 	public void insertChilComment(TBCommentDTO re_dto) {
-		tbcommentDao.insertChilComment(re_dto);
+
 	}
 
 	@Override
-	public void updateComment(int reply_reg_num, String content) {
-		tbcommentDao.updateComment(reply_reg_num, content);
+	public void insertChildComment(TBCommentDTO re_dto) {
+		tbcommentDao.insertChildComment(re_dto);
 	}
 
 	@Override
-	public void deleteComment(int reply_reg_num) {
-		tbcommentDao.deleteComment(reply_reg_num);
+	public void updateComment(int reply_reg_num, String content, String update_user) {
+		tbcommentDao.updateComment(reply_reg_num, content, update_user);
+	}
+
+	@Override
+	public void deleteComment(int reply_reg_num, String update_user) {
+		tbcommentDao.deleteComment(reply_reg_num, update_user);
 	}
 
 	@Override

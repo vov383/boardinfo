@@ -123,3 +123,11 @@ tr:last-child td:last-child {
 .input_game {
 	width: 300px;
 }
+
+#fileDrop {
+	float: right;
+	width: 50px;
+	height: 50px;
+	border: 1px solid black;
+	margin-right: 50px;
+}

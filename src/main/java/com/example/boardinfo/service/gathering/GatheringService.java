@@ -16,11 +16,9 @@ public interface GatheringService {
 	public List<GatheringDTO> list(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to, int start, int end, String searchOption, String keyword);
 	public boolean addReply(GatheringReplyDTO dto);
 
-
 	List<GatheringReplyDTO> getReplies(int gatheringId);
 
-
-    public int countList(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to);
+    int countList(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to);
 
 	public boolean update(GatheringDTO dto);
 

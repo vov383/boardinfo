@@ -33,7 +33,7 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.update("game.increaseViewcnt", gnum);
 	}
 	
-	public GameDTO view(int gnum) throws Exception {
+	public GameDTO view(int gnum) {
 		return sqlSession.selectOne("game.view", gnum);
 	}
 
@@ -48,8 +48,15 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.delete("game.deleteFile", fileName);
 	}
 
+	public int countList(Map<String, Object> map){
+		return sqlSession.selectOne("game.filteredListCount", map);
+	}
+
 	public List<GameDTO> filteredGamelist(Map<String, Object> map) {
 
 		return sqlSession.selectList("game.filteredList", map);
+	}
+	public void gameupdate(GameDTO dto){
+		sqlSession.update("game.gameupdate", dto);
 	}
 }

@@ -41,9 +41,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="view" resultType="publisherDto">
-		select p.pnum, p.publisher
-		from publisher p, game_publisher gp
-		where p.pnum = gp.pnum and gp.gnum = #{gnum}
+			select p.pnum, p.publisher
+			from publisher p, game_publisher gp
+			where p.pnum = gp.pnum and gp.gnum = #{gnum}
 	</select>
 	
 </mapper>

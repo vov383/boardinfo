@@ -36,3 +36,4 @@ public interface GatheringDAO {
 	public int update(GatheringDTO dto);
 
 }
+

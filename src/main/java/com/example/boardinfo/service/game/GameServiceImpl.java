@@ -10,10 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.example.boardinfo.controller.game.GameController;
 import com.example.boardinfo.model.game.dto.designer.DesignerDTO;
 import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
 import com.example.boardinfo.util.BggParser;
 import com.example.boardinfo.util.Pager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +37,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Service
 public class GameServiceImpl implements GameService {
-
+  private static final Logger logger=
+          LoggerFactory.getLogger(GameServiceImpl.class);
   @Inject
   GameDAO gameDao;
   @Inject
@@ -50,15 +55,27 @@ public class GameServiceImpl implements GameService {
   @Override
   public Map<String, Object> gamelist(int curPage) {
     int count = gameDao.countList();
+
     Pager pager = new Pager(count, curPage, 10);
     int start = pager.getPageBegin();
     int end = pager.getPageEnd();
+
     Map<String, Object> map = new HashMap<>();
     map.put("start",start);
     map.put("end",end);
+
     List<GameDTO> list = gameDao.gamelist(map);
+
+    for(GameDTO dto : list){
+      int bggnum = dto.getBggnum();
+      BggParser bggParser = new BggParser();
+      bggParser.setBgg_thumbnail(bggnum);
+      dto.setBgg_thumbnail(bggParser.getBgg_thumbnail());
+    }
+
     map.put("list",list);
     map.put("pager",pager);
+
     return map;
   }
 
@@ -187,10 +204,11 @@ public class GameServiceImpl implements GameService {
 
   //게임정보페이지
   @Transactional
-  public Map<String, Object> view(int gnum) throws Exception {
-    Map<String, Object> map = new HashMap<>();
+  public Map<String, Object> view(int gnum){
+
     //game테이블 데이터
     GameDTO dto = gameDao.view(gnum);
+
     //사진
     String str = dto.getGamephoto_url();
     if(str != null) {
@@ -198,6 +216,9 @@ public class GameServiceImpl implements GameService {
       String end = str.substring(14);
       dto.setGamephoto_url(front+end);
     }
+
+
+
     List<ArtistDTO> alist = artistDao.view(gnum);
     List<CategoryDTO> clist = categoryDao.view(gnum);
     List<DesignerDTO> dlist = designerDao.view(gnum);
@@ -207,12 +228,9 @@ public class GameServiceImpl implements GameService {
     int bggnum = dto.getBggnum();
 
     BggParser bggParser = new BggParser();
-    bggParser.setBgg_thumbnail(bggnum);
-    bggParser.setBgg_rank(bggnum);
-    bggParser.setBgg_rate(bggnum);
-    bggParser.setBgg_weight(bggnum);
+    bggParser.setBggInfo(bggnum);
 
-
+    Map<String, Object> map = new HashMap<>();
     map.put("dto",dto);
     map.put("alist", alist);
     map.put("clist", clist);
@@ -259,11 +277,182 @@ public class GameServiceImpl implements GameService {
 
 
   //아티스트,카테고리,디자이너,메카닉,퍼블리셔 개별 항목에 대응하는 게임목록 출력
-  public Map<String, Object> filteredGamelist(String filter,int num){
+
+  public Map<String, Object> filteredGamelist(String filter,int num, int curPage){
+
     Map<String, Object> map = new HashMap<>();
     map.put("filter",filter);
     map.put("num", num);
-    map.put("list", gameDao.gamelist(map));
+
+    int count = gameDao.countList(map);
+
+    Pager pager = new Pager(count, curPage, 10);
+    int start = pager.getPageBegin();
+    int end = pager.getPageEnd();
+    map.put("start",start);
+    map.put("end",end);
+
+    List<GameDTO> list = gameDao.filteredGamelist(map);
+
+    for(GameDTO dto : list){
+      int bggnum = dto.getBggnum();
+      BggParser bggParser = new BggParser();
+      bggParser.setBgg_thumbnail(bggnum);
+      logger.info("과연 : " + dto );
+      dto.setBgg_thumbnail(bggParser.getBgg_thumbnail());
+    }
+
+    map.put("count", count);
+    map.put("list", list);
+    map.put("pager", pager);
+
     return map;
   }
+
+  //게임수정페이지로 이동
+  public GameDTO updateView(int gnum){
+    GameDTO dto = gameDao.view(gnum);
+
+    List<ArtistDTO> alist = artistDao.view(gnum);
+    List<CategoryDTO> clist = categoryDao.view(gnum);
+    List<DesignerDTO> dlist = designerDao.view(gnum);
+    List<MechanicDTO> mlist = mechanicDao.view(gnum);
+    List<PublisherDTO> plist = publisherDao.view(gnum);
+
+    StringBuilder strbuilder = new StringBuilder();
+    for(ArtistDTO item : alist){
+      String str = item.getArtist();
+      strbuilder.append(str).append(",");
+    }
+    dto.setArtist(strbuilder.toString());
+
+    strbuilder.setLength(0);
+    for(CategoryDTO item : clist){
+      String str = item.getGamecategory();
+      strbuilder.append(str).append(",");
+    }
+    dto.setGamecategory(strbuilder.toString());
+
+    strbuilder.setLength(0);
+    for(DesignerDTO item : dlist){
+      String str = item.getDesigner();
+      strbuilder.append(str).append(",");
+    }
+    dto.setDesigner(strbuilder.toString());
+
+    strbuilder.setLength(0);
+    for(MechanicDTO item : mlist){
+      String str = item.getMechanic();
+      strbuilder.append(str).append(",");
+    }
+    dto.setMechanic(strbuilder.toString());
+
+    strbuilder.setLength(0);
+    for(PublisherDTO item : plist){
+      String str = item.getPublisher();
+      strbuilder.append(str).append(",");
+    }
+    dto.setPublisher(strbuilder.toString());
+
+    return dto;
+  }
+
+  @Transactional
+  @Override
+  public void gameupdate(GameDTO dto) {
+
+    //게임테이블에 update
+    gameDao.gameupdate(dto);
+
+    //카테고리테이블 update
+    //카테고리배열
+    String[] gamecategories = dto.getGamecategory().split(",");
+
+    for(String str : gamecategories) {
+      int check_category = categoryDao.check_category(str);
+
+      if (check_category == 0) { // 해당 카테고리가 db에 없다면
+        categoryDao.insert_category(str);
+        categoryDao.insert_category_mapping();
+      } else { // db에 존재하는 카테고리라면
+        int cnum = categoryDao.categorynum(str);
+
+        categoryDao.insert_category_mapping(cnum);
+      }
+    }
+
+    //아티스트테이블 insert
+    //아티스트배열
+    String[] artists = dto.getArtist().split(",");
+
+    for(String str : artists) {
+      int check_artist = artistDao.check_artist(str);
+
+      if (check_artist == 0) { // 해당 아티스트가 db에 없다면
+        artistDao.insert_artist(str);
+        artistDao.insert_artist_mapping();
+      } else { // db에 존재하는 아티스트라면
+        int anum = artistDao.artistnum(str);
+        artistDao.insert_artist_mapping(anum);
+      }
+    }
+
+    //메카닉테이블 insert
+    //메카닉배열
+    String[] mechanics = dto.getMechanic().split(",");
+
+    for(String str : mechanics) {
+      int check_mechanic = mechanicDao.check_mechanic(str);
+
+      if (check_mechanic == 0) { // 해당 매카니즘이 db에 없다면
+        mechanicDao.insert_mechanic(str);
+        mechanicDao.insert_mechanic_mapping();
+      } else { // db에 존재하는 매카니즘이라면
+        int mnum = mechanicDao.mechanicnum(str);
+        mechanicDao.insert_mechanic_mapping(mnum);
+      }
+    }
+
+    //퍼블리셔테이블 insert
+    //퍼블리셔배열
+    String[] publishers = dto.getPublisher().split(",");
+
+    for(String str : publishers) {
+      int check_publisher = publisherDao.check_publisher(str);
+
+      if (check_publisher == 0) { // 해당 제작자가 db에 없다면
+        publisherDao.insert_publisher(str);
+        publisherDao.insert_publisher_mapping();
+      } else { // db에 존재하는 제작자라면
+        int pnum = publisherDao.publishernum(str);
+        publisherDao.insert_publisher_mapping(pnum);
+      }
+    }
+
+    //디자이너테이블 insert
+    //디자이너배열
+    String[] designers = dto.getDesigner().split(",");
+
+    for(String str : designers) {
+      int check_designer = designerDao.check_designer(str);
+
+      if (check_designer == 0) { // 해당 디자인이 db에 없다면
+        designerDao.insert_designer(str);
+        designerDao.insert_designer_mapping();
+      } else { // db에 존재하는 디자인이라면
+        int dnum = designerDao.designernum(str);
+        designerDao.insert_designer_mapping(dnum);
+      }
+    }
+
+    //attach 테이블에 레코드 추가(게임사진테이블)
+    String[] files=dto.getFiles();//첨부파일 이름 배열
+    if(files==null) return; //첨부파일이 없으면 skip
+    for(String name : files) {
+      gameDao.addAttach(name);//attach테이블에 insert
+    }
+  }
+
+
+
 }

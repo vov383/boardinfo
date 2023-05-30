@@ -34,20 +34,35 @@ public class TBCommentDAOImpl implements TBCommentDAO {
 
 	@Override
 	public void insertChilComment(TBCommentDTO re_dto) {
+
+	}
+
+	@Override
+	public void insertChildComment(TBCommentDTO re_dto) {
 		sqlSession.insert("tbComment.insertChildComment", re_dto);
 	}
 
 	@Override
-	public void updateComment(int reply_reg_num,String content) {
+	public void updateComment(int reply_reg_num, String content, String update_user) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("reply_reg_num", reply_reg_num);
 		map.put("content", content);
+		map.put("update_user", update_user);
 		sqlSession.update("tbComment.updateComment", map);
 	}
 
 	@Override
 	public void deleteComment(int reply_reg_num) {
+
+	}
+
+	@Override
+	public void deleteComment(int reply_reg_num, String update_user) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("reply_reg_num", reply_reg_num);
+		map.put("update_user", update_user);
 		sqlSession.delete("tbComment.deleteComment", reply_reg_num);
+
 	}
 
 	@Override
