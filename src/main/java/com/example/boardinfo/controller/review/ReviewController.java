@@ -40,10 +40,12 @@ public class ReviewController {
 	public ModelAndView revewDetail(@ModelAttribute reviewSerchDTO reviewserchDTO) {
 		ModelAndView mav = new ModelAndView();
 
+/*
 		System.out.println("testestestestest");
 		System.out.println("testestestestest");
 		System.out.println("testestestestest");
 		System.out.println("reviewserchDTO : " + reviewserchDTO.getReviewDetailKey());
+*/
 
 		mav.setViewName("review/reviewDetail");
 		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));

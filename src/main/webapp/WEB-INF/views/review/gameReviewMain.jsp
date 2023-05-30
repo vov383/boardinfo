@@ -361,6 +361,14 @@
       document.reviewDetail.submit();
     }
 
+    // 리뷰 디테일 조회수 증가
+    function reviewViews(regNum){
+      $("#reviewDetailKey").val(regNum);
+      /*alert($("#reviewDetailKey").val());*/
+      /*alert("클릭 테스트");*/
+      document.formReviewEdit.submit();
+    }
+
 
   </script>
 
