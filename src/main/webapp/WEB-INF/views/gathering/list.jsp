@@ -439,7 +439,7 @@
                 <span>
               <a class="title" href="${path}/gathering/view/${post.gathering_id}">${post.title}</a>
               </span>
-                <span class="numPeople">(3/${post.maxPeople}명)</span>
+                <span class="numPeople">(${post.attendee_count}/${post.maxPeople}명)</span>
               </div>
               <div class="detail">
                 <span class="location"><img src="${path}/images/location_pin.png" width="18px">${post.address1} ${post.address2}</span>

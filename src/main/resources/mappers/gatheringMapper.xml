@@ -7,11 +7,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="gathering">
 
 	<insert id="addPost">
+		<selectKey keyProperty="gathering_id" resultType="int" order="BEFORE">
+			select gathering_id_seq.nextval from dual
+		</selectKey>
 		insert into gathering
 			(gathering_id, writer_id, post_date, title, gathering_content, gathering_date,
 			maxpeople, attendsystem, note, question, address1, address2, address3, place_name, lat, lng)
 		values 
-			(gathering_id_seq.nextval,'kim123',sysdate,#{title},#{gathering_content},#{gathering_date},
+			(#{gathering_id},'kim123',sysdate,#{title},#{gathering_content},#{gathering_date},
 			 #{maxPeople},#{attendSystem},#{note},#{question}, #{address1}, #{address2}, #{address3},
 			 #{place_name}, #{lat}, #{lng})
 	</insert>
@@ -61,7 +64,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		address1, address2, place_name, maxpeople, view_count,
 		(select count(*)
 		from gathering_reply
-		where gathering_id = g.gathering_id) as reply_count
+		where gathering_id = g.gathering_id) as reply_count,
+		(select count(*)
+		from attendee
+		where gathering_id = g.gathering_id and type = 'a') as attendee_count
 		from gathering g
 		<where>
 	    <trim prefixOverrides="and">
@@ -123,6 +129,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	set view_count = view_count+1
 	where gathering_id = #{gathering_id}
 	</update>
+
+	<insert id="attend">
+		insert into attendee
+			(attendee_id, gathering_id, user_id, type, create_date)
+		values(attendee_id_seq.nextval, #{gathering_id}, #{user_id}, #{type}, sysdate)
+	</insert>
+
 
 	<select id="getTargetReplyOrder" resultType="int">
 		select nvl(

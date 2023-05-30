@@ -71,7 +71,7 @@
     </websocket:handshake-interceptors>
 	<websocket:sockjs />
 	</websocket:handlers>
-	<bean id="chatHandler" class="com.example.boardinfo.controller.chat.ChatHandler"/>    
+	<bean id="chatHandler" class="com.example.boardinfo.handler.ChatHandler"/>
 
 	<!-- SqlSessionFactory 객체 주입 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
