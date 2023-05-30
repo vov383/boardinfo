@@ -17,6 +17,7 @@ import com.example.boardinfo.util.BggParser;
 import com.example.boardinfo.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -276,7 +277,9 @@ public class GameServiceImpl implements GameService {
 
 
   //아티스트,카테고리,디자이너,메카닉,퍼블리셔 개별 항목에 대응하는 게임목록 출력
+
   public Map<String, Object> filteredGamelist(String filter,int num, int curPage){
+
     Map<String, Object> map = new HashMap<>();
     map.put("filter",filter);
     map.put("num", num);

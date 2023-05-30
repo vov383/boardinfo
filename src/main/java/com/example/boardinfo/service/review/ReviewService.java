@@ -21,6 +21,13 @@ public interface ReviewService {
     // 리뷰 수정
     void reviewUpdate(ReviewDTO reviewDTO);
 
+    // 리뷰 삭제
+    void reviewDel(reviewSerchDTO reviewserchDTO);
+
+
+
+
+
 	// 리뷰 입력
     void create(TestDTO testdto);
 

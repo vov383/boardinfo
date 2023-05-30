@@ -166,9 +166,7 @@
 			
 			</tbody>
 
-
 		</table>
-
 
 	</div>
 

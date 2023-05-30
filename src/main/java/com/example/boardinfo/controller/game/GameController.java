@@ -119,6 +119,7 @@ public class GameController {
 
 		mav.setViewName("game/game_filteredList");
 		mav.addObject("map", gameService.filteredGamelist(filter, num, curPage));
+
 		return mav;
 	}
 
