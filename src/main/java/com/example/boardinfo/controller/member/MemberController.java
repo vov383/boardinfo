@@ -108,6 +108,7 @@ public class MemberController {
 			//비밀번호 체크
 			boolean result=memberService.checkPw(dto.getUserid(), dto.getPasswd());
 			if(result) {//비번이 맞으면
+				model.addAttribute("dto", memberService.viewMember(dto.getUserid()));
 				return "member/edit";
 			}else {//비번이 틀리면
 				model.addAttribute("dto", dto);
