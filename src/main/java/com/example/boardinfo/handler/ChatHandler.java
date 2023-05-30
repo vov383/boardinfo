@@ -1,4 +1,4 @@
-package com.example.boardinfo.controller.chat;
+package com.example.boardinfo.handler;
 
 
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.example.boardinfo.controller.chat.ChatController;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -91,7 +92,6 @@ public class ChatHandler extends TextWebSocketHandler {
 	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		System.out.println("연결끊김");
 		logger.info("#ChattingHandler, afterConnectionClosed");
 		
 		ChatRoom room = chatRoomStore.findRoomWithSession(session);
