@@ -164,11 +164,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<update id="gameupdate">
 		update game
-		set (gnum,gametitle,gametitle_eng,players,playtime,exnum,renum,
-			 ages,language,bggnum,release_year)
-		values
-			(seq_game.nextval,#{gametitle},#{gametitle_eng},#{players},
-			 #{playtime},#{exnum},#{renum},#{ages},#{language},#{bggnum},#{release_year})
+		set gametitle=#{gametitle}, gametitle_eng=#{gametitle_eng}, players=#{players},
+			playtime=#{playtime}, exnum=#{exnum}, renum=#{renum}, ages=#{ages}, language=#{language},
+			bggnum=#{bggnum}, release_year=#{release_year}
+		where gnum=#{gnum}
 	</update>
 	
 </mapper>

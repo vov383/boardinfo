@@ -35,7 +35,7 @@
 	<div align="center">
 	
 	<form name="gameform" id="gameform" method="post" action="${path}/game/update.do">
-
+		<input type="hidden" name="gnum" value="${dto.gnum}">
 		<table>
 
 		<colgroup>
@@ -278,14 +278,14 @@
 			<tr>
 
 				<td>확장</td>
-				<td><input name="expention" id="expention" class="input_game"></td>
+				<td><input name="exnum" id="expention" class="input_game"></td>
 
 			</tr>
 
 			<tr>
 
 				<td>재구현</td>
-				<td><input name="replacement" id="replacement" class="input_game"></td>
+				<td><input name="renum" id="replacement" class="input_game"></td>
 
 			</tr>
 
