@@ -46,6 +46,7 @@ public class GatheringDTO {
 	private int is_public;
 	private int view_count;
 	private int reply_count;
+	private int attendee_count;
 
 	
 
@@ -240,6 +241,14 @@ public class GatheringDTO {
 
 	public void setReply_count(int reply_count) {
 		this.reply_count = reply_count;
+	}
+
+	public int getAttendee_count() {
+		return attendee_count;
+	}
+
+	public void setAttendee_count(int attendee_count) {
+		this.attendee_count = attendee_count;
 	}
 
 	@Override

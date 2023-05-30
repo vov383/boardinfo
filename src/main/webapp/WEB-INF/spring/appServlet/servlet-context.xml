@@ -69,7 +69,7 @@
 		<websocket:sockjs websocket-enabled="true"/>
 	</websocket:handlers>
 	
-		<beans:bean id="chatHandler" class="com.example.boardinfo.controller.chat.ChatHandler"/>
+		<beans:bean id="chatHandler" class="com.example.boardinfo.handler.ChatHandler"/>
 	
 	<!-- 인터셉트 빈을 등록 -->
 	<beans:bean class="com.example.boardinfo.interceptor.LoginInterceptor" id="loginInterceptor"> </beans:bean>

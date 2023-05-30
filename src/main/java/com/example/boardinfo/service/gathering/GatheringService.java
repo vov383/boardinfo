@@ -9,7 +9,7 @@ import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 public interface GatheringService {
 	
 
-	public boolean addPost(GatheringDTO dto);
+	public int addPost(GatheringDTO dto);
 	public boolean deletePost();
 	public boolean editPost();
 	public GatheringDTO view(int gathering_id, boolean updateViewCount);

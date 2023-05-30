@@ -15,7 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
+import com.example.boardinfo.service.chat.ChatRoomStore;
 import com.example.boardinfo.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,7 @@ import com.example.boardinfo.service.gathering.GatheringService;
 public class GatheringController {
 	
 	@Inject GatheringService gatheringService;
+	@Inject ChatRoomStore chatRoomStore;
 	
 	private static final Logger logger = 
 			LoggerFactory.getLogger(ChatController.class);
@@ -45,13 +48,21 @@ public class GatheringController {
 
 	//로그인필요
 	@PostMapping("/add.do")
-	public String add(@ModelAttribute GatheringDTO dto) {
-		gatheringService.addPost(dto);
-		return "redirect:/gathering/add.do";
+	public String add(@ModelAttribute GatheringDTO dto, HttpSession session) {
+		dto.setWriter_id("kim123");
+
+		//에러처리 해야함
+		int new_gathering_id = gatheringService.addPost(dto);
+		ChatMessageDTO notice = new ChatMessageDTO();
+		notice.setGathering_id(new_gathering_id);
+		notice.setUserId(dto.getWriter_id());
+		notice.setType(ChatMessageDTO.MessageType.ATTEND);
+		chatRoomStore.pushMessage(notice);
+		return "redirect:/gathering/view/" + new_gathering_id;
 	}
 	
 	
-	@RequestMapping("locationSearch.do")
+	@RequestMapping("/locationSearch.do")
 	public String locationSearch(){
 		return "gathering/setLocation";
 	}	
@@ -173,10 +184,10 @@ public class GatheringController {
 
 
 	//로그인필요-해당회원인지 확인해야 함
-	@RequestMapping("update.do")
+	@RequestMapping("/update.do")
 	public String edit(@ModelAttribute GatheringDTO dto){
 		gatheringService.update(dto);
-		return "redirect:/gathering/list.do";
+		return "redirect:/gathering/view/" + dto.getGathering_id();
 	}
 
 
@@ -193,7 +204,7 @@ public class GatheringController {
 
 
 	@ResponseBody
-	@RequestMapping ("getReplies")
+	@RequestMapping ("/getReplies")
 	public Map<String, Object> getReplies(@RequestParam int gathering_id){
 		List<GatheringReplyDTO> list = gatheringService.getReplies(gathering_id);
 		Map<String, Object> map = new HashMap<>();

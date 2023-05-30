@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,8 @@ public class GatheringDAOImpl implements GatheringDAO {
 
 	@Override
 	public int addPost(GatheringDTO dto) {
-		return sqlSession.insert("gathering.addPost",dto);
+		sqlSession.insert("gathering.addPost",dto);
+		return dto.getGathering_id();
 	}
 
 	@Override
@@ -117,5 +119,10 @@ public class GatheringDAOImpl implements GatheringDAO {
 	@Override
 	public int update(GatheringDTO dto) {
 		return sqlSession.update("gathering.update", dto);
+	}
+
+	@Override
+	public void addAttendee(AttendeeDTO dto) {
+		sqlSession.insert("gathering.attend", dto);
 	}
 }
