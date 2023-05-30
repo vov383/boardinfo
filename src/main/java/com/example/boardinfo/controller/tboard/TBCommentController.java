@@ -74,7 +74,7 @@ public class TBCommentController {
 //		logger.info("tb_num 확인 : "+tb_num);
 //		logger.info("reply_reg_num 확인 : "+reply_reg_num);
 //		logger.info("content 확인 : "+content);
-		tbcommentService.updateComment(reply_reg_num, content);
+//		tbcommentService.updateComment(reply_reg_num, content);
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("tboard/viewPost");
 		mav.addObject("dto", tboardService.viewPost(tb_num));
@@ -88,7 +88,7 @@ public class TBCommentController {
 	){
 		logger.info("tb_num 확인 : "+tb_num);
 		logger.info("reply_reg_num 확인 : "+reply_reg_num);
-		tbcommentService.deleteComment(reply_reg_num);
+//		tbcommentService.deleteComment(reply_reg_num);
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("tboard/viewPost");
 		mav.addObject("dto", tboardService.viewPost(tb_num));

@@ -91,13 +91,12 @@ public class GameServiceImpl implements GameService {
     String[] gamecategories = dto.getGamecategory().split(",");
 
     for(String str : gamecategories) {
-      int check_category = categoryDao.check_category(str);
+      int cnum = categoryDao.check_category(str);
       
-      if (check_category == 0) { // 해당 카테고리가 db에 없다면
+      if (cnum == 0) { // 해당 카테고리가 db에 없다면
         categoryDao.insert_category(str);
         categoryDao.insert_category_mapping();
       } else { // db에 존재하는 카테고리라면
-        int cnum = categoryDao.categorynum(str);
         categoryDao.insert_category_mapping(cnum);
       }
     }
@@ -107,13 +106,12 @@ public class GameServiceImpl implements GameService {
     String[] artists = dto.getArtist().split(",");
 
     for(String str : artists) {
-      int check_artist = artistDao.check_artist(str);
+      int anum = artistDao.check_artist(str);
 
-      if (check_artist == 0) { // 해당 아티스트가 db에 없다면
+      if (anum == 0) { // 해당 아티스트가 db에 없다면
         artistDao.insert_artist(str);
         artistDao.insert_artist_mapping();
       } else { // db에 존재하는 아티스트라면
-        int anum = artistDao.artistnum(str);
         artistDao.insert_artist_mapping(anum);
       }
     }
@@ -123,13 +121,12 @@ public class GameServiceImpl implements GameService {
     String[] mechanics = dto.getMechanic().split(",");
 
     for(String str : mechanics) {
-      int check_mechanic = mechanicDao.check_mechanic(str);
+      int mnum = mechanicDao.check_mechanic(str);
 
-      if (check_mechanic == 0) { // 해당 매카니즘이 db에 없다면
+      if (mnum == 0) { // 해당 매카니즘이 db에 없다면
         mechanicDao.insert_mechanic(str);
         mechanicDao.insert_mechanic_mapping();
       } else { // db에 존재하는 매카니즘이라면
-        int mnum = mechanicDao.mechanicnum(str);
         mechanicDao.insert_mechanic_mapping(mnum);
       }
     }
@@ -139,13 +136,12 @@ public class GameServiceImpl implements GameService {
     String[] publishers = dto.getPublisher().split(",");
 
     for(String str : publishers) {
-      int check_publisher = publisherDao.check_publisher(str);
+      int pnum = publisherDao.check_publisher(str);
 
-      if (check_publisher == 0) { // 해당 제작자가 db에 없다면
+      if (pnum == 0) { // 해당 제작자가 db에 없다면
         publisherDao.insert_publisher(str);
         publisherDao.insert_publisher_mapping();
       } else { // db에 존재하는 제작자라면
-        int pnum = publisherDao.publishernum(str);
         publisherDao.insert_publisher_mapping(pnum);
       }
     }
@@ -155,13 +151,12 @@ public class GameServiceImpl implements GameService {
     String[] designers = dto.getDesigner().split(",");
 
     for(String str : designers) {
-      int check_designer = designerDao.check_designer(str);
+      int dnum = designerDao.check_designer(str);
 
-      if (check_designer == 0) { // 해당 디자인이 db에 없다면
+      if (dnum == 0) { // 해당 디자인이 db에 없다면
         designerDao.insert_designer(str);
         designerDao.insert_designer_mapping();
       } else { // db에 존재하는 디자인이라면
-        int dnum = designerDao.designernum(str);
         designerDao.insert_designer_mapping(dnum);
       }
     }
@@ -324,35 +319,45 @@ public class GameServiceImpl implements GameService {
       String str = item.getArtist();
       strbuilder.append(str).append(",");
     }
-    dto.setArtist(strbuilder.toString());
+    String artist = strbuilder.toString();
+    artist = artist.substring(0,artist.length()-1);
+    dto.setArtist(artist);
 
     strbuilder.setLength(0);
     for(CategoryDTO item : clist){
       String str = item.getGamecategory();
       strbuilder.append(str).append(",");
     }
-    dto.setGamecategory(strbuilder.toString());
+    String gamecategory = strbuilder.toString();
+    gamecategory = gamecategory.substring(0,gamecategory.length()-1);
+    dto.setGamecategory(gamecategory);
 
     strbuilder.setLength(0);
     for(DesignerDTO item : dlist){
       String str = item.getDesigner();
       strbuilder.append(str).append(",");
     }
-    dto.setDesigner(strbuilder.toString());
+    String designer = strbuilder.toString();
+    designer = designer.substring(0,designer.length()-1);
+    dto.setDesigner(designer);
 
     strbuilder.setLength(0);
     for(MechanicDTO item : mlist){
       String str = item.getMechanic();
       strbuilder.append(str).append(",");
     }
-    dto.setMechanic(strbuilder.toString());
+    String mechanic = strbuilder.toString();
+    mechanic = mechanic.substring(0,mechanic.length()-1);
+    dto.setMechanic(mechanic);
 
     strbuilder.setLength(0);
     for(PublisherDTO item : plist){
       String str = item.getPublisher();
       strbuilder.append(str).append(",");
     }
-    dto.setPublisher(strbuilder.toString());
+    String publisher = strbuilder.toString();
+    publisher = publisher.substring(0,publisher.length()-1);
+    dto.setPublisher(publisher);
 
     return dto;
   }
@@ -363,37 +368,45 @@ public class GameServiceImpl implements GameService {
 
     //게임테이블에 update
     gameDao.gameupdate(dto);
-
+    int gnum = dto.getGnum();
     //카테고리테이블 update
     //카테고리배열
     String[] gamecategories = dto.getGamecategory().split(",");
 
     for(String str : gamecategories) {
-      int check_category = categoryDao.check_category(str);
+      //해당 번호의 게임에 해당 카테고리가 존재하느냐
+      int check_game_category = categoryDao.check_category(str,gnum);
 
-      if (check_category == 0) { // 해당 카테고리가 db에 없다면
-        categoryDao.insert_category(str);
-        categoryDao.insert_category_mapping();
-      } else { // db에 존재하는 카테고리라면
-        int cnum = categoryDao.categorynum(str);
-
-        categoryDao.insert_category_mapping(cnum);
+      if (check_game_category == 0) { // 해당 카테고리가 해당번호의 게임에 없다면
+        //해당 카테고리가 db에 존재하느냐
+        int cnum = categoryDao.check_category(str);
+        if (cnum == 0) { //해당 카테고리가 db에 존재하지 않는다면
+          logger.info("cnum/str확인!!!!!!"+cnum+"/////"+str);
+          categoryDao.insert_category(str);
+          categoryDao.insert_category_mapping();
+        }else { //해당 카테고리가 db에 존재하면
+          categoryDao.insert_category_mapping(gnum,cnum);
+        }
       }
     }
 
-    //아티스트테이블 insert
+    //아티스트테이블 update
     //아티스트배열
     String[] artists = dto.getArtist().split(",");
 
     for(String str : artists) {
-      int check_artist = artistDao.check_artist(str);
+      //해당 번호의 게임에 해당 아티스트가 존재하느냐
+      int check_artist = artistDao.check_artist(str,gnum);
 
-      if (check_artist == 0) { // 해당 아티스트가 db에 없다면
-        artistDao.insert_artist(str);
-        artistDao.insert_artist_mapping();
-      } else { // db에 존재하는 아티스트라면
-        int anum = artistDao.artistnum(str);
-        artistDao.insert_artist_mapping(anum);
+      if (check_artist == 0) { // 해당 아티스트가 해당번호의 게임에 없다면
+        //해당 아티슽츠가 db에 존재하느냐
+        int anum = artistDao.check_artist(str);
+        if(anum == 0) { //해당 아티스트가 해당번호의 게임에 없다면
+          artistDao.insert_artist(str);
+          artistDao.insert_artist_mapping();
+        }else { // db에 존재하는 아티스트라면
+          artistDao.insert_artist_mapping(gnum,anum);
+        }
       }
     }
 
@@ -402,14 +415,18 @@ public class GameServiceImpl implements GameService {
     String[] mechanics = dto.getMechanic().split(",");
 
     for(String str : mechanics) {
-      int check_mechanic = mechanicDao.check_mechanic(str);
+      //해당 번호의 게임에 해당 메카닉이 존재하느냐
+      int check_mechanic = mechanicDao.check_mechanic(str,gnum);
 
-      if (check_mechanic == 0) { // 해당 매카니즘이 db에 없다면
-        mechanicDao.insert_mechanic(str);
-        mechanicDao.insert_mechanic_mapping();
-      } else { // db에 존재하는 매카니즘이라면
-        int mnum = mechanicDao.mechanicnum(str);
-        mechanicDao.insert_mechanic_mapping(mnum);
+      if (check_mechanic == 0) { // 해당 매카니즘이 해당번호의 게임에 없다면
+        //해당 메카닉이 db에 존재하느냐
+        int mnum = mechanicDao.check_mechanic(str);
+        if(mnum == 0){ //해당 메카닉이 db에 존재하지 않는다면
+          mechanicDao.insert_mechanic(str);
+          mechanicDao.insert_mechanic_mapping();
+        }else { //해당 메카닉이 db에 존재하면
+          mechanicDao.insert_mechanic_mapping(gnum,mnum);
+        }
       }
     }
 
@@ -418,14 +435,18 @@ public class GameServiceImpl implements GameService {
     String[] publishers = dto.getPublisher().split(",");
 
     for(String str : publishers) {
-      int check_publisher = publisherDao.check_publisher(str);
+      //해당 번호의 게임에 해당 퍼블리셔가 존재하느냐
+      int check_publisher = publisherDao.check_publisher(str,gnum);
 
-      if (check_publisher == 0) { // 해당 제작자가 db에 없다면
-        publisherDao.insert_publisher(str);
-        publisherDao.insert_publisher_mapping();
-      } else { // db에 존재하는 제작자라면
-        int pnum = publisherDao.publishernum(str);
-        publisherDao.insert_publisher_mapping(pnum);
+      if (check_publisher == 0) { // 해당 제작자가 해당번호의 게임에 없다면
+        //해당 제작자가 db에 존재하느냐
+        int pnum = publisherDao.check_publisher(str);
+        if(pnum == 0){ //해당 제작자가 db에 존재하지 않는다면
+          publisherDao.insert_publisher(str);
+          publisherDao.insert_publisher_mapping();
+        }else { // 해당 제작자가 db에 존재하면
+          publisherDao.insert_publisher_mapping(gnum,pnum);
+        }
       }
     }
 
@@ -434,22 +455,20 @@ public class GameServiceImpl implements GameService {
     String[] designers = dto.getDesigner().split(",");
 
     for(String str : designers) {
-      int check_designer = designerDao.check_designer(str);
+      //해당 번호의 게임에 해당 디자이너가 존재하느냐
+      int check_designer = designerDao.check_designer(str,gnum);
 
-      if (check_designer == 0) { // 해당 디자인이 db에 없다면
-        designerDao.insert_designer(str);
-        designerDao.insert_designer_mapping();
-      } else { // db에 존재하는 디자인이라면
-        int dnum = designerDao.designernum(str);
-        designerDao.insert_designer_mapping(dnum);
+      if (check_designer == 0) { // 해당 디자이너가 해당번호의 게임에 없다면
+        //해당 디자이너가 db에 존재하느냐
+        int dnum = designerDao.check_designer(str);
+        if(dnum == 0){ //해당 디자이너가 db에 존재하지 않는다면
+          designerDao.insert_designer(str);
+          designerDao.insert_designer_mapping();
+        }else { //해당 디자이너가 db에 존재하면
+          designerDao.insert_designer_mapping(gnum,dnum);
+        }
+
       }
-    }
-
-    //attach 테이블에 레코드 추가(게임사진테이블)
-    String[] files=dto.getFiles();//첨부파일 이름 배열
-    if(files==null) return; //첨부파일이 없으면 skip
-    for(String name : files) {
-      gameDao.addAttach(name);//attach테이블에 insert
     }
   }
 
