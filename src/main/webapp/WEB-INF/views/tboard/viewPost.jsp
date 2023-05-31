@@ -11,7 +11,7 @@
     <script type="text/javascript">
         $(function () {
             //댓글 목록 출력
-            listReply();
+            getReplies();
 
             //댓글 쓰기
             $("#btnCommentInsert").on("click", function () {
@@ -40,13 +40,12 @@
                     }
                 });
             });
-            $("#btnChange").on("click", function () {
+            //수정버튼
+            $(".btnChange").on("click", function () {
                 let tb_num = ${dto.tb_num};
                 location.href = "${path}/tboard/change.do?tb_num=" + tb_num;
             });
-            $("#btnList").on("click", function () {
-                location.href = "${path}/tboard/list.do";
-            });
+            //로그인버튼
             $("#btnMoveLogin").on("click", function () {
                 location.href = "${path}/member/member_login.do?message=nologin";
             });
@@ -54,7 +53,7 @@
 
 
         //댓글 목록 출력 함수
-        function listReply() {
+        function getReplies() {
 
             $.ajax({
                 type: "get",
@@ -71,36 +70,69 @@
                         for (let i = 0; i < re_list.length; i++) {
                             let reply = $("<div>").addClass("reply").attr("id", re_list[i].reply_reg_num);
 
-                            let create_user = $("<span>").text(re_list[i].create_user);
-                            let content = $("<div>").text(re_list[i].content);
+                            let replyUpperDiv = $('<div>').addClass('replyUpper');
 
-                            if (re_list[i].reply_parent_reg_num != null) {
-                                reply.addClass("childReply");
-                                create_user.html("<img width='10px' style='margin-right: 7px;'" +
-								"src='${path}/images/re_reply.png'"+ ">" + create_user.text());
-                                create_user.css("padding-left", (re_list[i].reply_parent_reg_num * 18) + "px");
-                                content.css("padding-left", (re_list[i].reply_parent_reg_num * 18) + "px");
-                            }
-
-                            let bigDiv = $("<div>");
-                            let smallDiv = $("<div>");
-                            let childReplyBtnSpan = $("<span>").addClass("insertChildReply");
-                            let link = $("<a>").prop("href", "javascript:showChildReplyForm(" + re_list[i].reply_reg_num + ")").text("답글");
+                            let userInfoDiv = $("<div>").addClass("userInfo");
+                            let userProfileDiv = $("<div>").addClass("userProfile");
+                            let userNickNameDiv = $("<div>").addClass("userNickName");
+                            let userIdDiv = $("<div>").addClass("create_user").attr("id", re_list[i].create_user).text(re_list[i].create_user);
 
                             let date = new Date(re_list[i].create_date);
                             let formattedDate = new Date(date + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '');
                             //3240 * 10000 milliseconds === 9h
 
-                            let dateSpan = $("<span>").text(formattedDate);
-                            let childReplyBtnImg = $("<img>").attr({
-                                src: "${path}/images/trade/insertChildReplyBtn.png",
-                                width: "30px"
-                            });
+                            let createDateDiv = $("<div>").addClass("create_date").text(formattedDate);
 
-                            childReplyBtnSpan.append(childReplyBtnImg, link);
-                            smallDiv.append(dateSpan, childReplyBtnSpan);
-                            bigDiv.append(create_user, smallDiv);
-                            reply.append(bigDiv, content);
+                            userInfoDiv.append(userProfileDiv);
+                            userInfoDiv.append(userNickNameDiv);
+                            userInfoDiv.append(userIdDiv);
+                            userInfoDiv.append(createDateDiv);
+                            replyUpperDiv.append(userInfoDiv);
+
+                            let replyContent = $('<div>').addClass('replyContent').text(re_list[i].content);
+
+                            let replySubDiv = $('<div>').addClass('replySub');
+                            let leftDiv = $('<div>').addClass('left');
+                            let leftButtonDiv = $('<div>').addClass('button');
+                            //에러날 수 있는 곳
+                            let childInsertLink = $('<a>').addClass('editReply').prop("href", "javascript:showChildReplyForm(" + re_list[i].reply_reg_num + ")");
+                            let childReplyImg = $("<img>").attr({
+                                src : "${path}/images/reply_arrow.png",
+                                width : "15px"
+                            });
+                            childInsertLink.append(childReplyImg);
+                            leftButtonDiv.append(childInsertLink);
+                            leftDiv.append(leftButtonDiv);
+
+                            let rightDiv = $('<div>').addClass('right');
+                            let rightButtonDiv = $('<div>').addClass('button');
+                            //에러날 수 있는 곳
+                            let replyEditLink= $('<a>').addClass('insertChildReply').prop("href", "javascript:showChildReplyForm(" + re_list[i].reply_reg_num + ")");
+
+                            let replyEditImg = $("<img>").attr({
+                                src : "${path}/images/trade/changeBtn.png",
+                                width : "30px"
+                            });
+                            replyEditLink.append(replyEditImg);
+                            rightButtonDiv.append(replyEditLink);
+                            rightDiv.append(rightButtonDiv);
+
+                            replySubDiv.append(leftDiv);
+                            replySubDiv.append(rightDiv);
+
+                            reply.append(replyUpperDiv);
+                            reply.append(replyContent);
+                            reply.append(replySubDiv);
+
+                            <%--//대댓글 들여쓰기--%>
+                            <%--if (re_list[i].reply_parent_reg_num > 1) {--%>
+                            <%--    reply.addClass("childReply");--%>
+                            <%--    create_user.html("<img width='10px' style='margin-right: 7px;'" +--%>
+                            <%--        "src='${path}/images/re_reply.png'" + ">" + create_user.text());--%>
+                            <%--    create_user.css("padding-left", (re_list[i].reply_parent_reg_num * 18) + "px");--%>
+                            <%--    content.css("padding-left", (re_list[i].reply_parent_reg_num * 18) + "px");--%>
+                            <%--}--%>
+
 
                             replyList.append(reply);
                         }
@@ -142,6 +174,17 @@
             childCommentForm.append(textArea, input, button);
             $("#" + reply_reg_num).append(childCommentForm);
         }
+
+        //댓글 수정
+        function editChildReplyForm(reply_reg_num) {
+            $("form[class='childReplyForm']").remove();
+
+            let childCommentForm = $("<form>").addClass("childCommentForm")
+                .attr({
+                    name: "childCommentForm",
+                    action: "${path}/tbComment/childCommentInsert.do"
+                });
+        }
     </script>
 </head>
 <body>
@@ -152,50 +195,46 @@
     <main>
         <div id="contentsHeader">
             <h2>게시물 보기</h2>
-            <div class="viewPostBtnContainer">
-                <a role="button" href="${path}/tboard/list.do" id="btnList"><img src="${path}/images/trade/listBtn.png"
-                                                                                 alt="목록버튼"></a>
-                <a role="button" href="#" id="btnChange"><img src="${path}/images/trade/changeReplyBtn.png" alt=""></a>
+        </div>
+        <div class="listAndEdit">
+            <div class="left">
+                <div class="button"><a href="${path}/tboard/list.do"><img src="${path}/images/trade/listBtn.png"></a>
+                </div>
+            </div>
+            <div class="right">
+                <div class="button"><a class="btnChange"><img src="${path}/images/trade/changeBtn.png}"></a></div>
             </div>
         </div>
         <div id="contentsMain">
-            <form name="btnChange" action="" method="post">
-                <input type="hidden" name="tb_num" value="${dto.tb_num}">
-            </form>
             <section class="imgSection">
                 <div class="imgController">
                     <div class="moveImgLeft">
-                        <a href="#"><img src="${path}/images/trade/moveToLeftImgBtn.png"></a>
+                        <a id="slideLeftBtn"><img src="${path}/images/trade/moveToLeftImgBtn.png"></a>
                     </div>
                     <div class="imgCarousel">
                         <div class="innerImg">
-                            <img src="${path}/images/trade/pig_012.jpg" alt="">
-                        </div>
-                        <div class="innerImg">
-                            <img src="${path}/images/trade/pig_029.jpg" alt="">
-                        </div>
-                        <div class="innerImg">
-                            <img src="${path}/images/trade/pig_045.jpg" alt="">
                         </div>
                     </div>
                     <div class="moveImgRight">
-                        <a href="#"><img src="${path}/images/trade/moveToRightImgBtn.png"></a>
+                        <a id="slideRightBtn"><img src="${path}/images/trade/moveToRightImgBtn.png"></a>
                     </div>
                 </div>
-                <div class="imgSlideNav">
-                    이미지 슬라이드바 영역
-                </div>
+                <nav class="imgSlideNav">
+                    <ul>
+                        <li class="imgList"></li>
+                    </ul>
+                </nav>
             </section>
             <section class="titleSection">
                 <div class="userInfo">
                     <ul>
                         <li>
-                            <a href="#"><img src="${path}/images/trade/defaultProfile.png" alt="유저 프로필 사진"></a>
+                            <a class="userProfile"><img src="${path}/images/trade/defaultProfile.png" alt="유저 프로필 사진"></a>
                         </li>
                         <li>
-                            <a href="#">유저 닉네임(${dto.create_user})</a>
+                            <a class="userNickName">유저 닉네임(${dto.create_user})</a>
                         </li>
-                        <li>거래 장소</li>
+                        <li>거래장소</li>
                     </ul>
                 </div>
                 <div id="titleContainer">
@@ -203,7 +242,7 @@
                         <li>
                             <c:choose>
                                 <c:when test="${dto.category == 's'}">
-                                    <img alt="판매" v src="${path}/images/trade/sell.png">
+                                    <img alt="판매" src="${path}/images/trade/sell.png">
                                 </c:when>
                                 <c:when test="${dto.category == 'b'}">
                                     <img alt="구매" src="${path}/images/trade/buy.png">
@@ -237,11 +276,12 @@
                 <div id="descriptionSub">
                     <ul>
                         <li>
-                            <a href=".replyList"><img src="${path}/images/trade/uncheckedHeart.png" alt="관심등록"></a>관심 count
+                            <a href=".replyList"><img src="${path}/images/trade/uncheckedHeart.png" alt="관심등록"></a>관심
+                            count
                         </li>
                         <li>조회수 : ${dto.view_count}</li>
                         <li>
-                            댓글[<span id="countReplies">]</span>
+                            댓글[<span id="countReplies"></span>]
                         </li>
                     </ul>
                 </div>
@@ -256,21 +296,26 @@
                 <div class="moreOtherItem"></div>
             </section>
             <section class="replySection">
-                <form name="replyFrom" action="${path}/tbComment/insert.do">
+                <div id="replyList"></div>
+                <form name="replyFrom">
                     <input type="hidden" name="tb_num" value="${dto.tb_num}">
                     <textarea name="content" id="replyContent" cols="30" rows="10"></textarea>
-                    <button type="button" id="replyInsert"><img src="${path}/images/trade/insertReplyBtn.png"></button>
+                    <div class="button"><a id="btnCommentInsert"><img src="${path}/images/trade/insertReplyBtn.png"></a>
+                    </div>
                 </form>
-                <div id="replyList"></div>
 
-                <form name="childReplyForm" action="${path}/tbComment/insertChild.do">
-                    <input type="hidden" name="parent_reply_reg_num" value="">
-                    <textarea name="content" id="ChildReplyContent" cols="30" rows="10"></textarea>
-                    <button type="button" id="ChildReplyInsert"><img src="${path}/images/trade/insertChildReplyBtn.png"></button>
-                </form>
-                <a href="#" role="button" onclick="showChildForm()"><img
-                        src="${path}/images/trade/insertChildReplyBtn.png" alt="대댓글 등록버튼"></a>
             </section>
+
+            <div class="listAndEdit">
+                <div class="left">
+                    <div class="button"><a href="${path}/tboard/list.do"><img
+                            src="${path}/images/trade/listBtn.png"></a></div>
+                </div>
+                <div class="right">
+                    <div class="button"><a href="${path}/tboard/change.do"><img
+                            src="${path}/images/trade/changeBtn.png}" alt=""></a></div>
+                </div>
+            </div>
         </div>
     </main>
 </div>
