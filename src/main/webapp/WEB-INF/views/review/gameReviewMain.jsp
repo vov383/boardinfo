@@ -414,7 +414,7 @@
     <%--본문--%>
     <form name="reviewlist" method="post" action="${path}/review/reviewlist.do">
       <table style="table-layout:fixed;">
-        <tr><!-- 첫번째 줄 시작 -->
+        <tr>
           <th style="width: 200px;">카테고리</th>
           <th style="width: 200px;">&#x1f495</th> <%--좋아요--%>
           <th style="width: 200px;">제목</th>
@@ -438,6 +438,9 @@
             <td style="width: 200px; text-align: center;">${vo.views}</td>
             <td style="width: 200px; text-align: center;">/댓글 연결 예정/</td>
             <td style="width: 200px; text-align: center;">${vo.gametitle}</td>
+
+
+
 
           </tr>
         </c:forEach>
