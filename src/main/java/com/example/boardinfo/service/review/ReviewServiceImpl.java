@@ -53,7 +53,15 @@ public class ReviewServiceImpl implements ReviewService {
 		System.out.println("testtesttesttesttesttesttesttesttesttest");
 */
 
-		reviewDAO.reviewCreate(reviewDTO);
+		if (null == reviewDTO.getRegNum()){
+			reviewDAO.reviewCreate(reviewDTO);
+		} else {
+			reviewDAO.reviewUpdate(reviewDTO);
+		}
+
+
+
+
 	}
 
 	//리뷰 수정

@@ -354,23 +354,27 @@
       document.reviewSearch.submit();
     }
 
-    /*리뷰 디테일 진입*/
+    /*리뷰 글쓰기 진입*/
+    function reviewInsert(regNum) {
+      /*alert("버튼 잘 눌리는지 테스트")*/
+      location.href="${path}/review/reviewInsert.do";
+    }
+
+
+
+    /*리뷰 디테일 진입, 조회수 증가*/
     function reviewDetail(regNum) {
       $("#reviewDetailKey").val(regNum);
       /*alert($("#reviewDetailKey").val());*/
       document.reviewDetail.submit();
     }
 
-    // 리뷰 디테일 조회수 증가
-    function reviewViews(regNum){
-      $("#reviewDetailKey").val(regNum);
-      /*alert($("#reviewDetailKey").val());*/
-      /*alert("클릭 테스트");*/
-      document.formReviewEdit.submit();
-    }
 
 
   </script>
+
+
+
 
 
 </head>
@@ -399,11 +403,13 @@
   </div>
   <div id="contentsMain">
 
-    <%--검색--%>
+    <%--검색 및 글쓰기 버튼--%>
     <div class="searchBox">
       <input type="text" id="searchTitle" placeholder="제목 및 내용을 검색하세요.">
       <button type="button" id="search" onclick="searchFu()">검색</button>
+      <button type="button" onclick="reviewInsert()">글쓰기</button>
     </div>
+
 
     <%--본문--%>
     <form name="reviewlist" method="post" action="${path}/review/reviewlist.do">
@@ -437,6 +443,8 @@
         </c:forEach>
       </table>
     </form>
+
+
 
 
   </div>

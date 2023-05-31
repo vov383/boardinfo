@@ -353,6 +353,14 @@
             document.formReviewEdit.submit();
         }
 
+        // 삭제
+        function reviewDel(regNum){
+            $("#reviewDelKey").val(regNum);
+            /*alert($("#reviewDetailKey").val());*/
+            /*alert("클릭 테스트");*/
+            document.formreviewdel.submit();
+        }
+
 
     </script>
 
@@ -362,8 +370,12 @@
 <body>
 <%@include file="../include/top.jsp" %>
 
-<form name="formReviewEdit" method="post" action="${path}/review/reviewedit.do">
+<form name="formReviewEdit" method="post" action="${path}/review/reviewInsert.do">
     <input type="hidden" name="reviewDetailKey" id="reviewDetailKey">
+</form>
+
+<form name="formreviewdel" method="post" action="${path}/review/reviewdelsave.do">
+    <input type="hidden" name="reviewDetailKey" id="reviewDelKey">
 </form>
 
 <div id="contents">
@@ -420,9 +432,10 @@
                     <td>${vo.reviewDetail}</td>
                 </tr>
             </table>
-                <button type="button" onclick="btnReply()">답변</button>
-                <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정/삭제</button>
                 <button type="button" onclick="btnList()">목록</button>
+                <button type="button" onclick ="reviewDel('${vo.regNum}')">삭제</button>
+                <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정</button>
+                <button type="button" onclick="btnReply()">답변</button>
 
                 </c:forEach>
         </form>
