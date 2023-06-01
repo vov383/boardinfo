@@ -14,10 +14,26 @@ public class LoginInterceptor extends HandlerInterceptorAdapter{
 		HttpSession session=request.getSession();
 		//세션이 없으면
 		if(session.getAttribute("userid")==null) {
-			response.sendRedirect(request.getContextPath()+"/member/member_login.do?message=nologin");
-			return false; //메인 액션으로 가지 않음
-		}else {//정상로그인하면 
+			if(isAjaxRequest(request)){
+				response.sendError(999);
+				return false;
+			}
+			else{
+				response.sendRedirect(request.getContextPath()+"/member/member_login.do?message=nologin");
+				return false; //메인 액션으로 가지 않음
+			}
+
+		}else {//정상로그인하면
 			return true; //메인 액션으로 이동
+		}
+	}
+
+	private boolean isAjaxRequest(HttpServletRequest req) {
+		String header = req.getHeader("x-requested-with");
+		if ("XMLHttpRequest".equals(header)){
+			return true;
+		}else{
+			return false;
 		}
 	}
 	
