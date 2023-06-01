@@ -1,58 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
 <mapper namespace="tbComment">
-	<select id="getCommentList" resultType="tbCommentDto">
-		select * from tb_comments
-		where tb_num = #{tb_num}
-		order by create_date desc
-	</select>
-	
-	<select id="commentCount">
-		select count(*) from tb_comments
-		where tb_num = #{tb_num}
-	</select>
+    <select id="getCommentList" resultType="tbCommentDto">
+        select *
+        from tb_comments
+        where tb_num = #{tb_num}
+        order by create_date desc
+    </select>
 
-	<!-- 댓글C -->
-	<insert id="insertComment">
-		insert into tb_comments 
-			(reply_reg_num, tb_num,
-			content, create_user) 
-		values
-			(seq_tb_comments.nextval, #{tb_num}, #{content}, #{create_user})
-	</insert>
+    <!-- Post replyCount -->
+    <select id="replyCount">
+        select count(*)
+        from tb_comments
+        where tb_num = #{tb_num}
+    </select>
 
-	<!-- 댓글R (dto 반환함) -->
-	<select id="getComment" resultType="tbCommentDto">
-		select * from tb_comments
-		where reply_reg_num = #{reply_reg_num}
-	</select>
-	<!-- 댓글U -->
-	<update id="updateComment">
-		update tb_comments set content = #{content},
-		   	update_date = sysdate, update_user = #{create_user}
-		where reply_reg_num = #{reply_reg_num}
-	</update>
+    <!-- 댓글들을 ArrayList (dto 반환함) -->
+    <select id="getReplyList" resultType="tbCommentDto">
+        select reply_reg_num, parent_reply, inner_order, depth, content,
+               create_user, create_date as create_date
+        from tb_comments
+        where tb_num = #{tb_num}
+        order by parent_reply, inner_order
+    </select>
 
-	<!-- 댓글D -->
-	<delete id="deleteComment">
-		update tb_comments set del = 'Y',
-			update_date = sysdate, update_user = #{update_user}
-		where reply_reg_num = #{reply_reg_num}
-	</delete>
+    <select id="getMotherDto" resultType="tbCommentDto">
+        select reply_reg_num, parent_reply, depth, inner_order
+        from tb_comments
+        where reply_reg_num = #{mother_reply}
+    </select>
 
-	<!-- 대댓글C -->
-	<insert id="insertChildComment">
-		insert into tb_comments
-		(reply_reg_num, reply_parent_reg_num, tb_num,
-		 content, create_user)
-		values
-			(seq_tb_comments.nextval, #{reply_reg_num},
-			 #{tb_num}, #{content}, #{create_user})
-	</insert>
+    <!-- re_dto 객체 반환 -->
+    <select id="getReplyObject" resultType="tbCommentDto">
+        select reply_reg_num, parent_reply, depth, inner_order
+        from tb_comments
+        where reply_reg_num = #{reply_reg_num}
+    </select>
+
+    <!-- 댓글 순서 -->
+    <select id="getTargetReplyOrder" resultType="int">
+        select nvl(
+                       (select min(inner_order)
+                        from tb_comments
+                        where parent_reply = #{parent_reply}
+                          and depth <![CDATA[<]]>= #{depth}
+                          and inner_order <![CDATA[>]]> #{inner_order})
+                   ,
+                       (select max(inner_order) + 1
+                        from tb_comments
+                        where parent_reply = #{parent_reply})
+                   )
+        from dual
+    </select>
+
+    <!--  -->
+    <select id="getLast" resultType="int">
+        select count(*)
+        from tb_comments
+        where tb_num = #{tb_num}
+    </select>
+
+    <!-- 댓글C -->
+    <insert id="insertReply">
+        insert into tb_comments
+        (reply_reg_num, tb_num, parent_reply, inner_order, depth, content, create_user)
+        values
+        (nvl((select max(reply_reg_num) from tb_comments)+1, 1), #{tb_num},
+        <choose>
+            <when test="parent_reply == null">
+                nvl((select max(reply_reg_num) from tb_comments)+1,1)
+            </when>
+            <otherwise>
+                #{parent_reply}
+            </otherwise>
+        </choose>
+        , #{inner_order}, #{depth}, #{content}, #{create_user})
+    </insert>
+
+    <!--  -->
+    <update id="replyOrderUpdate">
+        update tb_comments
+        set inner_order = inner_order + 1
+        where parent_reply = #{parent_reply}
+          and inner_order >= (#{inner_order})
+    </update>
+
+    <!-- 댓글U -->
+    <update id="updateComment">
+        update tb_comments
+        set content     = #{content},
+            update_date = sysdate,
+            update_user = #{create_user}
+        where reply_reg_num = #{reply_reg_num}
+    </update>
+
+    <!-- 댓글D -->
+    <delete id="deleteComment">
+        update tb_comments
+        set del         = 'Y',
+            update_date = sysdate,
+            update_user = #{update_user}
+        where reply_reg_num = #{reply_reg_num}
+    </delete>
+
+
+
+
+
+
+
+
 </mapper>
 
 

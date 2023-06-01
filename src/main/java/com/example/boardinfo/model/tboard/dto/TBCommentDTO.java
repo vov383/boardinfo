@@ -4,7 +4,8 @@ import java.util.Date;
 
 public class TBCommentDTO {
 	private int reply_reg_num;
-    private int reply_parent_reg_num;
+
+	private Integer parent_reply;
     private int tb_num;
     private String content;
     private String del;
@@ -12,19 +13,19 @@ public class TBCommentDTO {
     private Date create_date;
     private String update_user;
     private Date update_date;
-	
-    //getter, setter
-    public int getReply_reg_num() {
+
+	private int depth;
+	private int inner_order;
+	private Integer mother_reply;
+
+
+	//getter, setter
+	public int getReply_reg_num() {
 		return reply_reg_num;
 	}
+
 	public void setReply_reg_num(int reply_reg_num) {
 		this.reply_reg_num = reply_reg_num;
-	}
-	public int getReply_parent_reg_num() {
-		return reply_parent_reg_num;
-	}
-	public void setReply_parent_reg_num(int reply_parent_reg_num) {
-		this.reply_parent_reg_num = reply_parent_reg_num;
 	}
 	public int getTb_num() {
 		return tb_num;
@@ -68,12 +69,53 @@ public class TBCommentDTO {
 	public void setUpdate_date(Date update_date) {
 		this.update_date = update_date;
 	}
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
+
+	public int getInner_order() {
+		return inner_order;
+	}
+
+	public void setInner_order(int inner_order) {
+		this.inner_order = inner_order;
+	}
+
+	public Integer getMother_reply() {
+		return mother_reply;
+	}
+
+	public void setMother_reply(Integer mother_reply) {
+		this.mother_reply = mother_reply;
+	}
+
+	public Integer getParent_reply() {
+		return parent_reply;
+	}
+
+	public void setParent_reply(Integer parent_reply) {
+		this.parent_reply = parent_reply;
+	}
+
 	@Override
 	public String toString() {
-		return "TBCommentsDTO [reply_reg_num=" + reply_reg_num + ", reply_parent_reg_num=" + reply_parent_reg_num
-				+ ", tb_num=" + tb_num + ", content=" + content + ", del=" + del + ", create_user=" + create_user
-				+ ", create_date=" + create_date + ", update_user=" + update_user + ", update_date=" + update_date
-				+ "]";
+		return "TBCommentDTO{" +
+				"reply_reg_num=" + reply_reg_num +
+				", parent_reply=" + parent_reply +
+				", tb_num=" + tb_num +
+				", content='" + content + '\'' +
+				", del='" + del + '\'' +
+				", create_user='" + create_user + '\'' +
+				", create_date=" + create_date +
+				", update_user='" + update_user + '\'' +
+				", update_date=" + update_date +
+				", depth=" + depth +
+				", inner_order=" + inner_order +
+				", mother_reply=" + mother_reply +
+				'}';
 	}
-    
 }
