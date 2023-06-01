@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <%@ include file="../include/js/header.jsp" %>
     <title>게임 리뷰 작성</title>
 
 

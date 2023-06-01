@@ -124,21 +124,6 @@
                 box-shadow: 5px 10px 10px 1px rgba(0,0,0,.3);
             }
 
-            .popup-head{
-                width:100%;
-            /*부모요소를 따라가기 때문에 굳이 가로값을 주지 않아도 되지만 일부 ie에서 인식 못하는 문제가 있음*/
-                height:50px;
-            /*헤드 영역 높이*/
-                display:flex;
-            /*로고 이미지나 텍스트를 중앙 정렬하기 위한 flex 및 정렬*/
-                align-items:center;
-                justify-content:center;
-            }
-
-            .head-title {
-                color: white;
-            }
-
             .popup-body{
             /*몸통*/
             width:100%;
@@ -151,15 +136,6 @@
                 padding:30px;
             /*좌우에 내용이 붙으면 보기 안좋기 때문에 간격 띄움*/
             }
-            .body-titlebox{
-            /*컨텐츠 타이틀 영역*/
-                text-align:center;
-            /*제목 중앙정렬*/
-                width:100%;
-                height:40px;
-                margin-bottom:10px;
-            /*내용과 간격 조정*/
-            }
             .body-contentbox{
             /*컨텐츠 내용 영역*/
                 word-break:break-word;
@@ -168,38 +144,127 @@
             /*내부요소가 지정한 세로 값보다 클 경우 스크롤 생성*/
                 min-height:100px;
             /*최소 높이*/
-                max-height:200px;
+                max-height:60vw;
             /*최대 높이*/
             }
 
-            .popup-foot{
-            /*다리*/
-                width:100%;
-                height:50px;
+            /*모달 내용 관련*/
+            #bigFrame{
+                margin: auto;
+                width: 650px;
+                height: 850px;
+                border: 1px solid black;
+                padding: 60px;
+                display: flex;
+                flex-direction: column;
             }
-            .pop-btn{
-            /*각각의 버튼*/
-                display:inline-flex;
-            /*한줄로 나열하기 위한 inline속성과 flex속성 혼합*/
-                width:50%;
-            /*2개 버튼 각각 50% 영역*/
-                height:100%;
-            /*50px*/
-                justify-content:center;
-            /*수평정렬*/
-                align-items:center;
-            /*수직정렬*/
-                float:left;
-            /*좌측배치*/
-                color:#ffffff;
-            /*글자색*/
-                cursor:pointer;
-            /*마우스 포인터 효과*/
+
+            .labelAndStars{
+                display: flex;
+                align-items: center;
+                margin-bottom: 30px;
             }
-            .pop-btn.confirm{
-            /*확인버튼*/
-                border-right:1px solid #1432B1;
-            /*오른쪽 줄*/
+
+            #labelR{
+                width: 155px;
+            }
+
+            #labelW{
+                width: 135px;
+            }
+
+            .ratingStar, .weightStar{
+                cursor: pointer;
+            }
+
+            .star{
+                position: relative;
+            }
+
+            .star img:nth-child(3){
+                width: 60px;
+            }
+
+            .halfStar{
+                position: absolute;
+                width: 30px;
+                opacity: 0;
+                z-index: 2;
+                -webkit-user-drag: none;
+            }
+
+            .fullStar{
+                position: absolute;
+                width: 60px;
+                opacity: 0;
+                z-index: 1;
+                -webkit-user-drag: none;
+            }
+
+            #hollow{
+                opacity: 100%;
+                width: 20px;
+                height: 100%;
+            }
+
+
+            .columnFlex{
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 30px;
+            }
+
+            .columnFlex > span{
+                margin-bottom: 10px;
+            }
+
+            #ratingPeopleTable{
+                border-collapse: collapse;
+            }
+
+
+            #ratingPeopleTable th, #ratingPeopleTable td{
+                height: 30px;
+            }
+
+            #ratingPeopleTable td:first-of-type{
+                padding-left: 20px;
+            }
+
+            #ratingPeopleTable td:not(#ratingPeopleTable td:first-of-type){
+                text-align: center;
+            }
+
+            #ratingPeopleTable tr:nth-child(2n){
+                background-color: #F7F7F8;
+            }
+
+            .columnFlex textarea{
+                resize: none;
+                height: 180px;
+                padding: 10px;
+            }
+
+            #bigFrame > div:last-of-type{
+                text-align: center;
+            }
+
+            #bigFrame > div:last-of-type > button{
+                width: 140px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            #submitBtn{
+                background-color: #1432B1;
+                color: white;
+                border: none;
+                margin-right: 30px;
+            }
+
+            #cancelBtn{
+                background-color: white;
+                border: 1px solid black;
             }
         </style>
    </head>
@@ -423,24 +488,139 @@
    <div class="container">
        <div class="popup-wrap" id="popup">
            <div class="popup">
-               <div class="popup-head">
-                   <span class="head-title">글 작성</span>
-               </div>
+
 
                <div class="popup-body">
                    <div class="body-content">
-                       <div class="body-titlebox">
-                           <h2>평점</h2>
-                       </div>
                        <div class="body-contentbox">
-                           <p> 글쓰기 </p>
+
+        <%--여기부터 모달 내용--%>
+                           <div id="bigFrame">
+                               <div class="labelAndStars">
+                                   <span id="labelR">내 평점 (필수)</span>
+                                   <div>
+          <span class="star">
+              <img src="../include/half_star.png" data-value="0.5" class="ratingStar halfStar">
+              <img src="../include/yellow_star.png" data-value="1" class="ratingStar fullStar" style="opacity: 100">
+              <img src="../include/empty_star.png">
+          </span>
+                                       <span  class="star">
+              <img src="../include/half_star.png" data-value="1.5" class="ratingStar halfStar">
+              <img src="../include/yellow_star.png" data-value="2" class="ratingStar fullStar" style="opacity: 100">
+              <img src="../include/empty_star.png">
+          </span>
+                                       <span  class="star">
+              <img src="../include/half_star.png" data-value="2.5" class="ratingStar halfStar">
+              <img src="../include/yellow_star.png" data-value="3" class="ratingStar fullStar" style="opacity: 100">
+              <img src="../include/empty_star.png">
+          </span>
+                                       <span  class="star">
+              <img src="../include/half_star.png" data-value="3.5" class="ratingStar halfStar">
+              <img src="../include/yellow_star.png" data-value="4" class="ratingStar fullStar">
+              <img src="../include/empty_star.png">
+          </span>
+                                       <span  class="star">
+              <img src="../include/half_star.png" data-value="4.5" class="ratingStar halfStar">
+              <img src="../include/yellow_star.png" data-value="5" class="ratingStar fullStar">
+              <img src="../include/empty_star.png">
+          </span>
+                                       <input type="hidden" name="rating" value="3">
+                                   </div>
+                               </div>
+                               <div class="labelAndStars">
+                                   <span id="labelW">난이도 (선택)</span>
+                                   <span class="weightStar" id="hollow" data-value="0">
+              &nbsp
+          </span>
+                                   <div>
+          <span class="star">
+              <img src="../include/half_star_b.png" data-value="0.5" class="weightStar halfStar">
+              <img src="../include/blue_star.png" data-value="1" class="weightStar fullStar">
+              <img src="../include/empty_star.png">
+          </span>
+                                       <span class="star">
+              <img src="../include/half_star_b.png" data-value="1.5" class="weightStar halfStar">
+              <img src="../include/blue_star.png" data-value="2" class="weightStar fullStar">
+              <img src="../include/empty_star.png">
+          </span>
+                                       <span class="star">
+              <img src="../include/half_star_b.png" data-value="2.5" class="weightStar halfStar">
+              <img src="../include/blue_star.png" data-value="3" class="weightStar fullStar">
+              <img src="../include/empty_star.png">
+          </span>
+                                       <span class="star">
+              <img src="../include/half_star_b.png" data-value="3.5" class="weightStar halfStar">
+              <img src="../include/blue_star.png" data-value="4" class="weightStar fullStar">
+              <img src="../include/empty_star.png">
+          </span>
+                                       <span class="star">
+              <img src="../include/half_star_b.png" data-value="4.5" class="weightStar halfStar">
+              <img src="../include/blue_star.png" data-value="5" class="weightStar fullStar">
+              <img src="../include/empty_star.png">
+          </span>
+                                       <input type="hidden" name="weight" value="">
+                                   </div>
+                               </div>
+                               <div class="columnFlex">
+                                   <span>추천인원 (선택)</span>
+                                   <table id="ratingPeopleTable">
+                                       <tr><th></th><th>베스트</th><th>추천</th><th>비추천</th><th>응답없음</th></tr>
+                                       <tr>
+                                           <td>1</td>
+                                           <td><input name="participate1" value="1" type="radio"></td>
+                                           <td><input name="participate1" value="2" type="radio"></td>
+                                           <td><input name="participate1" value="3" type="radio"></td>
+                                           <td><input name="participate1" type="radio" checked></td>
+                                       </tr>
+                                       <tr>
+                                           <td>2</td>
+                                           <td><input name="participate2" value="1" type="radio"></td>
+                                           <td><input name="participate2" value="2" type="radio"></td>
+                                           <td><input name="participate2" value="3" type="radio"></td>
+                                           <td><input name="participate2" type="radio" checked></td>
+                                       </tr>
+                                       <tr>
+                                           <td>3</td>
+                                           <td><input name="participate3" value="1" type="radio"></td>
+                                           <td><input name="participate3" value="2" type="radio"></td>
+                                           <td><input name="participate3" value="3" type="radio"></td>
+                                           <td><input name="participate3" type="radio" checked></td>
+                                       </tr>
+                                       <tr>
+                                           <td>4</td>
+                                           <td><input name="participate4" value="1" type="radio"></td>
+                                           <td><input name="participate4" value="2" type="radio"></td>
+                                           <td><input name="participate4" value="3" type="radio"></td>
+                                           <td><input name="participate4" type="radio" checked></td>
+                                       </tr>
+                                       <tr>
+                                           <td>5인 이상</td>
+                                           <td><input name="participate5" value="1" type="radio"></td>
+                                           <td><input name="participate5" value="2" type="radio"></td>
+                                           <td><input name="participate5" value="3" type="radio"></td>
+                                           <td><input name="participate5" type="radio" checked></td>
+                                       </tr>
+                                       </tr>
+                                   </table>
+                               </div>
+                               <div class="columnFlex">
+                                   <span>코멘트 (선택)</span>
+                                   <textarea name="comment"></textarea>
+                               </div>
+                               <div><button type="button" id="submitBtn">작성 완료</button><button type="button" id="cancelBtn">작성 취소</button></div>
+
+                           </div>
+                           <%--여기까지 모달 내용--%>
+
+
+
+
                        </div>
                    </div>
                </div>
-               <div class="popup-foot">
-                   <span class="pop-btn confirm" id="confirm">확인</span>
-                   <span class="pop-btn close" id="close">창 닫기</span>
-               </div>
+
+
+
            </div>
        </div>
    </div>
@@ -509,6 +689,120 @@
                $("#popup").fadeOut(); //페이드아웃 효과
            }
        });
+   </script>
+
+<%-- 모달의 내용관련  --%>
+   <script>
+
+       let rValue = "";
+       let wValue = "";
+
+       $(function(){
+
+           $(".ratingStar").mouseover(function(){
+
+               rValue = $("input[name='rating']").val();
+
+               let stars = $(".ratingStar");
+               let rStar = $(this).data('value');
+
+               $.each(stars, function(){
+
+                   if($(this).data('value') > rStar){
+                       $(this).css('opacity', 0);
+                   }
+                   else{
+                       $(this).css('opacity', 100);
+                   }
+               });
+           });
+
+
+           $(".weightStar").mouseover(function(){
+
+               wValue = $("input[name='weight']").val();
+
+               let stars = $(".weightStar");
+               let wStar = $(this).data('value');
+
+               $.each(stars, function(){
+                   if($(this).data('value') > wStar){
+                       $(this).css('opacity', 0);
+                   }
+                   else{
+                       $(this).css('opacity', 100);
+                   }
+               });
+           });
+
+
+           $(".ratingStar").click(function() {
+               let stars = $(".ratingStar");
+               let rStar = $(this).data('value');
+
+               $.each(stars, function () {
+                   if ($(this).data('value') > rStar) {
+                       $(this).css('opacity', 0);
+                   } else {
+                       $(this).css('opacity', 100);
+                   }
+
+               });
+
+               $("input[name='rating']").val(rStar);
+               rValue = rStar;
+
+           });
+
+           $(".weightStar").click(function() {
+               let stars = $(".weightStar");
+               let wStar = $(this).data('value');
+
+               $.each(stars, function () {
+                   if ($(this).data('value') > wStar) {
+                       $(this).css('opacity', 0);
+                   } else {
+                       $(this).css('opacity', 100);
+                   }
+
+               });
+
+               $("input[name='weight']").val(wStar);
+               wValue = wStar;
+
+           });
+
+
+
+           $(".ratingStar").mouseout(function() {
+               let stars = $(".ratingStar");
+
+               $.each(stars, function () {
+                   if ($(this).data('value') > rValue) {
+                       $(this).css('opacity', 0);
+                   } else {
+                       $(this).css('opacity', 100);
+                   }
+               });
+           });
+
+
+           $(".weightStar").mouseout(function() {
+               let stars = $(".weightStar");
+
+               $.each(stars, function () {
+                   if ($(this).data('value') > wValue) {
+                       $(this).css('opacity', 0);
+                   } else {
+                       $(this).css('opacity', 100);
+                   }
+               });
+           });
+
+
+
+       });
+
    </script>
 
     </body>
