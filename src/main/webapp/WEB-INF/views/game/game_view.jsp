@@ -78,7 +78,7 @@
 				<td rowspan="10" id="td_photo">
 					<c:choose>
 						<c:when test="${map.dto.gamephoto_url != null}">
-							<img class="img_photo" src="${path}/resources/uploaded_game${map.dto.gamephoto_url}" width="250px" height="250px" border="1px">
+							<img class="img_photo" src="${path}/resources/uploaded_game${map.dto.gamephoto_url} " onerror="this.src='../images/game/no-image-icon.png'" width="250px" height="250px" border="1px">
 							<div>
 								<a href="#">등록된 이미지 보기</a>
 							</div>
