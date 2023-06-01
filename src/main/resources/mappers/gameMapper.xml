@@ -14,7 +14,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="gameList" resultType="gameDto">
 		select *
 		from (select a.*, rownum rn
+
 				from (select g.gnum,g.bggnum, g.gametitle, g.gametitle_eng, g.viewcount, g.release_year, ga.fullname gamephoto_url
+
 						from game g,
     		    			(select gnum, fullname
     		    			   from (select row_number() over(partition by gnum order by regdate desc) rnum, gnum, fullname
@@ -45,8 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="view" resultType="gameDto">
 	 	select g.gnum, exnum, renum, bggnum, gametitle, gametitle_eng, players,
-	 		   playtime, ages, language, release_year, bgg_game_score,
-	 		   bggrank, write_date, viewcount, ga.fullname gamephoto_url
+	 		   playtime, ages, language, release_year, write_date, viewcount, ga.fullname gamephoto_url
 		  from game g,
         	   (select gnum, fullname
                   from (select row_number() over(partition by gnum order by regdate desc) rnum, gnum, fullname
@@ -161,7 +162,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		  where rn between #{start} and #{end}
 	</select>
 
-
+	<update id="gameupdate">
+		update game
+		set gametitle=#{gametitle}, gametitle_eng=#{gametitle_eng}, players=#{players},
+			playtime=#{playtime}, exnum=#{exnum}, renum=#{renum}, ages=#{ages}, language=#{language},
+			bggnum=#{bggnum}, release_year=#{release_year}
+		where gnum=#{gnum}
+	</update>
 	
 </mapper>
 

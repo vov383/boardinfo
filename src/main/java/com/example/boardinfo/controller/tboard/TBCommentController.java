@@ -56,7 +56,9 @@ public class TBCommentController {
 		int tb_num = re_dto.getTb_num();
 		tboardService.increaseRecnt(tb_num);
 
+
 		return result;
+
 	}
 
 

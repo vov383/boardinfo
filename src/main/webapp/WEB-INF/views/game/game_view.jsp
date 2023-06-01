@@ -62,7 +62,12 @@
 				<th>평점자리(예정)</th>
 				<th>난이도자리(예정)</th>
 				<th>보드게임긱링크</th>
-				<th>수정하기버튼</th>
+				<th>
+					<form name="updateViewForm" method="post" action="${path}/game/updateView.do">
+						<input type="hidden" name="gnum" value="${map.dto.gnum}">
+					</form>
+					<input type="button" id="btnGameUpdate" value="수정하기">
+				</th>
 			</tr>
 
 			</thead>
@@ -73,7 +78,7 @@
 				<td rowspan="10" id="td_photo">
 					<c:choose>
 						<c:when test="${map.dto.gamephoto_url != null}">
-							<img class="img_photo" src="${path}/resources/uploaded_game${map.dto.gamephoto_url}" width="250px" height="250px" border="1px">
+							<img class="img_photo" src="${path}/resources/uploaded_game${map.dto.gamephoto_url} " onerror="this.src='../images/game/no-image-icon.png'" width="250px" height="250px" border="1px">
 							<div>
 								<a href="#">등록된 이미지 보기</a>
 							</div>
@@ -175,6 +180,14 @@
    <footer>
 	   <%@include file="../include/footer.jsp" %>
    </footer>
+
+   <script>
+	   	$(document).ready(function(){
+	   		$("#btnGameUpdate").click(function(){
+				document.updateViewForm.submit();
+			});
+	   	});
+   </script>
 
     </body>
     

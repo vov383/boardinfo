@@ -1,7 +1,9 @@
 package com.example.boardinfo.model.game.dao.artist;
 
 import java.sql.ClientInfoStatus;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -50,4 +52,17 @@ public class ArtistDAOImpl implements ArtistDAO {
 		return sqlSession.selectList("artist.view", gnum);
 	}
 
+	public int check_artist(String artist, int gnum){
+		Map<String, Object> map = new HashMap<>();
+		map.put("artist", artist);
+		map.put("gnum",gnum);
+		return sqlSession.selectOne("artist.updatecheck", map);
+	}
+
+	public void insert_artist_mapping(int gnum,int anum){
+		Map<String, Object> map = new HashMap<>();
+		map.put("anum", anum);
+		map.put("gnum",gnum);
+		sqlSession.insert("artist.insertmapping_update", map);
+	}
 }

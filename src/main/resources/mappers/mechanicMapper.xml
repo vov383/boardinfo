@@ -6,7 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
 <mapper namespace="mechanic">
 	<select id="check" resultType="int">
-		select count(*)
+		select nvl(max(mnum),0) mnum
 		from mechanic
 		where mechanic=#{mechanic}
 	</select>
@@ -37,12 +37,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="view" resultType="mechanicDto">
-		select m.mnum, m.mechanic
-		from mechanic m, game_mechanic gm
-		where m.mnum = gm.mnum and gm.gnum = #{gnum}
+			select m.mnum, m.mechanic
+			from mechanic m, game_mechanic gm
+			where m.mnum = gm.mnum and gm.gnum = #{gnum}
 	</select>
 
+	<select id="updatecheck" resultType="int">
+		select count(*)
+		from game_mechanic gm, mechanic m
+		where gm.mnum = m.mnum and gm.gnum = #{gnum} and m.mechanic = #{mechanic}
+	</select>
 
+	<insert id="insertmapping_update">
+		insert into game_mechanic
+		values (#{gnum},#{mnum})
+	</insert>
 
 </mapper>
 

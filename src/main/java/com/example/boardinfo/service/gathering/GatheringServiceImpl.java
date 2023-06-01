@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
+import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +22,12 @@ public class GatheringServiceImpl implements GatheringService {
 	@Inject GatheringDAO gatheringDao;
 	
 
+	@Transactional
 	@Override
-	public boolean addPost(GatheringDTO dto) {
-		int num = gatheringDao.addPost(dto);
-		boolean addCheck = false;
-		if(num == 1) addCheck = true; 
-		return addCheck;
+	public int addPost(GatheringDTO dto) {
+		int new_gathering_id = gatheringDao.addPost(dto);
+		gatheringDao.addAttendee(new AttendeeDTO(dto.getWriter_id(), new_gathering_id, AttendeeType.ATTENDING));
+		return new_gathering_id;
 	}
 
 	@Override
@@ -86,7 +88,6 @@ public class GatheringServiceImpl implements GatheringService {
 		else dto.setStatus("모집중");
 		
 		return dto;
-		
 	}
 
 
@@ -135,6 +136,7 @@ public class GatheringServiceImpl implements GatheringService {
 		if(num > 1) return true;
 		else return false;
 	}
+
 
 
 }

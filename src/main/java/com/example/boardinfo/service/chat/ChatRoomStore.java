@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import oracle.net.ns.Message;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -82,25 +83,44 @@ public class ChatRoomStore {
 	}
 
 
+	public void pushMessage(ChatMessageDTO chatMessage){
+		if(chatMessage.getType().equals(ChatMessageDTO.MessageType.ATTEND)) {
+			chatMessage.setMessage(chatMessage.getUserId() + "님이 입장하셨습니다.");
+		}
+		else if(chatMessage.getType().equals(ChatMessageDTO.MessageType.LEAVE)) {
+			chatMessage.setMessage(chatMessage.getUserId() + "님이 퇴장하셨습니다.");
+		}
+		chatMessage.setUserId("알림");
+		dao.insert(chatMessage);
+		try {
+			ChatRoom room = getChannelByGatheringId(chatMessage.getGathering_id());
+			if(room!=null) room.send(chatMessage);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
 	public void handleMessage(ChatRoom room, WebSocketSession session, ChatMessageDTO chatMessage) {
 		//채팅이 왔는데 OPEN타입이라면 세션+아이디 추가
 
-		//근데 우리는 입퇴장 메시지 필요없을듯 함 일단은 추가해보자
+		//근데 우리는 입퇴장 메시지 필요없을듯 함 나중에 접속여부 표시정도는 할 수 있을듯 일단은 추가해보자
 		if(chatMessage.getType().equals(ChatMessageDTO.MessageType.OPEN)) {
 			room.addSession(session, chatMessage.getUserId());
-			chatMessage.setMessage(chatMessage.getUserId() + "님이 입장하셨습니다.");
-			chatMessage.setUserId("알림");
+			//chatMessage.setMessage(chatMessage.getUserId() + "님이 입장하셨습니다.");
+			//chatMessage.setUserId("알림");
 		} else if(chatMessage.getType().equals(ChatMessageDTO.MessageType.CLOSE)) {
 			room.removeSession(session);
-			chatMessage.setMessage(chatMessage.getUserId() + "님이 퇴장하셨습니다.");
-			chatMessage.setUserId("알림");
-		} 
-		
-		dao.insert(chatMessage);
-		try {
-			room.send(chatMessage);
-		} catch (Exception e) {
-			e.printStackTrace();
+			//chatMessage.setMessage(chatMessage.getUserId() + "님이 퇴장하셨습니다.");
+			//chatMessage.setUserId("알림");
+		}
+		else{
+			dao.insert(chatMessage);
+			try {
+				room.send(chatMessage);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		
