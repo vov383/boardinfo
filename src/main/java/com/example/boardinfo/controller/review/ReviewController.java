@@ -40,21 +40,33 @@ public class ReviewController {
 	public ModelAndView revewDetail(@ModelAttribute reviewSerchDTO reviewserchDTO) {
 		ModelAndView mav = new ModelAndView();
 
+/*
 		System.out.println("testestestestest");
 		System.out.println("testestestestest");
 		System.out.println("testestestestest");
 		System.out.println("reviewserchDTO : " + reviewserchDTO.getReviewDetailKey());
+*/
 
 		mav.setViewName("review/reviewDetail");
 		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 		return mav;
 	}
 
-	// 리뷰 입력할 페이지
+	// 리뷰 입력 및 수정할 페이지
 	@RequestMapping("reviewInsert.do")
-	public String insert(@ModelAttribute ReviewDTO reviewDTO){
-		return "/review/ReviewInsert";
+	public ModelAndView insert(@ModelAttribute reviewSerchDTO reviewserchDTO){
+		/*첫 입력*/
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("review/ReviewInsert");
+
+		System.out.println("getReviewDetailKey : " + reviewserchDTO.getReviewDetailKey());
+		if (null == reviewserchDTO.getReviewDetailKey()) reviewserchDTO.setReviewDetailKey("1");
+
+		/*수정*/
+		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+		return mav;
 	}
+
 
 
 
@@ -108,18 +120,21 @@ public class ReviewController {
 
 
 
-
-
-
-	// 리뷰 저장후 페이지
+	// 리뷰 저장 후 페이지
 	@RequestMapping("reviewinsertsave.do")
-	public String insertPage(@ModelAttribute ReviewDTO reviewDTO){
-		/*System.out.println("testtesttesttesttest");*/
+	public ModelAndView insertPage(@ModelAttribute ReviewDTO reviewDTO){
 		reviewservice.reviewCreate(reviewDTO);
-		return "/review/gameReviewMain";
+
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("review/gameReviewMain");
+
+		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
+		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+		/*System.out.println("testtesttesttesttest");*/
+		return mav;
 	}
 
-	// 수정 및 삭제 할 페이지
+	// 수정 할 페이지
 	@RequestMapping("reviewedit.do")
 	public ModelAndView edit(@ModelAttribute reviewSerchDTO reviewserchDTO){
 		ModelAndView mav = new ModelAndView();
@@ -155,10 +170,12 @@ public class ReviewController {
 	@RequestMapping("reviewdelsave.do")
 	public ModelAndView reviewDelSave(@ModelAttribute reviewSerchDTO reviewserchDTO){
 		ModelAndView mav = new ModelAndView();
+/*
 		System.out.println("testtesttesttesttest");
 		System.out.println("testtesttesttesttest");
 		System.out.println("testtesttesttesttest");
 		System.out.println("reviewserchDTO.getReviewDetailKey() : "+ reviewserchDTO.getReviewDetailKey());
+*/
 
 		reviewservice.reviewDel(reviewserchDTO);
 		reviewserchDTO = new reviewSerchDTO();
