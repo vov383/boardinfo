@@ -36,25 +36,6 @@
             box-sizing: border-box;
         }
 
-        #header{
-            width: 100%;
-            margin: 0 auto;
-            position: fixed;
-            left: 0;
-            top: 0;
-            background-color: white;
-            z-index: 450;
-            border-bottom: 1px solid #D9D9D9;
-        }
-
-        #header-upper-box{
-            background-color: #FFC61A;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 77px;
-        }
-
         #header-upper-box > div{
             display: flex;
             justify-content: space-between;
@@ -62,18 +43,6 @@
             height: 77px;
             flex-basis: 1120px;
             max-width: 1120px;
-        }
-
-        #header-left{
-            display: flex;
-            align-items: center;
-        }
-
-        #header-right {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 15px;
         }
 
         form[name="gameSearch"] > div:first-of-type{
@@ -104,49 +73,12 @@
             background-color: rgba(255, 255, 255, 0.5);
         }
 
-        .sign{
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: bold;
-            color: black;
-        }
-
-        #signIn{
-            margin: 0 30px;
-        }
-
-        .nav{
-            margin: 0 auto;
-            max-width: 1120px;
-            display: flex;
-        }
-
-        .menu {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 45px;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
         .menu li {
             display: inline-block;
             flex: 0 0 25%;
             max-width: 25%;
             height: 100%;
             line-height: 45px;
-        }
-
-        .toMenu{
-            display: flex;
-            align-items: center;
-            font-size: 16px;
-            font-weight: bold;
-            text-decoration: none;
-            color: black;
-            margin-right: 20px;
         }
 
         .toMenu > img{
@@ -190,25 +122,8 @@
             min-height: 420px;
         }
 
-        #postUpper{
-            display: flex;
-        }
-
         #postUpper > div:first-of-type{
             padding: 30px 0;
-        }
-
-        #tmpDiv, #map{
-            width: 400px;
-            height: 280px;
-            border: 1px solid black;
-            text-align: center;
-            line-height: 280px;
-        }
-
-        #map{
-            overflow: hidden;
-            display: none;
         }
 
         #postUpper > div:nth-of-type(2){
@@ -219,11 +134,6 @@
             flex-direction: column;
         }
 
-        .labelAndItem{
-            display: flex;
-            flex-direction: row;
-        }
-
         .labelAndItem > span:first-of-type{
             width: 90px;
             text-align: right;
@@ -232,16 +142,6 @@
 
         .labelAndItem input{
             padding-left: 8px;
-        }
-
-        .flex{
-            flex-grow: 1;
-        }
-
-        #locationSearchBtn{
-            cursor: pointer;
-            width: 65px;
-            margin-left: 5px;
         }
 
         .labelAndItem input[type="date"]{
@@ -258,27 +158,8 @@
             width: 100%;
         }
 
-        #hiddenQuestion{
-            display: flex;
-            flex-direction: column;
-            visibility: hidden;
-        }
-
-        #postMain{
-            padding: 20px 0;
-            border-top: 2px dashed #D9D9D9;
-            display: flex;
-            flex-direction: column;
-        }
-
         #postMain > div:last-of-type{
             text-align: center;
-        }
-
-        #description{
-            padding: 20px;
-            height: 300px;
-            resize: none;
         }
 
         #postMain ul{
@@ -295,26 +176,6 @@
             font-weight: bold;
             border-radius: 0;
         }
-
-        #btn-attachGame{
-            margin-bottom: 10px;
-            background-color: #1432B1;
-            border: 0;
-            color: white;
-        }
-
-        #btn-submit{
-            background-color: #F9841A;
-            margin-right: 10px;
-            color: white;
-            border: 0;
-        }
-
-        #btn-reset{
-            border: 1px solid black;
-            background-color: white;
-        }
-
 
         footer{
             font-size: 15px;
@@ -353,6 +214,23 @@
             document.formReviewEdit.submit();
         }
 
+        // 삭제
+        function reviewDel(regNum){
+            $("#reviewDelKey").val(regNum);
+            /*alert($("#reviewDetailKey").val());*/
+            /*alert("클릭 테스트");*/
+            document.formreviewdel.submit();
+        }
+
+        //좋아요
+        function good(regNum){
+            $("#reviewDelKey").val(regNum);
+            /*alert($("#reviewDetailKey").val());*/
+            /*alert("클릭 테스트");*/
+            document.폼이름.submit();
+        }
+
+
 
     </script>
 
@@ -362,8 +240,16 @@
 <body>
 <%@include file="../include/top.jsp" %>
 
-<form name="formReviewEdit" method="post" action="${path}/review/reviewedit.do">
+<form name="formReviewEdit" method="post" action="${path}/review/reviewInsert.do">
     <input type="hidden" name="reviewDetailKey" id="reviewDetailKey">
+</form>
+
+<form name="formReviewEdit" method="post" action="${path}/review/reviewInsert.do">
+    <input type="hidden" name="reviewDetailKey" id="reviewDetailKeyGood">
+</form>
+
+<form name="formreviewdel" method="post" action="${path}/review/reviewdelsave.do">
+    <input type="hidden" name="reviewDetailKey" id="reviewDelKey">
 </form>
 
 <div id="contents">
@@ -420,9 +306,18 @@
                     <td>${vo.reviewDetail}</td>
                 </tr>
             </table>
-                <button type="button" onclick="btnReply()">답변</button>
-                <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정/삭제</button>
+                <table style="align-content: center; font-size: 50px;" border="1" >
+                    <tr>
+                        <td> <button type="button" onclick="good()"> &#x1f495 </button> <%--좋아요--%> </td>
+                    </tr>
+                    <tr>
+                        <td>눌러 주세요</td>
+                    </tr>
+                </table>
                 <button type="button" onclick="btnList()">목록</button>
+                <button type="button" onclick ="reviewDel('${vo.regNum}')">삭제</button>
+                <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정</button>
+                <button type="button" onclick="btnReply()">댓글</button>
 
                 </c:forEach>
         </form>

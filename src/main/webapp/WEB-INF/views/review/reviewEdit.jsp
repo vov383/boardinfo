@@ -351,15 +351,6 @@
             document.reviewedit.submit();
         }
 
-        // 삭제하기
-        function btnDel(regNum) {
-            $("#reviewDetailKey").val(regNum);
-            alert(regNum)
-            /*alert($("#reviewDetailKey").val());*/
-            document.formreviewdel.submit();
-        }
-
-
     </script>
 
 </head>
@@ -367,10 +358,6 @@
 
 <body>
 <%@include file="../include/top.jsp" %>
-
-<form name="formreviewdel" method="post" action="${path}/review/reviewdelsave.do">
-    <input type="hidden" name="reviewDetailKey" id="reviewDetailKey">
-</form>
 
 <div id="contents">
     <div id="contentsHeader">
@@ -393,9 +380,8 @@
                     <p>리뷰작성 : <input type="text" name="reviewDetail" value="${vo.reviewDetail}"></p>
                     <input type="hidden" name="regNum" value="${vo.regNum}">
                     <input type="hidden" name="del" value="${vo.del}">
-                    <button type="button" onclick="btnEdit()">수정하기</button>
-                    <button type="button" onclick="btnDel('${vo.regNum}')">삭제하기</button>
                     <button type="button" onclick="btnList()">목록</button>
+                    <button type="button" onclick="btnEdit()">저장</button>
                 </c:forEach>
             </table>
         </form>

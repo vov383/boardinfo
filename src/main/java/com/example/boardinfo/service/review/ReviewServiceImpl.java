@@ -19,8 +19,9 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override // 덮어쓰기 의미
 	public List<ReviewDTO> reviewlist(reviewSerchDTO reviewserchDTO){
+		reviewDAO.reviewViews(reviewserchDTO);
 		List<ReviewDTO> list = reviewDAO.reviewlist(reviewserchDTO);
-		System.out.println("vo : " + new Gson().toJson(list));
+		/*System.out.println("vo : " + new Gson().toJson(list));*/
 
 		return list;
 	}
@@ -29,6 +30,7 @@ public class ReviewServiceImpl implements ReviewService {
 	@Transactional
 	@Override
 	public void reviewCreate(ReviewDTO reviewDTO){
+/*
 
 		System.out.println("testtesttesttesttesttesttesttesttesttest");
 		System.out.println("reviewDTO.getRegNum() : " + reviewDTO.getRegNum());
@@ -49,8 +51,17 @@ public class ReviewServiceImpl implements ReviewService {
 		System.out.println("reviewDTO.getUpdateUser() : " + reviewDTO.getUpdateUser());
 		System.out.println("reviewDTO.getUpdateDate() : " + reviewDTO.getUpdateDate());
 		System.out.println("testtesttesttesttesttesttesttesttesttest");
+*/
 
-		reviewDAO.reviewCreate(reviewDTO);
+		if (null == reviewDTO.getRegNum()){
+			reviewDAO.reviewCreate(reviewDTO);
+		} else {
+			reviewDAO.reviewUpdate(reviewDTO);
+		}
+
+
+
+
 	}
 
 	//리뷰 수정
@@ -68,10 +79,11 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public void reviewDel(reviewSerchDTO reviewserchDTO){
 
-		System.out.println("testestestestestestestest");
+		/*System.out.println("testestestestestestestest");
 		System.out.println("testestestestestestestest");
 		System.out.println("testestestestestestestest");
 		System.out.println("reviewserchDTO : " + new Gson().toJson(reviewserchDTO));
+		*/
 		reviewDAO.reviewDel(reviewserchDTO);
 	}
 

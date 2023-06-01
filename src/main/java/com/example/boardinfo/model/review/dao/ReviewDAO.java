@@ -11,6 +11,9 @@ public interface ReviewDAO {
 	// 리뷰 테이블
     List<ReviewDTO> reviewlist(reviewSerchDTO reviewserchDTO);
 
+    // 조회수 증가
+    void reviewViews(reviewSerchDTO reviewserchDTO);
+
 	// 리뷰 입력
     void reviewCreate(ReviewDTO reviewDTO);
 
@@ -19,6 +22,7 @@ public interface ReviewDAO {
 
     // 리뷰 삭제
     void reviewDel(reviewSerchDTO reviewserchDTO);
+
 
 
 
