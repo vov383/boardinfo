@@ -14,7 +14,10 @@
             getReplies();
 
             //댓글 쓰기
-            $("#btnCommentInsert").on("click", function () {
+            //$(".클래스명).on("click", function(){} 로 시도했을 때는
+            //동적으로 생성된 Form에 이벤트가 안 넣어졌다.
+            //$(document).on("click", ".btnCommentInsert", function () {} 를 써서 document가 스스로 이벤트를 핸들링하도록 만들었다.
+            $(document).on("click", ".btnCommentInsert", function () {
                 let form = $(this).closest("form");
                 let content = form.find('textarea[name="content"]');
                 content.val(content.val().trim());
@@ -25,12 +28,12 @@
 
                 $.ajax({
                     type: "get",
-                    url: "${path}/tbComment/insert.do",
+                    url: "${path}/tbComment/insertReply.do",
                     data: queryString,
                     success: function (result) {
                         if (result) {
                             content.val("");
-                            listReply();
+                            getReplies();
                         } else {
                             alert("댓글 달기 실패");
                         }
@@ -87,15 +90,15 @@
                             userInfoDiv.append(userNickNameDiv);
                             userInfoDiv.append(userIdDiv);
                             userInfoDiv.append(createDateDiv);
-                            replyUpperDiv.append(userInfoDiv);
+
 
                             let replyContent = $('<div>').addClass('replyContent').text(re_list[i].content);
 
                             let replySubDiv = $('<div>').addClass('replySub');
                             let leftDiv = $('<div>').addClass('left');
                             let leftButtonDiv = $('<div>').addClass('button');
-                            //에러날 수 있는 곳
-                            let childInsertLink = $('<a>').addClass('editReply').prop("href", "javascript:showChildReplyForm(" + re_list[i].reply_reg_num + ")");
+
+                            let childInsertLink = $('<a>').addClass('editReply').prop("href", "javascript:showChildCommentForm(" + re_list[i].reply_reg_num + ")");
                             let childReplyImg = $("<img>").attr({
                                 src : "${path}/images/reply_arrow.png",
                                 width : "15px"
@@ -106,8 +109,8 @@
 
                             let rightDiv = $('<div>').addClass('right');
                             let rightButtonDiv = $('<div>').addClass('button');
-                            //에러날 수 있는 곳
-                            let replyEditLink= $('<a>').addClass('insertChildReply').prop("href", "javascript:showChildReplyForm(" + re_list[i].reply_reg_num + ")");
+
+                            let replyEditLink= $('<a>').addClass('insertChildReply').prop("href", "javascript:editReply(" + re_list[i].reply_reg_num + ")");
 
                             let replyEditImg = $("<img>").attr({
                                 src : "${path}/images/trade/changeBtn.png",
@@ -120,19 +123,24 @@
                             replySubDiv.append(leftDiv);
                             replySubDiv.append(rightDiv);
 
+
+                            //대댓글 들여쓰기
+                            if (re_list[i].depth > 0) {
+                                reply.addClass("childReply");
+                                childReplyImg = $("<img>").attr(
+                                    "src='${path}/images/re_reply.png'");
+                                replyUpperDiv.append(childReplyImg);
+                                replyUpperDiv.append(userInfoDiv);
+
+                                replyUpperDiv.css("padding-left", (re_list[i].depth * 18) + "px");
+                                replyContent.css("padding-left", (re_list[i].depth * 18) + "px");
+
+
+                            }
+                            replyUpperDiv.append(userInfoDiv);
                             reply.append(replyUpperDiv);
                             reply.append(replyContent);
                             reply.append(replySubDiv);
-
-                            <%--//대댓글 들여쓰기--%>
-                            <%--if (re_list[i].reply_parent_reg_num > 1) {--%>
-                            <%--    reply.addClass("childReply");--%>
-                            <%--    create_user.html("<img width='10px' style='margin-right: 7px;'" +--%>
-                            <%--        "src='${path}/images/re_reply.png'" + ">" + create_user.text());--%>
-                            <%--    create_user.css("padding-left", (re_list[i].reply_parent_reg_num * 18) + "px");--%>
-                            <%--    content.css("padding-left", (re_list[i].reply_parent_reg_num * 18) + "px");--%>
-                            <%--}--%>
-
 
                             replyList.append(reply);
                         }
@@ -144,46 +152,55 @@
                     $("#countReplies").text(0);
                 }//문제가 여기서 서 step into 하면 터져버림
             });//ajax 끝
-        } //listReply() 끝
-
-        //대댓글
-        function showChildReplyForm(reply_reg_num) {
-            $("form[class='childReplyForm']").remove();
-
-            let childCommentForm = $("<form>").addClass("childCommentForm")
-                .attr({
-                    name: "childCommentForm",
-                    action: "${path}/tbComment/childCommentInsert.do"
-                });
-
-            let textArea = $("<textarea>").attr({
-                name: "content"
-            });
-
-            let input = $("<input>").attr({
-                type: "hidden",
-                name: "reply_parent_reg_num",
-                value: reply_reg_num
-            });
-
-            let button = $("<button>").attr({
-                type: "button",
-                class: "btnChildCommentInsert"
-            }).text("댓글쓰기");
-
-            childCommentForm.append(textArea, input, button);
-            $("#" + reply_reg_num).append(childCommentForm);
         }
 
-        //댓글 수정
-        function editChildReplyForm(reply_reg_num) {
-            $("form[class='childReplyForm']").remove();
+        // Initialize the flag variable
+        let childCommentFormVisible = false;
 
-            let childCommentForm = $("<form>").addClass("childCommentForm")
-                .attr({
-                    name: "childCommentForm",
-                    action: "${path}/tbComment/childCommentInsert.do"
+        // Show or hide the child comment form based on its visibility
+        function showChildCommentForm(reply_reg_num) {
+            let childCommentForm = $("form.childCommentForm");
+
+            if (childCommentFormVisible) {
+                childCommentForm.remove();
+                childCommentFormVisible = false;
+            } else {
+                childCommentFormVisible = true;
+
+                let newChildCommentForm = $("<form>")
+                    .addClass("childCommentForm")
+                    .attr({
+                        name: "childCommentForm",
+                        action: "${path}/tbComment/InsertReply.do"
+                    });
+
+                let textArea = $("<textarea>").attr({
+                    name: "content"
                 });
+
+                let input = $("<input>").attr({
+                    type: "hidden",
+                    name: "mother_reply",
+                    value: reply_reg_num
+                });
+
+                let button = $("<button>")
+                    .attr({
+                        type: "button",
+                        class: "btnCommentInsert"
+                    }).text("댓글쓰기");
+
+                newChildCommentForm.append(textArea, input, button);
+
+                $("#" + reply_reg_num).append(newChildCommentForm);
+            }
+
+        }
+
+
+        //댓글 수정
+        function editReply(reply_reg_num) {
+
         }
     </script>
 </head>
@@ -297,10 +314,11 @@
             </section>
             <section class="replySection">
                 <div id="replyList"></div>
+
                 <form name="replyFrom">
                     <input type="hidden" name="tb_num" value="${dto.tb_num}">
-                    <textarea name="content" id="replyContent" cols="30" rows="10"></textarea>
-                    <div class="button"><a id="btnCommentInsert"><img src="${path}/images/trade/insertReplyBtn.png"></a>
+                    <textarea name="content" class="replyContent" cols="30" rows="10"></textarea>
+                    <div class="button"><a class="btnCommentInsert"><img src="${path}/images/trade/insertReplyBtn.png"></a>
                     </div>
                 </form>
 
@@ -312,7 +330,7 @@
                             src="${path}/images/trade/listBtn.png"></a></div>
                 </div>
                 <div class="right">
-                    <div class="button"><a href="${path}/tboard/change.do"><img
+                    <div class="button"><a class="btnChange"><img
                             src="${path}/images/trade/changeBtn.png}" alt=""></a></div>
                 </div>
             </div>
