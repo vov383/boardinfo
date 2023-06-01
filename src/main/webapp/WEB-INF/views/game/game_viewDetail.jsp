@@ -74,16 +74,16 @@
             }
 /*캐러셀*/
             .slide-container {
-                width: 300vw;
+                width: 300%;
                 transition: all 1s;
-                transform: translateX(-100vw);
+                transform: translateX(0%);
             }
             .slide-box {
-                width: 100vw;
+                width: calc(100%/3);
                 float: left;
             }
             .slide-box p {
-                width: 100%;
+                margin: 0;
             }
 
             /*모달*/
@@ -147,6 +147,33 @@
                 max-height:60vw;
             /*최대 높이*/
             }
+            ul {
+                list-style: none;
+                padding: 0;
+            }
+            ul li {
+                cursor: pointer;
+            }
+            ul li:hover {
+                background-color: rgba(0,0,0,.1);
+            }
+
+            .before_div, .next_div {
+                cursor: pointer;
+            }
+            .before_div:hover, .next_div:hover {
+                background-color: rgba(0,0,0,.1);
+            }
+
+            .next{
+                float: right;
+            }
+            .before, .next {
+                margin: 60px 0;
+                width: 20px;
+                height: 60px;
+            }
+
 
             /*모달 내용 관련*/
             #bigFrame{
@@ -432,39 +459,46 @@
                 <div class="game_detail_filtered_list">
 
                     <div>
-                        <div><button class="before">&lt;</button></div>
+                        <div class="before_div" style="width: 5%; float: left;">
+                            <img src="../images/chevron-compact-left.svg" class="before" />
+                        </div>
 
-                        <div style="overflow: hidden">
+                        <div style="overflow: hidden; width: 90%; float: left;">
                             <div class="slide-container">
                                 <div class="slide-box">
                                     <div>
                                         <p>평균 평점 [평점]</p>
                                         <p>전체 평가 수 [평가인원 수]</p>
                                     </div>
-                                    <p>평점그래프</p>
+                                    <div style="border: 1px solid; height: 100px; width: 100%;">평점그래프</div>
                                 </div>
                                 <div class="slide-box">
                                     <div>
                                         <p>추천 인원수 [인원]</p>
                                         <p>전체 평가 수 [평가인원 수]</p>
                                     </div>
-                                    <p>인원그래프</p>
+                                    <div style="border: 1px solid; height: 100px; width: 100%;">인원그래프</div>
                                 </div>
                                 <div class="slide-box">
                                     <div>
                                         <p>평균 난이도 [난이도]</p>
                                         <p>전체 평가 수 [평가인원 수]</p>
                                     </div>
-                                    <p>난이도그래프</p>
+                                    <div style="border: 1px solid; height: 100px; width: 100%;">난이도그래프</div>
                                 </div>
                             </div>
                         </div>
-                        <div><button class="next">&gt;</button></div>
+
+                        <div class="next_div" style="width: 5%; float: right;">
+                            <img src="../images/chevron-compact-right.svg" class="next" />
+                        </div>
 
 
                     </div>
 
                 </div>
+
+                <hr style="clear: both;">
 
                 <%--댓글 값 받아와서 list출력--%>
                 <div style="clear: both;">
@@ -632,40 +666,40 @@
    <script>
 <%--캐러셀관련--%>
        $('.slide-1').on('click', function() {
-           $('.slide-container').css('transform', 'translateX(0vw)');
+           $('.slide-container').css('transform', 'translateX(0%)');
        });
 
        $('.slide-2').on('click', function() {
-           $('.slide-container').css('transform', 'translateX(-100vw)');
+           $('.slide-container').css('transform', 'translateX(-33.333%');
        });
 
        $('.slide-3').on('click', function() {
-           $('.slide-container').css('transform', 'translateX(-200vw)');
+           $('.slide-container').css('transform', 'translateX(-66.666%');
        });
 
-       var item = 2;
+       var item = 1;
 
-       $('.next').on('click', function(){
+       $('.next_div').on('click', function(){
            if (item == 1) {
-               $('.slide-container').css('transform', 'translateX(-100vw)');
+               $('.slide-container').css('transform', 'translateX(-33.333%');
                item += 1;
            }
            else if (item == 2){
-               $('.slide-container').css('transform', 'translateX(-200vw)');
+               $('.slide-container').css('transform', 'translateX(-66.666%');
                item += 1;
            }else if (item == 3){
-               $('.slide-container').css('transform', 'translateX(0vw)');
+               $('.slide-container').css('transform', 'translateX(0%)');
                item = 1;
            }
        })
 
-       $('.before').on('click', function(){
+       $('.before_div').on('click', function(){
            if (item == 3) {
-               $('.slide-container').css('transform', 'translateX(-100vw)');
+               $('.slide-container').css('transform', 'translateX(-33.333%');
                item -= 1;
            }
            else if (item == 2){
-               $('.slide-container').css('transform', 'translateX(0vw)');
+               $('.slide-container').css('transform', 'translateX(0%)');
                item -= 1;
            }
 
