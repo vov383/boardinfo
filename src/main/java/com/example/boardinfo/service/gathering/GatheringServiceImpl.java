@@ -35,10 +35,6 @@ public class GatheringServiceImpl implements GatheringService {
 		return false;
 	}
 
-	@Override
-	public boolean editPost() {
-		return false;
-	}
 
 	@Override
 	public List<GatheringDTO> list(boolean showAvailable, String[] address1List
@@ -138,5 +134,69 @@ public class GatheringServiceImpl implements GatheringService {
 	}
 
 
+	@Override
+	public AttendeeType checkIfAttendee(int gathering_id, String user_id) {
+		return gatheringDao.checkIfAttendee(gathering_id, user_id);
+	}
 
+	@Override
+	public String addAttendee(int gathering_id, String user_id) {
+
+		System.out.println("들어옴");
+
+		String message = "";
+
+		//몇가지 조건 확인해야 함
+		//(1) 이미 모임에 참가해 있지는 않는가?
+		//(2) 모임 인원이 꽉 차지는 않았는가?
+		//(3) 모임이 허가제인가?
+
+		//먼저 모임 정보를 출력해오자(가입인원, max인원, 허가제여부, 모임중인지 여부)
+		//모임날짜도 출력해와서 비교해야 함!!!! 수정하기
+		GatheringDTO gatheringDTO = gatheringDao.getAttendInfo(gathering_id);
+
+		if(gatheringDTO.getMaxPeople() <= gatheringDTO.getAttendee_count()){
+			message = "모집 인원이 꽉 찼습니다.";
+			System.out.println(message);
+		}
+
+		else{
+
+			//내 마지막 가입 여부를 출력해오자
+			//가입중이거나 가입신청중이라면 no
+			//반려되었거나 탈퇴했다면 ok
+			//밴당한거라면?? 보류...
+			AttendeeType type = checkIfAttendee(gathering_id, user_id);
+
+			if(type == AttendeeType.ATTENDING){
+				message = "이미 모임에 참여중입니다.";
+				System.out.println(message);
+			}
+
+			else if(type == AttendeeType.WAIT){
+				message = "모임장의 승인을 기다리는 중입니다.";
+				System.out.println(message);
+			}
+
+			else {
+				if(gatheringDTO.getAttendSystem().equals("p")){
+					System.out.println("p");
+					AttendeeDTO dto = new AttendeeDTO(user_id, gathering_id, AttendeeType.WAIT);
+					int num = gatheringDao.addAttendee(dto);
+					if(num > 1) message = "모임에 가입 신청하였습니다.";
+				}
+
+				else{
+					System.out.println("o");
+					AttendeeDTO dto = new AttendeeDTO(user_id, gathering_id, AttendeeType.ATTENDING);
+					int num = gatheringDao.addAttendee(dto);
+					if(num > 1) message = "모임에 성공적으로 가입되었습니다.";
+				}
+			}
+
+		}
+
+		System.out.println("message : " + message);
+		return message;
+	}
 }

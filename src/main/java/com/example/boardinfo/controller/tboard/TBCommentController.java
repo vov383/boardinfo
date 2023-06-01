@@ -64,6 +64,8 @@ public class TBCommentController {
 
 		//ajax로 값만 넘기면 끝
 	}
+
+	/*
 	@RequestMapping("/update/{tb_num}")
 //	public String commentUpdate(
 	public ModelAndView commentUpdate(
@@ -81,6 +83,9 @@ public class TBCommentController {
 		return mav;
 		//undefined
 	}
+	 */
+
+	/*
 	@RequestMapping("/delete/{tb_num}")
 	public ModelAndView commentDelete(
 			@RequestParam("reply_reg_num") int reply_reg_num,
@@ -94,6 +99,7 @@ public class TBCommentController {
 		mav.addObject("dto", tboardService.viewPost(tb_num));
 		return mav;
 	}
+	 */
 
 	@RequestMapping("/childCommentInsert/{tb_num}")
 	public ModelAndView childCommentInsert(

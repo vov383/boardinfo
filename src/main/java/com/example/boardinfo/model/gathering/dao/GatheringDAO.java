@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
+import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 
@@ -26,7 +27,9 @@ public interface GatheringDAO {
 
 	public int update(GatheringDTO dto);
 
-	public void addAttendee(AttendeeDTO dto);
+	public int addAttendee(AttendeeDTO dto);
 
+	public AttendeeType checkIfAttendee(int gatheringId, String userId);
 
+	public GatheringDTO getAttendInfo(int gatheringId);
 }

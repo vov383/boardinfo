@@ -27,6 +27,7 @@ public class GatheringDTO {
 	private String title;
 	private String gathering_content;
 	private String img_url;
+	private String nickname;
 	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime gathering_date;
@@ -251,6 +252,15 @@ public class GatheringDTO {
 		this.attendee_count = attendee_count;
 	}
 
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+
 	@Override
 	public String toString() {
 		return "GatheringDTO{" +
@@ -261,6 +271,7 @@ public class GatheringDTO {
 				", title='" + title + '\'' +
 				", gathering_content='" + gathering_content + '\'' +
 				", img_url='" + img_url + '\'' +
+				", nickname='" + nickname + '\'' +
 				", gathering_date=" + gathering_date +
 				", fee=" + fee +
 				", address1='" + address1 + '\'' +
@@ -278,9 +289,7 @@ public class GatheringDTO {
 				", is_public=" + is_public +
 				", view_count=" + view_count +
 				", reply_count=" + reply_count +
+				", attendee_count=" + attendee_count +
 				'}';
 	}
-	
-	
-	
 }

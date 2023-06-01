@@ -6,6 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
 
 <title>채팅</title>
   <%@ include file="../include/js/header.jsp" %>
@@ -215,91 +217,77 @@
 
 
 <script>
+	var sock = new SockJS('http://localhost:8098/ws-stomp');
+	var stomp = Stomp.over(sock);
 
 $(function(){
-	
+
+	let msgArea = $("#msgArea");
+	let height = msgArea.prop('scrollHeight');
+	msgArea.scrollTop(height);
+
+
 	$("#sendBtn").click(function(){
-		//sendMessage("SEND");
+		sendMessage("SEND");
 		$('#msg').val('');
 	});
-	
-});
+
+	stomp.connect({}, function(){
+		stomp.subscribe("/sub/chat/room/" + "${gathering_id}", function(msg){
+			var chatMessageDto = JSON.parse(msg.body);
+			var sender = chatMessageDto.userId; //데이터를 보낸 사람
+			var message = chatMessageDto.message; //메시지
+			var cur_session = '${user_id}'; //현재 세션에 로그인한 사람
+
+			if(sender == cur_session){ //내가 보낸 메시지라면
+				var str =
+						"<div class='message_mine'><span class='chatTime'>오후 7:30</span>"
+						+ "<div class='messageContent'>"+message+"</div></div>";
+			}
+
+			else if(sender == 'SYSTEM'){
+				var str =
+						"<div class='message_notice'>"+
+						"<div class='messageContent'>"+message+"</div></div>";
+			}
+
+			else{
+				var str =
+						"<div class='message_yours'><div class='sender'>"+sender+"</div>"
+						+"<div><div class='messageContent'>"+message+"</div>"
+						+ "<span class='chatTime'>오후 7:30</span></div></div>";
+			}
+
+			let msgArea = $("#msgArea");
+			msgArea.append(str);
+
+			let height = msgArea.prop('scrollHeight');
+			let position = msgArea.scrollTop();
+
+			if(position>(height - 800)){
+				msgArea.scrollTop(height);
+			}
+
+		});
+
+	});
+
+	});
 
 
-//var sock = new SockJS('http://localhost:80/boardinfo/chatting');
-var sock = new SockJS('http://localhost:8098/chatting');
-sock.onmessage = onMessage;
-sock.onclose = onClose;
-sock.onopen = onOpen;
 
 
 function sendMessage(type){
 	
 	var messageDTO = {
+			userId: "${user_id}",
 			message: $("#msg").val(),
 			type: type,
-			gathering_id: 1,
+			gathering_id: "${gathering_id}",
 	};
-	
-	var jsonPayload = JSON.stringify(messageDTO);
-	sock.send(jsonPayload);	
 
+	stomp.send('/pub/chat/message', {}, JSON.stringify(messageDTO));
 }
-
-
-//서버로부터 메시지를 받을 때
-function onMessage(msg){
-	
-	//받은 메시지의 데이터를 data에 저장
-	var chatMessageDto = JSON.parse(msg.data);
-	var sender = chatMessageDto.userId; //데이터를 보낸 사람
-	var message = chatMessageDto.message; //메시지
-	var cur_session = '${userId}'; //현재 세션에 로그인한 사람
-	//컨트롤러에서 이미 userid 이름으로 넘겨줬음
-	
-	//로그인한 클라이언트와 타 클라이언트 분류하기 (css적으로다가)
-	//시간없으니까 그냥 통일시켜
-	if(sender == cur_session){ //내가 보낸 메시지라면
-		var str = 
-			"<div class='message_mine'><span class='chatTime'>오후 7:30</span>"
-				+ "<div class='messageContent'>"+message+"</div></div>";
-	}
-
-	else if(sender == '알림'){
-		var str =
-				"<div class='message_notice'>"+
-				"<div class='messageContent'>"+message+"</div></div>";
-	}
-	
-	else{
-		var str = 
-			"<div class='message_yours'><div class='sender'>"+sender+"</div>"
-				+"<div><div class='messageContent'>"+message+"</div>"
-				+ "<span class='chatTime'>오후 7:30</span></div>";
-	}
-	$("#msgArea").append(str);	
-	
-	
-}
-
-
-//채팅방에서 나갔을 때
-function onClose(evt){
-	alert('종료');
-	/*
-	var user = "${userId}";
-	//var user = '${pr.username}'; //나간사람 이름
-	var str = "알림: " + user + "님이 퇴장하셨습니다.";
-	$("#msgArea").append(str);
-	*/
-}
-
-
-//채팅방에 들어왔을 때
-function onOpen(evt){
-	sendMessage("OPEN");
-}
-
 
 
 </script>
@@ -358,7 +346,37 @@ function onOpen(evt){
   		<button type="button">채팅방 나가기</button>
   	</div>
   	<div id="msgArea">
-	
+
+		<c:forEach var="row" items="${list}">
+			<c:choose>
+				<c:when test="${row.userId==user_id}">
+					<div class='message_mine'>
+						<span class='chatTime'>오후 7:30</span>
+						<div class='messageContent'>${row.message}</div>
+					</div>
+				</c:when>
+
+				<c:when test="${row.userId=='SYSTEM'}">
+					<div class='message_notice'>
+						<div class='messageContent'>${row.message}</div>
+					</div>
+				</c:when>
+
+				<c:otherwise>
+					<div class='message_yours'>
+						<div class='sender'>${row.userId}</div>
+						<div>
+							<div class='messageContent'>${row.message}</div>
+							<span class='chatTime'>오후 7:30</span>
+						</div>
+					</div>
+				</c:otherwise>
+
+			</c:choose>
+
+
+		</c:forEach>
+
 	</div>
 	<div>
 	<input id="msg" placeholder="텍스트를 입력해주세요.">
