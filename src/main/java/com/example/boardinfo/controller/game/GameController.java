@@ -73,7 +73,8 @@ public class GameController {
 		//정보
 		Map<String, Object> map = gameService.view(gnum);
 
-		mav.setViewName("game/game_view");
+//		mav.setViewName("game/game_view");
+		mav.setViewName("game/game_viewDetail");
 		mav.addObject("map", map);
 		return mav;
 	}
