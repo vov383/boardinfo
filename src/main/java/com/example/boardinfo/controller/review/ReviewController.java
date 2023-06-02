@@ -4,6 +4,7 @@ import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.review.dto.TestDTO;
 import com.example.boardinfo.model.review.dto.reviewSerchDTO;
 import com.example.boardinfo.service.review.ReviewService;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -40,17 +42,39 @@ public class ReviewController {
 	public ModelAndView revewDetail(@ModelAttribute reviewSerchDTO reviewserchDTO) {
 		ModelAndView mav = new ModelAndView();
 
-/*
-		System.out.println("testestestestest");
-		System.out.println("testestestestest");
-		System.out.println("testestestestest");
-		System.out.println("reviewserchDTO : " + reviewserchDTO.getReviewDetailKey());
-*/
-
 		mav.setViewName("review/reviewDetail");
 		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+
+/*		System.out.println("testestestestest");
+		System.out.println("testestestestest");
+		System.out.println("testestestestest");
+		System.out.println("reviewserchDTO : " + reviewserchDTO.getReviewDetailKey());*/
+
 		return mav;
 	}
+
+
+	// 리뷰 좋아요 상세 페이지
+	@RequestMapping("reviewdetailGood.do")
+	public ModelAndView reviewdetailGood(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session) {
+
+		//좋아요
+		reviewservice.reviewGoodCreate(reviewserchDTO, session);
+
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("review/reviewDetail");
+		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+
+
+
+/*		System.out.println("testestestestest");
+		System.out.println("testestestestest");
+		System.out.println("testestestestest");
+		System.out.println("reviewserchDTO : " + reviewserchDTO.getReviewDetailKey());*/
+
+		return mav;
+	}
+
 
 	// 리뷰 입력 및 수정할 페이지
 	@RequestMapping("reviewInsert.do")
@@ -59,7 +83,8 @@ public class ReviewController {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("review/ReviewInsert");
 
-		System.out.println("getReviewDetailKey : " + reviewserchDTO.getReviewDetailKey());
+		/*System.out.println("getReviewDetailKey : " + reviewserchDTO.getReviewDetailKey());*/
+
 		if (null == reviewserchDTO.getReviewDetailKey()) reviewserchDTO.setReviewDetailKey("1");
 
 		/*수정*/
@@ -134,6 +159,29 @@ public class ReviewController {
 		return mav;
 	}
 
+
+	/*// 리뷰 좋아요 클릭 후 페이지
+	@RequestMapping("reviewgoodsave.do")
+	public ModelAndView reviewGoodSave(@ModelAttribute reviewSerchDTO reviewserchDTO){
+		ModelAndView mav = new ModelAndView();
+*//*
+		System.out.println("testtesttesttesttest");
+		System.out.println("testtesttesttesttest");
+		System.out.println("testtesttesttesttest");
+		System.out.println("reviewserchDTO.getReviewDetailKey() : "+ reviewserchDTO.getReviewDetailKey());
+*//*
+
+		reviewservice.reviewGoodCreate(reviewserchDTO);
+		reviewserchDTO = new reviewSerchDTO();
+		reviewserchDTO.setReviewDetailKey(reviewserchDTO.getReviewDetailKey());
+		mav.setViewName("/review/reviewDetail");
+		mav.addObject("list", reviewservice.reviewGoodCreate(reviewserchDTO));
+
+		return mav;
+	}*/
+	
+	
+	
 	// 수정 할 페이지
 	@RequestMapping("reviewedit.do")
 	public ModelAndView edit(@ModelAttribute reviewSerchDTO reviewserchDTO){

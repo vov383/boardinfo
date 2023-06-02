@@ -23,13 +23,12 @@ public interface ReviewDAO {
     // 리뷰 삭제
     void reviewDel(reviewSerchDTO reviewserchDTO);
 
+    // 리뷰 좋아요
+    void reviewGoodCreate(reviewSerchDTO reviewserchDTO);
 
 
 
-
-
-
-	// 리뷰 Blob 입력 테스트
+    // 리뷰 Blob 입력 테스트
     void create(TestDTO testdto);
 
 	/*// 리뷰 입력 테스트

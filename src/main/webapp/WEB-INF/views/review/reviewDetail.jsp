@@ -222,12 +222,12 @@
             document.formreviewdel.submit();
         }
 
-        //좋아요
+        //좋아요 → $("폼아이디).val()
         function good(regNum){
-            $("#reviewDelKey").val(regNum);
-            /*alert($("#reviewDetailKey").val());*/
+            $("#reviewDetailGoodKey").val(regNum);
+            alert($("#reviewDetailGoodKey").val());
             /*alert("클릭 테스트");*/
-            document.폼이름.submit();
+            document.formReviewGood.submit();
         }
 
 
@@ -240,16 +240,19 @@
 <body>
 <%@include file="../include/top.jsp" %>
 
+<%--리뷰 수정--%>
 <form name="formReviewEdit" method="post" action="${path}/review/reviewInsert.do">
     <input type="hidden" name="reviewDetailKey" id="reviewDetailKey">
 </form>
 
-<form name="formReviewEdit" method="post" action="${path}/review/reviewInsert.do">
-    <input type="hidden" name="reviewDetailKey" id="reviewDetailKeyGood">
-</form>
-
+<%--리뷰 삭제--%>
 <form name="formreviewdel" method="post" action="${path}/review/reviewdelsave.do">
     <input type="hidden" name="reviewDetailKey" id="reviewDelKey">
+</form>
+
+<%--좋아요--%>
+<form name="formReviewGood" method="post" action="${path}/review/reviewdetailGood.do">
+    <input type="hidden" name="reviewDetailKey" id="reviewDetailGoodKey">
 </form>
 
 <div id="contents">
@@ -308,10 +311,7 @@
             </table>
                 <table style="align-content: center; font-size: 50px;" border="1" >
                     <tr>
-                        <td> <button type="button" onclick="good()"> &#x1f495 </button> <%--좋아요--%> </td>
-                    </tr>
-                    <tr>
-                        <td>눌러 주세요</td>
+                        <td> <button type="button" onclick="good('${vo.regNum}')"> &#x1f495 </button> <%--좋아요--%> </td>
                     </tr>
                 </table>
                 <button type="button" onclick="btnList()">목록</button>

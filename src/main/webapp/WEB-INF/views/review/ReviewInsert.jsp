@@ -337,6 +337,7 @@
   </style>
 
   <script type="text/javascript">
+    /*리뷰 첫 입력 및 수정*/
   function btnSaveClick() {
   /*alert("버튼 잘 눌리는지 테스트"); // 테스트*/
   document.reviewInsertSave.submit();
@@ -386,8 +387,7 @@
 
   <div id="contentsMain">
 
-<%-- 수정하지 않은 insert 페이지 --%>
-    <%--수정 페이지--%>
+    <%--리뷰 수정 페이지--%>
     <form name="reviewInsertSave" method="get" action="${path}/review/reviewinsertsave.do">
       <c:forEach items="${list}" var="vo">
         <input type="hidden" name="regNum" value="${vo.regNum}">
@@ -416,7 +416,7 @@
         </script>
 
 
-        <%--첫 입력 페이지--%>
+        <%--리뷰 첫 입력 페이지--%>
       </c:forEach>
       <c:if test="${fn:length(list) == 0}">
         <p>카테고리 : <%--<input type="text" name="category">--%>
