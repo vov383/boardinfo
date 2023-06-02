@@ -342,6 +342,11 @@
   /*alert("버튼 잘 눌리는지 테스트"); // 테스트*/
   document.reviewInsertSave.submit();
   }
+
+    // 리뷰 리스트로 이동
+    function btnList(){
+      location.href="${path}/review/reviewlist.do";
+    }
   </script>
 
 <%--
@@ -389,6 +394,10 @@
 
     <%--리뷰 수정 페이지--%>
     <form name="reviewInsertSave" method="get" action="${path}/review/reviewinsertsave.do">
+
+      <button type="button" onclick="btnList()">목록</button>
+      <button type="button" id="btnsave" onclick="btnSaveClick()">저장</button>
+
       <c:forEach items="${list}" var="vo">
         <input type="hidden" name="regNum" value="${vo.regNum}">
       <p>카테고리 : <%--<input type="text" name="category" value="${vo.category}">--%>
@@ -403,7 +412,7 @@
       <p>제목 : <input type="text" name="title" value="${vo.title}"></p>
       <p>게임ID(임시) : <input type="text" name="gnum" value="${vo.gnum}"></p>
       <p>모임ID(임시) : <input type="text" name="gatheringId" value="${vo.gatheringId}"></p>
-      <p>작성자ID(임시) : <input type="text" name="createUser" value="${vo.nickName}" /></p>
+      <p>작성자 : <input type="text" name="createUser" value="${vo.nickName}" /></p>
       <%-- 체크 에디터 적용 테스트 --%>
       <p>리뷰작성<textarea name = "reviewDetail" id="reviewDetailID" rows = "5" cols = "80">${vo.reviewDetail}</textarea></p>
         <script>
@@ -454,8 +463,8 @@
 
 
 
-        <p>모임ID(임시) : <input type="text" name="gatheringId"></p>
-        <p>작성자ID(임시) : <input type="text" name="createUser"></p>
+        <%--<p>모임ID(임시) : <input type="text" name="gatheringId"></p>--%>
+        <%--<p>작성자ID(임시) : <input type="text" name="createUser"></p>--%>
         <%-- 체크 에디터 적용 테스트 --%>
         <p>리뷰작성<textarea name = "reviewDetail" id="reviewDetailID2" rows = "5" cols = "80"></textarea></p>
         <script>
@@ -467,7 +476,6 @@
           });
         </script>
       </c:if>
-      <button type="button" id="btnsave" onclick="btnSaveClick()">값 보내기</button>
     </form>
 
 

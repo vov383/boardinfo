@@ -1,5 +1,6 @@
 package com.example.boardinfo.model.review.dao;
 
+import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.review.dto.TestDTO;
 import com.example.boardinfo.model.review.dto.reviewSerchDTO;
@@ -16,19 +17,19 @@ public class ReviewDAOImpl implements ReviewDAO {
     SqlSession sqlSession;
 
 
-    //리뷰 테이블
+    /*리뷰 목록 조회*/
     @Override
     public List<ReviewDTO> reviewlist(reviewSerchDTO reviewserchDTO) {
         return sqlSession.selectList("review.reviewList", reviewserchDTO);
     }
 
-    //리뷰 조회수 증가
+    /*리뷰 조회수 증가*/
     @Override
     public void reviewViews(reviewSerchDTO reviewserchDTO) {
         sqlSession.update("review.reviewViews", reviewserchDTO);
     }
 
-    //리뷰 입력
+    /*리뷰 입력*/
     @Override
     public void reviewCreate(ReviewDTO reviewDTO) {
 
@@ -36,7 +37,7 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     }
 
-    //리뷰 수정
+    /*리뷰 수정*/
     @Override
     public void reviewUpdate(ReviewDTO reviewDTO) {
 
@@ -44,7 +45,7 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     }
 
-    //리뷰 삭제
+    /*리뷰 삭제*/
     @Override
     public void reviewDel(reviewSerchDTO reviewserchDTO) {
 
@@ -52,12 +53,26 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     }
 
-    //리뷰 좋아요
+    /*리뷰 좋아요*/
     @Override
     public void reviewGoodCreate(reviewSerchDTO reviewserchDTO) {
 
         sqlSession.insert("review.reviewGood", reviewserchDTO);
 
+    }
+
+    /*리뷰 댓글 입력*/
+    @Override
+    public void reviewReply(ReplyCommentsDTO replyCommentsDTO) {
+
+        sqlSession.insert("review.reviewReply", replyCommentsDTO);
+
+    }
+
+    /*리뷰 댓글 출력*/
+    @Override
+    public List<ReplyCommentsDTO> reviewReplyOut(reviewSerchDTO reviewserchDTO) {
+        return sqlSession.selectList("review.reviewReplyOut", reviewserchDTO);
     }
 
 

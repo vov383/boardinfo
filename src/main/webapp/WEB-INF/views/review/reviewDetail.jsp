@@ -222,10 +222,16 @@
             document.formreviewdel.submit();
         }
 
+        // 댓글
+        function btnReply(){
+            $("#reviewReplyKey").val($('input[name=regNumHidden]').val());
+            document.formreviewreply.submit();
+        }
+
         //좋아요 → $("폼아이디).val()
         function good(regNum){
             $("#reviewDetailGoodKey").val(regNum);
-            alert($("#reviewDetailGoodKey").val());
+            /*alert($("#reviewDetailGoodKey").val());*/
             /*alert("클릭 테스트");*/
             document.formReviewGood.submit();
         }
@@ -280,6 +286,13 @@
 --%>
             <c:forEach items="${list}" var="vo">
 
+                <input type="hidden" name="regNumHidden" value="${vo.regNum}">
+
+                <button type="button" onclick="btnList()">목록</button>
+                <button type="button" onclick ="reviewDel('${vo.regNum}')">삭제</button>
+                <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정</button>
+                <button type="button" onclick="good('${vo.regNum}')"> &#x1f495 </button> <%--좋아요--%>
+
             <h1>${vo.title}</h1>
             <table>
                 <tr>
@@ -309,18 +322,32 @@
                     <td>${vo.reviewDetail}</td>
                 </tr>
             </table>
-                <table style="align-content: center; font-size: 50px;" border="1" >
-                    <tr>
-                        <td> <button type="button" onclick="good('${vo.regNum}')"> &#x1f495 </button> <%--좋아요--%> </td>
-                    </tr>
-                </table>
-                <button type="button" onclick="btnList()">목록</button>
-                <button type="button" onclick ="reviewDel('${vo.regNum}')">삭제</button>
-                <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정</button>
-                <button type="button" onclick="btnReply()">댓글</button>
 
-                </c:forEach>
+            </c:forEach>
         </form>
+
+                <%--리뷰 댓글--%>
+        <c:forEach items="${commentList}" var="vo">
+            <p>
+                <textarea rows = "5" cols = "80">${vo.commentDetail}</textarea>
+                <input value="${vo.nickname}">
+            </p>
+
+        </c:forEach>
+        <form name="formreviewreply" method="post" action="${path}/review/reviewreplysave.do">
+            <input type="hidden" name="regNum" id="reviewReplyKey">
+
+            <p>댓글작성</p>
+                <p>
+                    <textarea name = "commentDetail" id="reviewReplyInsert" rows = "5" cols = "80"></textarea>
+                    <button type="button" onclick="btnReply()">댓글 저장</button>
+                </p>
+        </form>
+
+
+
+
+
 
 
 

@@ -1,10 +1,12 @@
 package com.example.boardinfo.model.review.dto;
 
+/*리뷰 검색등에 사용하는 Key값*/
 public class reviewSerchDTO {
 
 	private String searchTitle;			// 제목 및 내용 검색
 	private String reviewDetailKey;		// regNum 키 값
-	private String createUser;			//
+	private String createUser;			// 작성자 (userId)
+
 
 
 	public String getSearchTitle() {
@@ -30,4 +32,6 @@ public class reviewSerchDTO {
 	public void setCreateUser(String createUser) {
 		this.createUser = createUser;
 	}
+
 }
+
