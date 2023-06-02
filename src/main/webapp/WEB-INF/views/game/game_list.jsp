@@ -138,15 +138,15 @@
 					<td>
 						<c:choose>
 							<c:when test="${row.gamephoto_url != null}">
-								<img src="${path}/resources/uploaded_game${row.gamephoto_url}" >
+								<img src="${path}/resources/uploaded_game${row.gamephoto_url}"  onerror="this.src='../images/game/no-image-icon.png'" width="100px" height="100px">
 							</c:when>
 							<c:otherwise>
 								<c:choose>
 									<c:when test="${row.bggnum != null}">
-										<img class="img_photo" src="${row.bgg_thumbnail}" onerror="this.src='../images/game/no_image_icon.png'"width="100px" height="100px" border="1px">
+										<img class="img_photo" src="${row.bgg_thumbnail}" onerror="this.src='../images/game/no-image-icon.png'" width="100px" height="100px" border="1px">
 									</c:when>
 									<c:otherwise>
-										<img src="../images/game/no-image-icon.png">
+										<img src="../images/game/no-image-icon.png" width="100px" height="100px">
 									</c:otherwise>
 								</c:choose>
 

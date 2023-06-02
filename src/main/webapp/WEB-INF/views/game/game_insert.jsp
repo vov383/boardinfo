@@ -587,7 +587,7 @@
 		$('#artistSuggestions').on('click', '.searched', function() {
 			var selectedArtist = $(this).text();
 			selectedArtists.push(selectedArtist);
-			$("#selectedArtist").append("<div class='selected cursor_pointer'>" + selectedArtist + "</div>");
+			$("#selectedArtist").append("<div class='selected-value cursor_pointer'>" + selectedArtist + "</div>");
 			console.log("배열"+selectedArtists);
 			$("#inputArtist").val("");
 			$("#artistSuggestions").empty().hide();
@@ -596,7 +596,7 @@
 		});
 
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedArtist").on("click", ".selected", function() {
+		$("#selectedArtist").on("click", ".selected-value", function() {
 
 			var value = $(this).text();
 
@@ -669,7 +669,7 @@
 		$('#designerSuggestions').on('click', '.searched', function() {
 			var selectedDesigner = $(this).text();
 			selectedDesigners.push(selectedDesigner);
-			$("#selectedDesigner").append("<div class='selected cursor_pointer'>" + selectedDesigner + "</div>");
+			$("#selectedDesigner").append("<div class='selected-value cursor_pointer'>" + selectedDesigner + "</div>");
 			console.log("배열"+selectedDesigners);
 			$("#inputDesigner").val("");
 			$("#designerSuggestions").empty().hide();
@@ -678,7 +678,7 @@
 		});
 
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedDesigner").on("click", ".selected", function() {
+		$("#selectedDesigner").on("click", ".selected-value", function() {
 
 			var value = $(this).text();
 
@@ -751,7 +751,7 @@
 		$('#publisherSuggestions').on('click', '.searched', function() {
 			var selectedPublisher = $(this).text();
 			selectedPublishers.push(selectedPublisher);
-			$("#selectedPublisher").append("<div class='selected cursor_pointer'>" + selectedPublisher + "</div>");
+			$("#selectedPublisher").append("<div class='selected-value cursor_pointer'>" + selectedPublisher + "</div>");
 			console.log("배열"+selectedPublishers);
 			$("#inputPublisher").val("");
 			$("#publisherSuggestions").empty().hide();
@@ -760,7 +760,7 @@
 		});
 
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedPublisher").on("click", ".selected", function() {
+		$("#selectedPublisher").on("click", ".selected-value", function() {
 
 			var value = $(this).text();
 

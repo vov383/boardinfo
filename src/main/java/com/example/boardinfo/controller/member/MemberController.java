@@ -1,17 +1,27 @@
 package com.example.boardinfo.controller.member;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import javax.servlet.http.HttpSession;
 
+import com.example.boardinfo.controller.upload.AjaxUploadController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.boardinfo.model.member.dto.MemberDTO;
@@ -20,6 +30,10 @@ import com.example.boardinfo.service.member.MemberService;
 @Controller
 @RequestMapping("member/*")
 public class MemberController {
+
+	//로깅
+	private static final Logger logger =
+			LoggerFactory.getLogger(MemberController.class);
 	
 	@Inject
 	MemberService memberService;
@@ -44,11 +58,42 @@ public class MemberController {
 			return "member/login";
 		}	
 		
+
 		//회원입력
+		@Resource(name = "uploadPath") //servlet-context에 설정된 id값과 맞춤
+		String uploadPath;
 		@RequestMapping("member_insert.do")
-		public String insertMember(@ModelAttribute MemberDTO dto) {
+		public String insertMember(@ModelAttribute MemberDTO dto, HttpServletResponse response,
+								   @RequestParam MultipartFile profile_img) {
+				OutputStream out = null;
+				response.setCharacterEncoding("utf-8");
+				response.setContentType("text/html; charset=utf-8");
+
+				try {
+					//업로드한 파일 이름
+					String fileName=profile_img.getOriginalFilename();
+					//파일을 바이트 배열로 변환
+					byte[] bytes=profile_img.getBytes();
+					out = new FileOutputStream(new File(uploadPath+"/"+fileName));
+					//서버로 업로드
+					out.write(bytes);
+
+					dto.setProfile(fileName);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					try {
+						if(out != null) {
+							out.close();
+						}
+					} catch (Exception e2) {
+						e2.printStackTrace();
+					}
+				}
 			memberService.insertMember(dto);
 			return "home";
+
 		}
 		
 		@RequestMapping("login_check.do")

@@ -562,7 +562,7 @@
 				}
 	        });
 	        if(input=="")	$('#artistSuggestions').empty();
-	    });
+	    });//검색창 검색
 
 		var selectedArtists = [];
 

@@ -58,9 +58,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="getAuto" resultType="gameDto">
-		select gnum, gametitle, gametitle_eng
-		from game
-		where gametitle like #{input}||'%'
+		select g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, ga.fullname gamephoto_url
+		from game g,
+			 (select gnum, fullname
+                  from (select row_number() over(partition by gnum order by regdate desc) rnum, gnum, fullname
+                        from game_attach
+                       ) a
+                 where rnum = 1) ga
+		where g.gnum = ga.gnum(+) and gametitle like #{input}||'%'
 	</select>
 
 	<!--첨부파일 정보 저장-->

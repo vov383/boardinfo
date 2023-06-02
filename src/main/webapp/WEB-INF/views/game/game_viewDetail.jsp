@@ -12,6 +12,56 @@
         <link rel="stylesheet" href="${path}/include/js/style_game.css">
 
         <style>
+        
+        
+        #gameInfoUpper{
+        	display: flex;
+        	padding: 20px;
+        }
+        
+        
+        #gameInfoUpper > div:first-child{
+        	padding-right: 45px;
+        }
+        
+        
+        #upperRightSide{
+        	display: flex;
+        	flex-direction: column;
+        	background-color: pink;
+        	flex-grow: 1;
+        	align-items: flex-start;
+        }
+        
+        #titleArea{
+        	display: flex;
+        	align-items: center;
+        	margin-bottom: 10px;
+        	
+        }
+        
+        #titleArea h2{
+        	font-size: 24px;
+        	margin: 0;
+        	padding: 0;
+        	margin-right: 2px;
+        }
+        
+        
+        #titleArea h3{
+        	font-size: 20px;
+        	margin: 0;
+        	padding: 0;
+        	margin-right: 10px;
+        }
+        
+        #titleArea span{
+        	font-size: 16px;
+        }
+        
+        
+        
+        
             table tr {
                 border: none;
                 background-color: white;
@@ -46,18 +96,12 @@
             .detail_div > p {
                 margin: 0;
             }
-            .game_detail_title_div{
-                margin: 10px 0px;
+            
+            .detail_div a{
+            	color: black;
+            	cursor: pointer;
             }
-            .game_detail_title {
-                display: inline;
-                font-size: 20pt;
-                font-weight: bold;
-            }
-            .game_detail_subtitle {
-                display: inline;
-                font-size: 16pt;
-            }
+            
             .game_detail_filter_div {
                 clear: both;
             }
@@ -167,7 +211,7 @@
             /*모달 내용 관련*/
             #bigFrame{
                 width: 550px;
-                padding: 60px;
+                padding: 50px;
                 display: flex;
                 flex-direction: column;
 
@@ -320,71 +364,66 @@
                 <col width="14%"/>
                 <col width="35%"/>
             </colgroup>
+            
+           
+           <div id="gameInfoUpper">
+            <c:choose>
+              <c:when test="${map.dto.gamephoto_url != null}">
+               <div>
+                 <img class="img_photo" src="${path}/resources/uploaded_game${map.dto.gamephoto_url} " width="250px" height="250px" border="1px">
+                 <a href="#">등록된 이미지 보기</a>
+               </div>
+              </c:when>
+             <c:otherwise>
+			<div>
+              <img class="img_photo" src="${map.bgg_thumbnail}"onerror="this.src='../images/game/no-image-icon.png'"  width="250px" height="250px" border="1px">
+               <p>사진출처 : boardgamegeek</p>
+            </div>
+             </c:otherwise>
+            </c:choose>           	
 
-            <tr>
-                <td rowspan="7" id="td_photo">
-                    <c:choose>
-                        <c:when test="${map.dto.gamephoto_url != null}">
-                            <img class="img_photo" src="${path}/resources/uploaded_game${map.dto.gamephoto_url} " width="250px" height="250px" border="1px">
-                            <div>
-                                <a href="#">등록된 이미지 보기</a>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <img class="img_photo" src="${map.bgg_thumbnail}"onerror="this.src='../images/game/no-image-icon.png'"  width="250px" height="250px" border="1px">
-                            <div>
-                                <p>사진출처 : boardgamegeek</p>
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
-                </td>
-                <td colspan="4"><h2 class="game_detail_title">${map.dto.gametitle}</h2><h3 class="game_detail_subtitle">(${map.dto.gametitle_eng})&nbsp;${map.dto.release_year}</h3></td>
-            </tr>
-
-            <tr style="height: 40px;">
-                <td colspan="2">
-                    <span>
-                        <img src="../images/Star3.png" width="35px" height="35px" style="vertical-align: middle;">
-                        <a href="#"><strong>[rating]</strong> (참여인원)</a>
+           	<div id="upperRightSide">
+           		<div id="titleArea"><h2>${map.dto.gametitle}</h2><h3>(${map.dto.gametitle_eng})</h3><span>${map.dto.release_year}</span></div>
+           		<div>
+           			<span>
+                        <img src="../images/Star3.png" width="40px" style="vertical-align: middle;">
+                        <c:choose>
+                        	<c:when test="${map.statisticMap!=null}">
+		                        <a href="#"><strong>
+		                        <fmt:formatNumber value="${map.statisticMap.AVGRATING}" pattern=".0"/>
+		                        </strong> (${map.statisticMap.TOT}명)</a>
+                        	</c:when>
+                        	<c:otherwise>
+                        	- (0명)
+                        	</c:otherwise>
+                        </c:choose>
                     </span>
-                </td>
-                <td colspan="2">
                     <span>
                         <img src="../images/medal105.png" width="35px" height="35px" style="vertical-align: middle;">
                         <a href="#">이번 주 게임 <strong>[ranking]</strong>위 &nbsp;&nbsp;&nbsp;&gt;</a>
                     </span>
-                </td>
-            </tr>
-
-            <tr>
-                <td>인원</td>
-                <td colspan="3"><span>${map.dto.players} <a>(베스트 [인원투표값])</a></span></td>
-            </tr>
-
-            <tr>
-                <td>난이도</td>
-                <td colspan="3"><span><a>[난이도투표평균값]</a> / 5 </span></td>
-            </tr>
-
-            <tr>
-                <td>연령</td>
-                <td colspan="3"><span>${map.dto.ages}세</span></td>
-            </tr>
-
-            <tr>
-                <td>시간</td>
-                <td colspan="3"><span>${map.dto.playtime}</span></td>
-            </tr>
-
-            <tr>
-                <td></td>
-                <td id="modal-open" class="td_btn">평가 작성하기</td>
-                <td class="td_btn">컬렉션에 추가</td>
-            </tr>
-
-        </table>
-
-        <hr>
+           		</div>
+           		
+           		<div><span>인원</span><span>${map.dto.players} <a>(베스트 [인원투표값])</a></span></div>
+           		<div><span>난이도</span>
+	           		<span>
+	 	               <c:choose>
+	 	               <c:when test="${map.statisticMap!=null}">
+	 	               <a><fmt:formatNumber value="${map.statisticMap.AVGWEIGHT}" pattern=".0"/></a>
+	 	               </c:when>
+	 	               <c:otherwise>
+	 	               -
+	 	               </c:otherwise>
+	 	               </c:choose>
+	 	               
+	 	                / 5 </span>
+           		</div>
+           		<div><span>연령</span><span>${map.dto.ages}세</span></div>
+           		<div><span>시간</span><span>${map.dto.playtime}</span></div>
+           		<div><span>내 평가</span><span></span><span>컬렉션 추가</span></div>
+           		</div>
+           	</div>
+           		
 
         <div class="detail_div">
             <div class="game_detail_title_div">
@@ -868,7 +907,13 @@
                    data : ratingForm.serialize(),
                    success: function(response){
                        if(response == 'success'){
-                           //성공했으면 폼 비워주고 닫아주기
+                    	   
+                    	   //성공했으면 닫아주고 새로고침
+                    	   alert('성공적으로 평가가 반영되었습니다.');
+                    	   modalClose();
+                    	   location.reload();
+                    	   
+                    	   
                        }
                        else alert("에러가 발생했습니다.");
                    },

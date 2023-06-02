@@ -52,8 +52,6 @@ public class TBCommentController {
 
 		return result;
 
-
-=
 	}
 
 	@RequestMapping("changeReply.do")

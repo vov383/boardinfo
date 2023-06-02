@@ -25,6 +25,7 @@ import com.example.boardinfo.model.game.dao.GameDAO;
 import com.example.boardinfo.model.game.dao.artist.ArtistDAO;
 import com.example.boardinfo.model.game.dao.category.CategoryDAO;
 import com.example.boardinfo.model.game.dao.designer.DesignerDAO;
+import com.example.boardinfo.model.game.dao.gameRating.GameRatingDAO;
 import com.example.boardinfo.model.game.dao.mechanic.MechanicDAO;
 import com.example.boardinfo.model.game.dao.publisher.PublisherDAO;
 import com.example.boardinfo.model.game.dto.GameDTO;
@@ -51,6 +52,8 @@ public class GameServiceImpl implements GameService {
   MechanicDAO mechanicDao;
   @Inject
   PublisherDAO publisherDao;
+  @Inject
+  GameRatingDAO gameRatingDao;
 
   @Override
   public Map<String, Object> gamelist(int curPage) {
@@ -219,6 +222,10 @@ public class GameServiceImpl implements GameService {
     List<DesignerDTO> dlist = designerDao.view(gnum);
     List<MechanicDTO> mlist = mechanicDao.view(gnum);
     List<PublisherDTO> plist = publisherDao.view(gnum);
+    
+    
+    HashMap<String, Object> statisticMap = gameRatingDao.getStatistic(gnum);
+    
 
     int bggnum = dto.getBggnum();
 
@@ -237,7 +244,9 @@ public class GameServiceImpl implements GameService {
     map.put("bgg_rank", bggParser.getBgg_rank());
     map.put("bgg_rate", bggParser.getBgg_rate());
     map.put("bgg_weight", bggParser.getBgg_weight());
-
+    map.put("statisticMap", statisticMap);
+    
+    
     return map;
   }
 
@@ -261,9 +270,22 @@ public class GameServiceImpl implements GameService {
   public List<PublisherDTO> getAutoPublisher(String input){
     return publisherDao.getAutoPublisher(input);
   }
+
   //top의 검색창 검색목록
   public List<GameDTO> getAutoGame(String input){
-    return gameDao.getAutoGame(input);
+    List<GameDTO> list = gameDao.getAutoGame(input);
+
+    for(GameDTO dto : list){
+      if(dto.getGamephoto_url() == null){
+        int bggnum = dto.getBggnum();
+        BggParser bggParser = new BggParser();
+        bggParser.setBgg_thumbnail(bggnum);
+        logger.info("과연 : " + dto );
+        dto.setBgg_thumbnail(bggParser.getBgg_thumbnail());
+      }
+
+    }
+    return list;
   }
   //게임등록페이지의 사진 드롭 후 제거시 사진경로 삭제
   public void deleteFile(String fileName){
