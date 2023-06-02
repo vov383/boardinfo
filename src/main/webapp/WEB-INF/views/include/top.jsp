@@ -17,7 +17,7 @@
         <div>
           <input name="gameKeyword" id="gameKeyword" placeholder="보드게임 찾기" autocomplete="off">
           <input type="hidden">
-          <img src="${path}/images/search.png" onclick="searchAll()">
+          <img id="searchimg" src="${path}/images/search.png" onclick="searchAll()">
           <div id="gameSearchDiv"></div>
         </div>
       </form>
@@ -56,12 +56,16 @@ function searchAll() {
     document.gameSearch.submit();
   }
 }
+
+//검색기능
 $(document).ready(function(){
+  //검색창 키입력후
   $("#gameKeyword").keyup(function(){
-      if(Event.keyCode === '13'){
-        searchAll();
+      if(Event.keyCode === '13'){ //엔터입력시
+        searchAll();  //검색하러감
       }else{
-        setTimeout(function () {
+        //자동완성
+        setTimeout(function () {  //딜레이
 
           var input = $("#gameKeyword").val();
           $.ajax({
@@ -71,17 +75,34 @@ $(document).ready(function(){
               var gameSearchDiv = $('#gameSearchDiv');
               gameSearchDiv.empty(); // 기존 내용 비우기
 
-              if (result.length > 0) {
+              if (result.length > 0) {  //결과값이 존재하면
                 gameSearchDiv.css('max-height', '300px').show(); // 값이 있을 경우 높이 설정하고 보이기
                 $(result).each(function(index, item) {
                   var gametitle = item.gametitle;
-                  var gametitle_eng = item.gametitle_eng;
                   var gnum = item.gnum;
+                  var gamephoto_url = item.gamephoto_url;
+                  var bgg_thumbnail = item.bgg_thumbnail;
+                  var bggnum = item.bggnum;
                   console.log(gnum);
                   console.log(gametitle);
 
-                  gameSearchDiv.append("<div class='searched_top'><a href='${path}/game/view.do?gnum=" + gnum + "'>" + gametitle + " <br>(" + gametitle_eng + ")</a></div>");
+                  //var str => #gameSearchDiv 안에 들어갈 태그 입력
+                  var str = "<div class='searched_top'><div class='imageDiv'>";
 
+                  if(gamephoto_url != null) { //db에 입력된 사진 주소값이 없으면
+                  str += '<img src="${path}/resources/uploaded_game' + gamephoto_url + '"';
+                  str += 'onerror="this.src=\'${path}/images/game/no-image-icon.png\'">';
+                  } else {
+                    if(bggnum != null){ //보드게임긱 아이디가 존재하면
+                      str += '<img class="img_photo" src="' + bgg_thumbnail + '"';
+                      str += 'onerror="this.src=\'${path}/images/game/no-image-icon.png\'">';
+                    }else {
+                      str += '<img src="${path}/images/game/no-image-icon.png">';
+                    }
+                  }
+                  str += "</div><div class='titleDiv'><a href='${path}/game/view.do?gnum=" + gnum + "'>" + gametitle + "</a></div></div>";
+
+                  gameSearchDiv.append(str);
                 });
 
               } else {
@@ -93,7 +114,8 @@ $(document).ready(function(){
             }
           });
           if(input=="")	$('#gameSearchDiv').empty();
-        },500 )
+
+        },500 ) //settimeout 콜백함수로 0.5초 딜레이 후 검색창 작동
       }
   });
 });

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.boardinfo.model.member.dao.MemberDAO;
 import com.example.boardinfo.model.member.dto.MemberDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -25,6 +26,10 @@ public class MemberServiceImpl implements MemberService {
 	public void insertMember(MemberDTO dto) {
 		memberDao.insertMember(dto);
 		
+	}
+
+	public void insertMember(MemberDTO dto, MultipartFile multipartFile){
+
 	}
 
 	@Override
