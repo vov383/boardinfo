@@ -9,8 +9,9 @@ public interface TBCommentService {
 	int getCommentCount(int tb_num);
 	boolean insertReply(TBCommentDTO re_dto);
 
+    String getReplyContent(int replyRegNum);
 
-	void updateComment(int reply_reg_num, String content, String update_user);
-	void deleteComment(int reply_reg_num, String update_user);
+	boolean editReply(TBCommentDTO re_dto);
 
+	boolean deleteReply(int reply_reg_num, String update_user);
 }

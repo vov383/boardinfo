@@ -47,6 +47,7 @@ public class TBCommentDAOImpl implements TBCommentDAO {
 
     @Override
     public int insertReply(TBCommentDTO re_dto) {
+        //mybatis는 insert, update, delete문을 실행했을 경우 resultType이 없고 수정에 성공한 row의 갯수를 반환한다.
         int result = sqlSession.insert("tbComment.insertReply", re_dto);
         return result;
     }
@@ -68,27 +69,21 @@ public class TBCommentDAOImpl implements TBCommentDAO {
         sqlSession.update("tbComment.replyOrderUpdate", map);
     }
 
-
     @Override
-    public void updateComment(int reply_reg_num, String content, String update_user) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("reply_reg_num", reply_reg_num);
-        map.put("content", content);
-        map.put("update_user", update_user);
-        sqlSession.update("tbComment.updateComment", map);
+    public String getReplyContent(int reply_reg_num) {
+        return sqlSession.selectOne("tbComment.getReplyContent", reply_reg_num);
+
     }
 
     @Override
-    public void deleteComment(int reply_reg_num, String update_user) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("reply_reg_num", reply_reg_num);
-        map.put("update_user", update_user);
-        sqlSession.delete("tbComment.deleteComment", reply_reg_num);
-
+    public int editReply(TBCommentDTO re_dto) {
+        return sqlSession.update("tbComment.editReply", re_dto);
     }
 
-
-
+    @Override
+    public int deleteReply(Map map) {
+        return sqlSession.delete("tbComment.deleteReply", map);
+    }
 
 
 }

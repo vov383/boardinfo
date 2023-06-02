@@ -21,8 +21,13 @@
 
     <!-- 댓글들을 ArrayList (dto 반환함) -->
     <select id="getReplyList" resultType="tbCommentDto">
-        select reply_reg_num, parent_reply, inner_order, depth, content,
-               create_user, create_date as create_date
+        select reply_reg_num,
+               parent_reply,
+               inner_order,
+               depth,
+               content,
+               create_user,
+               create_date as create_date
         from tb_comments
         where tb_num = #{tb_num}
         order by parent_reply, inner_order
@@ -32,13 +37,6 @@
         select reply_reg_num, parent_reply, depth, inner_order
         from tb_comments
         where reply_reg_num = #{mother_reply}
-    </select>
-
-    <!-- re_dto 객체 반환 -->
-    <select id="getReplyObject" resultType="tbCommentDto">
-        select reply_reg_num, parent_reply, depth, inner_order
-        from tb_comments
-        where reply_reg_num = #{reply_reg_num}
     </select>
 
     <!-- 댓글 순서 -->
@@ -89,29 +87,30 @@
           and inner_order >= (#{inner_order})
     </update>
 
+    <!-- re_dto 객체 반환 -->
+    <select id="getReplyContent" resultType="String">
+        select content
+        from tb_comments
+        where reply_reg_num = #{reply_reg_num}
+    </select>
+
     <!-- 댓글U -->
-    <update id="updateComment">
+    <update id="editReply">
         update tb_comments
         set content     = #{content},
             update_date = sysdate,
-            update_user = #{create_user}
+            update_user = #{update_user}
         where reply_reg_num = #{reply_reg_num}
     </update>
 
     <!-- 댓글D -->
-    <delete id="deleteComment">
+    <delete id="deleteReply">
         update tb_comments
         set del         = 'Y',
             update_date = sysdate,
             update_user = #{update_user}
         where reply_reg_num = #{reply_reg_num}
     </delete>
-
-
-
-
-
-
 
 
 </mapper>
