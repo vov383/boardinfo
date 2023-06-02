@@ -88,8 +88,7 @@ public class TBCommentController {
 		boolean result = tbcommentService.deleteReply(reply_reg_num, update_user);
 		logger.info("댓글삭제 테스트");
 		return result;
+
 	}
-
-
 
 }

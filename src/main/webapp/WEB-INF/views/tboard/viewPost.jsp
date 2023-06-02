@@ -7,6 +7,7 @@
     <title>Insert title here</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%@ include file="../include/js/header.jsp" %>
+    <link rel="stylesheet" href="${path}/include/css/trade/viewPost.css">
     <script src="${path}/include/js/jquery-3.6.3.min.js"></script>
     <script type="text/javascript">
         $(function () {
@@ -95,6 +96,7 @@
                         success: function (result) {
                             if (result) {
                                 alert("삭제되었습니다.");
+                                childCommentFormVisible = false;
                                 getReplies();
                             } else {
                                 alert("삭제실패");
@@ -333,7 +335,7 @@
                         replyChangeForm.append(input, textArea, editButton, deleteButton);
 
                         //여기서 form을 추가하면 textArea의 value인 content 가 사라지는 에러 발생
-                        //jquery로 값을 할당할 때는 .attr()로 할당하는 것이 아니라 .val()을 사용한다.
+                        //jquery로 값을 할당할 때는 .attr()에 value : 로 할당하는 것이 아니라 .val()을 사용한다.
                         $("#" + reply_reg_num).append(replyChangeForm);
                     },
                     error: function () {
@@ -387,13 +389,14 @@
                 <div class="userInfo">
                     <ul>
                         <li>
-                            <a class="userProfile"><img src="${path}/images/trade/defaultProfile.png"
-                                                        alt="유저 프로필 사진"></a>
+                            <a class="userProfile"><img src="${path}/images/trade/defaultProfile.png" alt="유저 프로필 사진"></a>
                         </li>
                         <li>
                             <a class="userNickName">유저 닉네임(${dto.create_user})</a>
                         </li>
-                        <li>거래장소</li>
+                        <li>
+                            <div class="meeting_place">ㅁㅁ구 ㅇㅇ동</div>
+                        </li>
                     </ul>
                 </div>
                 <div id="titleContainer">
@@ -417,7 +420,7 @@
                         <li>${dto.title}</li>
                         <li><fmt:formatDate value="${dto.create_date}" pattern="yyyy-MM-dd hh:mm:ss"/>
                         </li>
-                        <li>${dto.price}</li>
+                        <li>${dto.price}원</li>
                     </ul>
                 </div>
             </section>
@@ -427,7 +430,6 @@
                     ${dto.description}
                 </div>
                 <div id="meeting_place" name="meeting_place">
-                    약속장소 영역
                     <c:if test="${dto.meeting_place != null }">
                         약속장소 : ${dto.meeting_place}
                     </c:if>
@@ -435,7 +437,8 @@
                 <div id="descriptionSub">
                     <ul>
                         <li>
-                            <a href=".replyList"><img src="${path}/images/trade/uncheckedHeart.png" alt="관심등록"></a>관심
+                            <a href="#"><img src="${path}/images/trade/uncheckedHeart.png" alt="관심등록"></a>
+                            관심
                             count
                         </li>
                         <li>조회수 : ${dto.view_count}</li>
@@ -465,6 +468,38 @@
                 </form>
 
             </section>
+
+            <%-- 댓글 구조 설명하려고 만든 곳 이따 지워야함 --%>
+            <div class="reply" id="${re_dto.reply_reg_num}">
+                <div class="replyUpper">
+                    <div class="userInfo">
+                        <div class="userProfile">
+                            <img src="" alt="">
+                        </div>
+                    </div>
+                    <div class="userNickName"></div>
+                    <div class="create_date"></div>
+                </div>
+                <div class="replyMain">
+                    <div class="replyContent"></div>
+                </div>
+                <div class="replySub">
+                    <div class="left">
+                        <div class="button">
+                            <a href="">
+                                <img src="" alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="button">
+                            <a href="">
+                                <img src="" alt="">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="listAndEdit">
                 <div class="left">

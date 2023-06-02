@@ -61,7 +61,6 @@ public class TBCommentServiceImpl implements TBCommentService {
 			tbcommentDao.replyOrderUpdate(re_dto.getParent_reply(), re_dto.getInner_order());
 		}
 
-
 		if(tbcommentDao.insertReply(re_dto) >= 1) {
 			result = true;
 
