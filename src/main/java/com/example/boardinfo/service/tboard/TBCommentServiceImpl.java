@@ -1,15 +1,19 @@
 package com.example.boardinfo.service.tboard;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.example.boardinfo.model.tboard.dao.TBoardDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.example.boardinfo.model.tboard.dao.TBCommentDAO;
 import com.example.boardinfo.model.tboard.dto.TBCommentDTO;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TBCommentServiceImpl implements TBCommentService {
@@ -18,6 +22,9 @@ public class TBCommentServiceImpl implements TBCommentService {
 			= LoggerFactory.getLogger(TBCommentServiceImpl.class);
 	@Inject
 	TBCommentDAO tbcommentDao;
+
+	@Inject
+	TBoardDAO tboardDao;
 	
 	@Override
 	public List<TBCommentDTO> getCommentList(int tb_num) {
@@ -29,6 +36,7 @@ public class TBCommentServiceImpl implements TBCommentService {
 	}
 
 	@Override
+	@Transactional
 	public boolean insertReply(TBCommentDTO re_dto) {
 
 		boolean result = false;
@@ -55,18 +63,42 @@ public class TBCommentServiceImpl implements TBCommentService {
 
 		if(tbcommentDao.insertReply(re_dto) >= 1) {
 			result = true;
+
+			//댓글개수 증가 처리
+			int tb_num = re_dto.getTb_num();
+			tboardDao.increaseRecnt(tb_num);
 		}
 		return result;
 	}
 
 	@Override
-	public void updateComment(int reply_reg_num, String content, String update_user) {
-		tbcommentDao.updateComment(reply_reg_num, content, update_user);
+	public String getReplyContent(int reply_reg_num) {
+		return tbcommentDao.getReplyContent(reply_reg_num);
 	}
 
 	@Override
-	public void deleteComment(int reply_reg_num, String update_user) {
-		tbcommentDao.deleteComment(reply_reg_num, update_user);
+	public boolean editReply(TBCommentDTO re_dto) {
+		boolean result = false;
+		int editted = tbcommentDao.editReply(re_dto);
+		logger.info("에디티드 : "+ editted);
+		if(editted >= 1){
+			result = true;
+		}
+		return result;
+	}
+
+	@Override
+	public boolean deleteReply(int reply_reg_num, String update_user) {
+		boolean result = false;
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("reply_reg_num", reply_reg_num);
+		map.put("update_user", update_user);
+		int deletted = tbcommentDao.deleteReply(map);
+		if(deletted >=1 ){
+			result = true;
+		}
+		return result;
 	}
 
 

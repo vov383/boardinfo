@@ -7,6 +7,7 @@
     <title>Insert title here</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%@ include file="../include/js/header.jsp" %>
+    <link rel="stylesheet" href="${path}/include/css/trade/viewPost.css">
     <script src="${path}/include/js/jquery-3.6.3.min.js"></script>
     <script type="text/javascript">
         $(function () {
@@ -43,6 +44,72 @@
                     }
                 });
             });
+            //댓글 수정버튼
+            $(document).on("click", ".btnReplyEdit", function () {
+                let form = $(this).closest("form");
+                let content = form.find('textarea[name="content"]').val();
+                let reply_reg_num = form.find('input[name="reply_reg_num"]').val();
+                content = content.trim();
+                if (content == "") {
+                    return;
+                }
+                //여기 ajax request 보내면 바로 error로 직행. editReply.do 에서 400에러.. data로 보낼 queryString에 있던 오타때문
+                //queryString 지워버리고 data를 키밸류 쌍으로 보냄
+                //해결 완료
+                //다음은 Maximum call stack size exceeded
+                //재귀함수 스택 초과때문
+                //data 를 보낼 때 val()을 보내야하는데 html element를 보내려고 하니까 없는 value를 참조하려고 빙빙 순환하면서 stackoverflow
+                //해결완료
+                $.ajax({
+                    type: "get",
+                    url: "${path}/tbComment/editReply.do",
+                    data: {
+                        "reply_reg_num" : reply_reg_num,
+                        "content" : content
+                    },
+                    success: function (result) {
+                        //DB에서 delete했으면 true 리턴
+                        if (result) {
+                            alert("댓글 수정 성공");
+                            replyChangeFormVisible = false;
+                            getReplies();
+                        } else {
+                            alert("댓글 수정 실패");
+                        }
+                    },
+                    error: function () {
+                        alert("댓글 수정 실패");
+                    }
+                });
+            });
+            //댓글 삭제 버튼
+            $(document).on("click", ".btnReplyDelete", function () {
+                let form = $(this).closest("form");
+                let reply_reg_num = form.find('input[name="reply_reg_num"]').val();
+                if (confirm("삭제하시겠습니까?")) {
+                    $.ajax({
+                        type: "get",
+                        url: "${path}/tbComment/deleteReply.do",
+                        data: {
+                            "reply_reg_num": reply_reg_num
+                        },
+                        success: function (result) {
+                            if (result) {
+                                alert("삭제되었습니다.");
+                                childCommentFormVisible = false;
+                                getReplies();
+                            } else {
+                                alert("삭제실패");
+                            }
+                        },
+                        error: function () {
+                            alert("삭제실패");
+                        }
+
+                    });
+                }
+            });
+
             //수정버튼
             $(".btnChange").on("click", function () {
                 let tb_num = ${dto.tb_num};
@@ -80,28 +147,40 @@
                             let userNickNameDiv = $("<div>").addClass("userNickName");
                             let userIdDiv = $("<div>").addClass("create_user").attr("id", re_list[i].create_user).text(re_list[i].create_user);
 
+                            //기본 프로필 이미지 추가(추후 member에 프사 가져오는 방식으로 변경
+                            let userProfileImg = $("<img>").attr({
+                                src: "${path}/images/trade/defaultProfile.png",
+                                width: "15px"
+                            });
+                            userProfileDiv.append(userProfileImg);
+
                             let date = new Date(re_list[i].create_date);
                             let formattedDate = new Date(date + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '');
                             //3240 * 10000 milliseconds === 9h
 
                             let createDateDiv = $("<div>").addClass("create_date").text(formattedDate);
 
+                            //userInfoDiv 완성시킴
                             userInfoDiv.append(userProfileDiv);
                             userInfoDiv.append(userNickNameDiv);
                             userInfoDiv.append(userIdDiv);
                             userInfoDiv.append(createDateDiv);
 
-
+                            //댓글 본문
                             let replyContent = $('<div>').addClass('replyContent').text(re_list[i].content);
 
+                            //댓글 하단
                             let replySubDiv = $('<div>').addClass('replySub');
                             let leftDiv = $('<div>').addClass('left');
                             let leftButtonDiv = $('<div>').addClass('button');
 
-                            let childInsertLink = $('<a>').addClass('editReply').prop("href", "javascript:showChildCommentForm(" + re_list[i].reply_reg_num + ")");
+                            //jquery에서 attr()과 prop()의 결과는 같은데 attr() 로 href=''를 정의하는 것이 일반적이라고 하네요.
+                            //attribute는 속성, property는 상태라서 그런듯?
+                            let childInsertLink = $('<a>').addClass('insertChildReply').attr("href", "javascript:showChildCommentForm(" + re_list[i].reply_reg_num + ")");
+
                             let childReplyImg = $("<img>").attr({
-                                src : "${path}/images/reply_arrow.png",
-                                width : "15px"
+                                src: "${path}/images/reply_arrow.png",
+                                width: "15px"
                             });
                             childInsertLink.append(childReplyImg);
                             leftButtonDiv.append(childInsertLink);
@@ -110,34 +189,34 @@
                             let rightDiv = $('<div>').addClass('right');
                             let rightButtonDiv = $('<div>').addClass('button');
 
-                            let replyEditLink= $('<a>').addClass('insertChildReply').prop("href", "javascript:editReply(" + re_list[i].reply_reg_num + ")");
+                            let replyChangeLink = $('<a>').addClass('changeReply').prop("href", "javascript:changeReply(" + re_list[i].reply_reg_num + ")");
 
-                            let replyEditImg = $("<img>").attr({
-                                src : "${path}/images/trade/changeBtn.png",
-                                width : "30px"
+                            let replyChangeImg = $("<img>").attr({
+                                src: "${path}/images/trade/changeBtn.png",
+                                width: "30px"
                             });
-                            replyEditLink.append(replyEditImg);
-                            rightButtonDiv.append(replyEditLink);
+                            replyChangeLink.append(replyChangeImg);
+                            rightButtonDiv.append(replyChangeLink);
                             rightDiv.append(rightButtonDiv);
 
                             replySubDiv.append(leftDiv);
                             replySubDiv.append(rightDiv);
 
-
                             //대댓글 들여쓰기
                             if (re_list[i].depth > 0) {
                                 reply.addClass("childReply");
-                                childReplyImg = $("<img>").attr(
-                                    "src='${path}/images/re_reply.png'");
+                                childReplyImg = $("<img>").attr("src='${path}/images/re_reply.png'");
                                 replyUpperDiv.append(childReplyImg);
                                 replyUpperDiv.append(userInfoDiv);
 
                                 replyUpperDiv.css("padding-left", (re_list[i].depth * 18) + "px");
                                 replyContent.css("padding-left", (re_list[i].depth * 18) + "px");
+                                replySubDiv.css("padding-left", (re_list[i].depth * 18) + "px");
 
-
+                            } else {
+                                replyUpperDiv.append(userInfoDiv);
                             }
-                            replyUpperDiv.append(userInfoDiv);
+
                             reply.append(replyUpperDiv);
                             reply.append(replyContent);
                             reply.append(replySubDiv);
@@ -150,7 +229,7 @@
 
                 }, error: function () {
                     $("#countReplies").text(0);
-                }//문제가 여기서 서 step into 하면 터져버림
+                }
             });//ajax 끝
         }
 
@@ -175,7 +254,7 @@
                     });
 
                 let textArea = $("<textarea>").attr({
-                    name: "content"
+                    name: "content",
                 });
 
                 let input = $("<input>").attr({
@@ -197,10 +276,74 @@
 
         }
 
-
         //댓글 수정
-        function editReply(reply_reg_num) {
+        let replyChangeFormVisible = false;
 
+        function changeReply(reply_reg_num) {
+
+            if (replyChangeFormVisible) {
+                $(".replyChangeForm").remove();
+                //id선택자의 후손 선택자의 css를 조작
+                $("#" + reply_reg_num + ".replyContent").css({
+                    display: "block"
+                });
+                alert("댓글 수정을 취소했습니다.");
+                replyChangeFormVisible = false;
+                return;
+            } else {
+                replyChangeFormVisible = true;
+                $("#" + reply_reg_num + ".replyContent").css({
+                    display: "none"
+                });
+
+                //여기에서 ajax 요청이 실패가 나면서 form이 안 만들어짐
+                //changeReply.do 에서 400 에러 -> 대부분 ajax syntax에러
+                $.ajax({
+                    type: "get",
+                    url: "${path}/tbComment/changeReply.do",
+                    data: {
+                        "reply_reg_num": reply_reg_num
+                    },
+                    success: function (result) {
+
+                        let reply_reg_num = result.reply_reg_num;
+                        let content = result.content;
+                        let replyChangeForm = $("<form>").addClass("replyChangeForm").attr({
+                            name: "replyChangeForm"
+                        });
+
+                        replyChangeForm.attr({
+                            name: "replyChangeForm"
+                        });
+                        let input = $("<input>").attr({
+                            type: "hidden",
+                            name: "reply_reg_num"
+                        }).val(reply_reg_num);
+                        let textArea = $("<textarea>").attr({
+                            name: "content",
+                        }).val(content);
+                        let editButton = $("<button>")
+                            .attr({
+                                type: "button",
+                                class: "btnReplyEdit"
+                            }).text("수정완료");
+                        let deleteButton = $("<button>").attr({
+                            type: "button",
+                            class: "btnReplyDelete"
+                        }).text("삭제");
+
+                        replyChangeForm.append(input, textArea, editButton, deleteButton);
+
+                        //여기서 form을 추가하면 textArea의 value인 content 가 사라지는 에러 발생
+                        //jquery로 값을 할당할 때는 .attr()에 value : 로 할당하는 것이 아니라 .val()을 사용한다.
+                        $("#" + reply_reg_num).append(replyChangeForm);
+                    },
+                    error: function () {
+                        replyChangeFormVisible = false;
+                        alert("실패!");
+                    }
+                });
+            }
         }
     </script>
 </head>
@@ -219,7 +362,7 @@
                 </div>
             </div>
             <div class="right">
-                <div class="button"><a class="btnChange"><img src="${path}/images/trade/changeBtn.png}"></a></div>
+                <div class="button"><a class="btnChange"><img src="${path}/images/trade/changeBtn.png"></a></div>
             </div>
         </div>
         <div id="contentsMain">
@@ -251,7 +394,9 @@
                         <li>
                             <a class="userNickName">유저 닉네임(${dto.create_user})</a>
                         </li>
-                        <li>거래장소</li>
+                        <li>
+                            <div class="meeting_place">ㅁㅁ구 ㅇㅇ동</div>
+                        </li>
                     </ul>
                 </div>
                 <div id="titleContainer">
@@ -275,7 +420,7 @@
                         <li>${dto.title}</li>
                         <li><fmt:formatDate value="${dto.create_date}" pattern="yyyy-MM-dd hh:mm:ss"/>
                         </li>
-                        <li>${dto.price}</li>
+                        <li>${dto.price}원</li>
                     </ul>
                 </div>
             </section>
@@ -285,7 +430,6 @@
                     ${dto.description}
                 </div>
                 <div id="meeting_place" name="meeting_place">
-                    약속장소 영역
                     <c:if test="${dto.meeting_place != null }">
                         약속장소 : ${dto.meeting_place}
                     </c:if>
@@ -293,7 +437,8 @@
                 <div id="descriptionSub">
                     <ul>
                         <li>
-                            <a href=".replyList"><img src="${path}/images/trade/uncheckedHeart.png" alt="관심등록"></a>관심
+                            <a href="#"><img src="${path}/images/trade/uncheckedHeart.png" alt="관심등록"></a>
+                            관심
                             count
                         </li>
                         <li>조회수 : ${dto.view_count}</li>
@@ -324,6 +469,38 @@
 
             </section>
 
+            <%-- 댓글 구조 설명하려고 만든 곳 이따 지워야함 --%>
+            <div class="reply" id="${re_dto.reply_reg_num}">
+                <div class="replyUpper">
+                    <div class="userInfo">
+                        <div class="userProfile">
+                            <img src="" alt="">
+                        </div>
+                    </div>
+                    <div class="userNickName"></div>
+                    <div class="create_date"></div>
+                </div>
+                <div class="replyMain">
+                    <div class="replyContent"></div>
+                </div>
+                <div class="replySub">
+                    <div class="left">
+                        <div class="button">
+                            <a href="">
+                                <img src="" alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="button">
+                            <a href="">
+                                <img src="" alt="">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="listAndEdit">
                 <div class="left">
                     <div class="button"><a href="${path}/tboard/list.do"><img
@@ -331,7 +508,7 @@
                 </div>
                 <div class="right">
                     <div class="button"><a class="btnChange"><img
-                            src="${path}/images/trade/changeBtn.png}" alt=""></a></div>
+                            src="${path}/images/trade/changeBtn.png" alt=""></a></div>
                 </div>
             </div>
         </div>
