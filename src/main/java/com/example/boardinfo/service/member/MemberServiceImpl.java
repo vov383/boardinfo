@@ -23,6 +23,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void insertMember(MemberDTO dto) {
+		
 		memberDao.insertMember(dto);
 		
 	}
@@ -48,14 +49,13 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void updateMember(MemberDTO dto) {
-		// TODO Auto-generated method stub
-		
+			memberDao.updateMember(dto);
 	}
 
 	@Override
-	public void deleteMember(String userid) {
-		// TODO Auto-generated method stub
-		
+	public void deleteMember(String userid , HttpSession session) {
+			memberDao.deleteMember(userid);
+			session.invalidate();
 	}
 
 	@Override
@@ -81,6 +81,15 @@ public class MemberServiceImpl implements MemberService {
 	public boolean checkDuplicateNick(String nickname) {
 		MemberDTO existingMember = memberDao.selectMemberByNick(nickname);
 	    return existingMember != null;
+	}
+
+	@Override
+	public boolean getDelValue(String userid) {
+	    MemberDTO delMember = memberDao.getDelValue(userid);
+	    if (delMember != null && "y".equals(delMember.getDel())) {
+	        return true; // 탈퇴한 회원인 경우
+	    }
+	    return false; // 탈퇴하지 않은 회원인 경우
 	}
 
 }

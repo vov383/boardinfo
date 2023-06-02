@@ -51,14 +51,12 @@ public class MemberDAOImpl implements MemberDAO {
 
 	@Override
 	public void updateMember(MemberDTO dto) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.selectOne("member.updateMember",dto);
 	}
 
 	@Override
 	public void deleteMember(String userid) {
-		// TODO Auto-generated method stub
-		
+		sqlSession.update("member.deleteMember",userid);
 	}
 
 	@Override
@@ -74,6 +72,11 @@ public class MemberDAOImpl implements MemberDAO {
 	@Override
 	public MemberDTO selectMemberByNick(String nickname) {
 		return sqlSession.selectOne("member.selectMemberByNick", nickname);
+	}
+
+	@Override
+	public MemberDTO getDelValue(String userid) {
+		return sqlSession.selectOne("member.getDelValue",userid);
 	}
 
 

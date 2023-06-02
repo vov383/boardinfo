@@ -3,6 +3,7 @@ package com.example.boardinfo.controller.member;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -52,17 +53,24 @@ public class MemberController {
 		
 		@RequestMapping("login_check.do")
 		public ModelAndView login_check(MemberDTO dto, HttpSession session) {
-			//로그인 성공 true, 실패 false
-			boolean result=memberService.loginCheck(dto, session);
-			ModelAndView mav=new ModelAndView();
-			if(result) {//로그인 성공
-				mav.setViewName("home");
-			}else {
-				mav.setViewName("member/login");//뷰이름
-				mav.addObject("message", "error");//뷰에 전달할 값
-			}
-			return mav;
+		    //로그인 성공 true, 실패 false
+		    boolean result = memberService.loginCheck(dto, session);
+		    boolean getDelValue = memberService.getDelValue(dto.getUserid()); // 회원 탈퇴 여부 확인
+		    ModelAndView mav = new ModelAndView();
+		    if (result) { //로그인 성공
+		        mav.setViewName("home");
+		    } else {
+		    		mav.setViewName("member/login");//뷰이름
+		        if (getDelValue) {
+		            mav.addObject("message", "del"); // 탈퇴한 회원 메시지
+		        } else {
+		            mav.addObject("message", "error"); // 로그인 실패 메시지
+		           
+		        }
+		    }
+		    return mav;
 		}
+
 		
 		@RequestMapping("logout.do")
 		public String logout(HttpSession session) {
@@ -108,12 +116,28 @@ public class MemberController {
 			//비밀번호 체크
 			boolean result=memberService.checkPw(dto.getUserid(), dto.getPasswd());
 			if(result) {//비번이 맞으면
+				model.addAttribute("dto", memberService.viewMember(dto.getUserid()));
 				return "member/edit";
 			}else {//비번이 틀리면
 				model.addAttribute("dto", dto);
 				model.addAttribute("message", "비밀번호를 확인하세요.");
 				return "member/view";
 			}
+		}
+		
+		@RequestMapping("update.do")
+		public String update(MemberDTO dto, HttpServletRequest request,Model model) {
+				memberService.updateMember(dto);
+				HttpSession session = request.getSession();
+				session.setAttribute("name",dto.getName());
+				return "home";
+		}
+		
+		@RequestMapping("delete.do")
+		public String delete(@RequestParam("userid") String userid,HttpSession session ) {
+				memberService.deleteMember(userid, session);
+				
+				return "home";
 		}
 		
 		

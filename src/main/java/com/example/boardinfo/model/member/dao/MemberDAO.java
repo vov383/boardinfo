@@ -14,5 +14,6 @@ public interface MemberDAO {
 	MemberDTO viewMember(String userid);
 	MemberDTO selectMemberById(String userid);
 	MemberDTO selectMemberByNick(String nickname);
+	MemberDTO getDelValue(String userid);
 	
 }
