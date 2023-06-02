@@ -277,7 +277,7 @@
 
             $("#bigBtn-apply").on("click", function(){
 
-                if("${sessionScope.userid==null}"){
+                if("${sessionScope.userid}" == ""){
                     if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
                         location.href= "${path}/member/member_login.do";
                         return;
@@ -321,7 +321,7 @@
 
             $(document).on("click", ".btn-AddReply", function() {
 
-                if("${sessionScope.userid==null}"){
+                if("${sessionScope.userid}" == ""){
                     if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
                         location.href= "${path}/member/member_login.do";
                         return;
