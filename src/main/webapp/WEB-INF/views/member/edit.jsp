@@ -16,15 +16,98 @@
 }
 </style>
 <script type="text/javascript">
+var oldNickName;
+$(document).ready(function () {
+	oldNickName= $("#nickname").val();
+});
+
 $(function() {
-	$("#btnUpdate").click(function(){
+	
+    $("#btnNickCheck").click(function() {
+      var nickname = $("#nickname").val();
+      if (nickname == "") {
+        alert("닉네임을 입력하세요.");
+        $("#nickname").focus();
+        return;
+      }
+      $.ajax({
+        url: "${path}/member/check_nick.do",
+        type: "POST",
+        data: {
+          nickname: nickname
+        },
+        success: function(result) {
+          if (oldNickName == $("#nickname").val() ){
+          	alert("현재 닉네임과 동일합니다.");
+        	isNickChecked = true;	
+          } else if (result == "duplicate") {
+            alert("이미 사용 중인 닉네임입니다.");
+            $("#nickname").val("");
+            $("#nickname").focus();
+            isNickChecked = false;
+          } else if (result == "available") {
+            alert("사용 가능한 닉네임입니다.");
+            isNickChecked = true;
+            document.form1.nickname.readOnly = true;
+          }
+        },
+        error: function() {
+          alert("서버와의 통신에 실패했습니다.");
+        }
+      });
+    });
+  });
+
+function check() {
+	//이름 체크
+	var name = $("#name").val();
+	if(name==""){
+		alert("이름은 필수 입력입니다.");
+		$("#name").focus();
+		return;
+	}	
+
+	//이름 정규식
+	var exp3 = /^[가-힣]+$/;
+	if(!exp3.test(name)){
+		alert("이름은 한글로 입력하세요.");
+		$("#name").focus();
+		return;
+	}
+	
+	//이메일 체크
+	var email = $("#email").val();
+	if(email==""){
+		alert("이메일은 필수 입력입니다.");
+		$("#email").focus();
+		return;
+	}
+	//이메일 정규식
+	var exp4 = /^[a-z0-9]{2,9}@[a-z0-9]{2,9}\.[a-z]{2,}$/;
+	if(!exp4.test(email)){
+		alert("이메일 형식이 잘못되었습니다. ex)abc@abc.com");
+		$("#email").focus();
+		return;
+	}
+	//핸드폰번호 정규식
+	var hp = $("#hp").val();
+	var exp5 = /^[\d]{11,12}$/;
+	if(!exp5.test(hp)){
+		alert("11~12자리를 숫자로 입력해주세요.");
+		$("#hp").focus();
+		return;
+	}
 		document.form1.action="${path}/member/update.do";
 		document.form1.submit();
-	});
+			alert("수정되었습니다.");
+	
+}
+$(function() {
 	$("#btnDelete").click(function(){
 		if(confirm('삭제하시겠습니까?')){
 			document.form1.action="${path}/member/delete.do";
 			document.form1.submit();
+			alert("회원탈퇴가 완료되었습니다.");
 		}
 	});
 });
@@ -50,11 +133,15 @@ $(function() {
  </tr>
  <tr>
   <td>비밀번호</td>
-  <td><input type="password" id="passwd" name="passwd"></td>
+  <td><input type="password" id="passwd" name="passwd" readonly></td>
  </tr>
  <tr>
   <td>닉네임</td>
-  <td><input value="${dto.nickname}" id="nickname" name="nickname" ></td>
+  <td>
+    <input value="${dto.nickname}" id="nickname" name="nickname" >
+  	<button type="button" id="btnNickCheck" >중복확인</button>
+  </td>
+  
  </tr>
  <tr>
   <td>이메일</td>
@@ -72,7 +159,7 @@ $(function() {
  </tr>
  <tr>
   <td colspan="2" align="center">
-   <input type="button" value="수정하기" name="btnUpdate" id="btnUpdate" >
+   <input type="button" value="수정하기" name="btnUpdate" id="btnUpdate" onclick="check()">
    <input type="button" value="탈퇴하기" name="btnDelete" id="btnDelete" >
      <a href="${path}/"><button type="button">메인으로</button></a>
   </td>

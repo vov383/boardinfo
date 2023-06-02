@@ -13,10 +13,11 @@ public interface MemberService {
 	boolean loginCheck(MemberDTO dto, HttpSession session);
 	boolean checkPw(String userid, String passwd);
 	void updateMember(MemberDTO dto);
-	void deleteMember(String userid);
+	void deleteMember(String userid , HttpSession session);
 	MemberDTO viewMember(String userid);
 	void logout(HttpSession session);
 	boolean checkDuplicateId(String userid);
 	boolean checkDuplicateNick(String nickname);
+	boolean getDelValue(String userid);
 	
 }
