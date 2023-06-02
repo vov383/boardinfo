@@ -403,24 +403,36 @@
             <option value="all">전체</option>
             <option value="title" selected>제목</option>
             <option value="gathering_content">내용</option>
+            <option value="location">장소</option>
             <option value="writer">글쓴이</option>
           </c:when>
           <c:when test="${option=='gathering_content'}">
             <option value="all">전체</option>
             <option value="title" selected>제목</option>
             <option value="gathering_content" selected>내용</option>
+            <option value="location">장소</option>
             <option value="writer">글쓴이</option>
           </c:when>
+          <c:when test="${option=='location'}">
+            <option value="all">전체</option>
+            <option value="title">제목</option>
+            <option value="gathering_content">내용</option>
+            <option value="location" selected>장소</option>
+            <option value="writer" selected>글쓴이</option>
+          </c:when>
+
           <c:when test="${option=='writer'}">
             <option value="all">전체</option>
             <option value="title">제목</option>
             <option value="gathering_content">내용</option>
+            <option value="location">장소</option>
             <option value="writer" selected>글쓴이</option>
           </c:when>
           <c:otherwise>
             <option value="all" selected>전체</option>
             <option value="title">제목</option>
             <option value="gathering_content">내용</option>
+            <option value="location">장소</option>
             <option value="writer">글쓴이</option>
           </c:otherwise>
         </c:choose>
@@ -439,7 +451,7 @@
                 <span>
               <a class="title" href="${path}/gathering/view/${post.gathering_id}">${post.title}</a>
               </span>
-                <span class="numPeople">(3/${post.maxPeople}명)</span>
+                <span class="numPeople">(${post.attendee_count}/${post.maxPeople}명)</span>
               </div>
               <div class="detail">
                 <span class="location"><img src="${path}/images/location_pin.png" width="18px">${post.address1} ${post.address2}</span>
@@ -452,7 +464,7 @@
               </div>
             </div>
             <div class="postLower">
-              <span>${post.writer_id}</span>
+              <span>${post.nickname}</span>
               <span><fmt:formatDate value="${post.post_date}" pattern="yyyy-MM-dd"/></span>
               <span>조회 ${post.view_count}</span>
               <span>댓글 ${post.reply_count}</span>

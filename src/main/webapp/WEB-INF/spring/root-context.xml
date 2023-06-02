@@ -21,13 +21,11 @@
 
 
 		<property name="url"
-				  value="jdbc:log4jdbc:oracle:thin:@192.168.30.213:1521:xe" />
+		value="jdbc:log4jdbc:oracle:thin:@192.168.30.213:1521:xe" />
 		<property name="username" value="boardinfo" />
-	
-
-<!-- 		<property name="url"-->
-<!-- 			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe" />-->
-<!-- 		<property name="username" value="spring" />-->
+ <!--		<property name="url"-->
+ <!--			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe" />-->
+ <!--		<property name="username" value="spring" />-->
 
 		<property name="password" value="1234" />
 
@@ -62,7 +60,7 @@
 	</bean>
 	
 	
-	<!-- websocket -->
+	<!-- websocket
 	<websocket:handlers>
 	<websocket:mapping handler="chatHandler" path="/chatting" /> 
 	<websocket:handshake-interceptors>
@@ -71,7 +69,8 @@
     </websocket:handshake-interceptors>
 	<websocket:sockjs />
 	</websocket:handlers>
-	<bean id="chatHandler" class="com.example.boardinfo.controller.chat.ChatHandler"/>    
+	<bean id="chatHandler" class="com.example.boardinfo.handler.ChatHandler"/>
+	 -->
 
 	<!-- SqlSessionFactory 객체 주입 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

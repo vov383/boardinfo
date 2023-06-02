@@ -3,7 +3,6 @@ package com.example.boardinfo.model.review.dao;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.review.dto.TestDTO;
 import com.example.boardinfo.model.review.dto.reviewSerchDTO;
-import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +22,12 @@ public class ReviewDAOImpl implements ReviewDAO {
         return sqlSession.selectList("review.reviewList", reviewserchDTO);
     }
 
+    //리뷰 조회수 증가
+    @Override
+    public void reviewViews(reviewSerchDTO reviewserchDTO) {
+        sqlSession.update("review.reviewViews", reviewserchDTO);
+    }
+
     //리뷰 입력
     @Override
     public void reviewCreate(ReviewDTO reviewDTO) {
@@ -38,6 +43,26 @@ public class ReviewDAOImpl implements ReviewDAO {
         sqlSession.update("review.reviewedit", reviewDTO);
 
     }
+
+    //리뷰 삭제
+    @Override
+    public void reviewDel(reviewSerchDTO reviewserchDTO) {
+
+        sqlSession.update("review.revieweDel", reviewserchDTO);
+
+    }
+
+    //리뷰 좋아요
+    @Override
+    public void reviewGoodCreate(reviewSerchDTO reviewserchDTO) {
+
+        sqlSession.insert("review.reviewGood", reviewserchDTO);
+
+    }
+
+
+
+
 
 
 

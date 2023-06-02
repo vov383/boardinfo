@@ -49,8 +49,12 @@ public class TBCommentController {
 		boolean result = tbcommentService.insertReply(re_dto);
 		logger.info("댓글입력 테스트" + re_dto.toString());
 
+
 		return result;
+
+
 	}
+
 	@RequestMapping("changeReply.do")
 	@ResponseBody
 	public Map<String, Object> changeReply(
@@ -62,6 +66,7 @@ public class TBCommentController {
 		map.put("content", content);
 		return map;
 	}
+
 
 	@RequestMapping("editReply.do")
 	@ResponseBody

@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="category">
 	
 	<select id="check" resultType="int">
-		select count(*)
+		select nvl(max(cnum),0) cnum
 		from category
 		where gamecategory=#{gamecategory}
 	</select>
@@ -42,6 +42,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from category c, game_category gc
 		where c.cnum = gc.cnum and gc.gnum = #{gnum}
 	</select>
+
+	<select id="updatecheck" resultType="int">
+		select count(*)
+		from game_category gc, category c
+		where gc.cnum = c.cnum and gc.gnum = #{gnum} and c.gamecategory = #{gamecategory}
+	</select>
+
+	<insert id="insertmapping_update">
+		insert into game_category
+		values (#{gnum},#{cnum})
+	</insert>
 	
 </mapper>
 

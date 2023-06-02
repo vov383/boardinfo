@@ -73,7 +73,8 @@ public class GameController {
 		//정보
 		Map<String, Object> map = gameService.view(gnum);
 
-		mav.setViewName("game/game_view");
+//		mav.setViewName("game/game_view");
+		mav.setViewName("game/game_viewDetail");
 		mav.addObject("map", map);
 		return mav;
 	}
@@ -119,8 +120,22 @@ public class GameController {
 
 		mav.setViewName("game/game_filteredList");
 		mav.addObject("map", gameService.filteredGamelist(filter, num, curPage));
+
 		return mav;
 	}
 
-	
+	@RequestMapping("updateView.do")
+	public ModelAndView updateView(ModelAndView mav, @RequestParam("gnum")int gnum) throws Exception {
+		mav.setViewName("game/game_update");
+		mav.addObject("dto", gameService.updateView(gnum));
+		mav.addObject("clist", gameService.categorylist());
+		mav.addObject("mlist", gameService.mechaniclist());
+		return mav;
+	}
+
+	@RequestMapping("update.do")
+	public String update(@ModelAttribute GameDTO dto) {
+		gameService.gameupdate(dto);
+		return "home";
+	}
 }

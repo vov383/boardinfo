@@ -17,6 +17,7 @@ import com.example.boardinfo.util.BggParser;
 import com.example.boardinfo.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,13 +91,12 @@ public class GameServiceImpl implements GameService {
     String[] gamecategories = dto.getGamecategory().split(",");
 
     for(String str : gamecategories) {
-      int check_category = categoryDao.check_category(str);
+      int cnum = categoryDao.check_category(str);
       
-      if (check_category == 0) { // 해당 카테고리가 db에 없다면
+      if (cnum == 0) { // 해당 카테고리가 db에 없다면
         categoryDao.insert_category(str);
         categoryDao.insert_category_mapping();
       } else { // db에 존재하는 카테고리라면
-        int cnum = categoryDao.categorynum(str);
         categoryDao.insert_category_mapping(cnum);
       }
     }
@@ -106,13 +106,12 @@ public class GameServiceImpl implements GameService {
     String[] artists = dto.getArtist().split(",");
 
     for(String str : artists) {
-      int check_artist = artistDao.check_artist(str);
+      int anum = artistDao.check_artist(str);
 
-      if (check_artist == 0) { // 해당 아티스트가 db에 없다면
+      if (anum == 0) { // 해당 아티스트가 db에 없다면
         artistDao.insert_artist(str);
         artistDao.insert_artist_mapping();
       } else { // db에 존재하는 아티스트라면
-        int anum = artistDao.artistnum(str);
         artistDao.insert_artist_mapping(anum);
       }
     }
@@ -122,13 +121,12 @@ public class GameServiceImpl implements GameService {
     String[] mechanics = dto.getMechanic().split(",");
 
     for(String str : mechanics) {
-      int check_mechanic = mechanicDao.check_mechanic(str);
+      int mnum = mechanicDao.check_mechanic(str);
 
-      if (check_mechanic == 0) { // 해당 매카니즘이 db에 없다면
+      if (mnum == 0) { // 해당 매카니즘이 db에 없다면
         mechanicDao.insert_mechanic(str);
         mechanicDao.insert_mechanic_mapping();
       } else { // db에 존재하는 매카니즘이라면
-        int mnum = mechanicDao.mechanicnum(str);
         mechanicDao.insert_mechanic_mapping(mnum);
       }
     }
@@ -138,13 +136,12 @@ public class GameServiceImpl implements GameService {
     String[] publishers = dto.getPublisher().split(",");
 
     for(String str : publishers) {
-      int check_publisher = publisherDao.check_publisher(str);
+      int pnum = publisherDao.check_publisher(str);
 
-      if (check_publisher == 0) { // 해당 제작자가 db에 없다면
+      if (pnum == 0) { // 해당 제작자가 db에 없다면
         publisherDao.insert_publisher(str);
         publisherDao.insert_publisher_mapping();
       } else { // db에 존재하는 제작자라면
-        int pnum = publisherDao.publishernum(str);
         publisherDao.insert_publisher_mapping(pnum);
       }
     }
@@ -154,13 +151,12 @@ public class GameServiceImpl implements GameService {
     String[] designers = dto.getDesigner().split(",");
 
     for(String str : designers) {
-      int check_designer = designerDao.check_designer(str);
+      int dnum = designerDao.check_designer(str);
 
-      if (check_designer == 0) { // 해당 디자인이 db에 없다면
+      if (dnum == 0) { // 해당 디자인이 db에 없다면
         designerDao.insert_designer(str);
         designerDao.insert_designer_mapping();
       } else { // db에 존재하는 디자인이라면
-        int dnum = designerDao.designernum(str);
         designerDao.insert_designer_mapping(dnum);
       }
     }
@@ -203,10 +199,11 @@ public class GameServiceImpl implements GameService {
 
   //게임정보페이지
   @Transactional
-  public Map<String, Object> view(int gnum) throws Exception {
-    Map<String, Object> map = new HashMap<>();
+  public Map<String, Object> view(int gnum){
+
     //game테이블 데이터
     GameDTO dto = gameDao.view(gnum);
+
     //사진
     String str = dto.getGamephoto_url();
     if(str != null) {
@@ -214,6 +211,9 @@ public class GameServiceImpl implements GameService {
       String end = str.substring(14);
       dto.setGamephoto_url(front+end);
     }
+
+
+
     List<ArtistDTO> alist = artistDao.view(gnum);
     List<CategoryDTO> clist = categoryDao.view(gnum);
     List<DesignerDTO> dlist = designerDao.view(gnum);
@@ -223,8 +223,9 @@ public class GameServiceImpl implements GameService {
     int bggnum = dto.getBggnum();
 
     BggParser bggParser = new BggParser();
-      bggParser.setBggInfo(bggnum);
+    bggParser.setBggInfo(bggnum);
 
+    Map<String, Object> map = new HashMap<>();
     map.put("dto",dto);
     map.put("alist", alist);
     map.put("clist", clist);
@@ -271,7 +272,9 @@ public class GameServiceImpl implements GameService {
 
 
   //아티스트,카테고리,디자이너,메카닉,퍼블리셔 개별 항목에 대응하는 게임목록 출력
+
   public Map<String, Object> filteredGamelist(String filter,int num, int curPage){
+
     Map<String, Object> map = new HashMap<>();
     map.put("filter",filter);
     map.put("num", num);
@@ -300,4 +303,175 @@ public class GameServiceImpl implements GameService {
 
     return map;
   }
+
+  //게임수정페이지로 이동
+  public GameDTO updateView(int gnum){
+    GameDTO dto = gameDao.view(gnum);
+
+    List<ArtistDTO> alist = artistDao.view(gnum);
+    List<CategoryDTO> clist = categoryDao.view(gnum);
+    List<DesignerDTO> dlist = designerDao.view(gnum);
+    List<MechanicDTO> mlist = mechanicDao.view(gnum);
+    List<PublisherDTO> plist = publisherDao.view(gnum);
+
+    StringBuilder strbuilder = new StringBuilder();
+    for(ArtistDTO item : alist){
+      String str = item.getArtist();
+      strbuilder.append(str).append(",");
+    }
+    String artist = strbuilder.toString();
+    artist = artist.substring(0,artist.length()-1);
+    dto.setArtist(artist);
+
+    strbuilder.setLength(0);
+    for(CategoryDTO item : clist){
+      String str = item.getGamecategory();
+      strbuilder.append(str).append(",");
+    }
+    String gamecategory = strbuilder.toString();
+    gamecategory = gamecategory.substring(0,gamecategory.length()-1);
+    dto.setGamecategory(gamecategory);
+
+    strbuilder.setLength(0);
+    for(DesignerDTO item : dlist){
+      String str = item.getDesigner();
+      strbuilder.append(str).append(",");
+    }
+    String designer = strbuilder.toString();
+    designer = designer.substring(0,designer.length()-1);
+    dto.setDesigner(designer);
+
+    strbuilder.setLength(0);
+    for(MechanicDTO item : mlist){
+      String str = item.getMechanic();
+      strbuilder.append(str).append(",");
+    }
+    String mechanic = strbuilder.toString();
+    mechanic = mechanic.substring(0,mechanic.length()-1);
+    dto.setMechanic(mechanic);
+
+    strbuilder.setLength(0);
+    for(PublisherDTO item : plist){
+      String str = item.getPublisher();
+      strbuilder.append(str).append(",");
+    }
+    String publisher = strbuilder.toString();
+    publisher = publisher.substring(0,publisher.length()-1);
+    dto.setPublisher(publisher);
+
+    return dto;
+  }
+
+  @Transactional
+  @Override
+  public void gameupdate(GameDTO dto) {
+
+    //게임테이블에 update
+    gameDao.gameupdate(dto);
+    int gnum = dto.getGnum();
+    //카테고리테이블 update
+    //카테고리배열
+    String[] gamecategories = dto.getGamecategory().split(",");
+
+    for(String str : gamecategories) {
+      //해당 번호의 게임에 해당 카테고리가 존재하느냐
+      int check_game_category = categoryDao.check_category(str,gnum);
+
+      if (check_game_category == 0) { // 해당 카테고리가 해당번호의 게임에 없다면
+        //해당 카테고리가 db에 존재하느냐
+        int cnum = categoryDao.check_category(str);
+        if (cnum == 0) { //해당 카테고리가 db에 존재하지 않는다면
+          logger.info("cnum/str확인!!!!!!"+cnum+"/////"+str);
+          categoryDao.insert_category(str);
+          categoryDao.insert_category_mapping();
+        }else { //해당 카테고리가 db에 존재하면
+          categoryDao.insert_category_mapping(gnum,cnum);
+        }
+      }
+    }
+
+    //아티스트테이블 update
+    //아티스트배열
+    String[] artists = dto.getArtist().split(",");
+
+    for(String str : artists) {
+      //해당 번호의 게임에 해당 아티스트가 존재하느냐
+      int check_artist = artistDao.check_artist(str,gnum);
+
+      if (check_artist == 0) { // 해당 아티스트가 해당번호의 게임에 없다면
+        //해당 아티슽츠가 db에 존재하느냐
+        int anum = artistDao.check_artist(str);
+        if(anum == 0) { //해당 아티스트가 해당번호의 게임에 없다면
+          artistDao.insert_artist(str);
+          artistDao.insert_artist_mapping();
+        }else { // db에 존재하는 아티스트라면
+          artistDao.insert_artist_mapping(gnum,anum);
+        }
+      }
+    }
+
+    //메카닉테이블 insert
+    //메카닉배열
+    String[] mechanics = dto.getMechanic().split(",");
+
+    for(String str : mechanics) {
+      //해당 번호의 게임에 해당 메카닉이 존재하느냐
+      int check_mechanic = mechanicDao.check_mechanic(str,gnum);
+
+      if (check_mechanic == 0) { // 해당 매카니즘이 해당번호의 게임에 없다면
+        //해당 메카닉이 db에 존재하느냐
+        int mnum = mechanicDao.check_mechanic(str);
+        if(mnum == 0){ //해당 메카닉이 db에 존재하지 않는다면
+          mechanicDao.insert_mechanic(str);
+          mechanicDao.insert_mechanic_mapping();
+        }else { //해당 메카닉이 db에 존재하면
+          mechanicDao.insert_mechanic_mapping(gnum,mnum);
+        }
+      }
+    }
+
+    //퍼블리셔테이블 insert
+    //퍼블리셔배열
+    String[] publishers = dto.getPublisher().split(",");
+
+    for(String str : publishers) {
+      //해당 번호의 게임에 해당 퍼블리셔가 존재하느냐
+      int check_publisher = publisherDao.check_publisher(str,gnum);
+
+      if (check_publisher == 0) { // 해당 제작자가 해당번호의 게임에 없다면
+        //해당 제작자가 db에 존재하느냐
+        int pnum = publisherDao.check_publisher(str);
+        if(pnum == 0){ //해당 제작자가 db에 존재하지 않는다면
+          publisherDao.insert_publisher(str);
+          publisherDao.insert_publisher_mapping();
+        }else { // 해당 제작자가 db에 존재하면
+          publisherDao.insert_publisher_mapping(gnum,pnum);
+        }
+      }
+    }
+
+    //디자이너테이블 insert
+    //디자이너배열
+    String[] designers = dto.getDesigner().split(",");
+
+    for(String str : designers) {
+      //해당 번호의 게임에 해당 디자이너가 존재하느냐
+      int check_designer = designerDao.check_designer(str,gnum);
+
+      if (check_designer == 0) { // 해당 디자이너가 해당번호의 게임에 없다면
+        //해당 디자이너가 db에 존재하느냐
+        int dnum = designerDao.check_designer(str);
+        if(dnum == 0){ //해당 디자이너가 db에 존재하지 않는다면
+          designerDao.insert_designer(str);
+          designerDao.insert_designer_mapping();
+        }else { //해당 디자이너가 db에 존재하면
+          designerDao.insert_designer_mapping(gnum,dnum);
+        }
+
+      }
+    }
+  }
+
+
+
 }

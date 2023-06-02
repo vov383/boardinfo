@@ -1,6 +1,5 @@
 package com.example.boardinfo.controller.gathering;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,16 +14,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
+import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 import com.example.boardinfo.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpRequest;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.boardinfo.controller.chat.ChatController;
+import com.example.boardinfo.controller.chat.ChatRoomController;
 import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.service.gathering.GatheringService;
 
@@ -33,25 +36,36 @@ import com.example.boardinfo.service.gathering.GatheringService;
 public class GatheringController {
 	
 	@Inject GatheringService gatheringService;
+
+	private SimpMessagingTemplate messagingTemplate;
 	
 	private static final Logger logger = 
-			LoggerFactory.getLogger(ChatController.class);
-	
+			LoggerFactory.getLogger(ChatRoomController.class);
+
+
 	@GetMapping("/add.do")
 	public String addForm() {
 		return "gathering/addForm";
 	}
 
 
-	//로그인필요
 	@PostMapping("/add.do")
-	public String add(@ModelAttribute GatheringDTO dto) {
-		gatheringService.addPost(dto);
-		return "redirect:/gathering/add.do";
+	public String add(@ModelAttribute GatheringDTO dto, HttpSession session) {
+		String user_id = (String)session.getAttribute("userid");
+		dto.setWriter_id(user_id);
+
+		//에러처리 해야함
+		int new_gathering_id = gatheringService.addPost(dto);
+		ChatMessageDTO notice = new ChatMessageDTO();
+		notice.setGathering_id(new_gathering_id);
+		notice.setUserId(user_id);
+		notice.setType(ChatMessageDTO.MessageType.ATTEND);
+		messagingTemplate.convertAndSend("sub/chat/room/" +
+		notice.getGathering_id(), notice);
+		return "redirect:/gathering/view/" + new_gathering_id;
 	}
-	
-	
-	@RequestMapping("locationSearch.do")
+
+	@RequestMapping("/locationSearch.do")
 	public String locationSearch(){
 		return "gathering/setLocation";
 	}	
@@ -121,9 +135,12 @@ public class GatheringController {
 	@RequestMapping("view/{gathering_id}")
 	public ModelAndView view(@PathVariable int gathering_id, ModelAndView mav,
 			@CookieValue(value="gatheringView", required=false) Cookie cookie,
-			HttpServletResponse response
+			HttpServletResponse response, HttpSession session
 			) {
-		
+
+		String user_id = null;
+		if(session!=null) user_id=(String)session.getAttribute("userid");
+
 		boolean updateViewCount = true;
 
 		/* 일단 제외시켜놨음~~~ 커뮤니티 특성상 굳이 조회수 증가를 막을 필요가 있을까 싶음
@@ -147,57 +164,86 @@ public class GatheringController {
 		 */
 
 		mav.setViewName("/gathering/view");
+
 		GatheringDTO dto = gatheringService.view(gathering_id, updateViewCount);
-		System.out.println(dto.toString());
+		AttendeeType type = null;
+		if(user_id!=null && !user_id.equals("")){
+			type = gatheringService.checkIfAttendee(gathering_id, user_id);
+		}
+
 		mav.addObject("dto", dto);
+		mav.addObject("type", type);
 		return mav;
 	}
 
 
-	//로그인필요-해당회원인지 확인해야 함
+	//해당회원인지 확인해야 함
 	@RequestMapping("edit/{gathering_id}")
-	public ModelAndView edit(@PathVariable int gathering_id, ModelAndView mav){
-		mav.setViewName("gathering/editForm");
+	public ModelAndView edit(@PathVariable int gathering_id, ModelAndView mav,
+							 HttpSession session, HttpServletRequest request){
+
 		GatheringDTO dto = gatheringService.view(gathering_id, false);
 
-		LocalDateTime post_date = dto.getPost_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		String formattedDateTime = post_date.format(formatter);
-		mav.addObject("minDate", formattedDateTime);
-		mav.addObject("dto", dto);
 
-		System.out.println(dto.getGathering_date());
-		System.out.println(dto.getGathering_date().toString());
-		return mav;
+		String user_id = (String)session.getAttribute("userid");
+		if(user_id != null && dto.getWriter_id()!=null && user_id.equals(dto.getWriter_id())){
+			LocalDateTime post_date = dto.getPost_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			String formattedDateTime = post_date.format(formatter);
+			mav.addObject("minDate", formattedDateTime);
+			mav.addObject("dto", dto);
+			mav.setViewName("gathering/editForm");
+			return mav;
+		}
+
+		//다시 뒤로 보내주기
+		else{
+			System.out.println(request.getHeader("Referer"));
+			if(request.getHeader("Referer")!=null){
+				mav.setViewName("redirect:request.getHeader('Referer')");
+				return mav;
+			}
+			else{
+				mav.setViewName("redirect:/gathering/list.do");
+				return mav;
+			}
+		}
 	}
 
 
-	//로그인필요-해당회원인지 확인해야 함
-	@RequestMapping("update.do")
+	@RequestMapping("/update.do")
 	public String edit(@ModelAttribute GatheringDTO dto){
 		gatheringService.update(dto);
-		return "redirect:/gathering/list.do";
+		return "redirect:/gathering/view/" + dto.getGathering_id();
 	}
 
 
-	//로그인필요
 	@ResponseBody
 	@RequestMapping ("/addReply.do")
 	public boolean addReply(@ModelAttribute GatheringReplyDTO dto, HttpSession session){
-		//dto.setCreator_id((String)session.getAttribute("userid"));
-		dto.setCreator_id("kim123");
+		dto.setCreator_id((String)session.getAttribute("userid"));
 		boolean result = gatheringService.addReply(dto);
-
 		return result;
 	}
 
 
 	@ResponseBody
-	@RequestMapping ("getReplies")
+	@RequestMapping ("/getReplies")
 	public Map<String, Object> getReplies(@RequestParam int gathering_id){
 		List<GatheringReplyDTO> list = gatheringService.getReplies(gathering_id);
 		Map<String, Object> map = new HashMap<>();
 		map.put("list", list);
+		return map;
+	}
+
+
+	@ResponseBody
+	@RequestMapping ("/addAttendee")
+	public Map<String, String> addAttendee(@RequestParam int gathering_id, HttpSession session){
+		String user_id = (String)session.getAttribute("userid");
+		String message = gatheringService.addAttendee(gathering_id, user_id);
+		Map<String, String> map = new HashMap<>();
+		map.put("message", message);
 		return map;
 	}
 

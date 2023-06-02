@@ -71,7 +71,7 @@
 				<td>
 					<div style="float: left;">사진</div>
 					<%--파일을 업로드할 영역--%>
-					<div class="fileDrop" id="fileDrop"><p>Drop Images!!</p><p>사진업로드</p></div>
+					<div class="fileDrop" id="fileDrop"><p>Drop Images!!<br>사진업로드</p></div>
 				</td>
 				<td>
 					<%--파일을 출력할 영역--%>

@@ -1,6 +1,8 @@
 package com.example.boardinfo.model.game.dao.mechanic;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -49,4 +51,19 @@ public class MechanicDAOImpl implements MechanicDAO {
   }
 
   public List<MechanicDTO> view(int gnum) { return sqlSession.selectList("mechanic.view", gnum); }
+
+  public int check_mechanic(String mechanic, int gnum){
+    Map<String, Object> map = new HashMap<>();
+    map.put("mechanic", mechanic);
+    map.put("gnum",gnum);
+    return sqlSession.selectOne("mechanic.updatecheck", map);
+  }
+
+  public void insert_mechanic_mapping(int gnum, int mnum){
+    Map<String, Object> map = new HashMap<>();
+    map.put("mnum", mnum);
+    map.put("gnum",gnum);
+    sqlSession.insert("mechanic.insertmapping_update", map);
+  }
+
 }

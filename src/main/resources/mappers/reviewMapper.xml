@@ -13,25 +13,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			 , M.NICKNAME
 			 , R.CATEGORY
 			 , R.VIEWS
-			 /*, G.GAMETITLE*/
-			 , R.GATHERING_ID
+			 , G.GNUM
+			 , G.GAMETITLE
+			 , R.GATHERING_ID AS GATHERINGID
 			 , R.TITLE
-			 , R.FUN_SCORE
-			 , R.REVIEW_SCORE
-			 , R.GAME_SCORE
+			 , R.FUN_SCORE AS FUNSCORE
+			 , R.REVIEW_SCORE AS REVIEWSCORE
+			 , R.GAME_SCORE AS GAMESCORE
 			 , R.REVIEW_DETAIL AS REVIEWDETAIL
-			 , R.GOOD
+			 , (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') AS GOOD
 			 , R.DEL
-			 , R.CREATE_USER
-			 , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD') AS CREATEDATE
-			 , R.UPDATE_USER
-			 , R.UPDATE_DATE
+			 , R.CREATE_USER AS CREATEUSER
+			 , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS CREATEDATE
+			 , R.UPDATE_USER AS UPDATEUSER
+			 , TO_CHAR(R.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE
 		FROM REVIEW R
 		   , MEMBER M
-		   /*, GAME G*/
-		WHERE R.CREATE_USER = M.USERID
-		 /* AND R.GNUM = G.GNUM
-		  AND G.GAMETITLE = G.GAMETITLE*/
+		   , GAME G
+		WHERE R.CREATE_USER = M.USERID(+)
+		  AND R.GNUM = G.GNUM(+)
 		  AND R.DEL = 'N'
 		  /*검색*/
 		<if test="searchTitle != '' and searchTitle != null">
@@ -42,6 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="reviewDetailKey != '' and reviewDetailKey != null">
 			AND R.REG_NUM = #{reviewDetailKey}
 		</if>
+		ORDER BY CREATEDATE
 
 	</select>
 
@@ -51,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		                    REG_NUM
 		                    , CATEGORY, GNUM
 		                    , GATHERING_ID, TITLE
-							, REVIEW_SCORE, GAME_SCORE, REVIEW_DETAIL
+							, REVIEW_DETAIL
 							, CREATE_USER
 							)
 		VALUES(
@@ -60,25 +61,68 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			  ,#{gnum}
 			  ,#{gatheringId}
 			  ,#{title}
-			  ,#{reviewScore}
-			  ,#{gameScore}
 			  ,#{reviewDetail}
 			  ,#{createUser}
 			  )
 	</insert>
 
+	<!-- 리뷰 수정 -->
 	<update id="reviewedit" parameterType="hashMap">
 		UPDATE REVIEW
 		SET CATEGORY = #{category}
 		    , TITLE = #{title}
-		    , GNUM = #{gnum}
-		    , GATHERING_ID = #{gatheringId}
-		    , REVIEW_SCORE = #{reviewScore}
-		    , GAME_SCORE = #{gameScore}
 		    , REVIEW_DETAIL = #{reviewDetail}
+			, UPDATE_DATE = sysdate
 		WHERE 1 = 1
 			AND REG_NUM = #{regNum}
 	</update>
+
+	<!-- 리뷰 삭제 -->
+	<update id="revieweDel" parameterType="hashMap">
+		UPDATE REVIEW
+		SET DEL = 'Y'
+		WHERE 1 = 1
+		  AND REG_NUM = #{reviewDetailKey}
+	</update>
+
+	<!-- 좋아요 입력 -->
+	<insert id="reviewGood" parameterType="hashMap">
+		MERGE INTO REVIEWGOOD
+		USING dual
+		ON (GOODKEY = #{reviewDetailKey}||#{createUser})
+		WHEN MATCHED THEN
+			UPDATE
+			SET REVIEWPK = #{reviewDetailKey}
+			   ,GOOD = DECODE(GOOD,'Y','N','Y')
+			   ,UPDATE_USER = #{createUser} /*지금 로그인 사람 정보가 필요*/
+			   ,CREATE_DATE = sysdate
+		WHEN NOT MATCHED THEN
+			INSERT (GOODKEY, REVIEWPK, GOOD, CREATE_USER, CREATE_DATE)
+			VALUES (#{reviewDetailKey}||#{createUser} , #{reviewDetailKey} ,'Y', #{createUser} , sysdate)
+	</insert>
+
+	<!-- 리뷰 조회수 증가 -->
+	<update id="reviewViews" parameterType="hashMap">
+		UPDATE REVIEW
+		SET VIEWS = VIEWS+1
+		WHERE 1 = 1
+			AND REG_NUM = #{reviewDetailKey,jdbcType=VARCHAR}
+	</update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	<insert id="reviewBlob" parameterType="hashMap">
