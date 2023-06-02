@@ -97,7 +97,48 @@ COMMENT ON COLUMN CHOICE_GAME.UPDATE_DATE    IS '수정 일자';
 
 
 
+-- 리뷰 좋아요 테이블
+create table REVIEWGOOD
+(
+    GOODKEY     VARCHAR2(50) not null
+        constraint REVIEWGOOD_PK
+            primary key,
+    REVIEWPK    VARCHAR2(50),
+    GOOD        VARCHAR2(50) default 'N',
+    DEL         VARCHAR2(50) default 'N',
+    CREATE_USER VARCHAR2(50),
+    CREATE_DATE DATE         default SYSDATE,
+    UPDATE_USER VARCHAR2(50),
+    UPDATE_DATE DATE
+)
+;
 
+comment on table REVIEWGOOD is '리뷰 좋아요 테이블'
+;
+
+comment on column REVIEWGOOD.GOODKEY is '좋아요 테이블의 PK'
+;
+
+comment on column REVIEWGOOD.REVIEWPK is '리뷰 테이블의 PK'
+;
+
+comment on column REVIEWGOOD.GOOD is '디폴트 값 : N, 클릭 한 번씩 Y, N 변경'
+;
+
+comment on column REVIEWGOOD.DEL is '삭제여부'
+;
+
+comment on column REVIEWGOOD.CREATE_USER is '작성자, 회원테이블의 PK'
+;
+
+comment on column REVIEWGOOD.CREATE_DATE is '작성일자'
+;
+
+comment on column REVIEWGOOD.UPDATE_USER is '수정자'
+;
+
+comment on column REVIEWGOOD.UPDATE_DATE is '수정일자'
+;
 
 
 

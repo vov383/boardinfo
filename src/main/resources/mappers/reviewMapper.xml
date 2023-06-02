@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			 , R.REVIEW_SCORE AS REVIEWSCORE
 			 , R.GAME_SCORE AS GAMESCORE
 			 , R.REVIEW_DETAIL AS REVIEWDETAIL
-			 , R.GOOD
+			 , (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') AS GOOD
 			 , R.DEL
 			 , R.CREATE_USER AS CREATEUSER
 			 , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS CREATEDATE
@@ -85,6 +85,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		  AND REG_NUM = #{reviewDetailKey}
 	</update>
 
+	<!-- 좋아요 입력 -->
+	<insert id="reviewGood" parameterType="hashMap">
+		MERGE INTO REVIEWGOOD
+		USING dual
+		ON (GOODKEY = #{reviewDetailKey}||#{createUser})
+		WHEN MATCHED THEN
+			UPDATE
+			SET REVIEWPK = #{reviewDetailKey}
+			   ,GOOD = DECODE(GOOD,'Y','N','Y')
+			   ,UPDATE_USER = #{createUser} /*지금 로그인 사람 정보가 필요*/
+			   ,CREATE_DATE = sysdate
+		WHEN NOT MATCHED THEN
+			INSERT (GOODKEY, REVIEWPK, GOOD, CREATE_USER, CREATE_DATE)
+			VALUES (#{reviewDetailKey}||#{createUser} , #{reviewDetailKey} ,'Y', #{createUser} , sysdate)
+	</insert>
 
 	<!-- 리뷰 조회수 증가 -->
 	<update id="reviewViews" parameterType="hashMap">
@@ -93,6 +108,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE 1 = 1
 			AND REG_NUM = #{reviewDetailKey,jdbcType=VARCHAR}
 	</update>
+
+
+
+
+
+
+
+
+
+
+
 
 
 

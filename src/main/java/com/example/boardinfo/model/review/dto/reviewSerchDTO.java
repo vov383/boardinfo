@@ -4,6 +4,7 @@ public class reviewSerchDTO {
 
 	private String searchTitle;			// 제목 및 내용 검색
 	private String reviewDetailKey;		// regNum 키 값
+	private String createUser;			//
 
 
 	public String getSearchTitle() {
@@ -22,4 +23,11 @@ public class reviewSerchDTO {
 		this.reviewDetailKey = reviewDetailKey;
 	}
 
+	public String getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
 }
