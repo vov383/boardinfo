@@ -2,6 +2,7 @@ package com.example.boardinfo.model.review.dto;
 
 public class ReviewDTO {
 
+	/*리뷰 테이블*/
 	private String regNum;			// 리뷰 테이블 PK
 	private String category;		// 카테고리 : 게임, 모임
 	private String nickName;		// 회원 닉네임
@@ -14,12 +15,15 @@ public class ReviewDTO {
 	private String reviewScore;		// 리뷰 점수
 	private String gameScore;		// 게임 난이도
 	private String reviewDetail;	// 리뷰 내용 (사진 포함)
-	private String good;			// 좋아요 여부 (기본값 : N)
 	private String del;				// 삭제 여부 (기본값 : N)
 	private String createUser;		// 등록자
 	private String createDate;		// 등록 일자
 	private String updateUser;		// 수정자
 	private String updateDate;		// 수정 일자
+	private String goodkey;			// 좋아요 테이블 PK
+	private String reviewpk;		// 좋아요 테이블 → 리뷰 테이블 PK
+	private String good;			// 좋아요 (기본값 : N)
+
 
 	public String getRegNum() {
 		return regNum;
@@ -163,5 +167,21 @@ public class ReviewDTO {
 
 	public void setUpdateDate(String updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	public String getGoodkey() {
+		return goodkey;
+	}
+
+	public void setGoodkey(String goodkey) {
+		this.goodkey = goodkey;
+	}
+
+	public String getReviewpk() {
+		return reviewpk;
+	}
+
+	public void setReviewpk(String reviewpk) {
+		this.reviewpk = reviewpk;
 	}
 }

@@ -2,9 +2,10 @@ package com.example.boardinfo.service.chat;
 
 import javax.inject.Inject;
 
+import com.example.boardinfo.model.chat.dao.ChatMessageDAO;
 import org.springframework.stereotype.Service;
 
-import com.example.boardinfo.model.chat.dao.ChatMessageDAO;
+import com.example.boardinfo.model.chat.dao.ChatMessageDAOImpl;
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
 import com.example.boardinfo.model.gathering.dao.MongoDAO;
 

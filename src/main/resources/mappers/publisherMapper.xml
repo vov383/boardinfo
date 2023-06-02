@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="publisher">
 	
 	<select id="check" resultType="int">
-		select count(*)
+		select nvl(max(pnum),0) pnum
 		from publisher
 		where publisher=#{publisher}
 	</select>
@@ -45,6 +45,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			from publisher p, game_publisher gp
 			where p.pnum = gp.pnum and gp.gnum = #{gnum}
 	</select>
+
+	<select id="updatecheck" resultType="int">
+		select count(*)
+		from game_publisher gp, publisher p
+		where gp.pnum = p.pnum and gp.gnum = #{gnum} and p.publisher = #{publisher}
+	</select>
+
+	<insert id="insertmapping_update">
+		insert into game_publisher
+		values (#{gnum},#{pnum})
+	</insert>
 	
 </mapper>
 

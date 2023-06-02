@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="designer">
 	
 	<select id="check" resultType="int">
-		select count(*)
+		select nvl(max(dnum),0) dnum
 		from designer
 		where designer=#{designer}
 	</select>
@@ -41,10 +41,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="view" resultType="designerDto">
-			select d.dnum, d.designer
-			from designer d, game_designer gd
-			where d.dnum = gd.dnum and gd.gnum = #{gnum}
+		select d.dnum, d.designer
+		from designer d, game_designer gd
+		where d.dnum = gd.dnum and gd.gnum = #{gnum}
 	</select>
+
+	<select id="updatecheck" resultType="int">
+		select count(*)
+		from game_designer gd, designer d
+		where gd.dnum = d.dnum and gd.gnum = #{gnum} and d.designer = #{designer}
+	</select>
+
+	<insert id="insertmapping_update">
+		insert into game_designer
+		values (#{gnum},#{dnum})
+	</insert>
 	
 </mapper>
 

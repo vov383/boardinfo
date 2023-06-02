@@ -354,7 +354,15 @@
       document.reviewSearch.submit();
     }
 
-    /*리뷰 디테일 진입*/
+    /*리뷰 글쓰기 진입*/
+    function reviewInsert(regNum) {
+      /*alert("버튼 잘 눌리는지 테스트")*/
+      location.href="${path}/review/reviewInsert.do";
+    }
+
+
+
+    /*리뷰 디테일 진입, 조회수 증가*/
     function reviewDetail(regNum) {
       $("#reviewDetailKey").val(regNum);
       /*alert($("#reviewDetailKey").val());*/
@@ -362,7 +370,11 @@
     }
 
 
+
   </script>
+
+
+
 
 
 </head>
@@ -391,16 +403,18 @@
   </div>
   <div id="contentsMain">
 
-    <%--검색--%>
+    <%--검색 및 글쓰기 버튼--%>
     <div class="searchBox">
       <input type="text" id="searchTitle" placeholder="제목 및 내용을 검색하세요.">
       <button type="button" id="search" onclick="searchFu()">검색</button>
+      <button type="button" onclick="reviewInsert()">글쓰기</button>
     </div>
+
 
     <%--본문--%>
     <form name="reviewlist" method="post" action="${path}/review/reviewlist.do">
       <table style="table-layout:fixed;">
-        <tr><!-- 첫번째 줄 시작 -->
+        <tr>
           <th style="width: 200px;">카테고리</th>
           <th style="width: 200px;">&#x1f495</th> <%--좋아요--%>
           <th style="width: 200px;">제목</th>
@@ -425,10 +439,15 @@
             <td style="width: 200px; text-align: center;">/댓글 연결 예정/</td>
             <td style="width: 200px; text-align: center;">${vo.gametitle}</td>
 
+
+
+
           </tr>
         </c:forEach>
       </table>
     </form>
+
+
 
 
   </div>

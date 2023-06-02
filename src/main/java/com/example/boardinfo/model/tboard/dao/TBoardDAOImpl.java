@@ -16,12 +16,18 @@ public class TBoardDAOImpl implements TBoardDAO {
 	
 	@Inject
 	SqlSession sqlSession;
-	
+
+	@Override
+	public int countArticle(
+			Map<String, Object> map) {
+		//여기서 에러
+		return sqlSession.selectOne("tboard.countArticle", map);
+	}
+
 	@Override
 	public List<TBoardDTO> list(Map<String, Object> map) {
 		return sqlSession.selectList("tboard.selectBoardList", map);
 	}
-
 	@Override
 	public void insert(TBoardDTO dto) {
 		sqlSession.insert("tboard.insertBoard", dto);
@@ -42,11 +48,7 @@ public class TBoardDAOImpl implements TBoardDAO {
 		sqlSession.delete("tboard.deletePost", tb_num);
 	}
 	
-	@Override
-	public int countArticle(
-			Map<String, Object> map) {
-		return sqlSession.selectOne("tboard.countArticle", map);
-	}
+
 
 	@Override
 	public void increaseViewcnt(int tb_num) {

@@ -1,17 +1,11 @@
 package com.example.boardinfo.controller.tboard;
 
 import com.example.boardinfo.model.tboard.dto.TBCommentDTO;
-import com.example.boardinfo.model.tboard.dto.TBoardDTO;
 import com.example.boardinfo.service.tboard.TBCommentService;
 import com.example.boardinfo.service.tboard.TBoardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -32,93 +26,76 @@ public class TBCommentController {
 	@Inject
 	TBoardService tboardService;
 
-	@RequestMapping("list.do")
-	public ModelAndView getList(
-			@RequestParam("tb_num") int tb_num,
-			ModelAndView mav){
-
+	@RequestMapping("replyList")
+	@ResponseBody
+	public Map<String, Object> getList(
+			@RequestParam int tb_num){
+//		logger.info("tb_num 잘 넘어오니 : "+tb_num);
 		List<TBCommentDTO> re_list = tbcommentService.getCommentList(tb_num);
-		mav.setViewName("tboard/tbComment_list"); //포워딩 뷰
-		mav.addObject("re_list", re_list);
-
-//		logger.info("re_list가 리턴되기 전까지 잘 나오는지 체크 :");
-		return mav;
+		Map<String, Object> map = new HashMap<>();
+		map.put("re_list", re_list);
+//		logger.info("list가 리턴되기 전까지 잘 나오는지 체크 :"+re_list.toString());
+		return map;
 	}
 
-	@RequestMapping("insert.do")
-	public void commentInsert(
-			@RequestParam("content") String content,
-			@RequestParam("tb_num") int tb_num,
+	@RequestMapping("insertReply.do")
+	public boolean replyInsert(
+			@ModelAttribute TBCommentDTO re_dto,
 			HttpSession session) {
 		//세션에 저장된 아이디객체 가져와
 		String create_user = (String)session.getAttribute("userid");
-		TBCommentDTO re_dto = new TBCommentDTO();
-		re_dto.setContent(content);
-		re_dto.setTb_num(tb_num);
 		re_dto.setCreate_user(create_user);
 
-		//테이블에 저장 처리
-		tbcommentService.insertComment(re_dto);
-		//게시물 댓글 개수 증가 처리
-		tboardService.increaseRecnt(tb_num);
+		boolean result = tbcommentService.insertReply(re_dto);
+		logger.info("댓글입력 테스트" + re_dto.toString());
 
-		//ajax로 값만 넘기면 끝
-	}
-	@RequestMapping("/update/{tb_num}")
-//	public String commentUpdate(
-	public ModelAndView commentUpdate(
-			@PathVariable("tb_num") int tb_num,
-			@RequestParam("reply_reg_num") int reply_reg_num,
-			@RequestParam("content") String content
-	){
-//		logger.info("tb_num 확인 : "+tb_num);
-//		logger.info("reply_reg_num 확인 : "+reply_reg_num);
-//		logger.info("content 확인 : "+content);
-		/*tbcommentService.updateComment(reply_reg_num, content);*/
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("tboard/viewPost");
-		mav.addObject("dto", tboardService.viewPost(tb_num));
-		return mav;
-		//undefined
-	}
-	@RequestMapping("/delete/{tb_num}")
-	public ModelAndView commentDelete(
-			@RequestParam("reply_reg_num") int reply_reg_num,
-			@PathVariable("tb_num") int tb_num
-	){
-		logger.info("tb_num 확인 : "+tb_num);
-		logger.info("reply_reg_num 확인 : "+reply_reg_num);
-		/*tbcommentService.deleteComment(reply_reg_num);*/
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("tboard/viewPost");
-		mav.addObject("dto", tboardService.viewPost(tb_num));
-		return mav;
+
+		return result;
+
+
+=
 	}
 
-	@RequestMapping("/childCommentInsert/{tb_num}")
-	public ModelAndView childCommentInsert(
-			@PathVariable("tb_num") int tb_num,
-			@RequestParam("reply_reg_num") int reply_reg_num,
-			@RequestParam("childComment") String childComment,
+	@RequestMapping("changeReply.do")
+	@ResponseBody
+	public Map<String, Object> changeReply(
+			@RequestParam int reply_reg_num
+	){
+
+		String content = tbcommentService.getReplyContent(reply_reg_num);
+		Map<String, Object> map = new HashMap<>();
+			map.put("reply_reg_num", reply_reg_num);
+		map.put("content", content);
+		return map;
+	}
+
+
+	@RequestMapping("editReply.do")
+	@ResponseBody
+	public boolean editeReply(
+			@ModelAttribute TBCommentDTO re_dto,
 			HttpSession session
 	){
 		//세션에 저장된 아이디객체 가져와
-		String create_user = (String)session.getAttribute("userid");
-		TBCommentDTO re_dto = new TBCommentDTO();
-		re_dto.setContent(childComment);
-		re_dto.setTb_num(tb_num);
-		re_dto.setCreate_user(create_user);
-		re_dto.setReply_parent_reg_num(reply_reg_num);
-
-		//테이블에 저장 처리
-		tbcommentService.insertChilComment(re_dto);
-		//게시물 댓글 개수 증가 처리
-		tboardService.increaseRecnt(tb_num);
-		TBoardDTO dto = tboardService.viewPost(tb_num);
-
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("tboard/viewPost");
-		mav.addObject("dto", dto);
-		return mav;
+		String update_user = (String)session.getAttribute("userid");
+		re_dto.setUpdate_user(update_user);
+		boolean result = tbcommentService.editReply(re_dto);
+		return result;
 	}
+	@RequestMapping("deleteReply.do")
+	@ResponseBody
+	public boolean deleteReply(
+			@ModelAttribute TBCommentDTO re_dto,
+			HttpSession session
+	){
+		int reply_reg_num = re_dto.getReply_reg_num();
+		//세션에 저장된 아이디 가져와
+		String update_user = (String)session.getAttribute("userid");
+
+		boolean result = tbcommentService.deleteReply(reply_reg_num, update_user);
+		logger.info("댓글삭제 테스트");
+		return result;
+
+	}
+
 }

@@ -16,6 +16,7 @@ public class GatheringReplyDTO {
     private Date create_date;
     private String updater_id;
     private Date update_date;
+    private String nickname;
 
     public int getReply_id() {
         return reply_id;
@@ -105,6 +106,14 @@ public class GatheringReplyDTO {
         this.update_date = update_date;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     @Override
     public String toString() {
         return "GatheringReplyDTO{" +
@@ -119,6 +128,7 @@ public class GatheringReplyDTO {
                 ", create_date=" + create_date +
                 ", updater_id='" + updater_id + '\'' +
                 ", update_date=" + update_date +
+                ", nickname='" + nickname + '\'' +
                 '}';
     }
 }

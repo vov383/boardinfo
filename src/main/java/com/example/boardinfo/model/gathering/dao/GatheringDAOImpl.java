@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
+import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -22,7 +24,8 @@ public class GatheringDAOImpl implements GatheringDAO {
 
 	@Override
 	public int addPost(GatheringDTO dto) {
-		return sqlSession.insert("gathering.addPost",dto);
+		sqlSession.insert("gathering.addPost",dto);
+		return dto.getGathering_id();
 	}
 
 	@Override
@@ -117,5 +120,24 @@ public class GatheringDAOImpl implements GatheringDAO {
 	@Override
 	public int update(GatheringDTO dto) {
 		return sqlSession.update("gathering.update", dto);
+	}
+
+	@Override
+	public int addAttendee(AttendeeDTO dto) {
+		return sqlSession.insert("gathering.attend", dto);
+	}
+
+	@Override
+	public AttendeeType checkIfAttendee(int gathering_id, String user_id) {
+		Map<String, Object> map = new HashMap();
+		map.put("gathering_id", gathering_id);
+		map.put("user_id", user_id);
+		AttendeeType type = sqlSession.selectOne("gathering.checkIfAttendee", map);
+		return type;
+	}
+
+	@Override
+	public GatheringDTO getAttendInfo(int gathering_id) {
+		return sqlSession.selectOne("gathering.getAttendInfo", gathering_id);
 	}
 }
