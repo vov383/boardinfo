@@ -209,7 +209,7 @@ id="userid" type="text"maxlength='15' onkeyup="duplication_check()">
 </div>
 <div class="form-group">
 닉네임 <input class="form-control" placeholder="닉네임" name="nickname" 
-id="nickname" type="text" onkeyup="duplication_check2()">
+id="nickname" type="text" maxlength="15" onkeyup="duplication_check2()">
 <div align="right">
 <button type="button" class="btn btn-dark button" id="btnNickCheck" >중복확인</button>
 </div>

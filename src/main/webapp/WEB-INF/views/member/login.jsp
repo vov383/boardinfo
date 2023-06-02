@@ -53,7 +53,7 @@ function login_check() {
    placeholder="아이디를 입력하세요." name="userid">
   </div>
   <div class="form-group">
-   <label for="pwd">Password : </label>
+   <label for="passwd">Password : </label>
    <input type="password" class="form-control" id="passwd" 
    placeholder="비밀번호를 입력하세요." name="passwd" onkeyup="login_check()" >
   </div>
@@ -72,9 +72,9 @@ function login_check() {
 					아이디 또는 비밀번호가 일치하지 않습니다.
 				</div>
 			</c:if>
-			<c:if test="${message == 'logout' }">
-				<div style="color:blue;">
-					로그아웃 처리되었습니다.
+			<c:if test="${message == 'del' }">
+				<div style="color:red;">
+					회원 탈퇴된 아이디입니다.	
 				</div>
 			</c:if>
  </form>

@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="memberList" resultType="com.example.boardinfo.model.member.dto.MemberDTO">
 		select * 
 		from member
+		where del = 'n'
 		order by name 
 	</select>
 	
@@ -17,15 +18,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 	
 	<select id="login_check" resultType="String" parameterType="com.example.boardinfo.model.member.dto.MemberDTO">
-		select name 
+		select name
 		from member
-		where userid=#{userid} and passwd=#{passwd} 
+		where userid=#{userid} and passwd=#{passwd} and del= 'n'
 	</select>
 	
 	<select id="viewMember" resultType="com.example.boardinfo.model.member.dto.MemberDTO" >
 		select * 
 		from member
-		where userid=#{userid} 
+		where userid=#{userid}
 	</select>
 	
 	<select id="selectMemberById" resultType="com.example.boardinfo.model.member.dto.MemberDTO" >
@@ -44,6 +45,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	  select count(*) from member
 	  where userid=#{userid} and passwd=#{passwd}
 	 </select>
+	 
+	 <update id="updateMember">
+	  update member
+	  set name=#{name},nickname=#{nickname},email=#{email},hp=#{hp}
+	  where userid=#{userid}
+	 </update>
+	 
+	 <update id="deleteMember" parameterType="String">
+	    update member
+	    set del = 'y'
+	    where userid = #{userid}
+	 </update>
+	
+	 <select id="getDelValue" resultType="com.example.boardinfo.model.member.dto.MemberDTO">
+         SELECT * 
+		 FROM member 
+		 WHERE userid = #{userid}
+     </select>
 	
 </mapper>
 

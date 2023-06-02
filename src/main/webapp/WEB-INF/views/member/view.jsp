@@ -5,7 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>회원 가입</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<title>회원 상세 정보</title>
 <%@ include file="../include/js/header.jsp" %>
 <%@include file="../include/top.jsp" %>
 <style type="text/css">
@@ -25,13 +27,13 @@ $(function() {
 </head>
 <body>
 
-<h2>회원정보 수정</h2>
+<h2>회원 상세 정보</h2>
 <form name="form1" method="post">
 <table border="1" style="width: 100%">
 <tr>
   <td>프로필</td>
-  <td><input value="${dto.profile}" name="profile"></td>
- </tr>
+  <td><input value="${dto.profile}" name="profile"></td> 
+</tr>
 <tr>
   <td>이름</td>
   <td><input value="${dto.name}" name="name" readonly></td>
@@ -46,28 +48,26 @@ $(function() {
  </tr>
  <tr>
   <td>닉네임</td>
-  <td>${dto.nickname}</td>
+  <td><input value="${dto.nickname}" name="nickname" readonly></td>
  </tr>
  <tr>
   <td>이메일</td>
-  <td>${dto.email}</td>
+  <td><input value="${dto.email}" name="email" readonly></td>
  </tr>
   <tr>
   <td>핸드폰</td>
-  <td>${dto.hp}</td>
+  <td><input value="${dto.hp}" name="hp" readonly ></td>
  </tr>
  <tr>
   <td>회원가입일자</td>
   <td>
-   <c:if test="${dto.join_date != null}">
-    <fmt:formatDate value="${dto.join_date}" pattern="yyyy-MM-dd"/>
-   </c:if>
+     <fmt:formatDate value="${dto.join_date}" pattern="yyyy-MM-dd"/>
   </td>
  </tr>
  <tr>
   <td colspan="2" align="center">
-   <input type="button" value="수정하기" name="btnEdit" id="btnEdit" >
-   <a href="${path}/"><button>메인으로</button></a>
+   <input type="button" value="내 정보 수정" name="btnEdit" id="btnEdit" >
+   <a href="${path}/"><button type="button">메인으로</button></a>
    <div style="color: red;">${message}</div>
   </td>
  </tr>
