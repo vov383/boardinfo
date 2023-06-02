@@ -261,9 +261,22 @@ public class GameServiceImpl implements GameService {
   public List<PublisherDTO> getAutoPublisher(String input){
     return publisherDao.getAutoPublisher(input);
   }
+
   //top의 검색창 검색목록
   public List<GameDTO> getAutoGame(String input){
-    return gameDao.getAutoGame(input);
+    List<GameDTO> list = gameDao.getAutoGame(input);
+
+    for(GameDTO dto : list){
+      if(dto.getGamephoto_url() == null){
+        int bggnum = dto.getBggnum();
+        BggParser bggParser = new BggParser();
+        bggParser.setBgg_thumbnail(bggnum);
+        logger.info("과연 : " + dto );
+        dto.setBgg_thumbnail(bggParser.getBgg_thumbnail());
+      }
+
+    }
+    return list;
   }
   //게임등록페이지의 사진 드롭 후 제거시 사진경로 삭제
   public void deleteFile(String fileName){

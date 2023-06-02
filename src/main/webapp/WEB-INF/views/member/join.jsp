@@ -193,9 +193,9 @@ function check() {
 <div align="center">
 <a href="${path}/"><img alt="로고" src="../resources/uploaded_image/boardinfo_logo.png"></a>
 </div>
-<form name="form1" method="post">
+<form name="form1" method="post" enctype="multipart/form-data">
 <div class="form-group">
-프로필 <input class="form-control" name="profile" id="profile" type="file">
+프로필 <input class="form-control" name="profile_img" id="profile" type="file">
 </div>
 <div class="form-group">
 이름 <input class="form-control" placeholder="이름" name="name" 

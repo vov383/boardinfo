@@ -106,7 +106,7 @@ public class GameController {
 		return list;
 	}
 
-	//top의 검색창에서의 검색어어
+	//top의 검색창에서의 검색 자동완성 기능
 	@RequestMapping("autoGame.do/{input}")
 	@ResponseBody
 	public List<GameDTO> autoGame(@PathVariable String input){
