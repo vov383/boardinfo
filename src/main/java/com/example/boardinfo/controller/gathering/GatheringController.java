@@ -56,12 +56,15 @@ public class GatheringController {
 
 		//에러처리 해야함
 		int new_gathering_id = gatheringService.addPost(dto);
+		/*
 		ChatMessageDTO notice = new ChatMessageDTO();
 		notice.setGathering_id(new_gathering_id);
 		notice.setUserId(user_id);
 		notice.setType(ChatMessageDTO.MessageType.ATTEND);
+		System.out.println(messagingTemplate);
 		messagingTemplate.convertAndSend("sub/chat/room/" +
 		notice.getGathering_id(), notice);
+		 */
 		return "redirect:/gathering/view/" + new_gathering_id;
 	}
 
