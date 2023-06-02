@@ -2,7 +2,7 @@ package com.example.boardinfo.model.review.dto;
 
 public class ReviewDTO {
 
-	/*리뷰 테이블*/
+	/*리뷰 목록 조회시 사용*/
 	private String regNum;			// 리뷰 테이블 PK
 	private String category;		// 카테고리 : 게임, 모임
 	private String nickName;		// 회원 닉네임

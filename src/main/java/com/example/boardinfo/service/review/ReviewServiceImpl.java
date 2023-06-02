@@ -1,6 +1,7 @@
 package com.example.boardinfo.service.review;
 
 import com.example.boardinfo.model.review.dao.ReviewDAO;
+import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.review.dto.TestDTO;
 import com.example.boardinfo.model.review.dto.reviewSerchDTO;
@@ -20,7 +21,7 @@ public class ReviewServiceImpl implements ReviewService {
 	@Inject
     ReviewDAO reviewDAO;
 
-	// 리뷰 목록 조회
+	/*리뷰 목록 조회*/
 	@Override // 덮어쓰기 의미
 	public List<ReviewDTO> reviewlist(reviewSerchDTO reviewserchDTO){
 		reviewDAO.reviewViews(reviewserchDTO);
@@ -30,10 +31,13 @@ public class ReviewServiceImpl implements ReviewService {
 		return list;
 	}
 
-	//리뷰 입력
+	/*리뷰 입력*/
 	@Transactional
 	@Override
-	public void reviewCreate(ReviewDTO reviewDTO){
+	public void reviewCreate(ReviewDTO reviewDTO, HttpSession session){
+
+		String userid = (String) session.getAttribute("userid");
+		reviewDTO.setCreateUser(userid);
 
 /*
 		System.out.println("testtesttesttesttesttesttesttesttesttest");
@@ -66,7 +70,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 	}
 
-	//리뷰 수정
+	/*리뷰 수정*/
 	@Transactional
 	@Override
 	public void reviewUpdate(ReviewDTO reviewDTO){
@@ -76,7 +80,7 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewDAO.reviewUpdate(reviewDTO);
 	}
 
-	//리뷰 삭제
+	/*리뷰 삭제*/
 	@Transactional
 	@Override
 	public void reviewDel(reviewSerchDTO reviewserchDTO){
@@ -91,7 +95,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 
 
-	//리뷰 좋아요
+	/*리뷰 좋아요*/
 	@Transactional
 	@Override
 	public void reviewGoodCreate(reviewSerchDTO reviewserchDTO, HttpSession session){
@@ -99,6 +103,27 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewserchDTO.setCreateUser(userid);
 		reviewDAO.reviewGoodCreate(reviewserchDTO);
 
+	}
+
+	/*리뷰 댓글 입력*/
+	@Transactional
+	@Override
+	public void reviewReply(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
+		String userid = (String) session.getAttribute("userid");
+		replyCommentsDTO.setCreateUser(userid);
+		reviewDAO.reviewReply(replyCommentsDTO);
+
+	}
+
+	/*리뷰 댓글 출력*/
+	@Override // 덮어쓰기 의미
+	public List<ReplyCommentsDTO> reviewReplyOut(reviewSerchDTO reviewserchDTO){
+
+
+		List<ReplyCommentsDTO> list = reviewDAO.reviewReplyOut(reviewserchDTO);
+		/*System.out.println("vo : " + new Gson().toJson(list));*/
+
+		return list;
 	}
 
 
