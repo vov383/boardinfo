@@ -5,7 +5,10 @@ import com.example.boardinfo.service.game.GameRatingService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -18,15 +21,12 @@ public class GameRatingController {
 
     @ResponseBody
     @RequestMapping("add.do")
-    public String ratingAdd(@ModelAttribute GameRatingDTO rating, HttpSession session){
-
-        String userid = (String) session.getAttribute("userid");
-        rating.setUserid(userid);
-        System.out.println(rating.toString());
-
-        System.out.println(userid);
+    public String ratingAdd(@RequestParam HashMap rating, HttpSession session){
+    	
+    	String userid = (String) session.getAttribute("userid");
+        rating.put("userid", userid);
         int num = gameRatingService.addGameRating(rating);
-        if(num > 1) return "success";
+        if(num >= 1) return "success";
         else return "failure";
     }
 

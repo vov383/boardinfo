@@ -4,6 +4,8 @@ import com.example.boardinfo.model.game.dao.gameRating.GameRatingDAO;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 @Service
@@ -13,8 +15,7 @@ public class GameRatingServiceImpl implements GameRatingService{
     GameRatingDAO gameRatingDAO;
 
     @Override
-    public int addGameRating(GameRatingDTO dto) {
-        System.out.println("dao가자");
+    public int addGameRating(HashMap<String, Object> dto) {
         return gameRatingDAO.addGameRating(dto);
     }
 
