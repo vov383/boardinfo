@@ -88,6 +88,7 @@
 
             /*모달*/
             .popup-wrap{
+                z-index: 1000;
                 background-color:rgba(0,0,0,.3);
             /*배경색과 투명도로 살짝 어둡지만 투명한 배경*/
             /*허공에 붕 떠있는 느낌을 주고 싶으면 안넣어도 무방*/
@@ -112,7 +113,7 @@
             .popup{
                 width:100%;
             /*반응형 이기 때문에 가로값은 100%*/
-                max-width:800px;
+                max-width: 670px;
             /*팝업의 최대 크기지정*/
                 border-radius:10px;
             /*둥글둥글한 디자인을 위해 각을 없앱니다.*/
@@ -126,27 +127,15 @@
 
             .popup-body{
             /*몸통*/
-            width:100%;
+                width:100%;
                 background-color:#ffffff;
             /*컨텐츠 영역의 배경색*/
             }
             .body-content{
             /*몸통 내부 컨텐츠 영역*/
                 width:100%;
-                padding:30px;
-            /*좌우에 내용이 붙으면 보기 안좋기 때문에 간격 띄움*/
             }
-            .body-contentbox{
-            /*컨텐츠 내용 영역*/
-                word-break:break-word;
-            /*단어가 짤리지 않음*/
-                overflow-y:auto;
-            /*내부요소가 지정한 세로 값보다 클 경우 스크롤 생성*/
-                min-height:100px;
-            /*최소 높이*/
-                max-height:60vw;
-            /*최대 높이*/
-            }
+
             ul {
                 list-style: none;
                 padding: 0;
@@ -177,13 +166,18 @@
 
             /*모달 내용 관련*/
             #bigFrame{
-                margin: auto;
-                width: 650px;
-                height: 850px;
-                border: 1px solid black;
+                width: 550px;
                 padding: 60px;
                 display: flex;
                 flex-direction: column;
+
+                /*컨텐츠 내용 영역*/
+                word-break:break-word;
+                /*단어가 짤리지 않음*/
+                overflow-y:auto;
+                /*내부요소가 지정한 세로 값보다 클 경우 스크롤 생성*/
+                min-height:100px;
+                max-height:60vw;
             }
 
             .labelAndStars{
@@ -209,12 +203,12 @@
             }
 
             .star img:nth-child(3){
-                width: 60px;
+                width: 40px;
             }
 
             .halfStar{
                 position: absolute;
-                width: 30px;
+                width: 20px;
                 opacity: 0;
                 z-index: 2;
                 -webkit-user-drag: none;
@@ -222,7 +216,7 @@
 
             .fullStar{
                 position: absolute;
-                width: 60px;
+                width: 40px;
                 opacity: 0;
                 z-index: 1;
                 -webkit-user-drag: none;
@@ -287,11 +281,13 @@
                 color: white;
                 border: none;
                 margin-right: 30px;
+                cursor: pointer;
             }
 
             #cancelBtn{
                 background-color: white;
                 border: 1px solid black;
+                cursor: pointer;
             }
         </style>
    </head>
@@ -525,132 +521,129 @@
 
 
                <div class="popup-body">
-                   <div class="body-content">
-                       <div class="body-contentbox">
 
-        <%--여기부터 모달 내용--%>
-                           <div id="bigFrame">
+                           <!--여기부터 모달내용-->
+                           <form name="ratingForm" id="bigFrame">
+                               <input type="hidden" name="gnum" value="${map.dto.gnum}">
                                <div class="labelAndStars">
                                    <span id="labelR">내 평점 (필수)</span>
                                    <div>
-          <span class="star">
-              <img src="../include/half_star.png" data-value="0.5" class="ratingStar halfStar">
-              <img src="../include/yellow_star.png" data-value="1" class="ratingStar fullStar" style="opacity: 100">
-              <img src="../include/empty_star.png">
-          </span>
+                                      <span class="star">
+                                          <img src="${path}/images/game/half_star.png" data-value="0.5" class="ratingStar halfStar">
+                                          <img src="${path}/images/game/yellow_star.png" data-value="1" class="ratingStar fullStar" style="opacity: 100">
+                                          <img src="${path}/images/game/empty_star.png">
+                                      </span>
                                        <span  class="star">
-              <img src="../include/half_star.png" data-value="1.5" class="ratingStar halfStar">
-              <img src="../include/yellow_star.png" data-value="2" class="ratingStar fullStar" style="opacity: 100">
-              <img src="../include/empty_star.png">
-          </span>
+                                          <img src="${path}/images/game/half_star.png" data-value="1.5" class="ratingStar halfStar">
+                                          <img src="${path}/images/game/yellow_star.png" data-value="2" class="ratingStar fullStar" style="opacity: 100">
+                                          <img src="${path}/images/game/empty_star.png">
+                                      </span>
                                        <span  class="star">
-              <img src="../include/half_star.png" data-value="2.5" class="ratingStar halfStar">
-              <img src="../include/yellow_star.png" data-value="3" class="ratingStar fullStar" style="opacity: 100">
-              <img src="../include/empty_star.png">
-          </span>
+                                          <img src="${path}/images/game/half_star.png" data-value="2.5" class="ratingStar halfStar">
+                                          <img src="${path}/images/game/yellow_star.png" data-value="3" class="ratingStar fullStar" style="opacity: 100">
+                                          <img src="${path}/images/game/empty_star.png">
+                                      </span>
                                        <span  class="star">
-              <img src="../include/half_star.png" data-value="3.5" class="ratingStar halfStar">
-              <img src="../include/yellow_star.png" data-value="4" class="ratingStar fullStar">
-              <img src="../include/empty_star.png">
-          </span>
+                                          <img src="${path}/images/game/half_star.png" data-value="3.5" class="ratingStar halfStar">
+                                          <img src="${path}/images/game/yellow_star.png" data-value="4" class="ratingStar fullStar">
+                                          <img src="${path}/images/game/empty_star.png">
+                                      </span>
                                        <span  class="star">
-              <img src="../include/half_star.png" data-value="4.5" class="ratingStar halfStar">
-              <img src="../include/yellow_star.png" data-value="5" class="ratingStar fullStar">
-              <img src="../include/empty_star.png">
-          </span>
+                                          <img src="${path}/images/game/half_star.png" data-value="4.5" class="ratingStar halfStar">
+                                          <img src="${path}/images/game/yellow_star.png" data-value="5" class="ratingStar fullStar">
+                                          <img src="${path}/images/game/empty_star.png">
+                                      </span>
                                        <input type="hidden" name="rating" value="3">
                                    </div>
                                </div>
                                <div class="labelAndStars">
                                    <span id="labelW">난이도 (선택)</span>
                                    <span class="weightStar" id="hollow" data-value="0">
-              &nbsp
-          </span>
+                                      &nbsp
+                                  </span>
                                    <div>
-          <span class="star">
-              <img src="../include/half_star_b.png" data-value="0.5" class="weightStar halfStar">
-              <img src="../include/blue_star.png" data-value="1" class="weightStar fullStar">
-              <img src="../include/empty_star.png">
-          </span>
+                                      <span class="star">
+                                          <img src="${path}/images/game/half_star_b.png" data-value="0.5" class="weightStar halfStar">
+                                          <img src="${path}/images/game/blue_star.png" data-value="1" class="weightStar fullStar">
+                                          <img src="${path}/images/game/empty_star.png">
+                                      </span>
                                        <span class="star">
-              <img src="../include/half_star_b.png" data-value="1.5" class="weightStar halfStar">
-              <img src="../include/blue_star.png" data-value="2" class="weightStar fullStar">
-              <img src="../include/empty_star.png">
-          </span>
+                                          <img src="${path}/images/game/half_star_b.png" data-value="1.5" class="weightStar halfStar">
+                                          <img src="${path}/images/game/blue_star.png" data-value="2" class="weightStar fullStar">
+                                          <img src="${path}/images/game/empty_star.png">
+                                      </span>
                                        <span class="star">
-              <img src="../include/half_star_b.png" data-value="2.5" class="weightStar halfStar">
-              <img src="../include/blue_star.png" data-value="3" class="weightStar fullStar">
-              <img src="../include/empty_star.png">
-          </span>
+                                          <img src="${path}/images/game/half_star_b.png" data-value="2.5" class="weightStar halfStar">
+                                          <img src="${path}/images/game/blue_star.png" data-value="3" class="weightStar fullStar">
+                                          <img src="${path}/images/game/empty_star.png">
+                                      </span>
                                        <span class="star">
-              <img src="../include/half_star_b.png" data-value="3.5" class="weightStar halfStar">
-              <img src="../include/blue_star.png" data-value="4" class="weightStar fullStar">
-              <img src="../include/empty_star.png">
-          </span>
+                                          <img src="${path}/images/game/half_star_b.png" data-value="3.5" class="weightStar halfStar">
+                                          <img src="${path}/images/game/blue_star.png" data-value="4" class="weightStar fullStar">
+                                          <img src="${path}/images/game/empty_star.png">
+                                      </span>
                                        <span class="star">
-              <img src="../include/half_star_b.png" data-value="4.5" class="weightStar halfStar">
-              <img src="../include/blue_star.png" data-value="5" class="weightStar fullStar">
-              <img src="../include/empty_star.png">
-          </span>
+                                          <img src="${path}/images/game/half_star_b.png" data-value="4.5" class="weightStar halfStar">
+                                          <img src="${path}/images/game/blue_star.png" data-value="5" class="weightStar fullStar">
+                                          <img src="${path}/images/game/empty_star.png">
+                                      </span>
                                        <input type="hidden" name="weight" value="">
                                    </div>
                                </div>
                                <div class="columnFlex">
                                    <span>추천인원 (선택)</span>
                                    <table id="ratingPeopleTable">
-                                       <tr><th></th><th>베스트</th><th>추천</th><th>비추천</th><th>응답없음</th></tr>
+                                       <tr><th></th><th>베스트</th><th>추천</th><th>비추천</th><th>모름(응답없음)</th></tr>
                                        <tr>
                                            <td>1</td>
-                                           <td><input name="participate1" value="1" type="radio"></td>
-                                           <td><input name="participate1" value="2" type="radio"></td>
-                                           <td><input name="participate1" value="3" type="radio"></td>
-                                           <td><input name="participate1" type="radio" checked></td>
+                                           <td><input name="participant1" value="1" type="radio"></td>
+                                           <td><input name="participant1" value="2" type="radio"></td>
+                                           <td><input name="participant1" value="3" type="radio"></td>
+                                           <td><input name="participant1" value="" type="radio" checked></td>
                                        </tr>
                                        <tr>
                                            <td>2</td>
-                                           <td><input name="participate2" value="1" type="radio"></td>
-                                           <td><input name="participate2" value="2" type="radio"></td>
-                                           <td><input name="participate2" value="3" type="radio"></td>
-                                           <td><input name="participate2" type="radio" checked></td>
+                                           <td><input name="participant2" value="1" type="radio"></td>
+                                           <td><input name="participant2" value="2" type="radio"></td>
+                                           <td><input name="participant2" value="3" type="radio"></td>
+                                           <td><input name="participant2" value="" type="radio" checked></td>
                                        </tr>
                                        <tr>
                                            <td>3</td>
-                                           <td><input name="participate3" value="1" type="radio"></td>
-                                           <td><input name="participate3" value="2" type="radio"></td>
-                                           <td><input name="participate3" value="3" type="radio"></td>
-                                           <td><input name="participate3" type="radio" checked></td>
+                                           <td><input name="participant3" value="1" type="radio"></td>
+                                           <td><input name="participant3" value="2" type="radio"></td>
+                                           <td><input name="participant3" value="3" type="radio"></td>
+                                           <td><input name="participant3" value="" type="radio" checked></td>
                                        </tr>
                                        <tr>
                                            <td>4</td>
-                                           <td><input name="participate4" value="1" type="radio"></td>
-                                           <td><input name="participate4" value="2" type="radio"></td>
-                                           <td><input name="participate4" value="3" type="radio"></td>
-                                           <td><input name="participate4" type="radio" checked></td>
+                                           <td><input name="participant4" value="1" type="radio"></td>
+                                           <td><input name="participant4" value="2" type="radio"></td>
+                                           <td><input name="participant4" value="3" type="radio"></td>
+                                           <td><input name="participant4" value="" type="radio" checked></td>
                                        </tr>
                                        <tr>
                                            <td>5인 이상</td>
-                                           <td><input name="participate5" value="1" type="radio"></td>
-                                           <td><input name="participate5" value="2" type="radio"></td>
-                                           <td><input name="participate5" value="3" type="radio"></td>
-                                           <td><input name="participate5" type="radio" checked></td>
+                                           <td><input name="participant5" value="1" type="radio"></td>
+                                           <td><input name="participant5" value="2" type="radio"></td>
+                                           <td><input name="participant5" value="3" type="radio"></td>
+                                           <td><input name="participant5" value="" type="radio" checked></td>
                                        </tr>
                                        </tr>
                                    </table>
                                </div>
                                <div class="columnFlex">
                                    <span>코멘트 (선택)</span>
-                                   <textarea name="comment"></textarea>
+                                   <textarea name="rating_comment"></textarea>
                                </div>
-                               <div><button type="button" id="submitBtn">작성 완료</button><button type="button" id="cancelBtn">작성 취소</button></div>
+                               <div><button type="button" id="submitBtn" onclick="submitRating()">작성 완료</button>
+                                   <button type="button" id="cancelBtn" onclick="cancelRating()">작성 취소</button>
+                               </div>
 
-                           </div>
+                           </form>
                            <%--여기까지 모달 내용--%>
 
-
-
-
                        </div>
-                   </div>
                </div>
 
 
@@ -713,17 +706,33 @@
                //컨펌 이벤트 처리
            });
            $("#modal-open").click(function(){
-               $("#popup").css('display','flex').hide().fadeIn();
-               //팝업을 flex속성으로 바꿔준 후 hide()로 숨기고 다시 fadeIn()으로 효과
+
+               //로그인한 회원인지 확인
+               if("${sessionScope.userid}" == ""){
+                   if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
+                       location.href= "${path}/member/member_login.do";
+                       return;
+                   }
+               }
+
+               else{
+                   $("#popup").css('display','flex').hide().fadeIn();
+                   //팝업을 flex속성으로 바꿔준 후 hide()로 숨기고 다시 fadeIn()으로 효과
+               }
+
            });
            $("#close").click(function(){
                modalClose(); //모달 닫기 함수 호출
            });
-           function modalClose(){
-               $("#popup").fadeOut(); //페이드아웃 효과
-           }
        });
+
+        function modalClose(){
+            $("#popup").fadeOut(); //페이드아웃 효과
+        }
+
    </script>
+
+
 
 <%-- 모달의 내용관련  --%>
    <script>
@@ -836,6 +845,45 @@
 
 
        });
+
+
+       function submitRating(){
+
+           star = $("input[name='rating']").val();
+           star = star.trim();
+           $("input[name='rating]").val(star);
+           if(star == null || star == '' || isNaN(star) || star < 0.5){
+               alert("평가를 제출하려면 반드시 별점을 입력해야 합니다. 다시 시도해주세요.");
+               return;
+           }
+
+           else{
+
+               //평가 제출
+               let ratingForm = $("form[name='ratingForm']");
+
+               $.ajax({
+                   type : "post",
+                   url : "${path}/gameRating/add.do",
+                   data : ratingForm.serialize(),
+                   success: function(response){
+                       if(response == 'success'){
+                           //성공했으면 폼 비워주고 닫아주기
+                       }
+                       else alert("에러가 발생했습니다.");
+                   },
+                   error: function(){
+                       alert("에러가 발생했습니다.");
+                   }
+               });
+
+           }
+       }
+
+       function cancelRating(){
+           modalClose();
+       }
+
 
    </script>
 

@@ -11,6 +11,7 @@ public class MemberDTO {
 	private String email;
 	private String hp;
 	private Date join_date;
+	private String del;
 	//getter,setter, toString ,생성자
 	
 	public String getProfile() {
@@ -61,16 +62,25 @@ public class MemberDTO {
 	public void setJoin_date(Date join_date) {
 		this.join_date = join_date;
 	}
+	
+	public String getDel() {
+		return del;
+	}
+	public void setDel(String del) {
+		this.del = del;
+	}
+	
 	@Override
 	public String toString() {
 		return "MemberDTO [profile=" + profile + ", name=" + name + ", userid=" + userid + ", passwd=" + passwd
-				+ ", nickname=" + nickname + ", email=" + email + ", hp=" + hp + ", join_date=" + join_date + "]";
+				+ ", nickname=" + nickname + ", email=" + email + ", hp=" + hp + ", join_date=" + join_date + ", del="
+				+ del + "]";
 	}
 	public MemberDTO() {
 	
 	}
 	public MemberDTO(String profile, String name, String userid, String passwd, String nickname, String email,
-			String hp, Date join_date) {
+			String hp, Date join_date, String del) {
 		super();
 		this.profile = profile;
 		this.name = name;
@@ -80,6 +90,7 @@ public class MemberDTO {
 		this.email = email;
 		this.hp = hp;
 		this.join_date = join_date;
+		this.del = del;
 	}
 	
 	

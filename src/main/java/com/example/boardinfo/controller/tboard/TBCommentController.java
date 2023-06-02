@@ -53,6 +53,7 @@ public class TBCommentController {
 		return result;
 
 
+=
 	}
 
 	@RequestMapping("changeReply.do")
@@ -60,6 +61,7 @@ public class TBCommentController {
 	public Map<String, Object> changeReply(
 			@RequestParam int reply_reg_num
 	){
+
 		String content = tbcommentService.getReplyContent(reply_reg_num);
 		Map<String, Object> map = new HashMap<>();
 			map.put("reply_reg_num", reply_reg_num);
