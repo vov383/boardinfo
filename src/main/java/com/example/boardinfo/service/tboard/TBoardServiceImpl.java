@@ -19,7 +19,15 @@ public class TBoardServiceImpl implements TBoardService {
 
 	@Inject
 	TBoardDAO tboardDao;
-	
+
+	@Override
+	public int countArticle(String select_category, String search_option, String keyword) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("select_category", select_category);
+		map.put("search_option", search_option);
+		map.put("keyword", "%"+keyword+"%");
+		return tboardDao.countArticle(map);
+	}
 	@Override
 	public Map<String, Object> list(String select_category, String search_option, String keyword, int curPage) {
 		Map<String, Object> map = new HashMap<>();
@@ -28,7 +36,6 @@ public class TBoardServiceImpl implements TBoardService {
 		map.put("keyword", "%"+keyword+"%");
 
 		int count = tboardDao.countArticle(map);
-
 		Pager pager = new Pager(count, curPage, 10);
 		int start = pager.getPageBegin();
 		int end = pager.getPageEnd();
@@ -68,14 +75,7 @@ public class TBoardServiceImpl implements TBoardService {
 		tboardDao.delete(tb_num);
 	}
 
-	@Override
-	public int countArticle(String select_category, String search_option, String keyword) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("select_category", select_category);
-		map.put("search_option", search_option);
-		map.put("keyword", "%"+keyword+"%");
-		return tboardDao.countArticle(map);
-	}
+
 	@Override
 	public void increaseViewCount(int tb_num, HttpSession session) {
 		long update_time=0;
