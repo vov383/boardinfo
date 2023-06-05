@@ -295,6 +295,30 @@
 
 			<tr>
 
+				<td>확장게임</td>
+				<td>
+					<div id="selectedEx"></div>
+					<input type="hidden" name="exnum" id="exnum">
+					<input id="inputEx" class="input_game" autocomplete="off">
+					<div id="exSuggestions"></div>
+				</td>
+
+			</tr>
+
+			<tr>
+
+				<td>재구현게임</td>
+				<td>
+					<div id="selectedRe"></div>
+					<input type="hidden" name="renum" id="renum">
+					<input id="inputRe" class="input_game" autocomplete="off">
+					<div id="reSuggestions"></div>
+				</td>
+
+			</tr>
+
+			<tr>
+
 				<td colspan="2">
 					<button type="button" id="btnGameInsert">등록</button>
 				</td>
@@ -775,6 +799,80 @@
 			updatePublisherInput();
 			console.log("인풋"+$("#publisher").val());
 		});
+
+
+
+		//	ex확장게임 검색 자동완성 쿼리
+		$('#inputEx').keyup(function() {
+			var input = $(this).val();
+			$.ajax({
+				type: "post",
+				url: "${path}/game/autoGame.do/"+input,
+				success: function(result) {
+					var suggestionsDiv = $('#exSuggestions');
+					suggestionsDiv.empty(); // 기존 내용 비우기
+
+					if (result.length > 0) {
+						suggestionsDiv.css('max-height', '150px').show(); // 값이 있을 경우 높이 설정하고 보이기
+						$(result).each(function(index, item) {
+							var exnum = item.gnum;
+							var gametitle = item.gametitle;
+							var exnumDiv = "<div class='exnumDiv' style='display: none;'>" + exnum + "</div>";
+							suggestionsDiv.append("<div class='searched cursor_pointer'>" + gametitle + "</div>" + exnumDiv);
+						});
+					} else {
+						suggestionsDiv.hide(); // 값이 없을 경우 숨기기
+					}
+				},
+				error: function() {
+					console.log("에러..");
+				}
+			});
+			if(input=="")	$('#exSuggestions').empty();
+		});
+
+		var selectedExs = [];
+
+		function updateExInput() {
+			var exInput = $("#exnum");
+			exInput.val(selectedExs.join(","));
+		}
+
+
+		//ex확장게임 검색값 클릭시 배열에 추가
+		$('#exSuggestions').on('click', '.searched', function() {
+			var selectedEx = $(this).text();
+			console.log(selectedEx);
+			var selectedExnum = $(this).next('.exnumDiv').text();
+			selectedExs.push(selectedExnum);
+			var selectedExnumDiv = "<div class='selectedExnumDiv' style='display: none;'>" + selectedExnum + "</div>";
+			$("#selectedEx").append("<div class='selected-value cursor_pointer'>" + selectedEx + "</div>" + selectedExnumDiv);
+			console.log("배열"+selectedExs);
+			$("#inputEx").val("");
+			$("#exSuggestions").empty().hide();
+			updateExInput();
+			console.log("인풋"+$("#exnum").val());
+		});
+
+		// 선택된 값 클릭 이벤트 처리
+		$("#selectedEx").on("click", ".selected-value", function() {
+
+			//var value = $(this).text();
+			var valuenum = $(this).next('.selectedExnumDiv').text();
+
+			// 선택된 값 배열에서 해당 값을 제거
+			selectedExs = selectedExs.filter(function(selected) {
+				return selected !== valuenum;
+			});
+
+			// 선택된 값 표시가 삭제되도록 처리
+			$(this).next('.selectedExnumDiv').remove();
+			$(this).remove();
+
+			updateExInput();
+			console.log("인풋"+$("#exnum").val());
+		});
+
 	});
 </script>
 

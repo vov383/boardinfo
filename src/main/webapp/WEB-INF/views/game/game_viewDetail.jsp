@@ -355,17 +355,6 @@
 
 	<div align="center">
 
-        <table>
-
-            <colgroup>
-                <col width="26%"/>
-                <col width="8%"/>
-                <col width="14%"/>
-                <col width="14%"/>
-                <col width="35%"/>
-            </colgroup>
-            
-           
            <div id="gameInfoUpper">
             <c:choose>
               <c:when test="${map.dto.gamephoto_url != null}">
