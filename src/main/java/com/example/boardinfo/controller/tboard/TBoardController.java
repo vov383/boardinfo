@@ -100,8 +100,6 @@ public class TBoardController {
 		} else {
 
 		}
-//
-//		}
 
 		//게시물 목록 갱신처리
 		return "redirect:/tboard/list.do";
