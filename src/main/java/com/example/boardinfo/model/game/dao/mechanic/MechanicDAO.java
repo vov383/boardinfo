@@ -9,7 +9,7 @@ public interface MechanicDAO {
 
 	int check_mechanic(String mechanic);
 	int check_mechanic(String mechanic, int gnum);
-	void insert_mechanic(String mechanic);
+	void insert_mechanic(String mechanic, String userid);
 	void insert_mechanic_mapping();
 	int mechanicnum(String mechanic);
 	void insert_mechanic_mapping(int mnum);

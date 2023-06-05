@@ -24,8 +24,11 @@ public class CategoryDAOImpl implements CategoryDAO {
   }
 
   @Override
-  public void insert_category(String category) {
-    sqlSession.insert("category.insert", category);
+  public void insert_category(String category, String userid) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("category",category);
+    map.put("userid",userid);
+    sqlSession.insert("category.insert", map);
   }
 
   @Override

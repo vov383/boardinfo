@@ -60,7 +60,13 @@ public class GameController {
 
 	//게임등록
 	@RequestMapping("insert.do")
-	public String insert(@ModelAttribute GameDTO dto) {
+	public String insert(@ModelAttribute GameDTO dto,HttpSession session) {
+		String userid = (String)session.getAttribute("userid");
+
+		if(userid != null)
+			dto.setCreate_user(userid);
+		else
+			dto.setCreate_user("admin");
 		gameService.gameinsert(dto);
 		return "home";
 	}
@@ -134,7 +140,12 @@ public class GameController {
 	}
 
 	@RequestMapping("update.do")
-	public String update(@ModelAttribute GameDTO dto) {
+	public String update(@ModelAttribute GameDTO dto,HttpSession session) {
+		String userid = (String)session.getAttribute("userid");
+
+		if(userid != null)
+			dto.setCreate_user(userid);
+
 		gameService.gameupdate(dto);
 		return "home";
 	}

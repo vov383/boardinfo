@@ -5,9 +5,23 @@ import java.util.Arrays;
 public class ArtistDTO {
   private int anum;
   private String artist;
-
+  private String userid;
   
   public ArtistDTO() {}
+
+  public ArtistDTO(int anum, String artist, String userid) {
+    this.anum = anum;
+    this.artist = artist;
+    this.userid = userid;
+  }
+
+  public String getUserid() {
+    return userid;
+  }
+
+  public void setUserid(String userid) {
+    this.userid = userid;
+  }
 
   public int getAnum() {
     return anum;
@@ -30,8 +44,7 @@ public class ArtistDTO {
     return "ArtistDTO{" +
             "anum=" + anum +
             ", artist='" + artist + '\'' +
+            ", userid='" + userid + '\'' +
             '}';
   }
-
-
 }

@@ -9,7 +9,7 @@ public interface ArtistDAO {
 
 	int check_artist(String artist);
 	int check_artist(String artist, int gnum);
-	void insert_artist(String artist);
+	void insert_artist(String artist, String userid);
 	void insert_artist_mapping();
 	int artistnum(String artist);
 	void insert_artist_mapping(int anum);

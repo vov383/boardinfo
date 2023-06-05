@@ -108,7 +108,7 @@ tr:last-child td:last-child {
 	cursor: pointer;
 }
 
-#artistSuggestions, #designerSuggestions, #publisherSuggestions, #exSuggestions{
+#artistSuggestions, #designerSuggestions, #publisherSuggestions, #exSuggestions, #reSuggestions{
 	width: 300px;
 	background-color: white;
 	overflow-y: auto;

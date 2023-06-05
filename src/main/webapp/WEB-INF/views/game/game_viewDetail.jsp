@@ -11,6 +11,7 @@
         <%@ include file="../include/js/header.jsp" %>
         <link rel="stylesheet" href="${path}/include/js/style_game.css">
 
+
         <style>
         
         
@@ -59,32 +60,8 @@
         	font-size: 16px;
         }
         
-        
-        
-        
-            table tr {
-                border: none;
-                background-color: white;
-            }
 
-            table tr td {
-                border: none;
-                background-color: white;
-            }
-            tr:nth-child(even) td {
-                background-color: white;
-            }
-            td:first-child {
-                border: none;
-            }
 
-            .td_btn {
-                cursor: pointer;
-            }
-            .td_btn:hover {
-                background-color: #9fcdff;
-                color: #0b0b0b;
-            }
             .detail_div {
                 height: 300px;
                 text-align: left;
@@ -333,6 +310,12 @@
                 border: 1px solid black;
                 cursor: pointer;
             }
+
+
+
+
+
+
         </style>
    </head>
 
@@ -409,7 +392,7 @@
            		</div>
            		<div><span>연령</span><span>${map.dto.ages}세</span></div>
            		<div><span>시간</span><span>${map.dto.playtime}</span></div>
-           		<div><span>내 평가</span><span></span><span>컬렉션 추가</span></div>
+           		<div><span id="modal-open">내 평가</span><span>/???/</span><span>컬렉션 추가</span></div>
            		</div>
            	</div>
            		

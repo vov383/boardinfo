@@ -23,8 +23,11 @@ public class PublisherDAOImpl implements PublisherDAO {
 	}
 	
 	@Override
-	public void insert_publisher(String publisher) {
-		sqlSession.insert("publisher.insert", publisher);
+	public void insert_publisher(String publisher, String userid) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("publisher",publisher);
+		map.put("userid",userid);
+		sqlSession.insert("publisher.insert", map);
 	}
 	
 	@Override

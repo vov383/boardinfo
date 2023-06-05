@@ -6,8 +6,6 @@ import java.util.Date;
 public class GameDTO {
 
 	private int gnum; //테이블 인덱스 pk
-	private int exnum; //확장판게임의 경우 본게임의 gnum을 입력
-	private String renum; //재구현게임의 경우 본게임의 gnum을 입력(복수일 경우 존재해 문자열로 배열형태로 저장)
 	private int bggnum; //보드게임긱의 id값
 	private String gametitle; //게임명 nn
 	private String gametitle_eng; //게임명 영문 
@@ -15,12 +13,14 @@ public class GameDTO {
 	private String playtime; //플레이시간 nn 모르면 정보없음입력
 	private String ages; //사용연령 nn 모르면 정보없음입력
 	private String language; //언어 nn
-	private String gamephoto_url; //게임사진파일경로 
-	private int release_year; //게임발매년도 
-	private float bgg_game_score; //보드게임긱 게임 난이도
-	private int bggrank;  //보드게임긱 랭킹
-	private Date write_date; //업로드날짜 nn sysout기본
-	private int viewcount; //조회수 나중에 주간랭킹같은것 구현 고려
+	private int release_year; //게임발매년도
+	private Date create_date; //업로드날짜 nn sysout기본
+	private String create_user; //업로드한 유저명
+	private Date update_date; //수정 날짜
+	private String update_user; //수정한 유저명
+	//private int viewcount; //조회수 매일 자정 viewcount_date 테이블에 저장후 초기화됨
+	private int totalviewcount; //조회수
+	//private String del; //삭제 글 표시여부
 	
 	//따로 테이블 만들어서 관리.
 	//게임등록시 값이 여러개일 경우 ',' 를 기준으로 spilt 할 수있게 문자열로 받은 다음
@@ -30,27 +30,22 @@ public class GameDTO {
 	private String publisher; //제작사
 	private String artist; //아트웍담당
 	private String mechanic; //게임 메카니즘
+	private String exnum; //확장판게임
+	private String renum; //재구현게임의
 
 	//사진테이블의 자료를 사용하는 용도의 배열
 	private String[] files;
 	//보드게임긱에서 썸네일 가져오는 용도
 	private String bgg_thumbnail;
+	//테이블에 없지만 값을 dto에만 존재
+	private String gamephoto_url; //게임사진파일경로
 
-	
-	//테이블에 없을것들 일단 적어놨지만 나중에 dto가 아닌 map으로 값 넘길수도 있음.
-	//변수명이 이상해서 db엎을때 제대로 다시 작성할것.
-	private double g_rate; //게임 평점
-	private double l_rate; //게임 난이도
-	private int g_rank; //게임순위
-	
 	
 	//getter setter tostring 생성자
 	public GameDTO() {}
 
-	public GameDTO(int gnum, int exnum, String renum, int bggnum, String gametitle, String gametitle_eng, String players, String playtime, String ages, String language, String gamephoto_url, int release_year, float bgg_game_score, int bggrank, Date write_date, int viewcount, String designer, String gamecategory, String publisher, String artist, String mechanic, String[] files, String bgg_thumbnail, double g_rate, double l_rate, int g_rank) {
+	public GameDTO(int gnum, int bggnum, String gametitle, String gametitle_eng, String players, String playtime, String ages, String language, int release_year, Date create_date, String create_user, Date update_date, String update_user, int totalviewcount, String designer, String gamecategory, String publisher, String artist, String mechanic, String exnum, String renum, String[] files, String bgg_thumbnail, String gamephoto_url) {
 		this.gnum = gnum;
-		this.exnum = exnum;
-		this.renum = renum;
 		this.bggnum = bggnum;
 		this.gametitle = gametitle;
 		this.gametitle_eng = gametitle_eng;
@@ -58,54 +53,38 @@ public class GameDTO {
 		this.playtime = playtime;
 		this.ages = ages;
 		this.language = language;
-		this.gamephoto_url = gamephoto_url;
 		this.release_year = release_year;
-		this.bgg_game_score = bgg_game_score;
-		this.bggrank = bggrank;
-		this.write_date = write_date;
-		this.viewcount = viewcount;
+		this.create_date = create_date;
+		this.create_user = create_user;
+		this.update_date = update_date;
+		this.update_user = update_user;
+		this.totalviewcount = totalviewcount;
 		this.designer = designer;
 		this.gamecategory = gamecategory;
 		this.publisher = publisher;
 		this.artist = artist;
 		this.mechanic = mechanic;
+		this.exnum = exnum;
+		this.renum = renum;
 		this.files = files;
 		this.bgg_thumbnail = bgg_thumbnail;
-		this.g_rate = g_rate;
-		this.l_rate = l_rate;
-		this.g_rank = g_rank;
+		this.gamephoto_url = gamephoto_url;
 	}
 
-	@Override
-	public String toString() {
-		return "GameDTO{" +
-				"gnum=" + gnum +
-				", exnum=" + exnum +
-				", renum='" + renum + '\'' +
-				", bggnum=" + bggnum +
-				", gametitle='" + gametitle + '\'' +
-				", gametitle_eng='" + gametitle_eng + '\'' +
-				", players='" + players + '\'' +
-				", playtime='" + playtime + '\'' +
-				", ages='" + ages + '\'' +
-				", language='" + language + '\'' +
-				", gamephoto_url='" + gamephoto_url + '\'' +
-				", release_year=" + release_year +
-				", bgg_game_score=" + bgg_game_score +
-				", bggrank=" + bggrank +
-				", write_date=" + write_date +
-				", viewcount=" + viewcount +
-				", designer='" + designer + '\'' +
-				", gamecategory='" + gamecategory + '\'' +
-				", publisher='" + publisher + '\'' +
-				", artist='" + artist + '\'' +
-				", mechanic='" + mechanic + '\'' +
-				", files=" + Arrays.toString(files) +
-				", bgg_thumbnail='" + bgg_thumbnail + '\'' +
-				", g_rate=" + g_rate +
-				", l_rate=" + l_rate +
-				", g_rank=" + g_rank +
-				'}';
+	public String getCreate_user() {
+		return create_user;
+	}
+
+	public void setCreate_user(String create_user) {
+		this.create_user = create_user;
+	}
+
+	public String getUpdate_user() {
+		return update_user;
+	}
+
+	public void setUpdate_user(String update_user) {
+		this.update_user = update_user;
 	}
 
 	public int getGnum() {
@@ -114,22 +93,6 @@ public class GameDTO {
 
 	public void setGnum(int gnum) {
 		this.gnum = gnum;
-	}
-
-	public int getExnum() {
-		return exnum;
-	}
-
-	public void setExnum(int exnum) {
-		this.exnum = exnum;
-	}
-
-	public String getRenum() {
-		return renum;
-	}
-
-	public void setRenum(String renum) {
-		this.renum = renum;
 	}
 
 	public int getBggnum() {
@@ -188,14 +151,6 @@ public class GameDTO {
 		this.language = language;
 	}
 
-	public String getGamephoto_url() {
-		return gamephoto_url;
-	}
-
-	public void setGamephoto_url(String gamephoto_url) {
-		this.gamephoto_url = gamephoto_url;
-	}
-
 	public int getRelease_year() {
 		return release_year;
 	}
@@ -204,36 +159,28 @@ public class GameDTO {
 		this.release_year = release_year;
 	}
 
-	public float getBgg_game_score() {
-		return bgg_game_score;
+	public Date getCreate_date() {
+		return create_date;
 	}
 
-	public void setBgg_game_score(float bgg_game_score) {
-		this.bgg_game_score = bgg_game_score;
+	public void setCreate_date(Date create_date) {
+		this.create_date = create_date;
 	}
 
-	public int getBggrank() {
-		return bggrank;
+	public Date getUpdate_date() {
+		return update_date;
 	}
 
-	public void setBggrank(int bggrank) {
-		this.bggrank = bggrank;
+	public void setUpdate_date(Date update_date) {
+		this.update_date = update_date;
 	}
 
-	public Date getWrite_date() {
-		return write_date;
+	public int getTotalviewcount() {
+		return totalviewcount;
 	}
 
-	public void setWrite_date(Date write_date) {
-		this.write_date = write_date;
-	}
-
-	public int getViewcount() {
-		return viewcount;
-	}
-
-	public void setViewcount(int viewcount) {
-		this.viewcount = viewcount;
+	public void setTotalviewcount(int totalviewcount) {
+		this.totalviewcount = totalviewcount;
 	}
 
 	public String getDesigner() {
@@ -276,6 +223,22 @@ public class GameDTO {
 		this.mechanic = mechanic;
 	}
 
+	public String getExnum() {
+		return exnum;
+	}
+
+	public void setExnum(String exnum) {
+		this.exnum = exnum;
+	}
+
+	public String getRenum() {
+		return renum;
+	}
+
+	public void setRenum(String renum) {
+		this.renum = renum;
+	}
+
 	public String[] getFiles() {
 		return files;
 	}
@@ -292,27 +255,41 @@ public class GameDTO {
 		this.bgg_thumbnail = bgg_thumbnail;
 	}
 
-	public double getG_rate() {
-		return g_rate;
+	public String getGamephoto_url() {
+		return gamephoto_url;
 	}
 
-	public void setG_rate(double g_rate) {
-		this.g_rate = g_rate;
+	public void setGamephoto_url(String gamephoto_url) {
+		this.gamephoto_url = gamephoto_url;
 	}
 
-	public double getL_rate() {
-		return l_rate;
-	}
-
-	public void setL_rate(double l_rate) {
-		this.l_rate = l_rate;
-	}
-
-	public int getG_rank() {
-		return g_rank;
-	}
-
-	public void setG_rank(int g_rank) {
-		this.g_rank = g_rank;
+	@Override
+	public String toString() {
+		return "GameDTO{" +
+				"gnum=" + gnum +
+				", bggnum=" + bggnum +
+				", gametitle='" + gametitle + '\'' +
+				", gametitle_eng='" + gametitle_eng + '\'' +
+				", players='" + players + '\'' +
+				", playtime='" + playtime + '\'' +
+				", ages='" + ages + '\'' +
+				", language='" + language + '\'' +
+				", release_year=" + release_year +
+				", create_date=" + create_date +
+				", create_user='" + create_user + '\'' +
+				", update_date=" + update_date +
+				", update_user='" + update_user + '\'' +
+				", totalviewcount=" + totalviewcount +
+				", designer='" + designer + '\'' +
+				", gamecategory='" + gamecategory + '\'' +
+				", publisher='" + publisher + '\'' +
+				", artist='" + artist + '\'' +
+				", mechanic='" + mechanic + '\'' +
+				", exnum='" + exnum + '\'' +
+				", renum='" + renum + '\'' +
+				", files=" + Arrays.toString(files) +
+				", bgg_thumbnail='" + bgg_thumbnail + '\'' +
+				", gamephoto_url='" + gamephoto_url + '\'' +
+				'}';
 	}
 }

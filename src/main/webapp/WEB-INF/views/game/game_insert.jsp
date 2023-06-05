@@ -873,6 +873,79 @@
 			console.log("인풋"+$("#exnum").val());
 		});
 
+
+
+		//	re재구현게임 검색 자동완성 쿼리
+		$('#inputRe').keyup(function() {
+			var input = $(this).val();
+			$.ajax({
+				type: "post",
+				url: "${path}/game/autoGame.do/"+input,
+				success: function(result) {
+					var suggestionsDiv = $('#reSuggestions');
+					suggestionsDiv.empty(); // 기존 내용 비우기
+
+					if (result.length > 0) {
+						suggestionsDiv.css('max-height', '150px').show(); // 값이 있을 경우 높이 설정하고 보이기
+						$(result).each(function(index, item) {
+							var renum = item.gnum;
+							var gametitle = item.gametitle;
+							var renumDiv = "<div class='renumDiv' style='display: none;'>" + renum + "</div>";
+							suggestionsDiv.append("<div class='searched cursor_pointer'>" + gametitle + "</div>" + renumDiv);
+						});
+					} else {
+						suggestionsDiv.hide(); // 값이 없을 경우 숨기기
+					}
+				},
+				error: function() {
+					console.log("에러..");
+				}
+			});
+			if(input=="")	$('#reSuggestions').empty();
+		});
+
+		var selectedRes = [];
+
+		function updateReInput() {
+			var reInput = $("#renum");
+			reInput.val(selectedRes.join(","));
+		}
+
+
+		//ex확장게임 검색값 클릭시 배열에 추가
+		$('#reSuggestions').on('click', '.searched', function() {
+			var selectedRe = $(this).text();
+			console.log(selectedRe);
+			var selectedRenum = $(this).next('.renumDiv').text();
+			selectedRes.push(selectedRenum);
+			var selectedRenumDiv = "<div class='selectedRenumDiv' style='display: none;'>" + selectedRenum + "</div>";
+			$("#selectedRe").append("<div class='selected-value cursor_pointer'>" + selectedRe + "</div>" + selectedRenumDiv);
+			console.log("배열"+selectedRes);
+			$("#inputRe").val("");
+			$("#reSuggestions").empty().hide();
+			updateReInput();
+			console.log("인풋"+$("#renum").val());
+		});
+
+		// 선택된 값 클릭 이벤트 처리
+		$("#selectedRe").on("click", ".selected-value", function() {
+
+			//var value = $(this).text();
+			var valuenum = $(this).next('.selectedRenumDiv').text();
+
+			// 선택된 값 배열에서 해당 값을 제거
+			selectedRes = selectedRes.filter(function(selected) {
+				return selected !== valuenum;
+			});
+
+			// 선택된 값 표시가 삭제되도록 처리
+			$(this).next('.selectedRenumDiv').remove();
+			$(this).remove();
+
+			updateReInput();
+			console.log("인풋"+$("#renum").val());
+		});
+
 	});
 </script>
 

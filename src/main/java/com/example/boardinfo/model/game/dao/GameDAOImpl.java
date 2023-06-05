@@ -1,5 +1,7 @@
 package com.example.boardinfo.model.game.dao;
 
+import java.awt.image.ImageProducer;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,8 +43,11 @@ public class GameDAOImpl implements GameDAO {
 		return sqlSession.selectList("game.getAuto", input);
 	}
 
-	public void addAttach(String fullName){
-		sqlSession.insert("game.addAttach", fullName);
+	public void addAttach(String fullName, String userid){
+		Map<String, Object> map = new HashMap<>();
+		map.put("fullName",fullName);
+		map.put("userid",userid);
+		sqlSession.insert("game.addAttach", map);
 	}
 	public void delteFile(String fileName){
 		sqlSession.delete("game.deleteFile", fileName);
@@ -58,5 +63,19 @@ public class GameDAOImpl implements GameDAO {
 	}
 	public void gameupdate(GameDTO dto){
 		sqlSession.update("game.gameupdate", dto);
+	}
+
+	public void insert_exnum(int exnum, String userid){
+		Map<String, Object> map = new HashMap<>();
+		map.put("exnum",exnum);
+		map.put("userid",userid);
+		sqlSession.insert("game.exnum_insert", map);
+	}
+
+	public void insert_renum(int renum, String userid){
+		Map<String, Object> map = new HashMap<>();
+		map.put("renum",renum);
+		map.put("userid",userid);
+		sqlSession.insert("game.renum_insert", map);
 	}
 }

@@ -23,8 +23,11 @@ public class DesignerDAOImpl implements DesignerDAO {
 	}
 	
 	@Override
-	public void insert_designer(String designer) {
-		sqlSession.insert("designer.insert", designer);
+	public void insert_designer(String designer, String userid) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("designer",designer);
+		map.put("userid",userid);
+		sqlSession.insert("designer.insert", map);
 	}
 	
 	@Override

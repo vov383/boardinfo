@@ -13,12 +13,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="insert">
-		insert into category
-		values (seq_category.nextval, #{gamecategory})
+		insert into category (cnum, gamecategory, userid)
+		values (seq_category.nextval, #{gamecategory}, #{userid})
 	</insert>
 	
 	<insert id="insertmapping">
-		insert into game_category
+		insert into game_category (gnum,cnum)
 		values (seq_game.currval,seq_category.currval)
 	</insert>
 	
@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="insertmapping_cnum">
-		insert into game_category
+		insert into game_category (gnum, cnum)
 		values (seq_game.currval,#{cnum})
 	</insert>
 	
@@ -50,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<insert id="insertmapping_update">
-		insert into game_category
+		insert into game_category (gnum,cnum)
 		values (#{gnum},#{cnum})
 	</insert>
 	
