@@ -153,7 +153,7 @@
 
                         <tr>
 
-                            <td>${row.gnum}</td><!-- 리뷰와 연동되면 순위 ${row.g_rank} -->
+                            <td>${row.gnum}</td>
                             <td>
                                 <c:choose>
                                     <c:when test="${row.gamephoto_url != null}">
@@ -178,7 +178,7 @@
                             <td>${row.release_year}</td>
                             <td>리뷰목록</td><!-- 리뷰와 연동되면 그쪽으로 link -->
                             <td>판매물품</td><!-- 거래와 연동되면 그쪽으로 link -->
-                            <td>${row.viewcount}</td>
+                            <td>${row.totalviewcount}</td>
 
                         </tr>
                     </c:forEach>

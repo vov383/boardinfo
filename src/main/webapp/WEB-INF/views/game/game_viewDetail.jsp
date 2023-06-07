@@ -337,6 +337,10 @@
 
 
 	<div align="center">
+        <form name="updateViewForm" method="post" action="${path}/game/updateView.do">
+            <input type="hidden" name="gnum" value="${map.dto.gnum}">
+        </form>
+        <div id="btnGameUpdate">수정</div>
 
            <div id="gameInfoUpper">
             <c:choose>
@@ -445,6 +449,52 @@
                 </c:forEach>
                 </div>
             </div>
+
+            <div  class="game_detail_filter_div">
+                <div class="game_detail_filter">퍼블리셔</div>
+                <div class="game_detail_filtered_list">
+                    <c:forEach var="publisher" items="${map.plist}">
+                        <a href="${path}/game/search.do?filter=publisher&num=${publisher.pnum}">${publisher.publisher}</a>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div  class="game_detail_filter_div">
+                <div class="game_detail_filter">확장(원본)</div>
+                <div class="game_detail_filtered_list">
+                    <c:forEach var="item" items="${map.exmap.origin}">
+                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div  class="game_detail_filter_div">
+                <div class="game_detail_filter">확장</div>
+                <div class="game_detail_filtered_list">
+                    <c:forEach var="item" items="${map.exmap.expansion}">
+                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div  class="game_detail_filter_div">
+                <div class="game_detail_filter">재구현(원본)</div>
+                <div class="game_detail_filtered_list">
+                    <c:forEach var="item" items="${map.remap.origin}">
+                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div  class="game_detail_filter_div">
+                <div class="game_detail_filter">재구현</div>
+                <div class="game_detail_filtered_list">
+                    <c:forEach var="item" items="${map.remap.expansion}">
+                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
+                    </c:forEach>
+                </div>
+            </div>
+
         </div>
 
         <hr style="clear: both;">
@@ -666,6 +716,14 @@
    <footer>
        <%@include file="../include/footer.jsp" %>
    </footer>
+
+   <script>
+       $(function () {
+           $("#btnGameUpdate").click(function(){
+               document.updateViewForm.submit();
+           });
+       });
+   </script>
 
    <script>
 <%--캐러셀관련--%>

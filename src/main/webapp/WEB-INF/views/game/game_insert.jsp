@@ -298,7 +298,7 @@
 				<td>확장게임</td>
 				<td>
 					<div id="selectedEx"></div>
-					<input type="hidden" name="exnum" id="exnum">
+					<input type="hidden" name="expansion" id="expansion">
 					<input id="inputEx" class="input_game" autocomplete="off">
 					<div id="exSuggestions"></div>
 				</td>
@@ -310,12 +310,19 @@
 				<td>재구현게임</td>
 				<td>
 					<div id="selectedRe"></div>
-					<input type="hidden" name="renum" id="renum">
+					<input type="hidden" name="reimplement" id="reimplement">
 					<input id="inputRe" class="input_game" autocomplete="off">
 					<div id="reSuggestions"></div>
 				</td>
 
 			</tr>
+
+<%--			<tr>--%>
+
+<%--				<td>보드게임긱아이디</td>--%>
+<%--				<td><input name="bggnum" id="bggnum" class="input_game"></td>--%>
+
+<%--			</tr>--%>
 
 			<tr>
 
@@ -815,10 +822,8 @@
 					if (result.length > 0) {
 						suggestionsDiv.css('max-height', '150px').show(); // 값이 있을 경우 높이 설정하고 보이기
 						$(result).each(function(index, item) {
-							var exnum = item.gnum;
 							var gametitle = item.gametitle;
-							var exnumDiv = "<div class='exnumDiv' style='display: none;'>" + exnum + "</div>";
-							suggestionsDiv.append("<div class='searched cursor_pointer'>" + gametitle + "</div>" + exnumDiv);
+							suggestionsDiv.append("<div class='searched cursor_pointer'>" + gametitle + "</div>");
 						});
 					} else {
 						suggestionsDiv.hide(); // 값이 없을 경우 숨기기
@@ -834,7 +839,7 @@
 		var selectedExs = [];
 
 		function updateExInput() {
-			var exInput = $("#exnum");
+			var exInput = $("#expansion");
 			exInput.val(selectedExs.join(","));
 		}
 
@@ -843,34 +848,30 @@
 		$('#exSuggestions').on('click', '.searched', function() {
 			var selectedEx = $(this).text();
 			console.log(selectedEx);
-			var selectedExnum = $(this).next('.exnumDiv').text();
-			selectedExs.push(selectedExnum);
-			var selectedExnumDiv = "<div class='selectedExnumDiv' style='display: none;'>" + selectedExnum + "</div>";
-			$("#selectedEx").append("<div class='selected-value cursor_pointer'>" + selectedEx + "</div>" + selectedExnumDiv);
+			selectedExs.push(selectedEx);
+			$("#selectedEx").append("<div class='selected-value cursor_pointer'>" + selectedEx + "</div>");
 			console.log("배열"+selectedExs);
 			$("#inputEx").val("");
 			$("#exSuggestions").empty().hide();
 			updateExInput();
-			console.log("인풋"+$("#exnum").val());
+			console.log("인풋"+$("#expansion").val());
 		});
 
 		// 선택된 값 클릭 이벤트 처리
 		$("#selectedEx").on("click", ".selected-value", function() {
 
-			//var value = $(this).text();
-			var valuenum = $(this).next('.selectedExnumDiv').text();
+			var value = $(this).text();
 
 			// 선택된 값 배열에서 해당 값을 제거
 			selectedExs = selectedExs.filter(function(selected) {
-				return selected !== valuenum;
+				return selected !== value;
 			});
 
 			// 선택된 값 표시가 삭제되도록 처리
-			$(this).next('.selectedExnumDiv').remove();
 			$(this).remove();
 
 			updateExInput();
-			console.log("인풋"+$("#exnum").val());
+			console.log("인풋"+$("#expansion").val());
 		});
 
 
@@ -888,10 +889,8 @@
 					if (result.length > 0) {
 						suggestionsDiv.css('max-height', '150px').show(); // 값이 있을 경우 높이 설정하고 보이기
 						$(result).each(function(index, item) {
-							var renum = item.gnum;
 							var gametitle = item.gametitle;
-							var renumDiv = "<div class='renumDiv' style='display: none;'>" + renum + "</div>";
-							suggestionsDiv.append("<div class='searched cursor_pointer'>" + gametitle + "</div>" + renumDiv);
+							suggestionsDiv.append("<div class='searched cursor_pointer'>" + gametitle + "</div>");
 						});
 					} else {
 						suggestionsDiv.hide(); // 값이 없을 경우 숨기기
@@ -907,43 +906,39 @@
 		var selectedRes = [];
 
 		function updateReInput() {
-			var reInput = $("#renum");
+			var reInput = $("#reimplement");
 			reInput.val(selectedRes.join(","));
 		}
 
 
-		//ex확장게임 검색값 클릭시 배열에 추가
+		//재구현게임 검색값 클릭시 배열에 추가
 		$('#reSuggestions').on('click', '.searched', function() {
 			var selectedRe = $(this).text();
 			console.log(selectedRe);
-			var selectedRenum = $(this).next('.renumDiv').text();
-			selectedRes.push(selectedRenum);
-			var selectedRenumDiv = "<div class='selectedRenumDiv' style='display: none;'>" + selectedRenum + "</div>";
-			$("#selectedRe").append("<div class='selected-value cursor_pointer'>" + selectedRe + "</div>" + selectedRenumDiv);
+			selectedRes.push(selectedRe);
+			$("#selectedRe").append("<div class='selected-value cursor_pointer'>" + selectedRe + "</div>");
 			console.log("배열"+selectedRes);
 			$("#inputRe").val("");
 			$("#reSuggestions").empty().hide();
 			updateReInput();
-			console.log("인풋"+$("#renum").val());
+			console.log("인풋"+$("#reimplement").val());
 		});
 
 		// 선택된 값 클릭 이벤트 처리
 		$("#selectedRe").on("click", ".selected-value", function() {
 
-			//var value = $(this).text();
-			var valuenum = $(this).next('.selectedRenumDiv').text();
+			var value = $(this).text();
 
 			// 선택된 값 배열에서 해당 값을 제거
 			selectedRes = selectedRes.filter(function(selected) {
-				return selected !== valuenum;
+				return selected !== value;
 			});
 
 			// 선택된 값 표시가 삭제되도록 처리
-			$(this).next('.selectedRenumDiv').remove();
 			$(this).remove();
 
 			updateReInput();
-			console.log("인풋"+$("#renum").val());
+			console.log("인풋"+$("#reimplement").val());
 		});
 
 	});

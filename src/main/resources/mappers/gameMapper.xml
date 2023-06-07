@@ -9,6 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="gameListCount" resultType="int">
 		select count(*)
 		from game
+		where del = 'n'
 	</select>
 
 	<select id="gameList" resultType="gameDto">
@@ -24,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     		    		        	) a
     		    			  where rnum = 1
     		    			) ga
-				 	  where g.gnum = ga.gnum(+)
+				 	  where g.gnum = ga.gnum(+) and g.del = 'n'
 				 	  order by gnum
 				 	 )a
 			 )
@@ -66,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                         from game_attach
                        ) a
                  where rnum = 1) ga
-		where g.gnum = ga.gnum(+) and gametitle like #{input}||'%'
+		where g.gnum = ga.gnum(+) and gametitle like #{input}||'%' and g.del = 'n'
 	</select>
 
 	<!--첨부파일 정보 저장-->
@@ -90,6 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				from ${mappingTable} mapping, ${filter} filter
 			</otherwise>
 		</choose>
+		, (select gnum from game where del='n') g
 		<where>
 			<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
 				mapping.anum = filter.anum and filter.anum=#{num}
@@ -106,6 +108,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
 				mapping.pnum = filter.pnum and filter.pnum=#{num}
 			</if>
+			and mapping.gnum=g.gnum
 		</where>
 
 	</select>
@@ -115,107 +118,59 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="filteredList" resultType="gameDto">
 	<bind name="filterColumn" value="filter+'.'+filter"/>
 	<bind name="mappingTable" value="'game_'+filter"/>
-<!--		select *-->
-<!--		from (select a.*, rownum rn-->
-<!--		from (-->
-<!--		select game.gnum, exnum, renum, bggnum, gametitle, gametitle_eng, players,-->
-<!--		playtime, ages, language, release_year, write_date, viewcount,-->
-<!--		gamephoto_url, ${filterColumn}-->
-<!--		from (select g.gnum, exnum, renum, bggnum, gametitle, gametitle_eng, players,-->
-<!--		playtime, ages, language, release_year, bgg_game_score,-->
-<!--		bggrank, write_date, viewcount, ga.fullname gamephoto_url-->
-<!--		from game g,-->
-<!--		(select gnum, fullname-->
-<!--		from (select row_number() over(partition by gnum order by regdate desc) rnum,-->
-<!--		gnum, fullname-->
-<!--		from game_attach-->
-<!--		)-->
-<!--		where rnum = 1-->
-<!--		) ga-->
-<!--		where g.gnum = ga.gnum(+)-->
-<!--		) game,-->
-<!--		(select gnum, filter.${filter}-->
-<!--		<choose>-->
-<!--			<when test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">-->
-<!--				from game_category mapping, category filter-->
-<!--			</when>-->
-<!--			<otherwise>-->
-<!--				from ${mappingTable} mapping, ${filter} filter-->
-<!--			</otherwise>-->
-<!--		</choose>-->
-<!--		<where>-->
-<!--			<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">-->
-<!--				mapping.anum = filter.anum and filter.anum=#{num}-->
-<!--			</if>-->
-<!--			<if test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">-->
-<!--				mapping.cnum = filter.cnum and filter.cnum=#{num}-->
-<!--			</if>-->
-<!--			<if test="filter != null and 'designer'.equalsIgnoreCase(filter)">-->
-<!--				mapping.dnum = filter.dnum and filter.dnum=#{num}-->
-<!--			</if>-->
-<!--			<if test="filter != null and 'mechanic'.equalsIgnoreCase(filter)">-->
-<!--				mapping.mnum = filter.mnum and filter.mnum=#{num}-->
-<!--			</if>-->
-<!--			<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">-->
-<!--				mapping.pnum = filter.pnum and filter.pnum=#{num}-->
-<!--			</if>-->
-<!--		</where>-->
-<!--		) ${filter}-->
-<!--		where game.gnum = ${filter}.gnum-->
-<!--		order by viewcount desc, game.gnum-->
-<!--		) a-->
-<!--		)-->
-<!--		where rn between #{start} and #{end}-->
 		select *
-		from (select a.*, rownum rn
-		from (
-		select game.gnum, bggnum, gametitle, gametitle_eng, players,
-		playtime, ages, language, release_year, create_date, totalviewcount,
-		gamephoto_url, ${filterColumn}
-		from (select g.gnum, bggnum, gametitle, gametitle_eng, players,
-		playtime, ages, language, release_year, create_date, totalviewcount,
-		ga.fullname gamephoto_url
-		from game g,
-		(select gnum, fullname
-		from (select row_number() over(partition by gnum order by create_date desc) rnum,
-		gnum, fullname
-		from game_attach
-		)
-		where rnum = 1
-		) ga
-		where g.gnum = ga.gnum(+)
-		) game,
-		(select gnum, filter.${filter}
-		<choose>
-			<when test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
-				from game_category mapping, category filter
-			</when>
-			<otherwise>
-				from ${mappingTable} mapping, ${filter} filter
-			</otherwise>
-		</choose>
-		<where>
-			<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
-				mapping.anum = filter.anum and filter.anum=#{num}
-			</if>
-			<if test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
-				mapping.cnum = filter.cnum and filter.cnum=#{num}
-			</if>
-			<if test="filter != null and 'designer'.equalsIgnoreCase(filter)">
-				mapping.dnum = filter.dnum and filter.dnum=#{num}
-			</if>
-			<if test="filter != null and 'mechanic'.equalsIgnoreCase(filter)">
-				mapping.mnum = filter.mnum and filter.mnum=#{num}
-			</if>
-			<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
-				mapping.pnum = filter.pnum and filter.pnum=#{num}
-			</if>
-		</where>
-		) ${filter}
-		where game.gnum = ${filter}.gnum
-		order by viewcount desc, game.gnum
-		) a
-		)
+		from   (
+				select a.*, rownum rn
+			    from   (
+					  	select game.gnum, bggnum, gametitle, gametitle_eng, players,
+					  		   playtime, ages, language, release_year, create_date, totalviewcount,
+					  		   gamephoto_url, ${filterColumn}
+					    from   (
+					  		    select g.gnum, bggnum, gametitle, gametitle_eng, players,
+									   playtime, ages, language, release_year, create_date, totalviewcount,
+									   ga.fullname gamephoto_url
+								from   game g,
+									   (select gnum, fullname
+										from   (
+												select row_number() over(partition by gnum order by create_date desc) rnum,
+													   gnum, fullname
+												from   game_attach
+												)
+										where rnum = 1
+										) ga
+								where g.gnum = ga.gnum(+) and g.del = 'n'
+								) game,
+								(select gnum, filter.${filter}
+						<choose>
+							<when test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
+								from    game_category mapping, category filter
+							</when>
+							<otherwise>
+								from ${mappingTable} mapping, ${filter} filter
+							</otherwise>
+						</choose>
+							<where>
+								<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
+									 mapping.anum = filter.anum and filter.anum=#{num}
+								</if>
+								<if test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
+									 mapping.cnum = filter.cnum and filter.cnum=#{num}
+								</if>
+								<if test="filter != null and 'designer'.equalsIgnoreCase(filter)">
+									 mapping.dnum = filter.dnum and filter.dnum=#{num}
+								</if>
+								<if test="filter != null and 'mechanic'.equalsIgnoreCase(filter)">
+									 mapping.mnum = filter.mnum and filter.mnum=#{num}
+								</if>
+								<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
+									 mapping.pnum = filter.pnum and filter.pnum=#{num}
+								</if>
+							</where>
+								) ${filter}
+						where game.gnum = ${filter}.gnum
+						order by totalviewcount desc, game.gnum
+						) a
+				)
 		where rn between #{start} and #{end}
 	</select>
 
@@ -233,15 +188,79 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where gnum=#{gnum}
 	</update>
 
-	<insert id="exnum_insert">
-		insert into expansion (gnum, exnum, userid)
-		values (seq_game.currval, #{exnum}, #{userid})
+	<insert id="expansion_insert">
+		insert into expansion (gnum, userid, exnum)
+		values (seq_game.currval, #{userid},
+			     (select gnum
+			      from   game
+			      where  gametitle=#{expansion})
+			    )
 	</insert>
 
-	<insert id="renum_insert">
-		insert into reimplement (gnum, renum, userid)
-		values (seq_game.currval, #{renum}, #{userid})
+	<insert id="reimplement_insert">
+		insert into reimplement (gnum, userid, renum)
+		values (seq_game.currval,#{userid},
+					(select gnum
+					 from   game
+					 where  gametitle=#{reimplement})
+				)
 	</insert>
+
+	<select id="getExpansion" resultType="gameDto">
+		select g.gnum, bggnum, gametitle, gametitle_eng, players, playtime, ages, language,
+       		   release_year, g.create_date, totalviewcount, ga.fullname gamephoto_url
+		from   game g
+		left join (
+     		select gnum, fullname
+     		from   (select row_number() over(partition by gnum order by create_date desc) rnum, gnum, fullname
+             		from   game_attach )
+             		where  rnum = 1 ) ga
+		on     g.gnum = ga.gnum
+		right join (select gnum, exnum
+     				from   EXPANSION ) ex
+		on     g.gnum = ex.${strOn}
+		where  ex.${strWhere}= #{gnum}
+	</select>
+
+	<select id="getReimplement" resultType="gameDto">
+		select g.gnum, bggnum, gametitle, gametitle_eng, players, playtime, ages, language,
+       		   release_year, g.create_date, totalviewcount, ga.fullname gamephoto_url
+		from   game g
+		left join (
+     		select gnum, fullname
+     		from   (select row_number() over(partition by gnum order by create_date desc) rnum, gnum, fullname
+             		from   game_attach )
+             		where  rnum = 1 ) ga
+		on     g.gnum = ga.gnum
+		right join (select gnum, renum
+     				from   reimplement ) re
+		on     g.gnum = re.${strOn}
+		where  re.${strWhere}= #{gnum} and g.del = 'n'
+	</select>
+
+	<update id="delete">
+		update game
+		set del = 'y', update_date = sysdate, update_user = #{userid}
+		where gnum=#{gnum}
+	</update>
+
+	<select id="viewExpansion" resultType="String">
+		select gametitle
+		from (select gnum, gametitle
+			  from   game
+			  where  del='n'
+			  ) g, expansion e
+		where g.gnum = e.exnum and e.gnum = #{gnum}
+	</select>
+
+	<select id="viewReimplement" resultType="String">
+		select gametitle
+		from (select gnum, gametitle
+			  from   game
+			  where  del='n'
+			  ) g, reimplement r
+		where g.gnum = r.renum and r.gnum = #{gnum}
+	</select>
 	
 </mapper>
 

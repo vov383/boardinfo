@@ -65,17 +65,79 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.update("game.gameupdate", dto);
 	}
 
-	public void insert_exnum(int exnum, String userid){
+	public void insert_expansion(String expansion, String userid){
 		Map<String, Object> map = new HashMap<>();
-		map.put("exnum",exnum);
+		map.put("expansion",expansion);
 		map.put("userid",userid);
-		sqlSession.insert("game.exnum_insert", map);
+		sqlSession.insert("game.expansion_insert", map);
 	}
 
-	public void insert_renum(int renum, String userid){
+	public void insert_reimplement(String reimplement, String userid){
 		Map<String, Object> map = new HashMap<>();
-		map.put("renum",renum);
+		map.put("reimplement",reimplement);
 		map.put("userid",userid);
-		sqlSession.insert("game.renum_insert", map);
+		sqlSession.insert("game.reimplement_insert", map);
+	}
+
+	public Map<String, Object> getExpansion(int gnum){
+		Map<String, Object> map = new HashMap<>();
+		map.put("gnum",gnum);
+
+		//해당게임의 확장판 게임을 구하는 경우 (해당게임이 원본)
+		map.put("strOn", "exnum");
+		map.put("strWhere","gnum");
+		List<GameDTO> origin =sqlSession.selectList("game.getExpansion", map);
+
+		//해당게임의 원본 게임을 구하는 경우 (해당게임이 확장판)
+		map.replace("strOn","gnum");
+		map.replace("strWhere","exnum");
+		List<GameDTO> expansion = sqlSession.selectList("game.getExpansion", map);
+
+		map.clear();
+
+		map.put("origin", origin);
+		map.put("expansion",expansion);
+
+		return map;
+	}
+
+	public Map<String, Object> getReimplement(int gnum){
+		Map<String, Object> map = new HashMap<>();
+		map.put("gnum",gnum);
+
+		//해당게임의 확장판 게임을 구하는 경우 (해당게임이 원본)
+		map.put("strOn", "renum");
+		map.put("strWhere","gnum");
+		List<GameDTO> origin =sqlSession.selectList("game.getReimplement", map);
+
+		//해당게임의 원본 게임을 구하는 경우 (해당게임이 확장판)
+		map.replace("strOn","gnum");
+		map.replace("strWhere","renum");
+		List<GameDTO> expansion = sqlSession.selectList("game.getReimplement", map);
+
+		map.clear();
+
+		map.put("origin", origin);
+		map.put("reimplement",expansion);
+
+		return map;
+	}
+
+	public void deleteGame(int gnum, String userid){
+		Map<String, Object> map = new HashMap<>();
+		map.put("gnum",gnum);
+		map.put("userid",userid);
+
+		sqlSession.update("game.delete", map);
+	}
+
+	public List<String> viewExpansion(int gnum){
+		List<String> list = sqlSession.selectList("game.viewExpansion", gnum);
+		return list;
+	}
+
+	public List<String> viewReimplement(int gnum){
+		List<String> list = sqlSession.selectList("game.viewReimplement", gnum);
+		return list;
 	}
 }

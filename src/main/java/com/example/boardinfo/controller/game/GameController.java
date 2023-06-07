@@ -79,7 +79,6 @@ public class GameController {
 		//정보
 		Map<String, Object> map = gameService.view(gnum);
 
-//		mav.setViewName("game/game_view");
 		mav.setViewName("game/game_viewDetail");
 		mav.addObject("map", map);
 		return mav;
@@ -147,6 +146,14 @@ public class GameController {
 			dto.setCreate_user(userid);
 
 		gameService.gameupdate(dto);
+		return "home";
+	}
+
+	@RequestMapping("delete.do")
+	public String delete(@RequestParam("delete_gnum")int gnum, HttpSession session){
+		String userid = (String)session.getAttribute("userid");
+		logger.info("gnummmmmmmmmmmmmmmmmmmmmm : " + gnum);
+		gameService.deleteGame(gnum, userid);
 		return "home";
 	}
 }

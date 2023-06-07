@@ -30,8 +30,8 @@ public class GameDTO {
 	private String publisher; //제작사
 	private String artist; //아트웍담당
 	private String mechanic; //게임 메카니즘
-	private String exnum; //확장판게임
-	private String renum; //재구현게임의
+	private String expansion; //확장판게임
+	private String reimplement; //재구현게임의
 
 	//사진테이블의 자료를 사용하는 용도의 배열
 	private String[] files;
@@ -44,47 +44,34 @@ public class GameDTO {
 	//getter setter tostring 생성자
 	public GameDTO() {}
 
-	public GameDTO(int gnum, int bggnum, String gametitle, String gametitle_eng, String players, String playtime, String ages, String language, int release_year, Date create_date, String create_user, Date update_date, String update_user, int totalviewcount, String designer, String gamecategory, String publisher, String artist, String mechanic, String exnum, String renum, String[] files, String bgg_thumbnail, String gamephoto_url) {
-		this.gnum = gnum;
-		this.bggnum = bggnum;
-		this.gametitle = gametitle;
-		this.gametitle_eng = gametitle_eng;
-		this.players = players;
-		this.playtime = playtime;
-		this.ages = ages;
-		this.language = language;
-		this.release_year = release_year;
-		this.create_date = create_date;
-		this.create_user = create_user;
-		this.update_date = update_date;
-		this.update_user = update_user;
-		this.totalviewcount = totalviewcount;
-		this.designer = designer;
-		this.gamecategory = gamecategory;
-		this.publisher = publisher;
-		this.artist = artist;
-		this.mechanic = mechanic;
-		this.exnum = exnum;
-		this.renum = renum;
-		this.files = files;
-		this.bgg_thumbnail = bgg_thumbnail;
-		this.gamephoto_url = gamephoto_url;
-	}
-
-	public String getCreate_user() {
-		return create_user;
-	}
-
-	public void setCreate_user(String create_user) {
-		this.create_user = create_user;
-	}
-
-	public String getUpdate_user() {
-		return update_user;
-	}
-
-	public void setUpdate_user(String update_user) {
-		this.update_user = update_user;
+	@Override
+	public String toString() {
+		return "GameDTO{" +
+				"gnum=" + gnum +
+				", bggnum=" + bggnum +
+				", gametitle='" + gametitle + '\'' +
+				", gametitle_eng='" + gametitle_eng + '\'' +
+				", players='" + players + '\'' +
+				", playtime='" + playtime + '\'' +
+				", ages='" + ages + '\'' +
+				", language='" + language + '\'' +
+				", release_year=" + release_year +
+				", create_date=" + create_date +
+				", create_user='" + create_user + '\'' +
+				", update_date=" + update_date +
+				", update_user='" + update_user + '\'' +
+				", totalviewcount=" + totalviewcount +
+				", designer='" + designer + '\'' +
+				", gamecategory='" + gamecategory + '\'' +
+				", publisher='" + publisher + '\'' +
+				", artist='" + artist + '\'' +
+				", mechanic='" + mechanic + '\'' +
+				", expansion='" + expansion + '\'' +
+				", reimplement='" + reimplement + '\'' +
+				", files=" + Arrays.toString(files) +
+				", bgg_thumbnail='" + bgg_thumbnail + '\'' +
+				", gamephoto_url='" + gamephoto_url + '\'' +
+				'}';
 	}
 
 	public int getGnum() {
@@ -167,12 +154,28 @@ public class GameDTO {
 		this.create_date = create_date;
 	}
 
+	public String getCreate_user() {
+		return create_user;
+	}
+
+	public void setCreate_user(String create_user) {
+		this.create_user = create_user;
+	}
+
 	public Date getUpdate_date() {
 		return update_date;
 	}
 
 	public void setUpdate_date(Date update_date) {
 		this.update_date = update_date;
+	}
+
+	public String getUpdate_user() {
+		return update_user;
+	}
+
+	public void setUpdate_user(String update_user) {
+		this.update_user = update_user;
 	}
 
 	public int getTotalviewcount() {
@@ -223,20 +226,20 @@ public class GameDTO {
 		this.mechanic = mechanic;
 	}
 
-	public String getExnum() {
-		return exnum;
+	public String getExpansion() {
+		return expansion;
 	}
 
-	public void setExnum(String exnum) {
-		this.exnum = exnum;
+	public void setExpansion(String expansion) {
+		this.expansion = expansion;
 	}
 
-	public String getRenum() {
-		return renum;
+	public String getReimplement() {
+		return reimplement;
 	}
 
-	public void setRenum(String renum) {
-		this.renum = renum;
+	public void setReimplement(String reimplement) {
+		this.reimplement = reimplement;
 	}
 
 	public String[] getFiles() {
@@ -263,33 +266,32 @@ public class GameDTO {
 		this.gamephoto_url = gamephoto_url;
 	}
 
-	@Override
-	public String toString() {
-		return "GameDTO{" +
-				"gnum=" + gnum +
-				", bggnum=" + bggnum +
-				", gametitle='" + gametitle + '\'' +
-				", gametitle_eng='" + gametitle_eng + '\'' +
-				", players='" + players + '\'' +
-				", playtime='" + playtime + '\'' +
-				", ages='" + ages + '\'' +
-				", language='" + language + '\'' +
-				", release_year=" + release_year +
-				", create_date=" + create_date +
-				", create_user='" + create_user + '\'' +
-				", update_date=" + update_date +
-				", update_user='" + update_user + '\'' +
-				", totalviewcount=" + totalviewcount +
-				", designer='" + designer + '\'' +
-				", gamecategory='" + gamecategory + '\'' +
-				", publisher='" + publisher + '\'' +
-				", artist='" + artist + '\'' +
-				", mechanic='" + mechanic + '\'' +
-				", exnum='" + exnum + '\'' +
-				", renum='" + renum + '\'' +
-				", files=" + Arrays.toString(files) +
-				", bgg_thumbnail='" + bgg_thumbnail + '\'' +
-				", gamephoto_url='" + gamephoto_url + '\'' +
-				'}';
+	public GameDTO(int gnum, int bggnum, String gametitle, String gametitle_eng, String players, String playtime, String ages, String language, int release_year, Date create_date, String create_user, Date update_date, String update_user, int totalviewcount, String designer, String gamecategory, String publisher, String artist, String mechanic, String expansion, String reimplement, String[] files, String bgg_thumbnail, String gamephoto_url) {
+		this.gnum = gnum;
+		this.bggnum = bggnum;
+		this.gametitle = gametitle;
+		this.gametitle_eng = gametitle_eng;
+		this.players = players;
+		this.playtime = playtime;
+		this.ages = ages;
+		this.language = language;
+		this.release_year = release_year;
+		this.create_date = create_date;
+		this.create_user = create_user;
+		this.update_date = update_date;
+		this.update_user = update_user;
+		this.totalviewcount = totalviewcount;
+		this.designer = designer;
+		this.gamecategory = gamecategory;
+		this.publisher = publisher;
+		this.artist = artist;
+		this.mechanic = mechanic;
+		this.expansion = expansion;
+		this.reimplement = reimplement;
+		this.files = files;
+		this.bgg_thumbnail = bgg_thumbnail;
+		this.gamephoto_url = gamephoto_url;
+
+
 	}
 }

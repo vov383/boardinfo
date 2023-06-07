@@ -14,6 +14,7 @@ import com.example.boardinfo.controller.game.GameController;
 import com.example.boardinfo.model.game.dto.designer.DesignerDTO;
 import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
 import com.example.boardinfo.util.BggParser;
+import com.example.boardinfo.util.GameUtils;
 import com.example.boardinfo.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -173,18 +174,18 @@ public class GameServiceImpl implements GameService {
 
     //확장게임 테이블에 insert
     //확장게임 배열
-    String[] exnums = dto.getExnum().split(",");
-    for(String str : exnums){
-      int exnum = Integer.parseInt(str);
-      gameDao.insert_exnum(exnum,userid);
+    String[] expansions = dto.getExpansion().split(",");
+    for(String str : expansions){
+      String expansion = str;
+      gameDao.insert_expansion(expansion,userid);
     }
 
     //재구현게임 테이블에 insert
     //재구현게임 배열
-    String[] renums = dto.getRenum().split(",");
-    for(String str : renums){
-      int renum = Integer.parseInt(str);
-      gameDao.insert_renum(renum,userid);
+    String[] reimplements = dto.getReimplement().split(",");
+    for(String str : reimplements){
+      String reimplement = str;
+      gameDao.insert_reimplement(reimplement,userid);
     }
   }
 
@@ -241,6 +242,13 @@ public class GameServiceImpl implements GameService {
     
     
     HashMap<String, Object> statisticMap = gameRatingDao.getStatistic(gnum);
+
+    //확장
+    Map<String, Object> expansionMap = gameDao.getExpansion(gnum);
+
+    //재구현
+    Map<String, Object> reimplementMap = gameDao.getReimplement(gnum);
+
     
 
     int bggnum = dto.getBggnum();
@@ -260,8 +268,11 @@ public class GameServiceImpl implements GameService {
     map.put("bgg_rank", bggParser.getBgg_rank());
     map.put("bgg_rate", bggParser.getBgg_rate());
     map.put("bgg_weight", bggParser.getBgg_weight());
+
     map.put("statisticMap", statisticMap);
-    
+
+    map.put("exmap", expansionMap);
+    map.put("remap", reimplementMap);
     
     return map;
   }
@@ -344,6 +355,7 @@ public class GameServiceImpl implements GameService {
 
   //게임수정페이지로 이동
   public GameDTO updateView(int gnum){
+    //게임테이블의 게임정보
     GameDTO dto = gameDao.view(gnum);
 
     List<ArtistDTO> alist = artistDao.view(gnum);
@@ -351,8 +363,14 @@ public class GameServiceImpl implements GameService {
     List<DesignerDTO> dlist = designerDao.view(gnum);
     List<MechanicDTO> mlist = mechanicDao.view(gnum);
     List<PublisherDTO> plist = publisherDao.view(gnum);
+    //확장
+    List<String> exlist = gameDao.viewExpansion(gnum);
+    //재구현
+    List<String> relist = gameDao.viewReimplement(gnum);
 
+    //리스트로 받은 값을 String 타입으로 변환
     StringBuilder strbuilder = new StringBuilder();
+    //아티스트
     for(ArtistDTO item : alist){
       String str = item.getArtist();
       strbuilder.append(str).append(",");
@@ -361,6 +379,7 @@ public class GameServiceImpl implements GameService {
     artist = artist.substring(0,artist.length()-1);
     dto.setArtist(artist);
 
+    //카테고리
     strbuilder.setLength(0);
     for(CategoryDTO item : clist){
       String str = item.getGamecategory();
@@ -370,6 +389,7 @@ public class GameServiceImpl implements GameService {
     gamecategory = gamecategory.substring(0,gamecategory.length()-1);
     dto.setGamecategory(gamecategory);
 
+    //디자이너
     strbuilder.setLength(0);
     for(DesignerDTO item : dlist){
       String str = item.getDesigner();
@@ -379,6 +399,7 @@ public class GameServiceImpl implements GameService {
     designer = designer.substring(0,designer.length()-1);
     dto.setDesigner(designer);
 
+    //메카닉
     strbuilder.setLength(0);
     for(MechanicDTO item : mlist){
       String str = item.getMechanic();
@@ -388,6 +409,7 @@ public class GameServiceImpl implements GameService {
     mechanic = mechanic.substring(0,mechanic.length()-1);
     dto.setMechanic(mechanic);
 
+    //퍼블리셔
     strbuilder.setLength(0);
     for(PublisherDTO item : plist){
       String str = item.getPublisher();
@@ -396,6 +418,23 @@ public class GameServiceImpl implements GameService {
     String publisher = strbuilder.toString();
     publisher = publisher.substring(0,publisher.length()-1);
     dto.setPublisher(publisher);
+
+    //확장
+    strbuilder.setLength(0);
+    for(String str : exlist){
+      strbuilder.append(str).append(",");
+    }
+    String expansion = strbuilder.toString();
+    expansion = GameUtils.removeLastChar(expansion);
+    dto.setExpansion(expansion);
+    //재구현
+    strbuilder.setLength(0);
+    for(String str : relist){
+      strbuilder.append(str).append(",");
+    }
+    String reimplement = strbuilder.toString();
+    reimplement = GameUtils.removeLastChar(reimplement);
+    dto.setReimplement(reimplement);
 
     return dto;
   }
@@ -449,7 +488,7 @@ public class GameServiceImpl implements GameService {
       }
     }
 
-    //메카닉테이블 insert
+    //메카닉테이블 update
     //메카닉배열
     String[] mechanics = dto.getMechanic().split(",");
 
@@ -469,7 +508,7 @@ public class GameServiceImpl implements GameService {
       }
     }
 
-    //퍼블리셔테이블 insert
+    //퍼블리셔테이블 update
     //퍼블리셔배열
     String[] publishers = dto.getPublisher().split(",");
 
@@ -489,7 +528,7 @@ public class GameServiceImpl implements GameService {
       }
     }
 
-    //디자이너테이블 insert
+    //디자이너테이블 update
     //디자이너배열
     String[] designers = dto.getDesigner().split(",");
 
@@ -509,8 +548,26 @@ public class GameServiceImpl implements GameService {
 
       }
     }
+
+//    //확장게임 테이블에 update
+//    //확장게임 배열
+//    String[] expansions = dto.getExpansion().split(",");
+//    for(String str : expansions){
+//      String expansion = str;
+//      gameDao.insert_expansion(expansion,userid);
+//    }
+//
+//    //재구현게임 테이블에 update
+//    //재구현게임 배열
+//    String[] reimplements = dto.getReimplement().split(",");
+//    for(String str : reimplements){
+//      String reimplement = str;
+//      gameDao.insert_reimplement(reimplement,userid);
+//    }
   }
 
-
+  public void deleteGame(int gnum, String userid){
+    gameDao.deleteGame(gnum, userid);
+  }
 
 }

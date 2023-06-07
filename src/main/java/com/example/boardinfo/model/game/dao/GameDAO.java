@@ -1,5 +1,6 @@
 package com.example.boardinfo.model.game.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,11 @@ public interface GameDAO {
 	List<GameDTO> filteredGamelist(Map<String, Object> map);
 	int countList(Map<String, Object> map);
     void gameupdate(GameDTO dto);
-    void insert_exnum(int exnum, String userid);
-	void insert_renum(int renum, String userid);
+    void insert_expansion(String expansion, String userid);
+	void insert_reimplement(String reimplement, String userid);
+    Map<String, Object> getExpansion(int gnum);
+	Map<String, Object> getReimplement(int gnum);
+	void deleteGame(int gnum, String userid);
+	List<String> viewExpansion(int gnum);
+	List<String> viewReimplement(int gnum);
 }
