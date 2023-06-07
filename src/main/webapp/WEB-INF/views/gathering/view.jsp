@@ -130,19 +130,34 @@
             font-size: 17px;
         }
 
-        #applyBtn{
+        button[id*="bigBtn-"]{
             width: 120px;
             height: 40px;
             font-size: 16px;
             font-weight: bold;
             border-radius: 0;
-            background-color: #F9841A;
-            border: 0;
-            color: white;
             cursor: pointer;
         }
 
-        #postMain{
+        #bigBtn-apply{
+            background-color: #1432B1;
+            border: 0;
+            color: white;
+        }
+
+        #bigBtn-cancel{
+            background-color: white;
+            border: 1px solid black;
+        }
+
+        #bigBtn-chat{
+            background-color: #F9841A;
+            border: 0;
+            color: white;
+
+        }
+
+       #postMain{
             padding: 30px 13px;
             border-top: 2px dashed #D9D9D9;
             display: flex;
@@ -232,9 +247,8 @@
         }
 
 
-
         .btn-AddReply{
-            background-color: #1432B1;
+            background-color: #3D3D43;
             border: 0;
             color: white;
         }
@@ -261,7 +275,60 @@
 
             getReplies();
 
+            $("#bigBtn-apply").on("click", function(){
+
+                if("${sessionScope.userid}" == ""){
+                    if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
+                        location.href= "${path}/member/member_login.do";
+                        return;
+                    }
+
+                    else return;
+
+                }
+
+                if(confirm("이 모임에 참여하시겠습니까?")){
+                   if("${dto.attendSystem=='o'}"){
+                       $.ajax({
+                           type: "get",
+                           url : "${path}/gathering/addAttendee.do",
+                           data : {
+                               "gathering_id": "${dto.gathering_id}"
+                           },
+                           success: function(result){
+                               alert(result.message);
+                               location.reload();
+                           },
+                           error: function(e){
+                               if(e.status==999){
+                                   if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
+                                       location.href= "${path}/member/member_login.do";
+                                       return;
+                               }
+                               }
+                               else{
+                                   alert("에러가 발생했습니다.");
+                               }
+                           }
+                       });
+                   }
+
+               }
+
+
+            });
+
+
             $(document).on("click", ".btn-AddReply", function() {
+
+                if("${sessionScope.userid}" == ""){
+                    if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
+                        location.href= "${path}/member/member_login.do";
+                        return;
+                    }
+                    else return;
+                }
+
 
                 let form = $(this).closest("form");
                 let reply_text = form.find('textarea[name="reply_text"]');
@@ -279,10 +346,10 @@
                            reply_text.val("");
                            getReplies();
                        }
-                       else alert("댓글 달기 실패");
+                       else alert("에러가 발생했습니다.");
                     },
                     error: function(){
-                       alert("댓글 달기 실패");
+                        alert("에러가 발생했습니다.");
                     }
                 });
 
@@ -294,7 +361,6 @@
 
 
         function getReplies(){
-
             $.ajax({
                 type: "get",
                 url : "${path}/gathering/getReplies.do",
@@ -307,9 +373,28 @@
                         repliesContainer.empty();
 
                         for(let i=0; i<list.length; i++){
+
+                            let addReplySpan = "";
+
+                            if("${sessionScope.userid}" == list[i].creator_id){
+                                addReplySpan =
+                                    "<span class='addRe_reply'><img src='${path}/images/reply_arrow.png' width='15px'>" +
+                                    "<img ><a href='javascript:showRe_reply('" + list[i].reply_id + "," +
+                                    list[i].parent_reply + "," + list[i].inner_order + "')>답글</a>" +
+                                    "&nbsp&nbsp<a href='javascript:editReply()'>수정</a>&nbsp&nbsp<a href='javascript:deleteReply()'>삭제</a>";
+                            }
+
+                            else{
+                                addReplySpan =
+                                    "<span class='addRe_reply'><img src='${path}/images/reply_arrow.png' width='15px'>" +
+                                    "<img ><a href='javascript:showRe_reply('" + list[i].reply_id + "," +
+                                    list[i].parent_reply + "," + list[i].inner_order + "')>답글</a>";
+                            }
+
+
                             let reply = $("<div>").addClass("reply").attr("id", list[i].reply_id);
 
-                            let writer = $("<span>").text(list[i].creator_id);
+                            let writer = $("<span>").text(list[i].nickname);
                             let text= $("<div>").text(list[i].reply_text);
 
                             if(list[i].depth > 0) {
@@ -322,24 +407,16 @@
 
                             let bigDiv = $("<div>");
                             let smallDiv = $("<div>");
-                            let addReplySpan = $("<span>").addClass("addRe_reply");
-                            let link = $("<a>").prop("href",
-                                "javascript:showRe_reply(" + list[i].reply_id + ","
-                                + list[i].parent_reply + ", "
-                                + list[i].inner_order + ")").text("답글");
+
 
                             let date = new Date(list[i].create_date);
                             let formattedDate = new Date(date + 3240 * 10000)
                                 .toISOString().replace('T', ' ').replace(/\..*/,'');
 
                             let span = $("<span>").text(formattedDate);
-                            let img = $("<img>").attr({
-                                src : "${path}/images/reply_arrow.png",
-                                width : "15px"
-                            });
 
 
-                            addReplySpan.append(img, link);
+
                             smallDiv.append(span, addReplySpan);
                             bigDiv.append(writer, smallDiv);
                             reply.append(bigDiv, text);
@@ -384,6 +461,11 @@
             re_reply_form.append(textArea, input, button);
             $("#" + reply_id).append(re_reply_form);
 
+        }
+
+        function editPost(){
+            document.form1.action = "${path}/gathering/edit/${dto.gathering_id}";
+            document.form1.submit();
         }
 
         function deletePost(){
@@ -455,7 +537,6 @@
 
 
   makeMap("${dto.lat}", "${dto.lng}");
-
 
   function makeMap(lat, lan){
     mapOption =
@@ -547,12 +628,24 @@
                         	</c:choose>
 
                         </li>
-                        <li>2/${dto.maxPeople}명 참가중<img src="${path}/images/more.png" width="30px"
+                        <li>${dto.attendee_count}/${dto.maxPeople}명 참가중
+                            <img src="${path}/images/more.png" width="30px"
                                          style="vertical-align: middle; padding-bottom: 2px;"></li>
                     </ul>
                     <div>
-                        <span>작성자: ${dto.writer_id}</span>
-                        <button type="button" id="applyBtn">참가신청</button>
+                        <span>작성자: ${dto.nickname}</span>
+                        <!--모집완료, 모집마감 고려해서 다시 짜기-->
+                        <c:choose>
+                            <c:when test="${type == 'WAIT'}">
+                                <button type="button" id="bigBtn-cancel">신청취소</button>
+                            </c:when>
+                            <c:when test="${type == 'ATTENDING'}">
+                                <button type="button" id="bigBtn-chat" onclick="location.href='${path}/chatRoom/enter.do?gathering_id=' + ${dto.gathering_id}">채팅하기</button>
+                            </c:when>
+                            <c:otherwise>
+                                <button type="button" id="bigBtn-apply">참가신청</button>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </div>
             </div>
@@ -564,12 +657,18 @@
                 <div id="replyUpper">
                     <span>댓글[<span id="countReplies"></span>]</span>
                     <span>이 모임에 대해 궁금한 사항이 있으면 댓글을 달아보세요.</span>
-                    <button type="button" id="btn-Edit"
-                            onclick='location.href="${path}/gathering/edit/${dto.gathering_id}"'>수정
-                    </button>
-                    <button type="button" id="btn-Delete"
-                            onclick="deletePost()">삭제
-                    </button>
+
+                    <form name="form1" action="" type="post">
+                    <c:if test="${sessionScope.usreid==dto.writer_id}">
+                        <button type="button" id="btn-Edit"
+                                onclick='editPost()'>수정
+                        </button>
+                        <button type="button" id="btn-Delete"
+                                onclick="deletePost()"> 삭제
+                        </button>
+
+                    </c:if>
+                    </form>
                     <button type="button" id="btn-GoList">목록</button>
                 </div>
                 <div id="replies">

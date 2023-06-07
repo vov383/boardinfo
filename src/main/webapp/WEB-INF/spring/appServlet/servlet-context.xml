@@ -60,29 +60,29 @@
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 
 	
-	<!-- 웹소켓 핸들러 등록 -->
+	<!-- 웹소켓 핸들러 등록
 	<websocket:handlers>
-		<websocket:mapping handler="chatHandler" path="/chatting" />	
+		<websocket:mapping handler="chatHandler" path="/chatting" />
 	    <websocket:handshake-interceptors>
 	   <beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
-	    </websocket:handshake-interceptors>		
+	    </websocket:handshake-interceptors>
 		<websocket:sockjs websocket-enabled="true"/>
 	</websocket:handlers>
+	-->
 	
-		<beans:bean id="chatHandler" class="com.example.boardinfo.controller.chat.ChatHandler"/>
-	
-	<!-- 인터셉트 빈을 등록 -->
 	<beans:bean class="com.example.boardinfo.interceptor.LoginInterceptor" id="loginInterceptor"> </beans:bean>
-	
 	<!-- 인터셉터 호출을 위한 url mapping -->
-	<interceptors>
 
+	<interceptors>
 	 <interceptor>
 	  <mapping path="/member/delete.do"/>
 	  <mapping path="/member/update.do"/>
 	  <mapping path="/member/member_list.do"/>
-	 
-	  <beans:ref bean="loginInterceptor"/>
+		 <mapping path="/gathering/addReply.do"/>
+		 <mapping path="/gathering/addAttendee.do"/>
+		 <mapping path="/gathering/add.do"/>
+		 <mapping path="/gathering/edit/**"/>
+		 <beans:ref bean="loginInterceptor"/>
 	 </interceptor>
 	
 	</interceptors>

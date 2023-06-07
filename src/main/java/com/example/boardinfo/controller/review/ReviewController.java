@@ -1,5 +1,6 @@
 package com.example.boardinfo.controller.review;
 
+import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.review.dto.TestDTO;
 import com.example.boardinfo.model.review.dto.reviewSerchDTO;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -27,35 +29,101 @@ public class ReviewController {
 
 	// 리뷰 리스트 페이지
 	@RequestMapping("reviewlist.do")
-	public ModelAndView revewlist(@ModelAttribute reviewSerchDTO reviewserchDTO) {
+	public ModelAndView revewlist(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session) {
+
+		String userid = (String) session.getAttribute("userid");
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("review/gameReviewMain");
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-//		System.out.println("reviewservice.reviewlist().get(0).getCreateDate() : " + reviewservice.reviewlist().get(0).getCreateDate());
+
+		/*userid가 null이면 로그인 페이지로 이동*/
+		if (null == userid){
+			mav.setViewName("member/login");
+
+		/*userid가 null이 아니면 리뷰 목록 조회로 이동*/
+		} else {
+			mav.setViewName("review/gameReviewMain");
+			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+		}
+
 		return mav;
 	}
 
 	// 리뷰 상세 페이지
 	@RequestMapping("reviewdetail.do")
-	public ModelAndView revewDetail(@ModelAttribute reviewSerchDTO reviewserchDTO) {
+	public ModelAndView revewDetail(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session) {
 		ModelAndView mav = new ModelAndView();
 
-		System.out.println("testestestestest");
-		System.out.println("testestestestest");
-		System.out.println("testestestestest");
-		System.out.println("reviewserchDTO : " + reviewserchDTO.getReviewDetailKey());
+		String userid = (String) session.getAttribute("userid");
 
+		/*userid가 null이면 로그인 페이지로 이동*/
+		if (null == userid){
+			mav.setViewName("member/login");
+
+			/*userid가 null이 아니면 리뷰 상세 페이지 이동*/
+		} else {
+			mav.setViewName("review/reviewDetail");
+			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+
+			/*댓글 출력*/
+			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+		}
+
+/*		System.out.println("testestestestest");
+		System.out.println("testestestestest");
+		System.out.println("testestestestest");
+		System.out.println("reviewserchDTO : " + reviewserchDTO.getReviewDetailKey());*/
+		return mav;
+	}
+
+
+	// 리뷰 좋아요 페이지
+	@RequestMapping("reviewdetailGood.do")
+	public ModelAndView reviewdetailGood(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session) {
+
+		//좋아요
+		reviewservice.reviewGoodCreate(reviewserchDTO, session);
+
+		ModelAndView mav = new ModelAndView();
 		mav.setViewName("review/reviewDetail");
 		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 		return mav;
 	}
 
-	// 리뷰 입력할 페이지
-	@RequestMapping("reviewInsert.do")
-	public String insert(@ModelAttribute ReviewDTO reviewDTO){
-		return "/review/ReviewInsert";
+	// 리뷰 댓글 페이지
+	@RequestMapping("reviewreplysave.do")
+	public ModelAndView reviewReply(@ModelAttribute ReplyCommentsDTO replyCommentsDTO, HttpSession session) {
+
+		/*댓글 입력*/
+		reviewservice.reviewReply(replyCommentsDTO, session);
+
+		/*댓글의 상단 리뷰 출력*/
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("review/reviewDetail");
+		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
+		reviewserchDTO.setReviewDetailKey(replyCommentsDTO.getRegNum());
+		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+
+		/*댓글 출력*/
+		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+
+		return mav;
 	}
 
+
+	// 리뷰 입력 및 수정할 페이지
+	@RequestMapping("reviewInsert.do")
+	public ModelAndView insert(@ModelAttribute reviewSerchDTO reviewserchDTO){
+		/*첫 입력*/
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("review/ReviewInsert");
+
+		/*System.out.println("getReviewDetailKey : " + reviewserchDTO.getReviewDetailKey());*/
+
+		if (null == reviewserchDTO.getReviewDetailKey()) reviewserchDTO.setReviewDetailKey("1");
+
+		/*수정*/
+		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+		return mav;
+	}
 
 
 	// 체크 에디터 적용 테스트
@@ -107,19 +175,20 @@ public class ReviewController {
 	}
 
 
-
-
-
-
-	// 리뷰 저장후 페이지
+	// 리뷰 저장 후 페이지
 	@RequestMapping("reviewinsertsave.do")
-	public String insertPage(@ModelAttribute ReviewDTO reviewDTO){
-		/*System.out.println("testtesttesttesttest");*/
-		reviewservice.reviewCreate(reviewDTO);
-		return "/review/gameReviewMain";
+	public ModelAndView insertPage(@ModelAttribute ReviewDTO reviewDTO, HttpSession session){
+		reviewservice.reviewCreate(reviewDTO, session);
+
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("review/gameReviewMain");
+
+		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
+		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+		return mav;
 	}
 
-	// 수정 및 삭제 할 페이지
+	// 수정 할 페이지
 	@RequestMapping("reviewedit.do")
 	public ModelAndView edit(@ModelAttribute reviewSerchDTO reviewserchDTO){
 		ModelAndView mav = new ModelAndView();
@@ -150,15 +219,16 @@ public class ReviewController {
 		return mav;
 	}
 
-
 	// 삭제 후 페이지
 	@RequestMapping("reviewdelsave.do")
 	public ModelAndView reviewDelSave(@ModelAttribute reviewSerchDTO reviewserchDTO){
 		ModelAndView mav = new ModelAndView();
+/*
 		System.out.println("testtesttesttesttest");
 		System.out.println("testtesttesttesttest");
 		System.out.println("testtesttesttesttest");
 		System.out.println("reviewserchDTO.getReviewDetailKey() : "+ reviewserchDTO.getReviewDetailKey());
+*/
 
 		reviewservice.reviewDel(reviewserchDTO);
 		reviewserchDTO = new reviewSerchDTO();

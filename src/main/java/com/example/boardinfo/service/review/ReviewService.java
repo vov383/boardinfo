@@ -1,34 +1,49 @@
 package com.example.boardinfo.service.review;
 
+import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.review.dto.TestDTO;
 import com.example.boardinfo.model.review.dto.reviewSerchDTO;
-import org.aspectj.weaver.ast.Test;
+import org.springframework.http.HttpRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public interface ReviewService {
 
-	//리뷰 테이블
+	/*리뷰 목록 조회*/
     List<ReviewDTO> reviewlist(reviewSerchDTO reviewserchDTO);
 
 //    주는놈 메소드(받는놈);
 
 
-	// 리뷰 입력
-    void reviewCreate(ReviewDTO reviewDTO);
+	/*리뷰 입력*/
+    void reviewCreate(ReviewDTO reviewDTO, HttpSession session);
 
-    // 리뷰 수정
+    /*리뷰 수정*/
     void reviewUpdate(ReviewDTO reviewDTO);
 
-    // 리뷰 삭제
+    /*리뷰 삭제*/
     void reviewDel(reviewSerchDTO reviewserchDTO);
 
+    /*리뷰 좋아요*/
+    void reviewGoodCreate(reviewSerchDTO reviewserchDTO, HttpSession session);
+
+    /*리뷰 댓글 입력*/
+    void reviewReply(ReplyCommentsDTO replyCommentsDTO, HttpSession session);
+
+    /*리뷰 댓글 출력*/
+    List<ReplyCommentsDTO> reviewReplyOut(reviewSerchDTO reviewserchDTO);
 
 
 
 
-	// 리뷰 입력
+
+
+
+
+	// 리뷰 입력 테스트
     void create(TestDTO testdto);
 
 

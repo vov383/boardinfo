@@ -1,5 +1,6 @@
 package com.example.boardinfo.model.game.dao.category;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +24,11 @@ public class CategoryDAOImpl implements CategoryDAO {
   }
 
   @Override
-  public void insert_category(String category) {
-    sqlSession.insert("category.insert", category);
+  public void insert_category(String category, String userid) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("category",category);
+    map.put("userid",userid);
+    sqlSession.insert("category.insert", map);
   }
 
   @Override
@@ -47,4 +51,18 @@ public class CategoryDAOImpl implements CategoryDAO {
   }
 
   public List<CategoryDTO> view(int gnum) { return  sqlSession.selectList("category.view", gnum); }
+
+  public int check_category(String gamecategory, int gnum) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("gamecategory", gamecategory);
+    map.put("gnum",gnum);
+    return sqlSession.selectOne("category.updatecheck", map);
+  }
+
+  public void insert_category_mapping(int gnum, int cnum){
+    Map<String, Object> map = new HashMap<>();
+    map.put("cnum", cnum);
+    map.put("gnum",gnum);
+    sqlSession.insert("category.insertmapping_update", map);
+  }
 }

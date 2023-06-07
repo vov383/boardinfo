@@ -295,6 +295,37 @@
 
 			<tr>
 
+				<td>확장게임</td>
+				<td>
+					<div id="selectedEx"></div>
+					<input type="hidden" name="expansion" id="expansion">
+					<input id="inputEx" class="input_game" autocomplete="off">
+					<div id="exSuggestions"></div>
+				</td>
+
+			</tr>
+
+			<tr>
+
+				<td>재구현게임</td>
+				<td>
+					<div id="selectedRe"></div>
+					<input type="hidden" name="reimplement" id="reimplement">
+					<input id="inputRe" class="input_game" autocomplete="off">
+					<div id="reSuggestions"></div>
+				</td>
+
+			</tr>
+
+<%--			<tr>--%>
+
+<%--				<td>보드게임긱아이디</td>--%>
+<%--				<td><input name="bggnum" id="bggnum" class="input_game"></td>--%>
+
+<%--			</tr>--%>
+
+			<tr>
+
 				<td colspan="2">
 					<button type="button" id="btnGameInsert">등록</button>
 				</td>
@@ -587,7 +618,7 @@
 		$('#artistSuggestions').on('click', '.searched', function() {
 			var selectedArtist = $(this).text();
 			selectedArtists.push(selectedArtist);
-			$("#selectedArtist").append("<div class='selected cursor_pointer'>" + selectedArtist + "</div>");
+			$("#selectedArtist").append("<div class='selected-value cursor_pointer'>" + selectedArtist + "</div>");
 			console.log("배열"+selectedArtists);
 			$("#inputArtist").val("");
 			$("#artistSuggestions").empty().hide();
@@ -596,7 +627,7 @@
 		});
 
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedArtist").on("click", ".selected", function() {
+		$("#selectedArtist").on("click", ".selected-value", function() {
 
 			var value = $(this).text();
 
@@ -669,7 +700,7 @@
 		$('#designerSuggestions').on('click', '.searched', function() {
 			var selectedDesigner = $(this).text();
 			selectedDesigners.push(selectedDesigner);
-			$("#selectedDesigner").append("<div class='selected cursor_pointer'>" + selectedDesigner + "</div>");
+			$("#selectedDesigner").append("<div class='selected-value cursor_pointer'>" + selectedDesigner + "</div>");
 			console.log("배열"+selectedDesigners);
 			$("#inputDesigner").val("");
 			$("#designerSuggestions").empty().hide();
@@ -678,7 +709,7 @@
 		});
 
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedDesigner").on("click", ".selected", function() {
+		$("#selectedDesigner").on("click", ".selected-value", function() {
 
 			var value = $(this).text();
 
@@ -751,7 +782,7 @@
 		$('#publisherSuggestions').on('click', '.searched', function() {
 			var selectedPublisher = $(this).text();
 			selectedPublishers.push(selectedPublisher);
-			$("#selectedPublisher").append("<div class='selected cursor_pointer'>" + selectedPublisher + "</div>");
+			$("#selectedPublisher").append("<div class='selected-value cursor_pointer'>" + selectedPublisher + "</div>");
 			console.log("배열"+selectedPublishers);
 			$("#inputPublisher").val("");
 			$("#publisherSuggestions").empty().hide();
@@ -760,7 +791,7 @@
 		});
 
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedPublisher").on("click", ".selected", function() {
+		$("#selectedPublisher").on("click", ".selected-value", function() {
 
 			var value = $(this).text();
 
@@ -775,6 +806,141 @@
 			updatePublisherInput();
 			console.log("인풋"+$("#publisher").val());
 		});
+
+
+
+		//	ex확장게임 검색 자동완성 쿼리
+		$('#inputEx').keyup(function() {
+			var input = $(this).val();
+			$.ajax({
+				type: "post",
+				url: "${path}/game/autoGame.do/"+input,
+				success: function(result) {
+					var suggestionsDiv = $('#exSuggestions');
+					suggestionsDiv.empty(); // 기존 내용 비우기
+
+					if (result.length > 0) {
+						suggestionsDiv.css('max-height', '150px').show(); // 값이 있을 경우 높이 설정하고 보이기
+						$(result).each(function(index, item) {
+							var gametitle = item.gametitle;
+							suggestionsDiv.append("<div class='searched cursor_pointer'>" + gametitle + "</div>");
+						});
+					} else {
+						suggestionsDiv.hide(); // 값이 없을 경우 숨기기
+					}
+				},
+				error: function() {
+					console.log("에러..");
+				}
+			});
+			if(input=="")	$('#exSuggestions').empty();
+		});
+
+		var selectedExs = [];
+
+		function updateExInput() {
+			var exInput = $("#expansion");
+			exInput.val(selectedExs.join(","));
+		}
+
+
+		//ex확장게임 검색값 클릭시 배열에 추가
+		$('#exSuggestions').on('click', '.searched', function() {
+			var selectedEx = $(this).text();
+			console.log(selectedEx);
+			selectedExs.push(selectedEx);
+			$("#selectedEx").append("<div class='selected-value cursor_pointer'>" + selectedEx + "</div>");
+			console.log("배열"+selectedExs);
+			$("#inputEx").val("");
+			$("#exSuggestions").empty().hide();
+			updateExInput();
+			console.log("인풋"+$("#expansion").val());
+		});
+
+		// 선택된 값 클릭 이벤트 처리
+		$("#selectedEx").on("click", ".selected-value", function() {
+
+			var value = $(this).text();
+
+			// 선택된 값 배열에서 해당 값을 제거
+			selectedExs = selectedExs.filter(function(selected) {
+				return selected !== value;
+			});
+
+			// 선택된 값 표시가 삭제되도록 처리
+			$(this).remove();
+
+			updateExInput();
+			console.log("인풋"+$("#expansion").val());
+		});
+
+
+
+		//	re재구현게임 검색 자동완성 쿼리
+		$('#inputRe').keyup(function() {
+			var input = $(this).val();
+			$.ajax({
+				type: "post",
+				url: "${path}/game/autoGame.do/"+input,
+				success: function(result) {
+					var suggestionsDiv = $('#reSuggestions');
+					suggestionsDiv.empty(); // 기존 내용 비우기
+
+					if (result.length > 0) {
+						suggestionsDiv.css('max-height', '150px').show(); // 값이 있을 경우 높이 설정하고 보이기
+						$(result).each(function(index, item) {
+							var gametitle = item.gametitle;
+							suggestionsDiv.append("<div class='searched cursor_pointer'>" + gametitle + "</div>");
+						});
+					} else {
+						suggestionsDiv.hide(); // 값이 없을 경우 숨기기
+					}
+				},
+				error: function() {
+					console.log("에러..");
+				}
+			});
+			if(input=="")	$('#reSuggestions').empty();
+		});
+
+		var selectedRes = [];
+
+		function updateReInput() {
+			var reInput = $("#reimplement");
+			reInput.val(selectedRes.join(","));
+		}
+
+
+		//재구현게임 검색값 클릭시 배열에 추가
+		$('#reSuggestions').on('click', '.searched', function() {
+			var selectedRe = $(this).text();
+			console.log(selectedRe);
+			selectedRes.push(selectedRe);
+			$("#selectedRe").append("<div class='selected-value cursor_pointer'>" + selectedRe + "</div>");
+			console.log("배열"+selectedRes);
+			$("#inputRe").val("");
+			$("#reSuggestions").empty().hide();
+			updateReInput();
+			console.log("인풋"+$("#reimplement").val());
+		});
+
+		// 선택된 값 클릭 이벤트 처리
+		$("#selectedRe").on("click", ".selected-value", function() {
+
+			var value = $(this).text();
+
+			// 선택된 값 배열에서 해당 값을 제거
+			selectedRes = selectedRes.filter(function(selected) {
+				return selected !== value;
+			});
+
+			// 선택된 값 표시가 삭제되도록 처리
+			$(this).remove();
+
+			updateReInput();
+			console.log("인풋"+$("#reimplement").val());
+		});
+
 	});
 </script>
 

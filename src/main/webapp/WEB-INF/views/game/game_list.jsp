@@ -134,19 +134,19 @@
 				
 				<tr>
 					
-					<td>${row.gnum}</td><!-- 리뷰와 연동되면 순위 ${row.g_rank} -->
+					<td>${row.gnum}</td><!-- 리뷰와 연동되면 순위 -->
 					<td>
 						<c:choose>
 							<c:when test="${row.gamephoto_url != null}">
-								<img alt="저장된 이미지파일이 없음" src="${path}/resources/uploaded_game${row.gamephoto_url}">
+								<img src="${path}/resources/uploaded_game${row.gamephoto_url}"  onerror="this.src='../images/game/no-image-icon.png'" width="100px" height="100px">
 							</c:when>
 							<c:otherwise>
 								<c:choose>
 									<c:when test="${row.bggnum != null}">
-										<img class="img_photo" src="${row.bgg_thumbnail}" width="100px" height="100px" border="1px">
+										<img class="img_photo" src="${row.bgg_thumbnail}" onerror="this.src='../images/game/no-image-icon.png'" width="100px" height="100px" border="1px">
 									</c:when>
 									<c:otherwise>
-										이미지를 등록해주세요
+										<img src="../images/game/no-image-icon.png" width="100px" height="100px">
 									</c:otherwise>
 								</c:choose>
 
@@ -159,7 +159,7 @@
 					<td>${row.release_year}</td>
 					<td>리뷰목록</td><!-- 리뷰와 연동되면 그쪽으로 link -->
 					<td>판매물품</td><!-- 거래와 연동되면 그쪽으로 link -->
-					<td>${row.viewcount}</td>
+					<td>${row.totalviewcount}</td>
 					
 				</tr>
 			</c:forEach>

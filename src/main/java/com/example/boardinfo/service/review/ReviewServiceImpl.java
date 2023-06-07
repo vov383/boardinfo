@@ -1,14 +1,18 @@
 package com.example.boardinfo.service.review;
 
 import com.example.boardinfo.model.review.dao.ReviewDAO;
+import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.review.dto.TestDTO;
 import com.example.boardinfo.model.review.dto.reviewSerchDTO;
-import com.google.gson.Gson;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Service
@@ -17,19 +21,25 @@ public class ReviewServiceImpl implements ReviewService {
 	@Inject
     ReviewDAO reviewDAO;
 
+	/*리뷰 목록 조회*/
 	@Override // 덮어쓰기 의미
 	public List<ReviewDTO> reviewlist(reviewSerchDTO reviewserchDTO){
+		reviewDAO.reviewViews(reviewserchDTO);
 		List<ReviewDTO> list = reviewDAO.reviewlist(reviewserchDTO);
-		System.out.println("vo : " + new Gson().toJson(list));
+		/*System.out.println("vo : " + new Gson().toJson(list));*/
 
 		return list;
 	}
 
-	//리뷰 입력
+	/*리뷰 입력*/
 	@Transactional
 	@Override
-	public void reviewCreate(ReviewDTO reviewDTO){
+	public void reviewCreate(ReviewDTO reviewDTO, HttpSession session){
 
+		String userid = (String) session.getAttribute("userid");
+		reviewDTO.setCreateUser(userid);
+
+/*
 		System.out.println("testtesttesttesttesttesttesttesttesttest");
 		System.out.println("reviewDTO.getRegNum() : " + reviewDTO.getRegNum());
 		System.out.println("reviewDTO.getCategory() : " + reviewDTO.getCategory());
@@ -48,12 +58,19 @@ public class ReviewServiceImpl implements ReviewService {
 		System.out.println("reviewDTO.getCreateDate() : " + reviewDTO.getCreateDate());
 		System.out.println("reviewDTO.getUpdateUser() : " + reviewDTO.getUpdateUser());
 		System.out.println("reviewDTO.getUpdateDate() : " + reviewDTO.getUpdateDate());
+		System.out.println("reviewDTO.getReviewpk() : " + reviewDTO.getReviewpk());
 		System.out.println("testtesttesttesttesttesttesttesttesttest");
+*/
 
-		reviewDAO.reviewCreate(reviewDTO);
+		if (null == reviewDTO.getRegNum()){
+			reviewDAO.reviewCreate(reviewDTO);
+		} else {
+			reviewDAO.reviewUpdate(reviewDTO);
+		}
+
 	}
 
-	//리뷰 수정
+	/*리뷰 수정*/
 	@Transactional
 	@Override
 	public void reviewUpdate(ReviewDTO reviewDTO){
@@ -63,18 +80,51 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewDAO.reviewUpdate(reviewDTO);
 	}
 
-	//리뷰 삭제
+	/*리뷰 삭제*/
 	@Transactional
 	@Override
 	public void reviewDel(reviewSerchDTO reviewserchDTO){
 
-		System.out.println("testestestestestestestest");
+		/*System.out.println("testestestestestestestest");
 		System.out.println("testestestestestestestest");
 		System.out.println("testestestestestestestest");
 		System.out.println("reviewserchDTO : " + new Gson().toJson(reviewserchDTO));
+		*/
 		reviewDAO.reviewDel(reviewserchDTO);
 	}
 
+
+
+	/*리뷰 좋아요*/
+	@Transactional
+	@Override
+	public void reviewGoodCreate(reviewSerchDTO reviewserchDTO, HttpSession session){
+		String userid = (String) session.getAttribute("userid");
+		reviewserchDTO.setCreateUser(userid);
+		reviewDAO.reviewGoodCreate(reviewserchDTO);
+
+	}
+
+	/*리뷰 댓글 입력*/
+	@Transactional
+	@Override
+	public void reviewReply(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
+		String userid = (String) session.getAttribute("userid");
+		replyCommentsDTO.setCreateUser(userid);
+		reviewDAO.reviewReply(replyCommentsDTO);
+
+	}
+
+	/*리뷰 댓글 출력*/
+	@Override // 덮어쓰기 의미
+	public List<ReplyCommentsDTO> reviewReplyOut(reviewSerchDTO reviewserchDTO){
+
+
+		List<ReplyCommentsDTO> list = reviewDAO.reviewReplyOut(reviewserchDTO);
+		/*System.out.println("vo : " + new Gson().toJson(list));*/
+
+		return list;
+	}
 
 
 

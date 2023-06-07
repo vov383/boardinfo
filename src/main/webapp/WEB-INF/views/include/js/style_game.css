@@ -1,12 +1,5 @@
 @charset "UTF-8";
 
-body {
-	color: #666;
-	font: 14px/24px "Open Sans", "HelveticaNeue-Light",
-		"Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial,
-		"Lucida Grande", Sans-Serif;
-}
-
 /* 테이블 관련 속성 */
 
 .tableDiv {
@@ -115,7 +108,7 @@ tr:last-child td:last-child {
 	cursor: pointer;
 }
 
-#artistSuggestions, #designerSuggestions, #publisherSuggestions{
+#artistSuggestions, #designerSuggestions, #publisherSuggestions, #exSuggestions, #reSuggestions{
 	width: 300px;
 	background-color: white;
 	overflow-y: auto;

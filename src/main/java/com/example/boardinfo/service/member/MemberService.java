@@ -5,11 +5,13 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import com.example.boardinfo.model.member.dto.MemberDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface MemberService {
 
 	List<MemberDTO> list();
 	void insertMember(MemberDTO dto);
+	void insertMember(MemberDTO dto, MultipartFile multipartFile);
 	boolean loginCheck(MemberDTO dto, HttpSession session);
 	boolean checkPw(String userid, String passwd);
 	void updateMember(MemberDTO dto);

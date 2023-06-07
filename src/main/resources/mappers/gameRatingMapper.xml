@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="gameRating">
+	<insert id="add">
+        insert into game_rating (gnum, userid, rating, weight, participant1, participant2, participant3, participant4, participant5, create_date)
+        values (#{gnum}, #{userid}, #{rating}, #{weight}, #{participant1}, #{participant2}, #{participant3}, #{participant4}, #{participant5}, sysdate)
+    </insert>
+
+
+	<select id="avgRatingAndWeight" resultType="HashMap">
+		select avg(rating) avgRating, avg(weight) avgWeight, count(*) tot
+		from game_rating
+		group by gnum
+		having gnum = #{gnum}
+	</select>
+	
+	
+	<select id="getOptimumPlayers" resultType="HashMap">
+	select
+	    COUNT(CASE WHEN participant1 = 1 THEN 1 END) AS best1,
+	    COUNT(CASE WHEN participant1 = 2 THEN 1 END) AS good1,
+	    COUNT(CASE WHEN participant1 = 3 THEN 1 END) AS bad1,
+	    COUNT(CASE WHEN participant2 = 1 THEN 1 END) AS best2,
+	    COUNT(CASE WHEN participant2 = 2 THEN 1 END) AS good2,
+	    COUNT(CASE WHEN participant2 = 3 THEN 1 END) AS bad2,
+	    COUNT(CASE WHEN participant3 = 1 THEN 1 END) AS best3,
+	    COUNT(CASE WHEN participant3 = 2 THEN 1 END) AS good3,
+	    COUNT(CASE WHEN participant3 = 3 THEN 1 END) AS bad3,
+	    COUNT(CASE WHEN participant4 = 1 THEN 1 END) AS best4,
+	    COUNT(CASE WHEN participant4 = 2 THEN 1 END) AS good4,
+	    COUNT(CASE WHEN participant4 = 3 THEN 1 END) AS bad4,
+	    COUNT(CASE WHEN participant5 = 1 THEN 1 END) AS best5,
+	    COUNT(CASE WHEN participant5 = 2 THEN 1 END) AS good5,
+	    COUNT(CASE WHEN participant5 = 3 THEN 1 END) AS bad5
+	FROM game_rating
+	where gnum= #{gnum}	
+	</select>
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

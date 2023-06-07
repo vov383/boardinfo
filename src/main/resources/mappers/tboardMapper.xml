@@ -1,117 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
 <mapper namespace="tboard">
-	<select id="selectBoardList" resultType="tboardDto">
-		<include refid="paging_header" />
-			select * from t_board
-			<include refid="search" />
-			order by tb_num desc
-			<include refid="paging_footer" />
-	</select>
-	
-	<select id="countArticle" resultType="int">
-		select count(*) from t_board
-		<include refid="search" />
-	</select>
-	
-	<sql id="paging_header">
-  select * 
-  from ( 
-	  select rownum as rn, A.*
-	  from(
- </sql>
-	
-	<sql id="search">
-    <choose>
-			<when test="search_option != 'all' ">
-				where del = 'N'
-				<if test="select_category != 'all' ">
-					and category = #{select_category}
-				</if>
-				and ${search_option} like #{keyword}
-			</when>
-			<otherwise>
-				where del = 'N'
-				<if test="select_category != 'all' ">
-					and category = #{select_category}
-				</if>
-				and (create_user like #{keyword} or title like #{keyword} or 
-				description like #{keyword})
-			</otherwise>
-		</choose>
- </sql>
- 
- <sql id="paging_footer">
-	  )A
-	) where rn between #{start} and #{end}
- </sql>
-	
-	<insert id="insertBoard">
-		insert into t_board (tb_num, title, price, 
-			description, category, create_user)
-		values ( seq_tboard.nextval, #{title}, #{price}, 
-			#{description}, #{category}, #{create_user} )
-	</insert>
-	
-	<select id="viewPost" resultType="tboardDto">
-		select * from t_board 
-		where tb_num = #{tb_num}
-	</select>
-	
-	<update id="updatePost">
-		update t_board set title = #{title}, price = #{price},
-		description = #{description}, category = #{category},
-		update_date = sysdate
-		where tb_num = #{tb_num}
-	</update>
-	
-	<delete id="deletePost">
-		update t_board set del = #{Y}
-		where tb_num = #{tb_num}
-	</delete>
-	
-	<update id="increaseViewcnt">
-		update t_board set view_count = view_count + 1
-		where tb_num = #{tb_num}
-	</update>
-	
-	<update id="increaseRecnt">
-		update t_board set re_count = re_count + 1
-		where tb_num = #{tb_num}
-	</update>
-	
-	<select id="getAttachList" resultType="tbFileDto">
-		select fullName from tb_files 
-		where tb_num = #{tb_num}
-		order by create_date desc
-	</select>
-	
-	<insert id="insertFile">
-		insert into tb_files (file_reg_num, tb_num, 
-			fullName, formatName, fileData, create_user)
-		values ((seq_tb_files.nextval), (seq_t_board.currval), #{fullName}, #{formatName},
-			#{fileData}, #{create_user})
-	</insert>
-	
-	<delete id="deleteAttach">
-		update into tb_files ()
-	</delete>
+    <select id="selectBoardList" resultType="tboardDto">
+        <include refid="paging_header"/>
+        select * from t_board
+        <include refid="search"/>
+        order by tb_num desc
+        <include refid="paging_footer"/>
+    </select>
+
+    <select id="countArticle" resultType="int">
+        select count(*) from t_board
+        <include refid="search"/>
+    </select>
+
+    <sql id="paging_header">
+        select *
+        from (select rownum as rn, A.*
+              from (
+    </sql>
+
+    <sql id="search">
+        <choose>
+            <when test="search_option != 'all' ">
+                where del = 'N'
+                <if test="select_category != 'all' ">
+                    and category = #{select_category}
+                </if>
+                and ${search_option} like #{keyword}
+            </when>
+            <otherwise>
+                where del = 'N'
+                <if test="select_category != 'all' ">
+                    and category = #{select_category}
+                </if>
+                and (create_user like #{keyword} or title like #{keyword} or
+                description like #{keyword})
+            </otherwise>
+        </choose>
+    </sql>
+
+    <sql id="paging_footer">
+        )A
+		) where rn between
+        #{start}
+        and
+        #{end}
+    </sql>
+
+    <insert id="insertBoard">
+        insert into t_board (tb_num, title, price,
+                             description, category, create_user)
+        values (seq_tboard.nextval, #{title}, #{price},
+                #{description}, #{category}, #{create_user})
+    </insert>
+
+    <select id="viewPost" resultType="tboardDto">
+        select *
+        from t_board
+        where tb_num = #{tb_num}
+    </select>
+
+    <update id="updatePost">
+        update t_board
+        set title       = #{title},
+            price       = #{price},
+            description = #{description},
+            category    = #{category},
+            update_date = sysdate
+        where tb_num = #{tb_num}
+    </update>
+
+    <delete id="deletePost">
+        update t_board
+        set del = #{Y}
+        where tb_num = #{tb_num}
+    </delete>
+
+    <update id="increaseViewcnt">
+        update t_board
+        set view_count = view_count + 1
+        where tb_num = #{tb_num}
+    </update>
+
+    <update id="increaseRecnt">
+        update t_board
+        set re_count = re_count + 1
+        where tb_num = #{tb_num}
+    </update>
+
+    <select id="getAttachList" resultType="tbFileDto">
+        select fullName
+        from tb_files
+        where tb_num = #{tb_num}
+        order by create_date desc
+    </select>
+
+    <insert id="insertFile">
+        insert into tb_files (file_reg_num, tb_num,
+                              fullName, formatName, fileData, create_user)
+        values ((seq_tb_files.nextval), (seq_t_board.currval), #{fullName}, #{formatName},
+                #{fileData}, #{create_user})
+    </insert>
+
+    <delete id="deleteAttach">
+        update into tb_files ()
+    </delete>
+
 </mapper>
-
-
-
-
-
-
-
-
-
-
-
-
-
-

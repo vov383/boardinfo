@@ -1,5 +1,6 @@
 package com.example.boardinfo.model.review.dto;
 
+/*리뷰 댓글 DTO*/
 public class ReplyCommentsDTO {
 
 	private String replyRegNum;		// 댓글 테이블 PK
@@ -11,6 +12,8 @@ public class ReplyCommentsDTO {
 	private String createDate;		// 등록 일자
 	private String updateUser;		// 수정자
 	private String updateDate;		// 수정 일자
+	private String nickname;		// 닉네임
+
 
 	public String getReplyRegNum() {
 		return replyRegNum;
@@ -82,6 +85,14 @@ public class ReplyCommentsDTO {
 
 	public void setUpdateDate(String updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 }
 

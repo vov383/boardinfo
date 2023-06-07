@@ -68,6 +68,11 @@ create table mechanic (
 mnum number not null primary key,    --테이블의 인덱스 기본키
 mechanic varchar2(100) not null          --카테고리
 );
+--이미지 썸네일 테이블
+create table game_attach (
+fullname varchar2(200) not null,
+gnum number not null,
+regdate date default sysdate);
 -----------------------------------------------------
 commit;
 -------------------------------------------------------------

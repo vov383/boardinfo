@@ -77,7 +77,7 @@
       border-radius: 20px;
     }
 
-    form[name="gameSearch"] img{
+    form[name="gameSearch"] #searchimg{
       width: 20px;
       position: absolute;
       top: 5px;
@@ -179,22 +179,6 @@
       flex-grow: 1;
       min-height: 420px;
     }
-    /*top 검색창 검색결과 전체 감싸는 div*/
-    #gameSearchDiv{
-        margin-top: 6px;
-        background-color: white;
-        overflow-y: auto;
-    }
-    /*top 검색창 검색결과 개별 감싸는 div*/
-    .searched_top {
-        height: 50px;
-        padding: 2px;
-        border-bottom: 1px dotted;
-    }
-
-    .searched_top > a {
-        margin: 5px;
-    }
 
     #footer{
         position: absolute;
@@ -203,4 +187,44 @@
 
         background: #3D3D43;
     }
+    /*여기부터 검색창 관련 css*/
+    /*top 검색창 검색결과 전체 감싸는 div*/
+    #gameSearchDiv{
+        margin-top: 6px;
+        background-color: white;
+        overflow-y: auto;
+    }
+    /*top 검색창 검색결과 개별 감싸는 div*/
+    .searched_top {
+        height: 55px;
+        padding: 2px;
+        border-bottom: 1px dotted;
+        clear: both;
+    }
+
+    .imageDiv {
+        width: 50px;
+        float: left;
+
+    }
+    .titleDiv > a {
+        height: 50px;
+        margin: 5px 0px;
+        word-break: break-word;
+    }
+
+    .titleDiv {
+        width: 220px;
+        float: right;
+    }
+
+    .imageDiv > img {
+    width: 50px;
+    height: 50px;
+    position: inherit;
+    vertical-align: top;
+    }
+
+
+
 

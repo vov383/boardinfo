@@ -7,6 +7,7 @@ import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +23,11 @@ public class PublisherDAOImpl implements PublisherDAO {
 	}
 	
 	@Override
-	public void insert_publisher(String publisher) {
-		sqlSession.insert("publisher.insert", publisher);
+	public void insert_publisher(String publisher, String userid) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("publisher",publisher);
+		map.put("userid",userid);
+		sqlSession.insert("publisher.insert", map);
 	}
 	
 	@Override
@@ -46,4 +50,18 @@ public class PublisherDAOImpl implements PublisherDAO {
 	}
 
 	public List<PublisherDTO> view(int gnum) { return sqlSession.selectList("publisher.view", gnum); }
+
+	public int check_publisher(String publisher, int gnum){
+		Map<String, Object> map = new HashMap<>();
+		map.put("publisher", publisher);
+		map.put("gnum",gnum);
+		return sqlSession.selectOne("publisher.updatecheck", map);
+	}
+
+	public void insert_publisher_mapping(int gnum, int pnum){
+		Map<String, Object> map = new HashMap<>();
+		map.put("pnum", pnum);
+		map.put("gnum",gnum);
+		sqlSession.insert("publisher.insertmapping_update", map);
+	}
 }

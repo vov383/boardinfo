@@ -7,18 +7,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="artist">
 	
 	<select id="check" resultType="int">
-		select count(*)
+		select nvl(max(anum),0) anum
 		from artist
 		where artist=#{artist}
 	</select>
 	
 	<insert id="insert">
-		insert into artist
-		values (seq_artist.nextval, #{artist})
+		insert into artist (anum, artist, userid)
+		values (seq_artist.nextval, #{artist}, #{userid})
 	</insert>
 	
 	<insert id="insertmapping">
-		insert into game_artist
+		insert into game_artist (gnum, anum)
 		values (seq_game.currval,seq_artist.currval)
 	</insert>
 	
@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="insertmapping_anum">
-		insert into game_artist
+		insert into game_artist (gnum, anum)
 		values (seq_game.currval,#{anum})
 	</insert>
 	
@@ -45,6 +45,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			from artist a, game_artist ga
 			where a.anum = ga.anum and ga.gnum = #{gnum}
 	</select>
+
+	<select id="updatecheck" resultType="int">
+		select count(*)
+		from game_artist ga, artist a
+		where ga.anum = a.anum and ga.gnum = #{gnum} and a.artist = #{artist}
+	</select>
+
+	<insert id="insertmapping_update">
+		insert into game_artist (gnum,anum)
+		values (#{gnum},#{anum})
+	</insert>
 	
 </mapper>
 

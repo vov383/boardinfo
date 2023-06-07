@@ -337,19 +337,50 @@
   </style>
 
   <script type="text/javascript">
+    /*리뷰 첫 입력 및 수정*/
   function btnSaveClick() {
   /*alert("버튼 잘 눌리는지 테스트"); // 테스트*/
   document.reviewInsertSave.submit();
   }
+
+    // 리뷰 리스트로 이동
+    function btnList(){
+      location.href="${path}/review/reviewlist.do";
+    }
   </script>
 
-  <%-- 체크 에디터 라이브러리 --%>
+<%--
+  &lt;%&ndash;게임 검색 스크립트&ndash;%&gt;
+  <script>
+    function searchAll() {
+      const keyword = $("#gameKeyword").val();
+      if(keyword !== ""){
+        document.gameSearch.submit();
+      }
+    }
+
+    /*검색 스크립트*/
+    function gameTitleSearch() {
+      $("#searchTitleHidden").val($("#searchTitle").val());
+      /*alert($("#searchTitleHidden").val());*/
+      document.gameTitleSearch.submit();
+    }
+  </script>
+--%>
+
+
+<%-- 체크 에디터 라이브러리 --%>
   <script src="${path}/ckeditor/ckeditor.js"></script>
 
 </head>
 
 <body>
 <%@include file="../include/top.jsp" %>
+
+<%--검색 폼--%>
+<form name="gameTitleSearch" method="post" action="${path}/review/reviewlist.do">
+  <input type="hidden" name="searchTitle" id="searchTitleHidden">
+</form>
 
 <div id="contents">
   <div id="contentsHeader">
@@ -361,32 +392,90 @@
 
   <div id="contentsMain">
 
-<%-- 수정하지 않은 insert 페이지 --%>
+    <%--리뷰 수정 페이지--%>
     <form name="reviewInsertSave" method="get" action="${path}/review/reviewinsertsave.do">
 
-      <p>카테고리 : <input type="text" name="category"></p>
-      <p>제목 : <input type="text" name="title"></p>
-      <p>게임ID(임시) : <input type="text" name="gnum"></p>
-      <p>모임ID(임시) : <input type="text" name="gatheringId"></p>
-      <p>별점(임시) : <input type="text" name="reviewScore"></p>
-      <p>작성자ID(임시) : <input type="text" name="createUser"></p>
+      <button type="button" onclick="btnList()">목록</button>
+      <button type="button" id="btnsave" onclick="btnSaveClick()">저장</button>
+
+      <c:forEach items="${list}" var="vo">
+        <input type="hidden" name="regNum" value="${vo.regNum}">
+      <p>카테고리 : <%--<input type="text" name="category" value="${vo.category}">--%>
+          <select id="category" name="category" size="1">
+            <option value="${vo.category}">${vo.category}</option>
+            <option value="게임후기">게임후기</option>
+            <option value="노하우">노하우</option>
+            <option value="포럼/문의">포럼/문의</option>
+            <option value="자유게시판">자유게시판</option>
+          </select>
+        </p>
+      <p>제목 : <input type="text" name="title" value="${vo.title}"></p>
+      <p>게임ID(임시) : <input type="text" name="gnum" value="${vo.gnum}"></p>
+      <p>모임ID(임시) : <input type="text" name="gatheringId" value="${vo.gatheringId}"></p>
+      <p>작성자 : <input type="text" name="createUser" value="${vo.nickName}" /></p>
+      <%-- 체크 에디터 적용 테스트 --%>
+      <p>리뷰작성<textarea name = "reviewDetail" id="reviewDetailID" rows = "5" cols = "80">${vo.reviewDetail}</textarea></p>
+        <script>
+          //id가 description인 태그에 ckeditor를 적용시킴
+          //이미지 업로드 안됨
+          CKEDITOR.replace("reviewDetailID",{
+            //이미지 업로드 기능을 추가하기위한 코드
+            filebrowserUploadUrl : "${path}/imageUpload.do"
+          });
+        </script>
 
 
-  <%-- 체크 에디터 적용 테스트 --%>
+        <%--리뷰 첫 입력 페이지--%>
+      </c:forEach>
+      <c:if test="${fn:length(list) == 0}">
+        <p>카테고리 : <%--<input type="text" name="category">--%>
+        <select id="category" name="category" size="1">
+          <option value="">선택하세요.</option>
+          <option value="게임후기">게임후기</option>
+          <option value="노하우">노하우</option>
+          <option value="포럼/문의">포럼/문의</option>
+          <option value="자유게시판">자유게시판</option>
+        </select>
+        </p>
+        <p>제목 : <input type="text" name="title"></p>
 
-      <p>리뷰작성<textarea name = "reviewDetail" id="reviewDetailID" rows = "5" cols = "80"></textarea>
-        <%--<input type="text" name="reviewDetail">--%></p>
-          <script>
-            //id가 description인 태그에 ckeditor를 적용시킴
-            //이미지 업로드 안됨
-            CKEDITOR.replace("reviewDetailID",{
-              //이미지 업로드 기능을 추가하기위한 코드
-              filebrowserUploadUrl : "${path}/imageUpload.do"
-            });
-          </script>
-          <input type="file" name="file1" id="file1"> <br>
-      <button type="button" id="btnsave" onclick="btnSaveClick()">값 보내기</button>
+          <%--게임 검색 기능 추가--%>
+        <p>게임ID(임시) : <input type="text" name="gnum"></p>
 
+<%--
+        <p>
+          게임명 검색 <input type="text" name="gametitle">
+          <button type="button" id="search" onclick="searchFu()">검색</button>
+          <table>
+            선택된 게임
+            <c:forEach items="${list}" var="vo">
+              <tr>
+                <td style="width: 200px; text-align: center;">${vo.gametitle}</td>
+              </tr>
+            </c:forEach>
+          </table>
+        </p>
+--%>
+
+
+
+
+
+
+
+        <%--<p>모임ID(임시) : <input type="text" name="gatheringId"></p>--%>
+        <%--<p>작성자ID(임시) : <input type="text" name="createUser"></p>--%>
+        <%-- 체크 에디터 적용 테스트 --%>
+        <p>리뷰작성<textarea name = "reviewDetail" id="reviewDetailID2" rows = "5" cols = "80"></textarea></p>
+        <script>
+          //id가 description인 태그에 ckeditor를 적용시킴
+          //이미지 업로드 안됨
+          CKEDITOR.replace("reviewDetailID2",{
+            //이미지 업로드 기능을 추가하기위한 코드
+            filebrowserUploadUrl : "${path}/imageUpload.do"
+          });
+        </script>
+      </c:if>
     </form>
 
 
