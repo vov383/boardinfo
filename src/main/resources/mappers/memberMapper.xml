@@ -13,9 +13,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="insertMember">
-		insert into member (profile,name,userid,passwd,nickname,email,hp)values 
-		(#{profile},#{name},#{userid},#{passwd},#{nickname},#{email},#{hp}) 
-	</insert>
+    <choose>
+        <!-- profile이 null인 경우 -->
+        <when test="profile == null">
+            INSERT INTO member (name, userid, passwd, nickname, email, hp)
+            VALUES (#{name}, #{userid}, #{passwd}, #{nickname}, #{email}, #{hp})
+        </when>
+        <!-- profile이 값을 가지고 있는 경우 -->
+        <otherwise>
+            INSERT INTO member (profile, name, userid, passwd, nickname, email, hp)
+            VALUES (#{profile}, #{name}, #{userid}, #{passwd}, #{nickname}, #{email}, #{hp})
+        </otherwise>
+    </choose>
+</insert>
 	
 	<select id="login_check" resultType="String" parameterType="com.example.boardinfo.model.member.dto.MemberDTO">
 		select name

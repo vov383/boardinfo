@@ -21,7 +21,7 @@
   </tr>
  <c:forEach var="row" items="${list}">
   <tr>
-    <td><img src="${row.profile}" width="100px" height="100px"></td>
+    <td><img src="${path}/images/${row.profile}" width="100px" height="100px"></td>
     <td>${row.name}</td>
     <td>${row.userid}</td>
     <td>${row.passwd}</td>
