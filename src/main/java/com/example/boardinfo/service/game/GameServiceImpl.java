@@ -307,7 +307,6 @@ public class GameServiceImpl implements GameService {
         int bggnum = dto.getBggnum();
         BggParser bggParser = new BggParser();
         bggParser.setBgg_thumbnail(bggnum);
-        logger.info("과연 : " + dto );
         dto.setBgg_thumbnail(bggParser.getBgg_thumbnail());
       }
 
@@ -342,7 +341,6 @@ public class GameServiceImpl implements GameService {
       int bggnum = dto.getBggnum();
       BggParser bggParser = new BggParser();
       bggParser.setBgg_thumbnail(bggnum);
-      logger.info("과연 : " + dto );
       dto.setBgg_thumbnail(bggParser.getBgg_thumbnail());
     }
 
@@ -376,7 +374,7 @@ public class GameServiceImpl implements GameService {
       strbuilder.append(str).append(",");
     }
     String artist = strbuilder.toString();
-    artist = artist.substring(0,artist.length()-1);
+    artist = GameUtils.removeLastChar(artist);
     dto.setArtist(artist);
 
     //카테고리
@@ -386,7 +384,7 @@ public class GameServiceImpl implements GameService {
       strbuilder.append(str).append(",");
     }
     String gamecategory = strbuilder.toString();
-    gamecategory = gamecategory.substring(0,gamecategory.length()-1);
+    gamecategory = GameUtils.removeLastChar(gamecategory);
     dto.setGamecategory(gamecategory);
 
     //디자이너
@@ -396,7 +394,7 @@ public class GameServiceImpl implements GameService {
       strbuilder.append(str).append(",");
     }
     String designer = strbuilder.toString();
-    designer = designer.substring(0,designer.length()-1);
+    designer = GameUtils.removeLastChar(designer);
     dto.setDesigner(designer);
 
     //메카닉
@@ -406,7 +404,7 @@ public class GameServiceImpl implements GameService {
       strbuilder.append(str).append(",");
     }
     String mechanic = strbuilder.toString();
-    mechanic = mechanic.substring(0,mechanic.length()-1);
+    mechanic = GameUtils.removeLastChar(mechanic);
     dto.setMechanic(mechanic);
 
     //퍼블리셔
@@ -416,7 +414,7 @@ public class GameServiceImpl implements GameService {
       strbuilder.append(str).append(",");
     }
     String publisher = strbuilder.toString();
-    publisher = publisher.substring(0,publisher.length()-1);
+    publisher = GameUtils.removeLastChar(publisher);
     dto.setPublisher(publisher);
 
     //확장
@@ -446,7 +444,7 @@ public class GameServiceImpl implements GameService {
     //게임테이블에 update
     gameDao.gameupdate(dto);
     int gnum = dto.getGnum();
-    String userid = dto.getCreate_user();
+    String userid = dto.getUpdate_user();
     //카테고리테이블 update
     //카테고리배열
     String[] gamecategories = dto.getGamecategory().split(",");
@@ -459,7 +457,6 @@ public class GameServiceImpl implements GameService {
         //해당 카테고리가 db에 존재하느냐
         int cnum = categoryDao.check_category(str);
         if (cnum == 0) { //해당 카테고리가 db에 존재하지 않는다면
-          logger.info("cnum/str확인!!!!!!"+cnum+"/////"+str);
           categoryDao.insert_category(str,userid);
           categoryDao.insert_category_mapping();
         }else { //해당 카테고리가 db에 존재하면
@@ -549,21 +546,25 @@ public class GameServiceImpl implements GameService {
       }
     }
 
-//    //확장게임 테이블에 update
-//    //확장게임 배열
-//    String[] expansions = dto.getExpansion().split(",");
-//    for(String str : expansions){
-//      String expansion = str;
-//      gameDao.insert_expansion(expansion,userid);
-//    }
-//
-//    //재구현게임 테이블에 update
-//    //재구현게임 배열
-//    String[] reimplements = dto.getReimplement().split(",");
-//    for(String str : reimplements){
-//      String reimplement = str;
-//      gameDao.insert_reimplement(reimplement,userid);
-//    }
+    //확장게임 테이블에 update
+    //확장게임 배열
+    String[] expansions = dto.getExpansion().split(",");
+    for(String str : expansions){
+      int exnum = gameDao.getExnum(gnum,str);
+      if(exnum == 0){
+        gameDao.insert_expansion(gnum,str,userid);
+      }
+    }
+
+    //재구현게임 테이블에 update
+    //재구현게임 배열
+    String[] reimplements = dto.getReimplement().split(",");
+    for(String str : reimplements){
+      int renum = gameDao.getRenum(gnum,str);
+      if(renum == 0){
+        gameDao.insert_reimplement(gnum,str,userid);
+      }
+    }
   }
 
   public void deleteGame(int gnum, String userid){
