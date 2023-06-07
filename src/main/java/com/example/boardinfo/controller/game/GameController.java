@@ -143,7 +143,9 @@ public class GameController {
 		String userid = (String)session.getAttribute("userid");
 
 		if(userid != null)
-			dto.setCreate_user(userid);
+			dto.setUpdate_user(userid);
+		else
+			dto.setUpdate_user("admin");
 
 		gameService.gameupdate(dto);
 		return "home";

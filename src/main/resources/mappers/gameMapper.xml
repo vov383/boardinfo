@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select *
 		from (select a.*, rownum rn
 
-				from (select g.gnum,g.bggnum, g.gametitle, g.gametitle_eng, g.viewcount, g.release_year, ga.fullname gamephoto_url
+				from (select g.gnum,g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year, ga.fullname gamephoto_url
 
 						from game g,
     		    			(select gnum, fullname
@@ -175,16 +175,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<update id="gameupdate">
--- 		update game
--- 		set gametitle=#{gametitle}, gametitle_eng=#{gametitle_eng}, players=#{players},
--- 			playtime=#{playtime}, exnum=#{exnum}, renum=#{renum}, ages=#{ages}, language=#{language},
--- 			bggnum=#{bggnum}, release_year=#{release_year}
--- 		where gnum=#{gnum}
 		update game
-		set (bggnum, gametitle, gametitle_eng, players, playtime, ages, language,
-			 release_year,update_user, update_date)
-		  =	(#{bggnum}, #{gametitle}, #{gametitle_eng}, #{players}, #{playtime},
-			 #{ages},# {language}, #{release_year}, #{userid}, sysdate)
+		set bggnum=#{bggnum}, gametitle=#{gametitle}, gametitle_eng=#{gametitle_eng}, players=#{players},
+			playtime=#{playtime}, ages=#{ages}, language=#{language}, release_year=#{release_year},
+			update_user=#{update_user}, update_date=sysdate
 		where gnum=#{gnum}
 	</update>
 
@@ -199,7 +193,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<insert id="reimplement_insert">
 		insert into reimplement (gnum, userid, renum)
-		values (seq_game.currval,#{userid},
+		values (seq_game.currval, #{userid},
+					(select gnum
+					 from   game
+					 where  gametitle=#{reimplement})
+				)
+	</insert>
+
+	<insert id="expansion_update">
+		insert into expansion (gnum, userid, exnum)
+		values (#{gnum}, #{userid},
+			     (select gnum
+			      from   game
+			      where  gametitle=#{expansion})
+			    )
+	</insert>
+
+	<insert id="reimplement_update">
+		insert into reimplement (gnum, userid, renum)
+		values (#{gnum}, #{userid},
 					(select gnum
 					 from   game
 					 where  gametitle=#{reimplement})
@@ -260,6 +272,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			  where  del='n'
 			  ) g, reimplement r
 		where g.gnum = r.renum and r.gnum = #{gnum}
+	</select>
+
+	<select id="getExnum" resultType="int">
+		select  nvl(max(g.gnum),0)
+		from    expansion e,
+        		(select gnum,GAMETITLE
+         		 from   GAME
+         		 where  del = 'n' and GAMETITLE = #{expansion}) g
+		where   e.exnum = g.gnum and e.gnum = #{gnum}
+	</select>
+
+	<select id="getRenum" resultType="int">
+		select  nvl(max(g.gnum),0)
+		from    reimplement r,
+        		(select gnum,GAMETITLE
+         		 from   GAME
+         		 where  del = 'n' and GAMETITLE = #{expansion}) g
+		where   r.renum = g.gnum and r.gnum = #{gnum}
 	</select>
 	
 </mapper>

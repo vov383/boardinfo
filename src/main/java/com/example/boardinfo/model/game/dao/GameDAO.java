@@ -21,9 +21,13 @@ public interface GameDAO {
     void gameupdate(GameDTO dto);
     void insert_expansion(String expansion, String userid);
 	void insert_reimplement(String reimplement, String userid);
+	void insert_expansion(int gnum, String expansion, String userid);
+	void insert_reimplement(int gnum, String reimplement, String userid);
     Map<String, Object> getExpansion(int gnum);
 	Map<String, Object> getReimplement(int gnum);
 	void deleteGame(int gnum, String userid);
 	List<String> viewExpansion(int gnum);
 	List<String> viewReimplement(int gnum);
+	int getExnum(int gnum, String expansion);
+	int getRenum(int gnum, String reimplement);
 }

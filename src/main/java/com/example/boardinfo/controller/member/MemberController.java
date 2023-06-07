@@ -13,10 +13,12 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -55,6 +57,7 @@ public class MemberController {
 		String uploadPath;
 		@RequestMapping("member_insert.do")
 		public String insertMember(@ModelAttribute MemberDTO dto, HttpServletResponse response,
+
 		                     @RequestParam MultipartFile profile_img) {
 		      OutputStream out = null;
 		      response.setCharacterEncoding("utf-8");
@@ -84,7 +87,7 @@ public class MemberController {
 		      }
 		   memberService.insertMember(dto);
 		   return "home";
-	
+
 		}
 		
 		@RequestMapping("login_check.do")
