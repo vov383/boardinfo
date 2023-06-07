@@ -9,6 +9,7 @@
 		<setting name="jdbcTypeForNull" value="NULL" />
 	</settings>
 
+
 	<typeAliases>
 
 		<typeAlias type="com.example.boardinfo.model.game.dto.GameDTO" alias="gameDto"/>

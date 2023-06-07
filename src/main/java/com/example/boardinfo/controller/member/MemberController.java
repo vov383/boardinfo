@@ -4,18 +4,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import javax.servlet.http.HttpSession;
 
-import com.example.boardinfo.controller.upload.AjaxUploadController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -33,10 +28,6 @@ import com.example.boardinfo.service.member.MemberService;
 @Controller
 @RequestMapping("member/*")
 public class MemberController {
-
-	//로깅
-	private static final Logger logger =
-			LoggerFactory.getLogger(MemberController.class);
 	
 	@Inject
 	MemberService memberService;
@@ -61,7 +52,6 @@ public class MemberController {
 			return "member/login";
 		}	
 		
-
 		//회원입력
 		@Resource(name = "uploadPath") //servlet-context에 설정된 id값과 맞춤
 		String uploadPath;
@@ -97,6 +87,7 @@ public class MemberController {
 		      }
 		   memberService.insertMember(dto);
 		   return "home";
+
 		}
 		
 		@RequestMapping("login_check.do")
