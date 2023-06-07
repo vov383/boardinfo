@@ -25,8 +25,11 @@ public class ArtistDAOImpl implements ArtistDAO {
 	}
 	
 	@Override
-	public void insert_artist(String artist) {
-		sqlSession.insert("artist.insert", artist);
+	public void insert_artist(String artist, String userid) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("artist",artist);
+		map.put("userid",userid);
+		sqlSession.insert("artist.insert", map);
 	}
 	
 	@Override

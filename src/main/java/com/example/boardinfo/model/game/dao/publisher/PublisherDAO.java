@@ -9,7 +9,7 @@ public interface PublisherDAO {
 
 	int check_publisher(String publisher);
 	int check_publisher(String publisher, int gnum);
-	void insert_publisher(String publisher);
+	void insert_publisher(String publisher, String userid);
 	void insert_publisher_mapping();
 	int publishernum(String publisher);
 	void insert_publisher_mapping(int pnum);

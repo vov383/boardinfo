@@ -13,12 +13,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="insert">
-		insert into artist
-		values (seq_artist.nextval, #{artist})
+		insert into artist (anum, artist, userid)
+		values (seq_artist.nextval, #{artist}, #{userid})
 	</insert>
 	
 	<insert id="insertmapping">
-		insert into game_artist
+		insert into game_artist (gnum, anum)
 		values (seq_game.currval,seq_artist.currval)
 	</insert>
 	
@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="insertmapping_anum">
-		insert into game_artist
+		insert into game_artist (gnum, anum)
 		values (seq_game.currval,#{anum})
 	</insert>
 	
@@ -53,7 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<insert id="insertmapping_update">
-		insert into game_artist
+		insert into game_artist (gnum,anum)
 		values (#{gnum},#{anum})
 	</insert>
 	

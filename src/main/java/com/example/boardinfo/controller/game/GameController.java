@@ -60,7 +60,13 @@ public class GameController {
 
 	//게임등록
 	@RequestMapping("insert.do")
-	public String insert(@ModelAttribute GameDTO dto) {
+	public String insert(@ModelAttribute GameDTO dto,HttpSession session) {
+		String userid = (String)session.getAttribute("userid");
+
+		if(userid != null)
+			dto.setCreate_user(userid);
+		else
+			dto.setCreate_user("admin");
 		gameService.gameinsert(dto);
 		return "home";
 	}
@@ -73,7 +79,6 @@ public class GameController {
 		//정보
 		Map<String, Object> map = gameService.view(gnum);
 
-//		mav.setViewName("game/game_view");
 		mav.setViewName("game/game_viewDetail");
 		mav.addObject("map", map);
 		return mav;
@@ -134,8 +139,21 @@ public class GameController {
 	}
 
 	@RequestMapping("update.do")
-	public String update(@ModelAttribute GameDTO dto) {
+	public String update(@ModelAttribute GameDTO dto,HttpSession session) {
+		String userid = (String)session.getAttribute("userid");
+
+		if(userid != null)
+			dto.setCreate_user(userid);
+
 		gameService.gameupdate(dto);
+		return "home";
+	}
+
+	@RequestMapping("delete.do")
+	public String delete(@RequestParam("delete_gnum")int gnum, HttpSession session){
+		String userid = (String)session.getAttribute("userid");
+		logger.info("gnummmmmmmmmmmmmmmmmmmmmm : " + gnum);
+		gameService.deleteGame(gnum, userid);
 		return "home";
 	}
 }

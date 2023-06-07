@@ -70,7 +70,7 @@
 			</tr>
 
 			<tr>
-				<%--고민해볼 문제지만 이 항목은 관리자만 업데이트가능하게 하면 좋을것 같다.--%>
+
 				<td>보드게임긱 아이디</td>
 				<td><input name="bggnum" id="bggnum" class="input_game" value="${dto.bggnum}"></td>
 
@@ -277,22 +277,33 @@
 
 			<tr>
 
-				<td>확장</td>
-				<td><input name="exnum" id="expention" class="input_game"></td>
+				<td>확장게임</td>
+				<td>
+					<div id="selectedEx"></div>
+					<input type="hidden" name="expansion" id="expansion" value="${dto.expansion}">
+					<input id="inputEx" class="input_game" autocomplete="off">
+					<div id="exSuggestions"></div>
+				</td>
 
 			</tr>
 
 			<tr>
 
-				<td>재구현</td>
-				<td><input name="renum" id="replacement" class="input_game"></td>
+				<td>재구현게임</td>
+				<td>
+					<div id="selectedRe"></div>
+					<input type="hidden" name="reimplement" id="reimplement" value="${dto.reimplement}">
+					<input id="inputRe" class="input_game" autocomplete="off">
+					<div id="reSuggestions"></div>
+				</td>
 
 			</tr>
 
 			<tr>
 
 				<td colspan="2">
-					<button type="button" id="btnGameInsert">등록</button>
+					<button type="button" id="btnGameUpdate">등록</button>
+					<button type="button" id="btnGameDelete">삭제</button>
 				</td>
 
 			</tr>
@@ -310,15 +321,26 @@
 
 	</main>
 
+	<form name="deleteform" method="post" action="${path}/game/delete.do">
+		<input type="hidden" name="delete_gnum" value="${dto.gnum}">
+	</form>
+
 
 <script type="text/javascript">
 
 	$(document).ready(function() {
 		
-		//새 게임 등록 버튼클릭
-		$("#btnGameInsert").click(function() {
+		//게임 수정 버튼클릭
+		$("#btnGameUpdate").click(function() {
 			//null값확인, 자료형확인필요함 -> 정규식응용
 			document.gameform.submit();
+		});
+		//게임 삭제 버튼 클릭
+		$("#btnGameDelete").click(function(){
+			if(confirm("해당 게임을 정말 삭제하시겠습니까?")){
+				document.deleteform.submit();
+			}else
+				return;
 		});
 
 		//파일을 마우스로 드래그해서 업로드 영역에 올릴때 파일이 열리는 기본효과 막는 처리
@@ -809,6 +831,166 @@
 			updatePublisherInput();
 			console.log("인풋"+$("#publisher").val());
 		});
+
+
+
+
+
+
+
+
+
+
+		//	ex확장게임 검색 자동완성 쿼리
+		$('#inputEx').keyup(function() {
+			var input = $(this).val();
+			$.ajax({
+				type: "post",
+				url: "${path}/game/autoGame.do/"+input,
+				success: function(result) {
+					var suggestionsDiv = $('#exSuggestions');
+					suggestionsDiv.empty(); // 기존 내용 비우기
+
+					if (result.length > 0) {
+						suggestionsDiv.css('max-height', '150px').show(); // 값이 있을 경우 높이 설정하고 보이기
+						$(result).each(function(index, item) {
+							var gametitle = item.gametitle;
+							suggestionsDiv.append("<div class='searched cursor_pointer'>" + gametitle + "</div>");
+						});
+					} else {
+						suggestionsDiv.hide(); // 값이 없을 경우 숨기기
+					}
+				},
+				error: function() {
+					console.log("에러..");
+				}
+			});
+			if(input=="")	$('#exSuggestions').empty();
+		});
+
+		var selectedExs = [];
+
+		//이미 가지고있는 확장게임 보여주는 함수
+		var expansionValue = $("#expansion").val();
+		if (expansionValue) {
+			selectedExs = expansionValue.split(",");
+			selectedExs.forEach(function(expansion) {
+				$("#selectedEx").append("<div class='selected cursor_pointer'>" + expansion + "</div>");
+			});
+		}
+
+		function updateExInput() {
+			var exInput = $("#expansion");
+			exInput.val(selectedExs.join(","));
+		}
+
+
+		//ex확장게임 검색값 클릭시 배열에 추가
+		$('#exSuggestions').on('click', '.searched', function() {
+			var selectedEx = $(this).text();
+			console.log(selectedEx);
+			selectedExs.push(selectedEx);
+			$("#selectedEx").append("<div class='selected-value cursor_pointer'>" + selectedEx + "</div>");
+			console.log("배열"+selectedExs);
+			$("#inputEx").val("");
+			$("#exSuggestions").empty().hide();
+			updateExInput();
+			console.log("인풋"+$("#expansion").val());
+		});
+
+		// 선택된 값 클릭 이벤트 처리
+		$("#selectedEx").on("click", ".selected-value", function() {
+
+			var value = $(this).text();
+
+			// 선택된 값 배열에서 해당 값을 제거
+			selectedExs = selectedExs.filter(function(selected) {
+				return selected !== value;
+			});
+
+			// 선택된 값 표시가 삭제되도록 처리
+			$(this).remove();
+
+			updateExInput();
+			console.log("인풋"+$("#expansion").val());
+		});
+
+
+
+		//	re재구현게임 검색 자동완성 쿼리
+		$('#inputRe').keyup(function() {
+			var input = $(this).val();
+			$.ajax({
+				type: "post",
+				url: "${path}/game/autoGame.do/"+input,
+				success: function(result) {
+					var suggestionsDiv = $('#reSuggestions');
+					suggestionsDiv.empty(); // 기존 내용 비우기
+
+					if (result.length > 0) {
+						suggestionsDiv.css('max-height', '150px').show(); // 값이 있을 경우 높이 설정하고 보이기
+						$(result).each(function(index, item) {
+							var gametitle = item.gametitle;
+							suggestionsDiv.append("<div class='searched cursor_pointer'>" + gametitle + "</div>");
+						});
+					} else {
+						suggestionsDiv.hide(); // 값이 없을 경우 숨기기
+					}
+				},
+				error: function() {
+					console.log("에러..");
+				}
+			});
+			if(input=="")	$('#reSuggestions').empty();
+		});
+
+		var selectedRes = [];
+
+		//이미 가지고있는 재구현게임 보여주는 함수
+		var reimplementValue = $("#reimplement").val();
+		if (reimplementValue) {
+			selectedRes = reimplementValue.split(",");
+			selectedRes.forEach(function(reimplement) {
+				$("#selectedRe").append("<div class='selected cursor_pointer'>" + reimplement + "</div>");
+			});
+		}
+
+		function updateReInput() {
+			var reInput = $("#reimplement");
+			reInput.val(selectedRes.join(","));
+		}
+
+
+		//재구현게임 검색값 클릭시 배열에 추가
+		$('#reSuggestions').on('click', '.searched', function() {
+			var selectedRe = $(this).text();
+			console.log(selectedRe);
+			selectedRes.push(selectedRe);
+			$("#selectedRe").append("<div class='selected-value cursor_pointer'>" + selectedRe + "</div>");
+			console.log("배열"+selectedRes);
+			$("#inputRe").val("");
+			$("#reSuggestions").empty().hide();
+			updateReInput();
+			console.log("인풋"+$("#reimplement").val());
+		});
+
+		// 선택된 값 클릭 이벤트 처리
+		$("#selectedRe").on("click", ".selected-value", function() {
+
+			var value = $(this).text();
+
+			// 선택된 값 배열에서 해당 값을 제거
+			selectedRes = selectedRes.filter(function(selected) {
+				return selected !== value;
+			});
+
+			// 선택된 값 표시가 삭제되도록 처리
+			$(this).remove();
+
+			updateReInput();
+			console.log("인풋"+$("#reimplement").val());
+		});
+
 	});
 
 </script>

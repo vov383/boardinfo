@@ -9,7 +9,7 @@ public interface DesignerDAO {
 
 	int check_designer(String designer);
 	int check_designer(String designer, int gnum);
-	void insert_designer(String designer);
+	void insert_designer(String designer, String userid);
 	void insert_designer_mapping();
 	int designernum(String designer);
 	void insert_designer_mapping(int dnum);

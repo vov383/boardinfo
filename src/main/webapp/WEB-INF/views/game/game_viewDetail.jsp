@@ -11,6 +11,7 @@
         <%@ include file="../include/js/header.jsp" %>
         <link rel="stylesheet" href="${path}/include/js/style_game.css">
 
+
         <style>
         
         
@@ -59,32 +60,8 @@
         	font-size: 16px;
         }
         
-        
-        
-        
-            table tr {
-                border: none;
-                background-color: white;
-            }
 
-            table tr td {
-                border: none;
-                background-color: white;
-            }
-            tr:nth-child(even) td {
-                background-color: white;
-            }
-            td:first-child {
-                border: none;
-            }
 
-            .td_btn {
-                cursor: pointer;
-            }
-            .td_btn:hover {
-                background-color: #9fcdff;
-                color: #0b0b0b;
-            }
             .detail_div {
                 height: 300px;
                 text-align: left;
@@ -333,6 +310,12 @@
                 border: 1px solid black;
                 cursor: pointer;
             }
+
+
+
+
+
+
         </style>
    </head>
 
@@ -354,6 +337,10 @@
 
 
 	<div align="center">
+        <form name="updateViewForm" method="post" action="${path}/game/updateView.do">
+            <input type="hidden" name="gnum" value="${map.dto.gnum}">
+        </form>
+        <div id="btnGameUpdate">수정</div>
 
            <div id="gameInfoUpper">
             <c:choose>
@@ -409,7 +396,7 @@
            		</div>
            		<div><span>연령</span><span>${map.dto.ages}세</span></div>
            		<div><span>시간</span><span>${map.dto.playtime}</span></div>
-           		<div><span>내 평가</span><span></span><span>컬렉션 추가</span></div>
+           		<div><span id="modal-open">내 평가</span><span>/???/</span><span>컬렉션 추가</span></div>
            		</div>
            	</div>
            		
@@ -462,6 +449,52 @@
                 </c:forEach>
                 </div>
             </div>
+
+            <div  class="game_detail_filter_div">
+                <div class="game_detail_filter">퍼블리셔</div>
+                <div class="game_detail_filtered_list">
+                    <c:forEach var="publisher" items="${map.plist}">
+                        <a href="${path}/game/search.do?filter=publisher&num=${publisher.pnum}">${publisher.publisher}</a>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div  class="game_detail_filter_div">
+                <div class="game_detail_filter">확장(원본)</div>
+                <div class="game_detail_filtered_list">
+                    <c:forEach var="item" items="${map.exmap.origin}">
+                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div  class="game_detail_filter_div">
+                <div class="game_detail_filter">확장</div>
+                <div class="game_detail_filtered_list">
+                    <c:forEach var="item" items="${map.exmap.expansion}">
+                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div  class="game_detail_filter_div">
+                <div class="game_detail_filter">재구현(원본)</div>
+                <div class="game_detail_filtered_list">
+                    <c:forEach var="item" items="${map.remap.origin}">
+                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div  class="game_detail_filter_div">
+                <div class="game_detail_filter">재구현</div>
+                <div class="game_detail_filtered_list">
+                    <c:forEach var="item" items="${map.remap.expansion}">
+                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
+                    </c:forEach>
+                </div>
+            </div>
+
         </div>
 
         <hr style="clear: both;">
@@ -683,6 +716,14 @@
    <footer>
        <%@include file="../include/footer.jsp" %>
    </footer>
+
+   <script>
+       $(function () {
+           $("#btnGameUpdate").click(function(){
+               document.updateViewForm.submit();
+           });
+       });
+   </script>
 
    <script>
 <%--캐러셀관련--%>

@@ -24,8 +24,11 @@ public class MechanicDAOImpl implements MechanicDAO {
   }
 
   @Override
-  public void insert_mechanic(String mechanic) {
-    sqlSession.insert("mechanic.insert", mechanic);
+  public void insert_mechanic(String mechanic, String userid) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("mechanic",mechanic);
+    map.put("userid",userid);
+    sqlSession.insert("mechanic.insert", map);
 
   }
 
