@@ -2,9 +2,7 @@ package com.example.boardinfo.controller.member;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -64,36 +67,36 @@ public class MemberController {
 		String uploadPath;
 		@RequestMapping("member_insert.do")
 		public String insertMember(@ModelAttribute MemberDTO dto, HttpServletResponse response,
-								   @RequestParam MultipartFile profile_img) {
-				OutputStream out = null;
-				response.setCharacterEncoding("utf-8");
-				response.setContentType("text/html; charset=utf-8");
 
-				try {
-					//업로드한 파일 이름
-					String fileName=profile_img.getOriginalFilename();
-					//파일을 바이트 배열로 변환
-					byte[] bytes=profile_img.getBytes();
-					out = new FileOutputStream(new File(uploadPath+"/"+fileName));
-					//서버로 업로드
-					out.write(bytes);
-
-					dto.setProfile(fileName);
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					try {
-						if(out != null) {
-							out.close();
-						}
-					} catch (Exception e2) {
-						e2.printStackTrace();
-					}
-				}
-			memberService.insertMember(dto);
-			return "home";
-
+		                     @RequestParam MultipartFile profile_img) {
+		      OutputStream out = null;
+		      response.setCharacterEncoding("utf-8");
+		      response.setContentType("text/html; charset=utf-8");
+	
+		      try {
+		         //업로드한 파일 이름
+		         String fileName=profile_img.getOriginalFilename();
+		         //파일을 바이트 배열로 변환
+		         byte[] bytes=profile_img.getBytes();
+		         out = new FileOutputStream(new File(uploadPath+"/"+fileName));
+		         //서버로 업로드
+		         out.write(bytes);
+	
+		         dto.setProfile(fileName);
+	
+		      } catch (Exception e) {
+		         e.printStackTrace();
+		      } finally {
+		         try {
+		            if(out != null) {
+		               out.close();
+		            }
+		         } catch (Exception e2) {
+		            e2.printStackTrace();
+		         }
+		      }
+		   memberService.insertMember(dto);
+		   return "home";
 		}
 		
 		@RequestMapping("login_check.do")
@@ -130,10 +133,10 @@ public class MemberController {
 		public String checkId(@RequestParam String userid) {
 			boolean isDuplicate = memberService.checkDuplicateId(userid);
 		    	if (isDuplicate) {
-		    		return "duplicate";
+		    		return "duplicate"; //중복o
 		    	} else 
 		    	{
-		    		return "available";
+		    		return "available"; //중복x
 		    	}
 		}
 		//닉네임 중복확인 
@@ -142,10 +145,10 @@ public class MemberController {
 		public String check_nick(@RequestParam String nickname) {
 			boolean isDuplicate = memberService.checkDuplicateNick(nickname);
 		    	if (isDuplicate) {
-		    		return "duplicate";
+		    		return "duplicate"; //중복o
 		    	} else 
 		    	{
-		    		return "available";
+		    		return "available"; //중복x
 		    	}
 		}
 		//회원 상세정보 
@@ -170,6 +173,7 @@ public class MemberController {
 			}
 		}
 		
+		//회원 상세정보 수정
 		@RequestMapping("update.do")
 		public String update(MemberDTO dto, HttpServletRequest request,Model model) {
 				memberService.updateMember(dto);
@@ -178,6 +182,7 @@ public class MemberController {
 				return "home";
 		}
 		
+		//회원 삭제 (del='n'  ->  del='y')로 변경 후 보이지 않게 처리
 		@RequestMapping("delete.do")
 		public String delete(@RequestParam("userid") String userid,HttpSession session ) {
 				memberService.deleteMember(userid, session);
