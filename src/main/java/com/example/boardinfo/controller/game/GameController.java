@@ -158,4 +158,11 @@ public class GameController {
 		gameService.deleteGame(gnum, userid);
 		return "home";
 	}
+
+	@ResponseBody
+	@RequestMapping("parseAjax")
+	public Map<String, Object> parseInsert(@RequestParam("bggnum")int bggnum, Map<String, Object> map){
+		map = gameService.parseInsert(bggnum);
+		return map;
+	}
 }

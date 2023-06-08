@@ -13,6 +13,108 @@ public class BggParser {
     private double bgg_rate;
     private double bgg_weight;
     private int bgg_rank;
+    private String bgg_gametitle;
+    private String bgg_designer;
+    private String bgg_gamecategory;
+    private String bgg_artist;
+    private String bgg_mechanic;
+    private String bgg_publisher;
+    private String bgg_players;
+    private String bgg_playtime;
+    private String bgg_ages;
+    private String bgg_release_year;
+
+    public void setBgg_thumbnail(String bgg_thumbnail) {
+        this.bgg_thumbnail = bgg_thumbnail;
+    }
+
+    public void setBgg_rate(double bgg_rate) {
+        this.bgg_rate = bgg_rate;
+    }
+
+    public void setBgg_weight(double bgg_weight) {
+        this.bgg_weight = bgg_weight;
+    }
+
+    public String getBgg_gametitle() {
+        return bgg_gametitle;
+    }
+
+    public void setBgg_gametitle(String bgg_gametitle) {
+        this.bgg_gametitle = bgg_gametitle;
+    }
+
+    public String getBgg_designer() {
+        return bgg_designer;
+    }
+
+    public void setBgg_designer(String bgg_designer) {
+        this.bgg_designer = bgg_designer;
+    }
+
+    public String getBgg_gamecategory() {
+        return bgg_gamecategory;
+    }
+
+    public void setBgg_gamecategory(String bgg_gamecategory) {
+        this.bgg_gamecategory = bgg_gamecategory;
+    }
+
+    public String getBgg_artist() {
+        return bgg_artist;
+    }
+
+    public void setBgg_artist(String bgg_artist) {
+        this.bgg_artist = bgg_artist;
+    }
+
+    public String getBgg_mechanic() {
+        return bgg_mechanic;
+    }
+
+    public void setBgg_mechanic(String bgg_mechanic) {
+        this.bgg_mechanic = bgg_mechanic;
+    }
+
+    public String getBgg_publisher() {
+        return bgg_publisher;
+    }
+
+    public void setBgg_publisher(String bgg_publisher) {
+        this.bgg_publisher = bgg_publisher;
+    }
+
+    public String getBgg_players() {
+        return bgg_players;
+    }
+
+    public void setBgg_players(String bgg_players) {
+        this.bgg_players = bgg_players;
+    }
+
+    public String getBgg_playtime() {
+        return bgg_playtime;
+    }
+
+    public void setBgg_playtime(String bgg_playtime) {
+        this.bgg_playtime = bgg_playtime;
+    }
+
+    public String getBgg_ages() {
+        return bgg_ages;
+    }
+
+    public void setBgg_ages(String bgg_ages) {
+        this.bgg_ages = bgg_ages;
+    }
+
+    public String getBgg_release_year() {
+        return bgg_release_year;
+    }
+
+    public void setBgg_release_year(String bgg_release_year) {
+        this.bgg_release_year = bgg_release_year;
+    }
 
     public String getBgg_thumbnail() {
         return bgg_thumbnail;
@@ -55,21 +157,6 @@ public class BggParser {
             this.bgg_rank = bgg_rank;
     }
 
-    public void setBggInfo(int id) {
-        try {
-            String url = "https://boardgamegeek.com/xmlapi2/thing?id=" + id + "&stats=1";
-            Document doc = parseXML(id);
-
-            if (doc != null) {
-                this.bgg_thumbnail = parseThumbnail(doc);
-                this.bgg_rate = parseRating(doc);
-                this.bgg_weight = parseWeight(doc);
-                this.bgg_rank = parseRank(doc);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private Document parseXML(int id) {
         try {
@@ -135,6 +222,22 @@ public class BggParser {
         return bgg_rank;
     }
 
+
+//    public void setBggInfo(int id) {
+//        try {
+//            String url = "https://boardgamegeek.com/xmlapi2/thing?id=" + id + "&stats=1";
+//            Document doc = parseXML(id);
+//
+//            if (doc != null) {
+//                this.bgg_thumbnail = parseThumbnail(doc);
+//                this.bgg_rate = parseRating(doc);
+//                this.bgg_weight = parseWeight(doc);
+//                this.bgg_rank = parseRank(doc);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
 
