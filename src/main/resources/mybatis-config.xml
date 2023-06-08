@@ -15,6 +15,8 @@
 		<typeAlias type="com.example.boardinfo.model.review.dto.ReviewDTO" alias="reviewDto"/>
 		<typeAlias type="com.example.boardinfo.model.review.dto.TestDTO" alias="testDto"/>
 
+		<typeAlias type="com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO" alias="gameRatingDTO"/>
+		<typeAlias type="com.example.boardinfo.model.game.dto.gameRating.RatingStatisticDTO" alias="ratingStatisticDTO"/>
 		<typeAlias type="com.example.boardinfo.model.gathering.dto.GatheringDTO" alias="gatheringDTO"/>
 		<typeAlias type="com.example.boardinfo.model.gathering.dto.GatheringReplyDTO" alias="gatheringReplyDTO"/>
 

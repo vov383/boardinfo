@@ -3,22 +3,14 @@ package com.example.boardinfo.model.game.dto.gameRating;
 public class GameRatingDTO {
     private int gnum;
     private String userid;
-    private int rating;
-    private int weight;
+    private float rating;
+    private float weight;
     private int participant1;
     private int participant2;
     private int participant3;
     private int participant4;
     private int participant5;
     private String rating_comment;
-
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
 
     public int getGnum() {
         return gnum;
@@ -36,11 +28,19 @@ public class GameRatingDTO {
         this.userid = userid;
     }
 
-    public int getWeight() {
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    public float getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(float weight) {
         this.weight = weight;
     }
 
@@ -91,7 +91,7 @@ public class GameRatingDTO {
     public void setRating_comment(String rating_comment) {
         this.rating_comment = rating_comment;
     }
-    
+
     @Override
     public String toString() {
         return "GameRatingDTO{" +
@@ -107,5 +107,4 @@ public class GameRatingDTO {
                 ", rating_comment='" + rating_comment + '\'' +
                 '}';
     }
-
 }

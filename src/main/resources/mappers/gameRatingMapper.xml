@@ -6,10 +6,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
 <mapper namespace="gameRating">
 	<insert id="add">
-        insert into game_rating (gnum, userid, rating, weight, participant1, participant2, participant3, participant4, participant5, create_date)
-        values (#{gnum}, #{userid}, #{rating}, #{weight}, #{participant1}, #{participant2}, #{participant3}, #{participant4}, #{participant5}, sysdate)
+        insert into game_rating (gnum, userid, rating, weight, participant1, participant2, participant3, participant4, participant5, rating_comment, create_date)
+        values (#{gnum}, #{userid}, #{rating}, #{weight}, #{participant1}, #{participant2}, #{participant3}, #{participant4}, #{participant5}, #{rating_comment}, sysdate)
     </insert>
 
+
+	<insert id="update">
+		update game_rating
+		set rating=#{rating}, weight=#{weight}, participant1=#{participant1}, participant2=#{participant2}, participant3=#{participant3},
+			participant4=#{participant4}, participant5=#{participant5}, rating_comment=#{rating_comment}, update_date = sysdate
+		where gnum = #{gnum} and userid = #{userid}
+	</insert>
+
+
+	<insert id="delete">
+		delete from game_rating
+		where gnum = #{gnum} and userid= #{user_id}
+	</insert>
 
 	<select id="avgRatingAndWeight" resultType="HashMap">
 		select avg(rating) avgRating, avg(weight) avgWeight, count(*) tot
@@ -17,8 +30,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		group by gnum
 		having gnum = #{gnum}
 	</select>
-	
-	
+
+
+	<select id="getUserRatingPoint" resultType="float">
+		select rating from game_rating
+		where gnum = #{gnum} and userid = #{user_id}
+	</select>
+
+
+	<select id="getUserRating" resultType="GameRatingDTO">
+		select * from game_rating
+		where gnum = #{gnum} and userid = #{user_id}
+	</select>
+
+
 	<select id="getOptimumPlayers" resultType="HashMap">
 	select
 	    COUNT(CASE WHEN participant1 = 1 THEN 1 END) AS best1,
@@ -38,6 +63,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    COUNT(CASE WHEN participant5 = 3 THEN 1 END) AS bad5
 	FROM game_rating
 	where gnum= #{gnum}	
+	</select>
+
+
+	<select id="getRatingStatistic" resultType="ratingStatisticDTO">
+		select rating as value, count(rating) as count
+		from game_rating
+		where gnum = #{gnum}
+		group by rating
+	</select>
+
+
+	<select id="getWeightStatistic" resultType="ratingStatisticDTO">
+		select weight as value, count(weight) as count
+		from game_rating
+		where gnum = #{gnum}
+		group by weight
 	</select>
 
 

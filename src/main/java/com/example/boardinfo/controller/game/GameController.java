@@ -6,6 +6,7 @@ import com.example.boardinfo.model.game.dto.category.CategoryDTO;
 import com.example.boardinfo.model.game.dto.designer.DesignerDTO;
 import com.example.boardinfo.model.game.dto.mechanic.MechanicDTO;
 import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
+import com.example.boardinfo.service.game.GameRatingService;
 import com.example.boardinfo.service.game.GameService;
 import com.example.boardinfo.util.UploadFileUtils;
 import org.slf4j.Logger;
@@ -33,6 +34,9 @@ public class GameController {
 			LoggerFactory.getLogger(GameController.class);
 	@Inject
 	GameService gameService;
+
+	@Inject
+	GameRatingService gameRatingService;
 
 	//전체게임목록으로 이동
 	@RequestMapping("gamelist.do")
@@ -67,15 +71,20 @@ public class GameController {
 
 	//게임정보페이지로 이동
 	@RequestMapping("view.do")
-	public ModelAndView view(ModelAndView mav, int gnum, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView view(ModelAndView mav, int gnum, HttpServletRequest request,
+							 HttpSession session, HttpServletResponse response) throws Exception {
 		//조회수
 		gameService.increaseViewcnt(gnum, request, response);
 		//정보
 		Map<String, Object> map = gameService.view(gnum);
+		//평가정보
+		Map<String, Object> statisticMap = gameRatingService.getStatistic(gnum, (String)session.getAttribute("userid"));
+
 
 //		mav.setViewName("game/game_view");
 		mav.setViewName("game/game_viewDetail");
 		mav.addObject("map", map);
+		mav.addObject("statisticMap", statisticMap);
 		return mav;
 	}
 

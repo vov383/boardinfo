@@ -224,9 +224,6 @@ public class GameServiceImpl implements GameService {
     List<PublisherDTO> plist = publisherDao.view(gnum);
     
     
-    HashMap<String, Object> statisticMap = gameRatingDao.getStatistic(gnum);
-    
-
     int bggnum = dto.getBggnum();
 
     BggParser bggParser = new BggParser();
@@ -244,9 +241,7 @@ public class GameServiceImpl implements GameService {
     map.put("bgg_rank", bggParser.getBgg_rank());
     map.put("bgg_rate", bggParser.getBgg_rate());
     map.put("bgg_weight", bggParser.getBgg_weight());
-    map.put("statisticMap", statisticMap);
-    
-    
+
     return map;
   }
 
