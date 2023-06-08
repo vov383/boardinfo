@@ -250,5 +250,8 @@
     .dropdown:hover .dropdown-content a {
         align-self: center;
         text-decoration: none;
+        font-size: 15px;
+        font-weight: bold;
+        color: black;
     }
 
