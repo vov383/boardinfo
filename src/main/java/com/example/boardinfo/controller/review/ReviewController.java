@@ -1,10 +1,9 @@
 package com.example.boardinfo.controller.review;
 
-import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
-import com.example.boardinfo.model.review.dto.TestDTO;
-import com.example.boardinfo.model.review.dto.reviewSerchDTO;
+import com.example.boardinfo.model.review.dto.*;
 import com.example.boardinfo.service.review.ReviewService;
+import com.example.boardinfo.service.review.paging;
+import com.google.gson.Gson;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,20 +28,43 @@ public class ReviewController {
 
 	// 리뷰 리스트 페이지
 	@RequestMapping("reviewlist.do")
-	public ModelAndView revewlist(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session) {
+	public ModelAndView revewlist(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session, PageDTO page) {
 
 		String userid = (String) session.getAttribute("userid");
 		ModelAndView mav = new ModelAndView();
 
+		/*조회 쿼리 이전에 페이징 처리 먼저 작업 → 조회 쿼리 이전에 불러와야 하기 때문임*/
+/*
+		System.out.println("pagepagepagepagepagepagepagepagepagepage : " + new Gson().toJson(page));
+		→ 0값으로 조회됨
+*/
+
+		page = paging.Paging(page);
+		System.out.println("한글테스트 : " + new Gson().toJson(page));
+
 		/*userid가 null이면 로그인 페이지로 이동*/
-		if (null == userid){
-			mav.setViewName("member/login");
+//		if (null == userid){
+//			mav.setViewName("member/login");
 
 		/*userid가 null이 아니면 리뷰 목록 조회로 이동*/
-		} else {
+//		} else {
 			mav.setViewName("review/gameReviewMain");
+
+			/*내가 보는 리스트의 총개수*/
+			int cnt = reviewservice.reviewListCnt(reviewserchDTO);
+			page = paging.Paginggeqwjg(page, cnt);
+
+			reviewserchDTO.setStart(page.getStart());
+			reviewserchDTO.setEnd(page.getEnd());
+
 			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-		}
+			mav.addObject("page", page);
+
+
+//		}
+
+
+
 
 		return mav;
 	}

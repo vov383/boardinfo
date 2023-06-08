@@ -3,12 +3,12 @@ package com.example.boardinfo.model.review.dto;
 public class PageDTO {
 
     private int nowPage;                 // 현재 페이지
-    private int startPage;               // 화면 페이지 시작 번호
-    private int endPage;                 // 화면 페이지 마지막 번호
-    private int cntPage;                 // 화면 페이지 개수
+    private int cntPage;                 // 화면 페이지 개수 (가로)
+    private int cntPerPage;              // 쿼리 리스트 개수 (세로)
     private int total;                   // 쿼리 리스트 총 개수
-    private int cntPerPage;              // 쿼리 리스트 개수
     private int lastPage;                // 마지막 번호 (시작번호는 1로고정)
+    private int startPage;               // 화면 페이지 가로 시작 번호
+    private int endPage;                 // 화면 페이지 가로 마지막 번호
     private int start;                   // 쿼리 리스트 변수
     private int end;                     // 쿼리 리스트 변수
 
