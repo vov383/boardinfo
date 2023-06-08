@@ -20,7 +20,6 @@ public class TBoardDAOImpl implements TBoardDAO {
 	@Override
 	public int countArticle(
 			Map<String, Object> map) {
-		//여기서 에러
 		return sqlSession.selectOne("tboard.countArticle", map);
 	}
 
@@ -32,6 +31,12 @@ public class TBoardDAOImpl implements TBoardDAO {
 	public void insert(TBoardDTO dto) {
 		sqlSession.insert("tboard.insertBoard", dto);
 	}
+	@Override
+	public void insertWithAddress(TBoardDTO dto) {
+		sqlSession.insert("tboard.insertBoardWithAddress", dto);
+	}
+
+
 
 	@Override
 	public TBoardDTO viewPost(int tb_num) {
@@ -74,5 +79,7 @@ public class TBoardDAOImpl implements TBoardDAO {
 	public void fileAttach(TBAttachDTO f_dto) {
 		sqlSession.insert("tboard.insertFile", f_dto);
 	}
+
+
 
 }

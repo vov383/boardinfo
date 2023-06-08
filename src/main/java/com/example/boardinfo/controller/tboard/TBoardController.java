@@ -7,15 +7,12 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
+import com.example.boardinfo.model.review.dto.reviewSerchDTO;
 import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -85,7 +82,9 @@ public class TBoardController {
 		}else{
 			//이름이 없기 때문에 session에서 id를 가져와야 한다.
 			String create_user = (String)session.getAttribute("userid");
+			String nickname = (String)session.getAttribute("nickname");
 			dto.setCreate_user(create_user);
+			dto.setNickname(nickname);
 		}
 		//레코드 저장
 		tboardService.insert(dto);
@@ -93,14 +92,9 @@ public class TBoardController {
 			// Files were attached
 			TBAttachDTO f_dto = new TBAttachDTO();
 			for (MultipartFile file : files) {
-
 				tboardService.fileAttach(f_dto);
-
 			}
-		} else {
-
 		}
-
 		//게시물 목록 갱신처리
 		return "redirect:/tboard/list.do";
 	}
@@ -157,4 +151,7 @@ public class TBoardController {
 		tboardService.delete(tb_num);
 		return "redirect:/tboard/list.do";
 	}
+
+
+
 }
