@@ -6,6 +6,8 @@ public class reviewSerchDTO {
 	private String searchTitle;			// 제목 및 내용 검색
 	private String reviewDetailKey;		// regNum 키 값
 	private String createUser;			// 작성자 (userId)
+	private int start;                   // 쿼리 리스트 변수
+	private int end;                     // 쿼리 리스트 변수
 
 
 
@@ -33,5 +35,20 @@ public class reviewSerchDTO {
 		this.createUser = createUser;
 	}
 
+	public int getStart() {
+		return start;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public int getEnd() {
+		return end;
+	}
+
+	public void setEnd(int end) {
+		this.end = end;
+	}
 }
 

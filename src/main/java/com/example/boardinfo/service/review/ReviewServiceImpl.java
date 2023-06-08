@@ -31,6 +31,12 @@ public class ReviewServiceImpl implements ReviewService {
 		return list;
 	}
 
+	/*리뷰 목록 조회*/
+	@Override // 덮어쓰기 의미
+	public int reviewListCnt(reviewSerchDTO reviewserchDTO){
+		return reviewDAO.reviewListCnt(reviewserchDTO);
+	}
+
 	/*리뷰 입력*/
 	@Transactional
 	@Override

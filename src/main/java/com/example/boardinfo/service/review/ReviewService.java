@@ -15,6 +15,9 @@ public interface ReviewService {
 	/*리뷰 목록 조회*/
     List<ReviewDTO> reviewlist(reviewSerchDTO reviewserchDTO);
 
+	/*리뷰 목록 조회*/
+    int reviewListCnt(reviewSerchDTO reviewserchDTO);
+
 //    주는놈 메소드(받는놈);
 
 

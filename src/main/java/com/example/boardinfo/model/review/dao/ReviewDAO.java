@@ -12,6 +12,8 @@ public interface ReviewDAO {
 	/*리뷰 목록 조회*/
     List<ReviewDTO> reviewlist(reviewSerchDTO reviewserchDTO);
 
+    int reviewListCnt(reviewSerchDTO reviewserchDTO);
+
     /*조회수 증가*/
     void reviewViews(reviewSerchDTO reviewserchDTO);
 

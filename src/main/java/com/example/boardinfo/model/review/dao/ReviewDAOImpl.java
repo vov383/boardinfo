@@ -23,6 +23,14 @@ public class ReviewDAOImpl implements ReviewDAO {
         return sqlSession.selectList("review.reviewList", reviewserchDTO);
     }
 
+    /*리뷰 목록 조회*/
+    @Override
+    public int reviewListCnt(reviewSerchDTO reviewserchDTO) {
+        return sqlSession.selectOne("review.reviewListCnt", reviewserchDTO);
+    }
+
+
+
     /*리뷰 조회수 증가*/
     @Override
     public void reviewViews(reviewSerchDTO reviewserchDTO) {
