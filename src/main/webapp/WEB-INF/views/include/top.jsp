@@ -13,9 +13,8 @@
       <a href="${path}/" title="보드인포"><img src="${path}/images/boardinfo_logo.png" width="170px"></a>
     </div>
     <div id="header-right">
-
       <form name="gameSearch" id="gameSearch" method="get" action="${path}/game/searchAll.do">
-        <div>
+        <div >
           <input name="gameKeyword" id="gameKeyword" placeholder="보드게임 찾기" autocomplete="off">
           <input type="hidden">
           <img id="searchimg" src="${path}/images/search.png" onclick="searchAll()">
@@ -26,13 +25,18 @@
   	 <c:when test="${sessionScope.userid == null}">
     <!-- 로그인하지 않은 상태 -->
       <a href="${path}/member/member_login.do" title="로그인" class="sign" id="signIn">로그인</a>
-      <a href="${path}/member/member_join.do" title="회원가입" class="sign" id="signUp">회원가입</a>
+      <a href="${path}/member/member_join.do" title="회원가입" class="sign" id="signUp">회원가입</a> 
       </c:when>
    <c:otherwise>
     <!-- 로그인한 상태 -->
-    ${sessionScope.name}님이 로그인중입니다.
-    <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a> &nbsp;
-    <a href="${path}/member/logout.do">로그아웃</a> 
+    <div class="dropdown">
+          <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.name} 님<img src="${path}/images/dropdown.png" width="16px"></a></div>
+          <div class="dropdown-content">
+          	<a href="#">내활동</a>
+            <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
+          </div>
+        </div>
+        <a href="${path}/member/logout.do" class="sign">로그아웃</a>
    </c:otherwise>
   </c:choose>
     </div>
@@ -125,4 +129,43 @@ $(document).ready(function(){
 
 
 </script>
+<style>
 
+.dropdown .dropbtn:hover {
+  background-color: #eaeaea;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #eaeaea;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover button {
+  background-color: #eaeaea;
+}
+
+</style>
