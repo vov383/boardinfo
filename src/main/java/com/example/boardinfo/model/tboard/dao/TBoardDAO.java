@@ -27,4 +27,7 @@ public interface TBoardDAO {
 	void deleteFile(String fileName);
 
     void fileAttach(TBAttachDTO f_dto);
+
+    void insertWithAddress(TBoardDTO dto);
+
 }
