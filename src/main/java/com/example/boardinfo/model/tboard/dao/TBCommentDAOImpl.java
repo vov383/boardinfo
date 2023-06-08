@@ -48,6 +48,7 @@ public class TBCommentDAOImpl implements TBCommentDAO {
     @Override
     public int insertReply(TBCommentDTO re_dto) {
         //mybatis는 insert, update, delete문을 실행했을 경우 resultType이 없고 수정에 성공한 row의 갯수를 반환한다.
+        /*여기서 댓글 500에러 발생*/
         int result = sqlSession.insert("tbComment.insertReply", re_dto);
         return result;
     }
