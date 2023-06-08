@@ -57,9 +57,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	 </select>
 	 
 	 <update id="updateMember">
-	  update member
-	  set name=#{name},nickname=#{nickname},email=#{email},hp=#{hp}
-	  where userid=#{userid}
+	  <choose>
+        <!-- profile이 null인 경우 -->
+        <when test="profile == null">
+            update member 
+            set name=#{name},nickname=#{nickname},email=#{email},hp=#{hp}
+            where userid=#{userid}
+        </when>
+        <!-- profile이 값을 가지고 있는 경우 -->
+        <otherwise>
+            update member 
+            set profile=#{profile},name=#{name},nickname=#{nickname},email=#{email},hp=#{hp}
+            where userid=#{userid}
+        </otherwise>
+    </choose>
 	 </update>
 	 
 	 <update id="deleteMember" parameterType="String">

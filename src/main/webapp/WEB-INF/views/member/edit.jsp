@@ -117,11 +117,11 @@ $(function() {
 <body>
 
 <h2>회원 정보 수정</h2>
-<form name="form1" method="post">
+<form name="form1" method="post" enctype="multipart/form-data">
 <table border="1" style="width: 100%">
 <tr>
   <td>프로필</td>
-  <td><input value="${dto.profile}" name="profile"></td> 
+  <td><input name="profile_img" id="profile" type="file"></td> 
 </tr>
 <tr>
   <td>이름</td>
