@@ -36,11 +36,6 @@ public class DesignerDAOImpl implements DesignerDAO {
 	}
 	
 	@Override
-	public int designernum(String designer) {
-		return sqlSession.selectOne("designer.designer_num", designer);
-	}
-	
-	@Override
 	public void insert_designer_mapping(int dnum) {
 		sqlSession.insert("designer.insertmapping_dnum",dnum);
 	}
@@ -65,5 +60,10 @@ public class DesignerDAOImpl implements DesignerDAO {
 		map.put("dnum", dnum);
 		map.put("gnum",gnum);
 		sqlSession.insert("designer.insertmapping_update", map);
+	}
+
+	@Override
+	public List<String> viewDesigner(int gnum) {
+		return sqlSession.selectList("designer.viewDesigner", gnum);
 	}
 }

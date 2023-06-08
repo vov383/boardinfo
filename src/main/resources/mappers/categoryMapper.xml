@@ -9,12 +9,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="check" resultType="int">
 		select nvl(max(cnum),0) cnum
 		from category
-		where gamecategory=#{gamecategory}
+		where gamecategory=#{category}
 	</select>
 	
 	<insert id="insert">
 		insert into category (cnum, gamecategory, userid)
-		values (seq_category.nextval, #{gamecategory}, #{userid})
+		values (seq_category.nextval, #{category}, #{userid})
 	</insert>
 	
 	<insert id="insertmapping">
@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="category_num" resultType="int">
 		select cnum
 		from category
-		where gamecategory=#{gamecategory} 
+		where gamecategory=#{category}
 	</select>
 	
 	<insert id="insertmapping_cnum">
@@ -46,13 +46,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="updatecheck" resultType="int">
 		select count(*)
 		from game_category gc, category c
-		where gc.cnum = c.cnum and gc.gnum = #{gnum} and c.gamecategory = #{gamecategory}
+		where gc.cnum = c.cnum and gc.gnum = #{gnum} and c.gamecategory = #{category}
 	</select>
 
 	<insert id="insertmapping_update">
 		insert into game_category (gnum,cnum)
 		values (#{gnum},#{cnum})
 	</insert>
+
+	<select id="viewGamecategory" resultType="String">
+		select c.gamecategory
+		from category c, game_category gc
+		where c.cnum = gc.cnum and gc.gnum = #{gnum}
+	</select>
 	
 </mapper>
 
