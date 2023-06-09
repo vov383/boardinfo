@@ -11,9 +11,9 @@ public interface MechanicDAO {
 	int check_mechanic(String mechanic, int gnum);
 	void insert_mechanic(String mechanic, String userid);
 	void insert_mechanic_mapping();
-	int mechanicnum(String mechanic);
 	void insert_mechanic_mapping(int mnum);
     List<MechanicDTO> list();
     List<MechanicDTO> view(int gnum);
 	void insert_mechanic_mapping(int gnum, int mnum);
+    List<String> viewMechanic(int gnum);
 }

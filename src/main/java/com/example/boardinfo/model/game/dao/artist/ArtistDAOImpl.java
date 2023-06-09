@@ -38,11 +38,6 @@ public class ArtistDAOImpl implements ArtistDAO {
 	}
 	
 	@Override
-	public int artistnum(String artist) {
-		return sqlSession.selectOne("artist.artist_num", artist);
-	}
-	
-	@Override
 	public void insert_artist_mapping(int anum) {
 		sqlSession.insert("artist.insertmapping_anum",anum);
 	}
@@ -67,5 +62,9 @@ public class ArtistDAOImpl implements ArtistDAO {
 		map.put("anum", anum);
 		map.put("gnum",gnum);
 		sqlSession.insert("artist.insertmapping_update", map);
+	}
+
+	public List<String> viewArtist(int gnum){
+		return sqlSession.selectList("artist.viewArtist", gnum);
 	}
 }

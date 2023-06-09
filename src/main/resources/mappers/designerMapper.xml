@@ -56,6 +56,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into game_designer (gnum, dnum)
 		values (#{gnum},#{dnum})
 	</insert>
+
+	<select id="viewDesigner" resultType="String">
+		select d.designer
+		from designer d, game_designer gd
+		where d.dnum = gd.dnum and gd.gnum = #{gnum}
+	</select>
 	
 </mapper>
 

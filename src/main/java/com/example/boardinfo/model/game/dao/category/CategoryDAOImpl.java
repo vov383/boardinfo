@@ -37,11 +37,6 @@ public class CategoryDAOImpl implements CategoryDAO {
   }
 
   @Override
-  public int categorynum(String category) {
-    return sqlSession.selectOne("category.category_num", category);
-  }
-
-  @Override
   public void insert_category_mapping(int cnum) {
     sqlSession.insert("category.insertmapping_cnum", cnum);
   }
@@ -52,9 +47,9 @@ public class CategoryDAOImpl implements CategoryDAO {
 
   public List<CategoryDTO> view(int gnum) { return  sqlSession.selectList("category.view", gnum); }
 
-  public int check_category(String gamecategory, int gnum) {
+  public int check_category(String category, int gnum) {
     Map<String, Object> map = new HashMap<>();
-    map.put("gamecategory", gamecategory);
+    map.put("category", category);
     map.put("gnum",gnum);
     return sqlSession.selectOne("category.updatecheck", map);
   }
@@ -64,5 +59,9 @@ public class CategoryDAOImpl implements CategoryDAO {
     map.put("cnum", cnum);
     map.put("gnum",gnum);
     sqlSession.insert("category.insertmapping_update", map);
+  }
+
+  public List<String> viewGamecategory(int gnum){
+    return  sqlSession.selectList("category.viewGamecategory", gnum);
   }
 }

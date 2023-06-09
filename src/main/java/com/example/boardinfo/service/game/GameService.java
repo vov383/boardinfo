@@ -31,4 +31,5 @@ public interface GameService {
   GameDTO updateView(int gnum);
   void gameupdate(GameDTO dto);
   void deleteGame(int gnum, String userid);
+  Map<String, Object> parseInsert(int bggnum);
 }

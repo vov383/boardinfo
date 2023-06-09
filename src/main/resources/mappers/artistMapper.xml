@@ -56,6 +56,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into game_artist (gnum,anum)
 		values (#{gnum},#{anum})
 	</insert>
+
+	<select id="viewArtist" resultType="String">
+		select a.artist
+			from artist a, game_artist ga
+			where a.anum = ga.anum and ga.gnum = #{gnum}
+	</select>
 	
 </mapper>
 

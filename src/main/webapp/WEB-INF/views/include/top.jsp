@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 <div id="header">
 
@@ -13,9 +14,8 @@
       <a href="${path}/" title="보드인포"><img src="${path}/images/boardinfo_logo.png" width="170px"></a>
     </div>
     <div id="header-right">
-
       <form name="gameSearch" id="gameSearch" method="get" action="${path}/game/searchAll.do">
-        <div>
+        <div >
           <input name="gameKeyword" id="gameKeyword" placeholder="보드게임 찾기" autocomplete="off">
           <input type="hidden">
           <img id="searchimg" src="${path}/images/search.png" onclick="searchAll()">
@@ -26,13 +26,18 @@
   	 <c:when test="${sessionScope.userid == null}">
     <!-- 로그인하지 않은 상태 -->
       <a href="${path}/member/member_login.do" title="로그인" class="sign" id="signIn">로그인</a>
-      <a href="${path}/member/member_join.do" title="회원가입" class="sign" id="signUp">회원가입</a>
+      <a href="${path}/member/member_join.do" title="회원가입" class="sign" id="signUp">회원가입</a> 
       </c:when>
    <c:otherwise>
     <!-- 로그인한 상태 -->
-    ${sessionScope.name}님이 로그인중입니다.
-    <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a> &nbsp;
-    <a href="${path}/member/logout.do">로그아웃</a> 
+    <div class="dropdown">
+          <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.name} 님<img src="${path}/images/dropdown.png" width="16px"></a></div>
+          <div class="dropdown-content">
+          	<a href="#">내활동</a>
+            <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
+          </div>
+        </div>
+        <a href="${path}/member/logout.do" class="sign">로그아웃</a>
    </c:otherwise>
   </c:choose>
     </div>
@@ -42,10 +47,49 @@
   <div class="nav">
     <ul class="menu">
 
-      <li><a href="${path}/game/gamelist.do" class="toMenu" title="게임정보">게임정보<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="커뮤니티">커뮤니티<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="#" class="toMenu" title="오프모임">오프모임<img src="${path}/images/dropdown.png" width="34px"></a></li>
-      <li><a href="${path}/tboard/list.do" class="toMenu" title="중고장터">중고장터<img src="${path}/images/dropdown.png" width="34px"></a></li>
+      <li>
+        <div class="dropdown">
+          <a href="${path}/game/gamelist.do" class="toMenu" title="게임정보">게임정보<img src="${path}/images/dropdown.png" width="34px"></a>
+          <div class="dropdown-content">
+            <a href="#">게임순위</a>
+            <a href="#">카테고리</a>
+            <a href="#">디자이너</a>
+            <a href="#">출판사</a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="dropdown">
+          <a href="#" class="toMenu" title="커뮤니티">커뮤니티<img src="${path}/images/dropdown.png" width="34px"></a>
+          <div class="dropdown-content">
+            <a href="#">게임후기</a>
+            <a href="#">순위포럼</a>
+            <a href="#">자유게시판</a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="dropdown">
+          <a href="#" class="toMenu" title="오프모임">오프모임<img src="${path}/images/dropdown.png" width="34px"></a>
+          <div class="dropdown-content">
+            <a href="#">모임모집</a>
+            <a href="#">모임후기</a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="dropdown">
+          <a href="${path}/tboard/list.do" class="toMenu" title="중고장터">중고장터
+          <img src="${path}/images/dropdown.png" width="34px"></a>
+          <div class="dropdown-content">
+            <a href="${paht}/tboard/list.do">전체</a>
+            <a href="${paht}/tboard/list.do?select_category=s">판매</a>
+            <a href="${paht}/tboard/list.do?select_category=b">구매</a>
+            <a href="${paht}/tboard/list.do?select_category=n">나눔</a>
+            <a href="${paht}/tboard/list.do?select_category=f">완료</a>
+          </div>
+        </div>
+      </li>
     </ul>
   </div>
 </div>
@@ -121,8 +165,62 @@ $(document).ready(function(){
   });
 });
 
+// JavaScript to toggle dropdown
+document.addEventListener('click', function(event) {
+  var dropdown = event.target.closest('.dropdown');
+  if (dropdown) {
+    dropdown.querySelector('.dropdown-content').classList.toggle('show');
+  } else {
+    var dropdowns = document.getElementsByClassName('dropdown-content');
+    for (var i = 0; i < dropdowns.length; i++) {
+      var dropdownContent = dropdowns[i];
+      if (dropdownContent.classList.contains('show')) {
+        dropdownContent.classList.remove('show');
+      }
+    }
+  }
+});
 
 
 
 </script>
+<style>
 
+.dropdown .dropbtn:hover {
+  background-color: #eaeaea;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #eaeaea;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover button {
+  background-color: #eaeaea;
+}
+
+</style>

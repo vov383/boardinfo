@@ -39,11 +39,6 @@ public class MechanicDAOImpl implements MechanicDAO {
   }
 
   @Override
-  public int mechanicnum(String mechanic) {
-    return sqlSession.selectOne("mechanic.mechanic_num", mechanic);
-  }
-
-  @Override
   public void insert_mechanic_mapping(int mnum) {
     sqlSession.insert("mechanic.insertmapping_mnum", mnum);
 
@@ -69,4 +64,8 @@ public class MechanicDAOImpl implements MechanicDAO {
     sqlSession.insert("mechanic.insertmapping_update", map);
   }
 
+  @Override
+  public List<String> viewMechanic(int gnum) {
+    return sqlSession.selectList("mechanic.viewMechanic", gnum);
+  }
 }

@@ -58,21 +58,36 @@
 			<tr>
 
 			  	<td>게임 이름</td>
-				<td><input name="gametitle" id="gametitle" class="input_game" value="${dto.gametitle}"></td>
+				<td>
+					<input name="gametitle" id="gametitle" class="input_game" value="${dto.gametitle}" maxlength="100">
+					<div>
+						<label for="gametitle">콤마(,)를 제외한 게임명을 입력해주세요</label>
+					</div>
+				</td>
 
 			</tr>
 
 			<tr>
 
 				<td>게임 이름(영문)</td>
-				<td><input name="gametitle_eng" id="gametitle_eng" class="input_game" value="${dto.gametitle_eng}"></td>
+				<td>
+					<input name="gametitle_eng" id="gametitle_eng" class="input_game" value="${dto.gametitle_eng}" maxlength="100">
+					<div>
+						<label for="gametitle_eng">콤마(,)를 제외한 게임의 영문명을 입력해주세요</label>
+					</div>
+				</td>
 
 			</tr>
 
 			<tr>
 
 				<td>보드게임긱 아이디</td>
-				<td><input name="bggnum" id="bggnum" class="input_game" value="${dto.bggnum}"></td>
+				<td>
+					<input type="number" name="bggnum" id="bggnum" class="input_game" value="${dto.bggnum}" oninput='numberInput(this, 8)'>
+					<div>
+						<label for="bggnum">(선택)보드게임긱의 게임번호를 입력하세요</label>
+					</div>
+				</td>
 
 			</tr>
 
@@ -84,8 +99,13 @@
 				</td>
 				<td>
 					<div id="selectedDesigner"></div>
+
 					<input type="hidden" name="designer" id="designer" value="${dto.designer}">
 					<input id="inputDesigner" class="input_game" autocomplete="off">
+					<div>
+						<label for="inputDesigner">디자이너명을 입력하세요</label>
+					</div>
+
 					<div id="designerSuggestions"></div>
 				</td>
 
@@ -100,11 +120,13 @@
 				<td>
 				
 					<div id="selectedCategory"></div>
+
 					<input type="hidden" name="gamecategory" id="gamecategory" value="${dto.gamecategory}">
 					<input type="checkbox" id="toggleCategory"> 
 					<label for="toggleCategory" class="toggleSwitch"> 
 						<span class="toggleButton"></span>
 					</label>
+					<label for="toggleCategory">카테고리를 선택하세요</label>
 
 					<div id="divCategory">
 						
@@ -159,8 +181,13 @@
 				</td>
 				<td>
 					<div id="selectedArtist"></div>
+
 					<input type="hidden" name="artist" id="artist" value="${dto.artist}">
 					<input id="inputArtist" class="input_game" autocomplete="off">
+					<div>
+						<label for="inputArtist">아티스트명을 입력하세요</label>
+					</div>
+
 					<div id="artistSuggestions"></div>
 				</td>
 
@@ -180,6 +207,7 @@
 					<label for="toggleMechanic" class="toggleSwitch"> 
 					 <span class="toggleButton"></span>
 					</label>
+					<label for="toggleMechanic">게임 메커니즘을 선택하세요</label>
 
 					<div id="divMechanic">
 						
@@ -233,8 +261,13 @@
 				</td>
 				<td>
 					<div id="selectedPublisher"></div>
+
 					<input type="hidden" name="publisher" id="publisher" value="${dto.publisher}">
 					<input id="inputPublisher" class="input_game" autocomplete="off">
+					<div>
+						<label for="inputPublisher">제작사명을 입력하세요</label>
+					</div>
+
 					<div id="publisherSuggestions"></div>
 				</td>
 
@@ -243,35 +276,58 @@
 			<tr>
 
 				<td>플레이 인원</td>
-				<td><input name="players" id="players" class="input_game" value="${dto.players}"></td>
+				<td>
+					<input name="players" id="players" class="input_game" value="${dto.players}" maxlength="20">
+					<div>
+						<label for="players">게임의 권장 플레이 인원을 입력하세요</label>
+					</div>
+				</td>
 
 			</tr>
 
 			<tr>
 
 				<td>플레이 시간</td>
-				<td><input name="playtime" id="playtime" class="input_game" value="${dto.playtime}"></td>
+				<td>
+					<input name="playtime" id="playtime" class="input_game" value="${dto.playtime}" maxlength="20">
+					<div>
+						<label for="playtime">게임의 플레이 시간을 입력하세요</label>
+					</div>
+				</td>
 
 			</tr>
 
 			<tr>
 
 				<td>사용연령</td>
-				<td><input name="ages" id="ages" class="input_game" value="${dto.ages}"></td>
+				<td><input name="ages" id="ages" class="input_game" value="${dto.ages}" maxlength="20">
+					<div>
+						<label for="ages">게임의 사용 연령을 입력하세요</label>
+					</div>
+				</td>
 
 			</tr>
 
 			<tr>
 
 				<td>발매년도</td>
-				<td><input name="release_year" id="release_year" class="input_game" value="${dto.release_year}"></td>
+				<td><input type="number" name="release_year" id="release_year" class="input_game" value="${dto.release_year}" oninput='numberInput(this, 4)'>
+					<div>
+						<label for="release_year">게임의 발매년도를 입력하세요</label>
+					</div>
+				</td>
 
 			</tr>
 
 			<tr>
 
 				<td>사용언어</td>
-				<td><input name="language" id="language" class="input_game" value="${dto.language}"></td>
+				<td>
+					<input name="language" id="language" class="input_game" value="${dto.language}" maxlength="20">
+					<div>
+						<label for="language">게임의 사용 언어를 입력하세요</label>
+					</div>
+				</td>
 
 			</tr>
 
@@ -280,8 +336,13 @@
 				<td>확장게임</td>
 				<td>
 					<div id="selectedEx"></div>
+
 					<input type="hidden" name="expansion" id="expansion" value="${dto.expansion}">
 					<input id="inputEx" class="input_game" autocomplete="off">
+					<div>
+						<label for="inputEx">게임의 원본 게임명을 입력하세요</label>
+					</div>
+
 					<div id="exSuggestions"></div>
 				</td>
 
@@ -292,8 +353,13 @@
 				<td>재구현게임</td>
 				<td>
 					<div id="selectedRe"></div>
+
 					<input type="hidden" name="reimplement" id="reimplement" value="${dto.reimplement}">
 					<input id="inputRe" class="input_game" autocomplete="off">
+					<div>
+						<label for="inputRe">게임의 원본 게임명을 입력하세요</label>
+					</div>
+
 					<div id="reSuggestions"></div>
 				</td>
 
@@ -327,14 +393,126 @@
 
 
 <script type="text/javascript">
+	//type=number 인 input 태그의 길이제한 메서드
+	function numberInput(num, maxlength){
+		if(num.value.length > maxlength)  {
+			num.value
+					= num.value.substr(0, maxlength);
+		}
+	}
 
-	$(document).ready(function() {
-		
+	$(document).ready(function () {
 		//게임 수정 버튼클릭
 		$("#btnGameUpdate").click(function() {
 			//null값확인, 자료형확인필요함 -> 정규식응용
+
+			//gametitle 체크
+			var gametitle = $("#gametitle").val();
+			if(gametitle==""){
+				alert("게임제목을 입력하세요.");
+				$("#gametitle").focus();
+				return;
+			}
+			//gametitle 정규식
+			var exp_gametitle = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"\s]{1,}$/;
+
+			if(!exp_gametitle.test(gametitle)){
+				alert("잘못 입력했습니다.");
+				$("#gametitle").focus();
+				return;
+			}
+
+			//gametitle_eng 체크
+			var gametitle_eng = $("#gametitle_eng").val();
+			if(gametitle_eng==""){
+				alert("게임제목(영문)을 입력하세요.");
+				$("#gametitle_eng").focus();
+				return;
+			}
+			//gametitle_eng 정규식
+			var exp_gametitle_eng = /^[a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"\s]{1,}$/;
+
+			if(!exp_gametitle_eng.test(gametitle_eng)){
+				alert("잘못 입력했습니다.");
+				$("#gametitle_eng").focus();
+				return;
+			}
+
+			//players 체크
+			var players = $("#players").val();
+			if(players==""){
+				alert("게임인원을 입력하세요.");
+				$("#players").focus();
+				return;
+			}
+			//players 정규식
+			var exp_players = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"\s]{1,}$/;
+
+			if(!exp_players.test(players)){
+				alert("잘못 입력했습니다.");
+				$("#players").focus();
+				return;
+			}
+
+			//playtime 체크
+			var playtime = $("#playtime").val();
+			if(playtime==""){
+				alert("게임시간을 입력하세요.");
+				$("#playtime").focus();
+				return;
+			}
+			//playtime 정규식
+			var exp_playtime = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"\s]{1,}$/;
+
+			if(!exp_playtime.test(playtime)){
+				alert("잘못 입력했습니다.");
+				$("#playtime").focus();
+				return;
+			}
+
+			//ages 체크
+			var ages = $("#ages").val();
+			if(ages==""){
+				alert("적정연령을 입력하세요.");
+				$("#ages").focus();
+				return;
+			}
+			//ages 정규식
+			var exp_ages = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"\s]{1,}$/;
+
+			if(!exp_ages.test(ages)){
+				alert("잘못 입력했습니다.");
+				$("#ages").focus();
+				return;
+			}
+
+			//release_year 체크
+			var release_year = $("#release_year").val();
+			if(release_year==""){
+				alert("발매년도를 입력하세요.");
+				$("#release_year").focus();
+				return;
+			}
+
+			//language 체크
+			var language = $("#language").val();
+			if(language==""){
+				alert("사용언어를 입력하세요.");
+				$("#language").focus();
+				return;
+			}
+			//language 정규식
+			var exp_language = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"\s]{1,}$/;
+
+			if(!exp_language.test(ages)){
+				alert("잘못 입력했습니다.");
+				$("#language").focus();
+				return;
+			}
+
 			document.gameform.submit();
 		});
+
 		//게임 삭제 버튼 클릭
 		$("#btnGameDelete").click(function(){
 			if(confirm("해당 게임을 정말 삭제하시겠습니까?")){
@@ -342,6 +520,15 @@
 			}else
 				return;
 		});
+	});
+
+
+</script>
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+
 
 		//파일을 마우스로 드래그해서 업로드 영역에 올릴때 파일이 열리는 기본효과 막는 처리
 		$(".fileDrop").on("dragenter dragover", function(e) {
