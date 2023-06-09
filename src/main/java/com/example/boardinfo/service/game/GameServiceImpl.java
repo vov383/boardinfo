@@ -8,12 +8,9 @@ import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import com.example.boardinfo.controller.game.GameController;
 import com.example.boardinfo.model.game.dto.designer.DesignerDTO;
 import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
-import com.example.boardinfo.util.BggParser;
 import com.example.boardinfo.util.GameUtils;
 import com.example.boardinfo.util.Pager;
 import org.slf4j.Logger;
@@ -33,9 +30,6 @@ import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.artist.ArtistDTO;
 import com.example.boardinfo.model.game.dto.category.CategoryDTO;
 import com.example.boardinfo.model.game.dto.mechanic.MechanicDTO;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.servlet.ModelAndView;
 
 @Service
 public class GameServiceImpl implements GameService {
@@ -72,9 +66,7 @@ public class GameServiceImpl implements GameService {
 
     for(GameDTO dto : list){
       int bggnum = dto.getBggnum();
-      BggParser bggParser = new BggParser();
-      bggParser.setBgg_thumbnail(bggnum);
-      dto.setBgg_thumbnail(bggParser.getBgg_thumbnail());
+      dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
     }
 
     map.put("list",list);
@@ -258,9 +250,6 @@ public class GameServiceImpl implements GameService {
 
     int bggnum = dto.getBggnum();
 
-    BggParser bggParser = new BggParser();
-    bggParser.setBgg_thumbnail(bggnum);
-
     Map<String, Object> map = new HashMap<>();
     map.put("dto",dto);
     map.put("alist", alist);
@@ -269,7 +258,7 @@ public class GameServiceImpl implements GameService {
     map.put("mlist", mlist);
     map.put("plist", plist);
 
-    map.put("bgg_thumbnail", bggParser.getBgg_thumbnail());
+    map.put("bgg_thumbnail", GameUtils.setStr(bggnum,"thumbnail"));
 
     map.put("statisticMap", statisticMap);
 
@@ -307,9 +296,7 @@ public class GameServiceImpl implements GameService {
     for(GameDTO dto : list){
       if(dto.getGamephoto_url() == null){
         int bggnum = dto.getBggnum();
-        BggParser bggParser = new BggParser();
-        bggParser.setBgg_thumbnail(bggnum);
-        dto.setBgg_thumbnail(bggParser.getBgg_thumbnail());
+        dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
       }
 
     }
@@ -341,9 +328,7 @@ public class GameServiceImpl implements GameService {
 
     for(GameDTO dto : list){
       int bggnum = dto.getBggnum();
-      BggParser bggParser = new BggParser();
-      bggParser.setBgg_thumbnail(bggnum);
-      dto.setBgg_thumbnail(bggParser.getBgg_thumbnail());
+      dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
     }
 
     map.put("count", count);
@@ -546,11 +531,57 @@ logger.info("artist값이 잘 null로 되나 : " + artist);
     gameDao.deleteGame(gnum, userid);
   }
 
+
   @Override
   public Map<String, Object> parseInsert(int bggnum) {
     Map<String, Object> map = new HashMap<>();
 
+    //게임영문명
+    String gametitle_eng = GameUtils.setStr(bggnum,"name");
+    //플레이인원
+    String minplayers = GameUtils.setStr(bggnum,"minplayers");
+    String maxplayers = GameUtils.setStr(bggnum,"maxplayers");
+    String players = minplayers + " - " + maxplayers;
+    //플레이시간
+    String minplaytime = GameUtils.setStr(bggnum,"minplaytime");
+    String maxplaytime = GameUtils.setStr(bggnum,"maxplaytime");
+    String playtime = minplaytime + " - " + maxplaytime;
+    //사용연령
+    String ages = GameUtils.setStr(bggnum,"minage") + "세 이상";
+    //발매년도
+    int release_year = Integer.parseInt(GameUtils.setStr(bggnum,"yearpublished"));
 
+    //아트웍
+    List<String> alist = GameUtils.setList(bggnum,"boardgameartist");
+    String artist = GameUtils.listToStr(alist);
+    artist = GameUtils.removeLastChar(artist);
+    //카테고리
+    List<String> clist = GameUtils.setList(bggnum,"boardgamecategory");
+    String gamecategory = GameUtils.listToStr(clist);
+    gamecategory = GameUtils.removeLastChar(gamecategory);
+    //디자이너
+    List<String> dlist = GameUtils.setList(bggnum,"boardgamedesigner");
+    String designer = GameUtils.listToStr(dlist);
+    designer = GameUtils.removeLastChar(designer);
+    //메카니즘
+    List<String> mlist = GameUtils.setList(bggnum,"boardgamemechanic");
+    String mechanic = GameUtils.listToStr(mlist);
+    mechanic = GameUtils.removeLastChar(mechanic);
+    //퍼블리셔
+    List<String> plist = GameUtils.setList(bggnum,"boardgamepublisher");
+    String publisher = GameUtils.listToStr(plist);
+    publisher = GameUtils.removeLastChar(publisher);
+
+    map.put("gametitle_eng",gametitle_eng);
+    map.put("players",players);
+    map.put("playtime",playtime);
+    map.put("ages",ages);
+    map.put("release_year",release_year);
+    map.put("artist",artist);
+    map.put("gamecategory",gamecategory);
+    map.put("designer",designer);
+    map.put("mechanic",mechanic);
+    map.put("publisher",publisher);
 
     return map;
   }

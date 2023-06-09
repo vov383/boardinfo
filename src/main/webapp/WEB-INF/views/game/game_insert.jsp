@@ -71,7 +71,7 @@
 				<td>
 					<div style="float: left;">사진</div>
 					<%--파일을 업로드할 영역--%>
-					<div class="fileDrop" id="fileDrop"><p>Drop Images!!<br>사진업로드</p></div>
+					<div class="fileDrop" id="fileDrop"><p>Drop Images!!</p></div>
 				</td>
 				<td>
 					<%--파일을 출력할 영역--%>
@@ -386,7 +386,7 @@
 				<td>보드게임긱아이디</td>
 				<td>
 					<input type="number" id="bggnum" class="input_game" oninput='numberInput(this, 8)'>
-					<input type="button" id="btnParse" value="입력" onclick="parse()">
+					<input type="button" id="btnParse" value="입력">
 					<div>
 						<label for="bggnum">(선택)보드게임긱의 게임번호를 입력하세요</label>
 					</div>
@@ -425,22 +425,7 @@
 		}
 	}
 
-	//bbgnum 입력후 버튼 누르면 파싱해온 값 들어가는 메서드
-	function parse(){
-		var param = {"bggnum" : $("#bggnum").val()};
-		$.ajax({
-			url: "${path}/game/parseAjax",
-			data: param,
-			type: "post",
-			success: function(data){
-				//컨트롤러에서 가져올 값을 뿌려주자
-			},
-			error: function () {
-				console.log("에러..");
-				alert("해당 번호는 없는 번호입니다.");
-			}
-		});
-	}
+
 
 
 	$(document).ready(function() {
@@ -1145,6 +1130,94 @@
 			updateReInput();
 			console.log("인풋"+$("#reimplement").val());
 		});
+
+		$("#btnParse").click(function(){
+			parse();
+		});
+
+
+		//bbgnum 입력후 버튼 누르면 파싱해온 값 들어가는 메서드
+		function parse(){
+			var param = {"bggnum" : $("#bggnum").val()};
+			$.ajax({
+				url: "${path}/game/parseAjax",
+				data: param,
+				type: "post",
+				success: function(data){
+					var gametitle_eng = data.gametitle_eng;
+					$('#gametitle_eng').val(gametitle_eng);
+					var players = data.players
+					$('#players').val(players);
+					var playtime = data.playtime
+					$('#playtime').val(playtime);
+					var ages = data.ages;
+					$('#ages').val(ages);
+					var release_year = data.release_year;
+					$('#release_year').val(release_year);
+
+					//artist
+					var artistValue = data.artist;
+					if (artistValue) {
+						$("#artist").val(artistValue);
+						selectedArtists = [];
+						$("#selectedArtist").empty();
+						selectedArtists = artistValue.split(",");
+						selectedArtists.forEach(function(artist) {
+							$("#selectedArtist").append("<div class='selected cursor_pointer'>" + artist + "</div>");
+						});
+					}
+					//designer
+					var designerValue = data.designer;
+					if (designerValue) {
+						$("#designer").val(designerValue);
+						selectedDesigners = [];
+						$("#selectedDesigner").empty();
+						selectedDesigners = designerValue.split(",");
+						selectedDesigners.forEach(function(designer) {
+							$("#selectedDesigner").append("<div class='selected cursor_pointer'>" + designer + "</div>");
+						});
+					}
+					//publisher
+					var publisherValue = data.publisher;
+					if (publisherValue) {
+						$("#publisher").val(publisherValue);
+						selectedPublishers = [];
+						$("#selectedPublisher").empty();
+						selectedPublishers = publisherValue.split(",");
+						selectedPublishers.forEach(function(publisher) {
+							$("#selectedPublisher").append("<div class='selected cursor_pointer'>" + publisher + "</div>");
+						});
+					}
+					//category
+					var categoryValue = data.gamecategory;
+					if (categoryValue) {
+						$("#gamecategory").val(categoryValue);
+						selectedCategories = [];
+						$("#selectedCategory").empty();
+						selectedCategories = categoryValue.split(",");
+						selectedCategories.forEach(function(category) {
+							$("#selectedCategory").append("<div class='selected-value'>" + category + "</div>");
+						});
+					}
+					//mechanic
+					var mechanicValue = data.mechanic;
+					if (mechanicValue) {
+						$("#mechanic").val(mechanicValue);
+						selectedMechanics = [];
+						$("#selectedMechanic").empty();
+						selectedMechanics = mechanicValue.split(",");
+						selectedMechanics.forEach(function(mechanic) {
+							$("#selectedMechanic").append("<div class='selected-value'>" + mechanic + "</div>");
+						});
+					}
+
+				},
+				error: function () {
+					console.log("에러..");
+					alert("해당 번호는 없는 번호입니다.");
+				}
+			});
+		}
 
 	});
 </script>
