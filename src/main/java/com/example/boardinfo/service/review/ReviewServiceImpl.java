@@ -121,6 +121,26 @@ public class ReviewServiceImpl implements ReviewService {
 
 	}
 
+	/*리뷰 댓글 입력*/
+	@Transactional
+	@Override
+	public void reviewReplyUpdate(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
+		String userid = (String) session.getAttribute("userid");
+		replyCommentsDTO.setCreateUser(userid);
+		reviewDAO.reviewReplyUpdate(replyCommentsDTO);
+
+	}
+
+	/*리뷰 댓글 삭제*/
+	@Transactional
+	@Override
+	public void reviewReplyDel(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
+		String userid = (String) session.getAttribute("userid");
+		replyCommentsDTO.setCreateUser(userid);
+		reviewDAO.reviewReplyDel(replyCommentsDTO);
+
+	}
+
 	/*리뷰 댓글 출력*/
 	@Override // 덮어쓰기 의미
 	public List<ReplyCommentsDTO> reviewReplyOut(reviewSerchDTO reviewserchDTO){

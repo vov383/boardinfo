@@ -36,6 +36,12 @@ public interface ReviewService {
     /*리뷰 댓글 입력*/
     void reviewReply(ReplyCommentsDTO replyCommentsDTO, HttpSession session);
 
+    /*리뷰 댓글 수정*/
+    void reviewReplyUpdate(ReplyCommentsDTO replyCommentsDTO, HttpSession session);
+
+    /*리뷰 댓글 삭제*/
+    void reviewReplyDel(ReplyCommentsDTO replyCommentsDTO, HttpSession session);
+
     /*리뷰 댓글 출력*/
     List<ReplyCommentsDTO> reviewReplyOut(reviewSerchDTO reviewserchDTO);
 
