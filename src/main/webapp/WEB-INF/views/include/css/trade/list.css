@@ -150,3 +150,24 @@
     background-repeat: no-repeat;
     background-position: center;
 }
+
+/*페이지네이션*/
+.pagenation {
+    display: flex;
+    margin: 20px auto 0 auto;
+}
+
+#curPage {
+    border: 2px solid #1432B1;
+    color: #1432B1;
+    line-height: 31px;
+}
+.pageItem {
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    line-height: 35px;
+    text-align: center;
+    margin: 0 3px;
+    font-size: 1.2em;
+}
