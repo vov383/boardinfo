@@ -77,6 +77,18 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     }
 
+    /*리뷰 댓글 수정*/
+    @Override
+    public void reviewReplyUpdate(ReplyCommentsDTO replyCommentsDTO) {
+        sqlSession.update("review.reviewReplyUpdate", replyCommentsDTO);
+    }
+
+    /*리뷰 댓글 삭제*/
+    @Override
+    public void reviewReplyDel(ReplyCommentsDTO replyCommentsDTO) {
+        sqlSession.update("review.reviewReplyDel", replyCommentsDTO);
+    }
+
     /*리뷰 댓글 출력*/
     @Override
     public List<ReplyCommentsDTO> reviewReplyOut(reviewSerchDTO reviewserchDTO) {

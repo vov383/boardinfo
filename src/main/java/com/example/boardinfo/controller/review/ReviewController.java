@@ -85,6 +85,8 @@ public class ReviewController {
 			mav.setViewName("review/reviewDetail");
 			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 
+			mav.addObject("userid", userid);
+
 			/*댓글 출력*/
 			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
 		}
@@ -106,7 +108,15 @@ public class ReviewController {
 
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("review/reviewDetail");
+
+		String userid = (String) session.getAttribute("userid");
+		mav.addObject("userid", userid);
+
 		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+
+		/*댓글 출력*/
+		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+
 		return mav;
 	}
 
@@ -117,7 +127,7 @@ public class ReviewController {
 		/*댓글 입력*/
 		reviewservice.reviewReply(replyCommentsDTO, session);
 
-		/*댓글의 상단 리뷰 출력*/
+		/*댓글의 상단 리뷰 내용 출력*/
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("review/reviewDetail");
 		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
@@ -127,13 +137,16 @@ public class ReviewController {
 		/*댓글 출력*/
 		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
 
+		String userid = (String) session.getAttribute("userid");
+		mav.addObject("userid", userid);
+
 		return mav;
 	}
 
 
 	// 리뷰 입력 및 수정할 페이지
 	@RequestMapping("reviewInsert.do")
-	public ModelAndView insert(@ModelAttribute reviewSerchDTO reviewserchDTO){
+	public ModelAndView reviewInsert(@ModelAttribute reviewSerchDTO reviewserchDTO){
 		/*첫 입력*/
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("review/ReviewInsert");
@@ -145,6 +158,56 @@ public class ReviewController {
 		/*수정*/
 		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 		return mav;
+	}
+
+	// 댓글 수정할 페이지
+	@RequestMapping("reviewreplyedit.do")
+	public ModelAndView reviewreplyedit(@ModelAttribute ReplyCommentsDTO replycommentsDTO, HttpSession session){
+
+		/*댓글 수정*/
+		reviewservice.reviewReplyUpdate(replycommentsDTO, session);
+
+		/*댓글의 상단 리뷰 내용 출력*/
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("review/reviewDetail");
+
+		String userid = (String) session.getAttribute("userid");
+		mav.addObject("userid", userid);
+
+		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
+		reviewserchDTO.setReviewDetailKey(replycommentsDTO.getRegNum());
+		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+
+		/*댓글 출력*/
+		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+
+		return mav;
+
+	}
+
+	// 댓글 삭제
+	@RequestMapping("reviewreplydel.do")
+	public ModelAndView reviewreplydel(@ModelAttribute ReplyCommentsDTO replycommentsDTO, HttpSession session){
+
+		/*댓글 입력*/
+		reviewservice.reviewReplyDel(replycommentsDTO, session);
+
+		/*댓글의 상단 리뷰 내용 출력*/
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("review/reviewDetail");
+
+		String userid = (String) session.getAttribute("userid");
+		mav.addObject("userid", userid);
+
+		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
+		reviewserchDTO.setReviewDetailKey(replycommentsDTO.getRegNum());
+		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+
+		/*댓글 출력*/
+		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+
+		return mav;
+
 	}
 
 

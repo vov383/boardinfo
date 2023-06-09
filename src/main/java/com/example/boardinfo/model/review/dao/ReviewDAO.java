@@ -32,6 +32,12 @@ public interface ReviewDAO {
     /*리뷰 댓글 입력*/
     void reviewReply(ReplyCommentsDTO replyCommentsDTO);
 
+    /*리뷰 댓글 수정*/
+    void reviewReplyUpdate(ReplyCommentsDTO replyCommentsDTO);
+
+    /*리뷰 댓글 삭제*/
+    void reviewReplyDel(ReplyCommentsDTO replyCommentsDTO);
+
     /*리뷰 댓글 출력*/
     List<ReplyCommentsDTO> reviewReplyOut(reviewSerchDTO reviewserchDTO);
 
