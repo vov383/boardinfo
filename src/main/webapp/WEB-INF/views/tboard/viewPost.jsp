@@ -655,9 +655,10 @@
                 </div>
             </div>
             <div id="descriptionSub">
-                <div class="interestCount"><i class="fa-regular fa-thumbs-up"></i> 21</div>
-                <a href="#">&#x1f495&nbsp;</a>
-                ${dto.interestCount}
+                <div class="interestCount">
+                    <a href="#"><i class="fa-solid fa-heart"></i></a>
+                </div>
+
                 <div class="viewCount">
                     <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="eye"
                          class="svg-inline--fa fa-eye fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg"
@@ -668,7 +669,7 @@
                     ${dto.view_count}
                 </div>
 
-                댓글[<span id="countReplies"></span>]
+                <i class="fa-regular fa-comment-dots"></i>[<span id="countReplies"></span>]
                 </ul>
             </div>
         </section>
@@ -692,8 +693,8 @@
                             <div class="replyContent">
                                 <textarea name="content" class="replyContent" cols="30" rows="10"></textarea>
                             </div>
-                            <div class="submit"><a class="btnCommentInsert"><img
-                                    src="${path}/images/trade/insertReplyBtn.png" alt=""></a>
+                            <div class="submit">
+                                <button class="btnCommentInsert">댓글등록</button>
                             </div>
                         </div>
                     </form>
