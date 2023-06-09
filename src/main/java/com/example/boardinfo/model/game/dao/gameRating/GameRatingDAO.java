@@ -16,4 +16,7 @@ public interface GameRatingDAO {
     public List<RatingStatisticDTO> getRatingStatistic(int gnum);
     public List<RatingStatisticDTO> getWeightStatistic(int gnum);
     public Map<String, Integer> getPlayerStatistic(int gnum);
+    public List<GameRatingDTO> getTopRatings(int gnum, int number, String user_id);
+    public int likeIt(int gnum, String writer_id, String user_id);
+    public int unLikeIt(int gnum, String writer_id, String user_id);
 }

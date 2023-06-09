@@ -6,7 +6,9 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -83,6 +85,40 @@ public class GameRatingController {
     public JSONObject getPlayerJsonData(@RequestParam int gnum){
         return gameRatingService.getPlayerJsonData(gnum);
     }
+
+
+    @ResponseBody
+    @RequestMapping("getTopRatings.do")
+    public HashMap<String, List<GameRatingDTO>> getTopRatings(@RequestParam int gnum, HttpSession session){
+        int number = 3; //상위 몇건까지 출력할 것인지
+
+        String user_id = (String)session.getAttribute("userid");
+        List<GameRatingDTO> list = gameRatingService.getTopRatings(gnum, number, user_id);
+        HashMap<String, List<GameRatingDTO>> map = new HashMap<>();
+        map.put("list", list);
+        System.out.println("사이즈는 " + list.size());
+        return map;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("likeIt.do")
+    public int likeIt(@RequestParam int gnum, @RequestParam String writer_id, HttpSession session){
+        String user_id = (String)session.getAttribute("userid");
+        int num = gameRatingService.likeIt(gnum, writer_id, user_id);
+        return num;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("unLikeIt.do")
+    public int unLikeIt(@RequestParam int gnum, @RequestParam String writer_id, HttpSession session){
+        String user_id = (String)session.getAttribute("userid");
+        int num = gameRatingService.unLikeIt(gnum, writer_id, user_id);
+        return num;
+    }
+
+
 
 
 

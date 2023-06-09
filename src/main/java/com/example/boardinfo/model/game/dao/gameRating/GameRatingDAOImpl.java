@@ -87,7 +87,7 @@ public class GameRatingDAOImpl implements GameRatingDAO  {
 				Map<String, Object> map = new HashMap<>();
 				map.put("gnum", gnum);
 				map.put("user_id", user_id);
-				float userRating = session.selectOne("gameRating.getUserRatingPoint", map);
+				Float userRating = session.selectOne("gameRating.getUserRatingPoint", map);
 				statisticMap.put("userRating", userRating);
 			}
 
@@ -119,5 +119,32 @@ public class GameRatingDAOImpl implements GameRatingDAO  {
 	@Override
 	public Map<String, Integer> getPlayerStatistic(int gnum) {
 		return session.selectOne("gameRating.getOptimumPlayers", gnum);
+	}
+
+	@Override
+	public List<GameRatingDTO> getTopRatings(int gnum, int number, String user_id) {
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("gnum", gnum);
+		map.put("number", number);
+		map.put("user_id", user_id);
+		return session.selectList("gameRating.getTopRatings", map);
+	}
+
+	@Override
+	public int likeIt(int gnum, String writer_id, String user_id) {
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("gnum", gnum);
+		map.put("writer_id", writer_id);
+		map.put("user_id", user_id);
+		return session.insert("gameRating.likeIt", map);
+	}
+
+	@Override
+	public int unLikeIt(int gnum, String writer_id, String user_id) {
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("gnum", gnum);
+		map.put("writer_id", writer_id);
+		map.put("user_id", user_id);
+		return session.delete("gameRating.unLikeIt", map);
 	}
 }

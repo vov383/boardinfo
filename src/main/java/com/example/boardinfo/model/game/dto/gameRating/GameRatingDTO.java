@@ -1,5 +1,9 @@
 package com.example.boardinfo.model.game.dto.gameRating;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDateTime;
+
 public class GameRatingDTO {
     private int gnum;
     private String userid;
@@ -11,6 +15,12 @@ public class GameRatingDTO {
     private int participant4;
     private int participant5;
     private String rating_comment;
+    private int likeCount;
+    private int myLike;
+
+    private String create_date;
+    private String update_date;
+
 
     public int getGnum() {
         return gnum;
@@ -92,6 +102,39 @@ public class GameRatingDTO {
         this.rating_comment = rating_comment;
     }
 
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public int getMyLike() {
+        return myLike;
+    }
+
+    public void setMyLike(int myLike) {
+        this.myLike = myLike;
+    }
+
+
+    public String getCreate_date() {
+        return create_date;
+    }
+
+    public void setCreate_date(String create_date) {
+        this.create_date = create_date;
+    }
+
+    public String getUpdate_date() {
+        return update_date;
+    }
+
+    public void setUpdate_date(String update_date) {
+        this.update_date = update_date;
+    }
+
     @Override
     public String toString() {
         return "GameRatingDTO{" +
@@ -105,6 +148,10 @@ public class GameRatingDTO {
                 ", participant4=" + participant4 +
                 ", participant5=" + participant5 +
                 ", rating_comment='" + rating_comment + '\'' +
+                ", likeCount=" + likeCount +
+                ", myLike=" + myLike +
+                ", create_date=" + create_date +
+                ", update_date=" + update_date +
                 '}';
     }
 }

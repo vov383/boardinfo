@@ -3,12 +3,10 @@ package com.example.boardinfo.service.game;
 import com.example.boardinfo.model.game.dao.gameRating.GameRatingDAO;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.model.game.dto.gameRating.RatingStatisticDTO;
-import com.mongodb.util.JSON;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -222,7 +220,8 @@ public class GameRatingServiceImpl implements GameRatingService{
 
         for(int i=1; i<=5; i++){
             JSONObject name = new JSONObject();
-            name.put("v", i+"인");
+            if(i==5) name.put("v", i+"인 이상");
+            else name.put("v", i+"인");
 
             JSONObject best = new JSONObject();
             best.put("v", items.get("BEST"+i));
@@ -244,5 +243,20 @@ public class GameRatingServiceImpl implements GameRatingService{
         data.put("rows", body);
 
         return data;
+    }
+
+    @Override
+    public List<GameRatingDTO> getTopRatings(int gnum, int number, String user_id) {
+        return gameRatingDAO.getTopRatings(gnum, number, user_id);
+    }
+
+    @Override
+    public int likeIt(int gnum, String writer_id, String user_id) {
+        return gameRatingDAO.likeIt(gnum, writer_id, user_id);
+    }
+
+    @Override
+    public int unLikeIt(int gnum, String writer_id, String user_id) {
+        return gameRatingDAO.unLikeIt(gnum, writer_id, user_id);
     }
 }

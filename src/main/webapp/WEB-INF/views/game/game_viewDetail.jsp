@@ -162,7 +162,7 @@
 
 
             .detailDiv{
-                padding: 20px;
+                padding: 30px 20px;
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
@@ -292,7 +292,7 @@
             }
 
             #topReviewList{
-                margin-top: 10px;
+                margin-top: 12px;
                 width: 100%;
                 display: flex;
                 flex-direction: column;
@@ -307,7 +307,7 @@
                 text-align: left;
                 display: flex;
                 align-items: center;
-                margin-top: 15px;
+                margin-top: 12px;
             }
 
             .topReview > span:first-of-type{
@@ -315,13 +315,71 @@
             }
 
             .topReview > div:last-of-type{
-                padding: 20px;
+                padding: 20px 20px 16px 20px;
                 border: 1px solid #D9D9D9;
                 flex-grow: 1;
             }
 
+            .reviewStar{
+                position: relative;
+            }
 
+            .reviewStar > span{
+                position: absolute;
+                left: 32px;
+                top: 34px;
+                z-index: 1;
+                font-size: 18px;
+                font-weight: bold;
+            }
 
+            .reviewStar img{
+                -webkit-user-drag: none;
+            }
+
+            .topReview > div:last-of-type > div{
+                margin-bottom: 5px;
+            }
+
+            .topReview > div:last-of-type > div:first-of-type{
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .topReview > div:last-of-type > div:last-of-type{
+                margin-bottom: 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .reviewDetail > span{
+                font-size: 14px;
+                padding: 0 10px;
+                border-right: 1px solid black;
+            }
+
+            .reviewDetail > span:first-of-type{
+                padding-left: 0;
+            }
+
+            .reviewDetail > span:last-of-type{
+                border-right: none;
+            }
+
+            .likeItDiv {
+                display: flex;
+                align-content: center;
+                padding: 4px 20px;
+                border: 1px solid black;
+                border-radius: 30px;
+                cursor: pointer;
+            }
+
+            .likeItDiv > img{
+                -webkit-user-drag: none;
+                margin-right: 5px;
+            }
 
 
             /*모달*/
@@ -758,38 +816,6 @@
 
             <div id="topReviewList">
                 <span>더보기</span>
-                <div class="topReview">
-                    <span>
-                      <img src="${path}/images/game/yellow_star.png" width="80px" height="75px" style="vertical-align: middle;">
-                    </span>
-                    <div>
-                        <div>딸기우유 | 2023-05-02</div>
-                        <div>꿀잼.. 같이 할 사람이 더 많았으면 좋겠다</div>
-                        <div>난이도 3.0 | 베스트인원 1인 | 추천인원 2인 3인</div>
-                    </div>
-                </div>
-                <div class="topReview">
-                    <span>
-                      <img src="${path}/images/game/yellow_star.png" width="80px" height="75px" style="vertical-align: middle;">
-                    </span>
-                    <div>
-                        <div>딸기우유 | 2023-05-02</div>
-                        <div>꿀잼.. 같이 할 사람이 더 많았으면 좋겠다</div>
-                        <div>난이도 3.0 | 베스트인원 1인 | 추천인원 2인 3인</div>
-                    </div>
-                </div>
-                <div class="topReview">
-                    <span>
-                      <img src="${path}/images/game/yellow_star.png" width="80px" height="75px" style="vertical-align: middle;">
-                    </span>
-                    <div>
-                        <div>딸기우유 | 2023-05-02</div>
-                        <div>꿀잼.. 같이 할 사람이 더 많았으면 좋겠다</div>
-                        <div>난이도 3.0 | 베스트인원 1인 | 추천인원 2인 3인</div>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
 
@@ -972,6 +998,108 @@
 
 
        $(function() {
+
+
+           /*게임리뷰 좋아요 상위 3개 불러오기*/
+           $.ajax({
+               type: "get",
+               url : "${path}/gameRating/getTopRatings.do",
+               data : {
+                   "gnum": "${map.dto.gnum}"
+               },
+               success: function(result){
+
+                   list = result.list;
+
+                   for(let i=0; i<list.length; i++){
+                       let rating_comment = "";
+                       if(list[i].rating_comment != null)
+                           rating_comment = "<div>" + list[i].rating_comment + "</div>";
+
+                       let rating = list[i].rating + "";
+                       if(rating.indexOf('.') == -1){
+                        rating += '.0';
+                       }
+
+
+                       let weightSpan = "";
+                       let weight = list[i].weight + "";
+                       if(weight != '') {
+                           if(weight.indexOf('.') == -1){
+                               weight += '.0';
+                           }
+                           weightSpan = "<span>난이도 " + weight + "</span>";
+                       }
+
+                       let bestSpan = "";
+                       let goodSpan = "";
+                       let badSpan = "";
+
+                       let bestPeople = [];
+                       let goodPeople = [];
+                       let badPeople = [];
+
+                       let nums = [list[i].participant1, list[i].participant2, list[i].participant3,
+                           list[i].participant4, list[i].participant5];
+
+                       for(let i=0; i<4; i++){
+                           if(nums[i] == 1) bestPeople.push(i+1);
+                           else if(nums[i] == 2) goodPeople.push(i+1);
+                           else if(nums[i] == 3) badPeople.push(i+1);
+                       }
+
+                       if(nums[4] == 1) bestPeople.push("5↑");
+                       else if(nums[4] == 2) goodPeople.push("5↑");
+                       else if(nums[4] == 3) badPeople.push("5↑");
+
+
+                       if(bestPeople.length > 0)
+                           bestSpan = "<span>베스트인원 " + bestPeople.join(", ") + "</span>";
+
+                       if(goodPeople.length > 0)
+                           goodSpan = "<span>추천인원 " + goodPeople.join(", ") + "</span>";
+
+                       if(badPeople.length > 0)
+                           badSpan = "<span>비추천인원 " + badPeople.join(", ") + "</span>";
+
+
+                       let likeItDiv;
+
+                       if(list[i].myLike > 0)
+                           likeItDiv = "<div data-like='y' class='likeItDiv' onclick='likeIt(\"" + list[i].userid + "\")'>"
+                               +"<img src='${path}/images/game/pink_heart.png' width='20px'> <span class='likeCount'>" + list[i].likeCount + "</span></div>";
+
+                       else
+                           likeItDiv = "<div data-like='n' class='likeItDiv' onclick='likeIt(\"" + list[i].userid + "\")'>"
+                               +"<img src='${path}/images/game/empty_heart.png' width='20px'> <span class='likeCount'>" + list[i].likeCount + "</span></div>";
+
+
+                       let topReview = "<div class='topReview' data-writer='" + list[i].userid + "'> <span class='reviewStar'><span>" + rating + "</span>"
+                            +"<img src='${path}/images/game/yellow_star.png' width='90px' height='85px' style='vertical-align: middle'></span>"
+                            +"<div><div>"+ list[i].userid + "&nbsp;&nbsp;&nbsp;&nbsp;" + list[i].create_date + "</div>"
+                            + rating_comment
+                            +"<div><div class='reviewDetail'>" + weightSpan + bestSpan + goodSpan + badSpan + "</div>"
+                            +likeItDiv + "</div></div></div>";
+
+                       $("#topReviewList").append(topReview);
+                   }
+
+                   $(".likeItDiv").mouseover(function(){
+                       if($(this).data("like") == 'n'){
+                           $(this).find("img").prop("src", "${path}/images/game/pink_heart.png");
+                       }
+                   });
+
+                   $(".likeItDiv").mouseout(function(){
+                       if($(this).data("like") == 'n'){
+                           $(this).find("img").prop("src", "${path}/images/game/empty_heart.png");
+                       }
+                   });
+
+               }
+           });
+
+
 
            let msg = sessionStorage.getItem("msg");
            if(msg){
@@ -1165,7 +1293,7 @@
                                }
                            }
                            else{
-                               alert("에러가 발생했습니다.");
+                               alert("요청한 작업 처리 중 에러가 발생했습니다.");
                            }
                        }
                    });
@@ -1269,7 +1397,63 @@
             chart1.draw(data1, opt);
             chart2.draw(data2, opt);
             chart3.draw(data3, opt2);
+
         }
+
+
+       function likeIt(userid){
+           let review = $("div[data-writer=" + userid + "]");
+           let likeItDiv = review.find("div[class='likeItDiv']");
+           let type = likeItDiv.data("like");
+           likeCount = Number(review.find("span[class='likeCount']").text());
+
+           if("${sessionScope.userid}"==null || "${sessionScope.userid}"==''){
+               if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
+                   location.href= "${path}/member/member_login.do";
+               }
+               return;
+           }
+
+           if(type == 'n'){
+               $.ajax({
+                   type: "get",
+                   url : "${path}/gameRating/likeIt.do",
+                   data : {
+                       "gnum": "${map.dto.gnum}",
+                       "writer_id": userid
+                   },
+                   success: function(result){
+                       if(result > 0){
+                           review.find("span[class='likeCount']").text(likeCount+1);
+                           likeItDiv.data("like", "y");
+                           likeItDiv.find("img").prop("src", "${path}/images/game/pink_heart.png");
+                       }
+                       else alert("요청한 작업 처리 중 에러가 발생하였습니다.");
+                   }
+               });
+           }
+
+           else if(type == 'y'){
+               $.ajax({
+                   type: "get",
+                   url : "${path}/gameRating/unLikeIt.do",
+                   data : {
+                       "gnum": "${map.dto.gnum}",
+                       "writer_id": userid
+                   },
+                   success: function(result){
+                       if(result > 0){
+                           review.find("span[class='likeCount']").text(likeCount-1);
+                           likeItDiv.data("like", "n");
+                           likeItDiv.find("img").prop("src", "${path}/images/game/empty_heart.png");
+                       }
+                       else alert("요청한 작업 처리 중 에러가 발생하였습니다.");
+                   }
+               });
+           }
+
+
+       }
 
    </script>
 
@@ -1434,10 +1618,10 @@
                     	   location.reload();
                     	   
                        }
-                       else alert("에러가 발생했습니다.");
+                       else alert("요청한 작업 처리 중 에러가 발생했습니다.");
                    },
                    error: function(){
-                       alert("에러가 발생했습니다.");
+                       alert("요청한 작업 처리 중 에러가 발생했습니다.");
                    }
                });
 

@@ -82,6 +82,65 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 
+	<select id="getTopRatings" resultType="gameRatingDTO">
+		<choose>
+			<when test="user_id != null">
+				select *
+				from
+				(
+				select a.*, rownum rn
+				from
+				(
+				select userid, count(l.user_id) likeCount, r.gnum, rating, weight, participant1, participant2,
+				participant3, participant4, participant5, rating_comment, to_char(create_date, 'YYYY-MM-dd') create_date, count(l2.user_id) myLike
+				from game_rating r
+				left join game_rating_like l on r.userid = l.writer_id
+				left join (
+				select writer_id, user_id from game_rating_like
+				where  gnum=#{gnum} and user_id =#{user_id}
+				)l2 on r.userid = l2.writer_id
+				where r.gnum = #{gnum}
+				group by l.writer_id, userid, r.gnum, rating, weight, participant1, participant2, participant3,
+				participant4, participant5, rating_comment, create_date, l2.user_id, l2.writer_id
+				order by likeCount desc, create_date desc
+				)a
+				)
+				where rn <![CDATA[<]]>= #{number}
+			</when>
+			<otherwise>
+				select *
+				from
+				(
+				select a.*, rownum rn
+				from
+				(select userid, count(l.user_id) likeCount, r.gnum, rating, weight, participant1, participant2,
+				participant3, participant4, participant5, rating_comment, to_char(create_date, 'YYYY-MM-dd') create_date
+				from game_rating r
+				left join game_rating_like l on r.userid = l.writer_id
+				where r.gnum =#{gnum}
+				group by writer_id, userid, r.gnum, rating, weight, participant1, participant2, participant3,
+				participant4, participant5, rating_comment, create_date
+				order by likeCount desc, create_date desc
+				)a
+				)
+				where rn <![CDATA[<]]>= #{number}
+			</otherwise>
+		</choose>
+		</select>
+
+
+	<insert id="likeIt">
+		insert into game_rating_like
+			(gnum, writer_id, user_id) values(#{gnum}, #{writer_id}, #{user_id})
+	</insert>
+
+	<delete id="unLikeIt">
+		delete from game_rating_like
+		where gnum = #{gnum} and writer_id = #{writer_id} and user_id = #{user_id}
+	</delete>
+
+
+
 </mapper>
 
 
