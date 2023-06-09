@@ -31,6 +31,12 @@ public class ReviewServiceImpl implements ReviewService {
 		return list;
 	}
 
+	/*리뷰 목록 조회*/
+	@Override // 덮어쓰기 의미
+	public int reviewListCnt(reviewSerchDTO reviewserchDTO){
+		return reviewDAO.reviewListCnt(reviewserchDTO);
+	}
+
 	/*리뷰 입력*/
 	@Transactional
 	@Override
@@ -112,6 +118,26 @@ public class ReviewServiceImpl implements ReviewService {
 		String userid = (String) session.getAttribute("userid");
 		replyCommentsDTO.setCreateUser(userid);
 		reviewDAO.reviewReply(replyCommentsDTO);
+
+	}
+
+	/*리뷰 댓글 입력*/
+	@Transactional
+	@Override
+	public void reviewReplyUpdate(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
+		String userid = (String) session.getAttribute("userid");
+		replyCommentsDTO.setCreateUser(userid);
+		reviewDAO.reviewReplyUpdate(replyCommentsDTO);
+
+	}
+
+	/*리뷰 댓글 삭제*/
+	@Transactional
+	@Override
+	public void reviewReplyDel(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
+		String userid = (String) session.getAttribute("userid");
+		replyCommentsDTO.setCreateUser(userid);
+		reviewDAO.reviewReplyDel(replyCommentsDTO);
 
 	}
 

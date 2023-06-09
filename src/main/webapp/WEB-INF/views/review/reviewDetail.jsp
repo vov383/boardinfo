@@ -206,7 +206,7 @@
             location.href="${path}/review/reviewlist.do";
         }
 
-        // 수정, 삭제 화면(편집화면)으로 이동
+        // 수정 화면(편집화면)으로 이동
         function reviewEdit(regNum){
             $("#reviewDetailKey").val(regNum);
             /*alert($("#reviewDetailKey").val());*/
@@ -228,6 +228,50 @@
             document.formreviewreply.submit();
         }
 
+        // 댓글 수정
+        function btnReplyEdit(replyRegNum, regNum){
+            $("#replyRegNumEdit").val(replyRegNum);
+            $("#regNumEdit").val(regNum);
+            $("#commentDetailEdit").val($("#"+replyRegNum+regNum).val());
+
+            document.formreviewreplyedit.submit();
+
+/*
+            const commentText = document.getElementById("comment-text");
+            const editButton = document.getElementById("edit-button");
+            const saveButton = document.getElementById("save-button");
+            commentText.disabled = false;
+            commentText.focus();
+            editButton.style.display = "none";
+            saveButton.style.display = "block";
+*/
+
+
+            /*
+                        $("#reviewReplyKeyEdit").val();
+                        alert("$(\"#reviewReplyKeyEdit\").val(replyRegNum) : " + $("#reviewReplyKeyEdit").val())
+            */
+        }
+
+        // 댓글 수정 변환
+        function btnReplyEditMode(replyRegNum, regNum){
+            if ($("td[name=reply_show_"+replyRegNum+regNum+"]").attr("style") == "display: none") {
+                $("td[name=reply_edit_"+replyRegNum+regNum+"]").attr("style","display: none");
+                $("td[name=reply_show_"+replyRegNum+regNum+"]").attr("style","");
+            } else {
+                $("td[name=reply_show_"+replyRegNum+regNum+"]").attr("style","display: none");
+                $("td[name=reply_edit_"+replyRegNum+regNum+"]").attr("style","");
+            }
+        }
+
+        // 댓글 삭제
+        function btnReplyDel(replyRegNum, regNum) {
+            $("#replyRegNumDel").val(replyRegNum);
+            $("#regNumDel").val(regNum);
+
+            document.formreviewreplydel.submit();
+        }
+
         //좋아요 → $("폼아이디).val()
         function good(regNum){
             $("#reviewDetailGoodKey").val(regNum);
@@ -235,8 +279,6 @@
             /*alert("클릭 테스트");*/
             document.formReviewGood.submit();
         }
-
-
 
     </script>
 
@@ -261,6 +303,19 @@
     <input type="hidden" name="reviewDetailKey" id="reviewDetailGoodKey">
 </form>
 
+<%--댓글 수정--%>
+<form name="formreviewreplyedit" method="post" action="${path}/review/reviewreplyedit.do">
+    <input type="hidden" name="replyRegNum" id="replyRegNumEdit">
+    <input type="hidden" name="regNum" id="regNumEdit">
+    <input type="hidden" name="commentDetail" id="commentDetailEdit">
+</form>
+
+<%--댓글 삭제--%>
+<form name="formreviewreplydel" method="post" action="${path}/review/reviewreplydel.do">
+    <input type="hidden" name="replyRegNum" id="replyRegNumDel">
+    <input type="hidden" name="regNum" id="regNumDel">
+</form>
+
 <div id="contents">
     <div id="contentsHeader">
         <h2>커뮤니티</h2>
@@ -272,7 +327,7 @@
 
         <form name="reviewdetail" method="post" action="${path}/review/reviewdetail.do">
 
-            <%--
+<%--
                     <script>
                         console.log(<c:out value="${list}"></c:out>)
                         console.log(<c:out value="${vo.title}"></c:out>)
@@ -289,9 +344,14 @@
                 <input type="hidden" name="regNumHidden" value="${vo.regNum}">
 
                 <button type="button" onclick="btnList()">목록</button>
+                <c:if test="${userid eq vo.createUser}">
                 <button type="button" onclick ="reviewDel('${vo.regNum}')">삭제</button>
                 <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정</button>
-                <button type="button" onclick="good('${vo.regNum}')"> &#x1f495 </button> <%--좋아요--%>
+                </c:if>
+                <%--좋아요--%>
+                <c:if test="${userid ne vo.createUser}">
+                <button type="button" onclick="good('${vo.regNum}')"> &#x1f495 </button>
+                </c:if>
 
             <h1>${vo.title}</h1>
             <table>
@@ -326,28 +386,58 @@
             </c:forEach>
         </form>
 
-                <%--리뷰 댓글--%>
+        <%--댓글 보여주기--%>
+        <br><br>
+        <h1>Comment</h1>
+        <%--구분선--%>
+        <hr/>
+
         <c:forEach items="${commentList}" var="vo">
-            <p>
-                <textarea rows = "5" cols = "80">${vo.commentDetail}</textarea>
-                <input value="${vo.nickname}">
-            </p>
+
+        <table style="table-layout:fixed;">
+            <tr>
+                <td width="100"><b>${vo.nickname}</b></td>
+
+                <td>${vo.createDate}</td>
+
+                <c:if test="${userid eq vo.createUser}">
+                <td name="reply_show_${vo.replyRegNum}${vo.regNum}">
+                    <button type="button" onclick="btnReplyEditMode('${vo.replyRegNum}','${vo.regNum}')">수정</button>
+                    <button type="button" onclick="btnReplyDel('${vo.replyRegNum}','${vo.regNum}')">삭제</button>
+                </td>
+                <td name="reply_edit_${vo.replyRegNum}${vo.regNum}" style="display: none">
+                    <button type="button" onclick="btnReplyEditMode('${vo.replyRegNum}','${vo.regNum}')">취소</button>
+                    <button type="button" onclick="btnReplyEdit('${vo.replyRegNum}','${vo.regNum}')">저장</button>
+                </td>
+                </c:if>
+
+            </tr>
+            <tr>   <%--style="display: none"--%>
+                <td colspan="2" name="reply_show_${vo.replyRegNum}${vo.regNum}"><pre>${vo.commentDetail}</pre></td>
+                <td colspan="2" name="reply_edit_${vo.replyRegNum}${vo.regNum}" style="display: none"><textarea id="${vo.replyRegNum}${vo.regNum}">${vo.commentDetail}</textarea></td>
+            </tr>
+            <p></p>
+        </table>
+
+
 
         </c:forEach>
+
+
+        <br>
+
+        <%--댓글 입력--%>
         <form name="formreviewreply" method="post" action="${path}/review/reviewreplysave.do">
             <input type="hidden" name="regNum" id="reviewReplyKey">
 
-            <p>댓글작성</p>
+            <p>Comment 작성</p>
+                <%--구분선--%>
+                <hr/>
                 <p>
                     <textarea name = "commentDetail" id="reviewReplyInsert" rows = "5" cols = "80"></textarea>
                     <button type="button" onclick="btnReply()">댓글 저장</button>
                 </p>
         </form>
-
-
-
-
-
 
 
 

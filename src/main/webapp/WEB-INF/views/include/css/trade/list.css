@@ -1,0 +1,173 @@
+
+#contentsHeader {
+
+}
+.dot {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 100%;
+}
+#searchFormSection {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 30px 0;
+}
+.h2 {
+    font-size: 1.2em;
+    font-weight: bold;
+    flex:0.2;
+    align-items: center;
+    justify-content: flex-start;
+}
+.searchFormMain {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#searchForm {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    width: 440px;
+    height: 40px;
+}
+.search {
+    display: flex;
+}
+#searchForm select {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 20px;
+    font-size: 1em;
+    /*color: var(--default-anchor-color);*/
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: 0;
+    border-radius: 8px;
+    appearance: textfield;
+}
+#searchForm input {
+    box-sizing: border-box;
+    flex: 1;
+    height: 40px;
+    padding: 0 16px;
+    margin: 0 14px;
+    font-size: 1em;
+    background-color: #f0f0f0;
+    border: 0;
+    border-radius: 8px;
+}
+
+#searchForm button {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 20px;
+    margin: 0;
+    font-size: 1em;
+    /*color: var(--default-font-color);*/
+    /*background-color: var(--sercondary-background-color);*/
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.categories {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+    height: 32px;
+    margin-bottom: 10px;
+    overflow: auto;
+}
+
+.category {
+    font-size: .9em;
+    padding: 8px 10px;
+    white-space: nowrap;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    height: 100%;
+}
+
+.category a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-decoration: none;
+
+}
+
+.itemList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.itemCard {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(33.33% - 20px);
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #000;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-radius: 8px;
+}
+.imgCard-thumbnail {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.subInfo {
+    display: flex;
+    flex-direction: row;
+
+}
+.viewCount svg {
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+}
+.reCount {
+    color: #0f74a8;
+}
+.interestCount i {
+    margin-right: 4px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/*페이지네이션*/
+.pagenation {
+    display: flex;
+    margin: 20px auto 0 auto;
+}
+
+#curPage {
+    border: 2px solid #1432B1;
+    color: #1432B1;
+    line-height: 31px;
+}
+.pageItem {
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    line-height: 35px;
+    text-align: center;
+    margin: 0 3px;
+    font-size: 1.2em;
+}

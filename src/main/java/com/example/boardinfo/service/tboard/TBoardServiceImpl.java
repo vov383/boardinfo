@@ -36,7 +36,7 @@ public class TBoardServiceImpl implements TBoardService {
 		map.put("keyword", "%"+keyword+"%");
 
 		int count = tboardDao.countArticle(map);
-		Pager pager = new Pager(count, curPage, 10);
+		Pager pager = new Pager(12, curPage, 10);
 		int start = pager.getPageBegin();
 		int end = pager.getPageEnd();
 
@@ -44,6 +44,7 @@ public class TBoardServiceImpl implements TBoardService {
 		map.put("end", end);
 
 		List<TBoardDTO> list = tboardDao.list(map);
+		map.put("keyword", keyword);
 		map.put("list", list);
 		map.put("pager", pager);
 
@@ -52,7 +53,11 @@ public class TBoardServiceImpl implements TBoardService {
 
 	@Override
 	public void insert(TBoardDTO dto) {
-		tboardDao.insert(dto);
+		if(dto.getAddress1() == "" || dto.getAddress1().equals("")){tboardDao.insert(dto);
+		}else{
+			tboardDao.insertWithAddress(dto);
+		}
+
 	}
 
 	@Override
@@ -100,6 +105,8 @@ public class TBoardServiceImpl implements TBoardService {
 		tboardDao.deleteFile(fileName);
 	}
 
+
+
 	@Override
 	public void increaseRecnt(int tb_num) {
 		tboardDao.increaseRecnt(tb_num);
@@ -109,7 +116,6 @@ public class TBoardServiceImpl implements TBoardService {
 	public List<String> getAttach(int tb_num) {
 		return tboardDao.getAttach(tb_num);
 	}
-
 
 
 }

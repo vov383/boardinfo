@@ -12,12 +12,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="insert">
-		insert into mechanic
-		values (seq_mechanic.nextval, #{mechanic})
+		insert into mechanic (mnum, mechanic, userid)
+		values (seq_mechanic.nextval, #{mechanic}, #{userid})
 	</insert>
 	
 	<insert id="insertmapping">
-		insert into game_mechanic
+		insert into game_mechanic (gnum,mnum)
 		values (seq_game.currval,seq_mechanic.currval)
 	</insert>
 	
@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="insertmapping_mnum">
-		insert into game_mechanic
+		insert into game_mechanic (gnum,mnum)
 		values (seq_game.currval,#{mnum})
 	</insert>
 	
@@ -37,9 +37,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="view" resultType="mechanicDto">
-			select m.mnum, m.mechanic
-			from mechanic m, game_mechanic gm
-			where m.mnum = gm.mnum and gm.gnum = #{gnum}
+		select m.mnum, m.mechanic
+		from mechanic m, game_mechanic gm
+		where m.mnum = gm.mnum and gm.gnum = #{gnum}
 	</select>
 
 	<select id="updatecheck" resultType="int">
@@ -49,9 +49,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<insert id="insertmapping_update">
-		insert into game_mechanic
+		insert into game_mechanic (gnum,mnum)
 		values (#{gnum},#{mnum})
 	</insert>
+
+	<select id="viewMechanic" resultType="String">
+		select m.mechanic
+			from mechanic m, game_mechanic gm
+			where m.mnum = gm.mnum and gm.gnum = #{gnum}
+	</select>
 
 </mapper>
 

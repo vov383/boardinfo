@@ -13,17 +13,17 @@ public class TBoardDTO {
 	private int re_count;
 	private String del;
 	private String create_user;
+	private String nickname;
 	private Date create_date;
 	private String update_user;
 	private Date update_date;
-	private String meeting_place;
-	
-	public String getMeeting_place() {
-		return meeting_place;
-	}
-	public void setMeeting_place(String meeting_place) {
-		this.meeting_place = meeting_place;
-	}
+	private String address1;
+	private String address2;
+	private String address3;
+	private String place_name;
+	private double lat;
+	private double lng;
+	private int interestCount;
 	//getter, setter
 	public int getTb_num() {
 		return tb_num;
@@ -79,6 +79,15 @@ public class TBoardDTO {
 	public void setCreate_user(String create_user) {
 		this.create_user = create_user;
 	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
 	public Date getCreate_date() {
 		return create_date;
 	}
@@ -97,12 +106,87 @@ public class TBoardDTO {
 	public void setUpdate_date(Date update_date) {
 		this.update_date = update_date;
 	}
+
+	public String getAddress1() {
+		return address1;
+	}
+
+	public void setAddress1(String address1) {
+		this.address1 = address1;
+	}
+
+	public String getAddress2() {
+		return address2;
+	}
+
+	public void setAddress2(String address2) {
+		this.address2 = address2;
+	}
+
+	public String getAddress3() {
+		return address3;
+	}
+
+	public void setAddress3(String address3) {
+		this.address3 = address3;
+	}
+
+	public int getInterestCount() {
+		return interestCount;
+	}
+
+	public String getPlace_name() {
+		return place_name;
+	}
+
+	public void setPlace_name(String place_name) {
+		this.place_name = place_name;
+	}
+
+	public double getLat() {
+		return lat;
+	}
+
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLng() {
+		return lng;
+	}
+
+	public void setLng(double lng) {
+		this.lng = lng;
+	}
+
+	public void setInterestCount(int interestCount) {
+		this.interestCount = interestCount;
+	}
+
 	@Override
 	public String toString() {
-		return "TBoardDTO [tb_num=" + tb_num + ", category=" + category + ", title=" + title + ", price=" + price
-				+ ", description=" + description + ", view_count=" + view_count + ", re_count=" + re_count + ", del="
-				+ del + ", create_user=" + create_user + ", create_date=" + create_date + ", update_user=" + update_user
-				+ ", update_date=" + update_date + ", meeting_place=" + meeting_place + "]";
+		return "TBoardDTO{" +
+				"tb_num=" + tb_num +
+				", category='" + category + '\'' +
+				", title='" + title + '\'' +
+				", price=" + price +
+				", description='" + description + '\'' +
+				", view_count=" + view_count +
+				", re_count=" + re_count +
+				", del='" + del + '\'' +
+				", create_user='" + create_user + '\'' +
+				", nickName='" + nickname + '\'' +
+				", create_date=" + create_date +
+				", update_user='" + update_user + '\'' +
+				", update_date=" + update_date +
+				", address1='" + address1 + '\'' +
+				", address2='" + address2 + '\'' +
+				", address3='" + address3 + '\'' +
+				", place_name='" + place_name + '\'' +
+				", lat=" + lat +
+				", lng=" + lng +
+				", interestCount=" + interestCount +
+				'}';
 	}
-	
+
 }

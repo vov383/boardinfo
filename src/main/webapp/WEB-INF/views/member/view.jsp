@@ -32,7 +32,7 @@ $(function() {
 <table border="1" style="width: 100%">
 <tr>
   <td>프로필</td>
-  <td><input value="${dto.profile}" name="profile"></td> 
+  <td><img src="${path}/images/${dto.profile}" width="100px" height="100px"></td>
 </tr>
 <tr>
   <td>이름</td>

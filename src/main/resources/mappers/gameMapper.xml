@@ -9,13 +9,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="gameListCount" resultType="int">
 		select count(*)
 		from game
+		where del = 'n'
 	</select>
 
 	<select id="gameList" resultType="gameDto">
 		select *
 		from (select a.*, rownum rn
 
-				from (select g.gnum,g.bggnum, g.gametitle, g.gametitle_eng, g.viewcount, g.release_year, ga.fullname gamephoto_url
+				from (select g.gnum,g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year, ga.fullname gamephoto_url
 
 						from game g,
     		    			(select gnum, fullname
@@ -24,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     		    		        	) a
     		    			  where rnum = 1
     		    			) ga
-				 	  where g.gnum = ga.gnum(+)
+				 	  where g.gnum = ga.gnum(+) and g.del = 'n'
 				 	  order by gnum
 				 	 )a
 			 )
@@ -32,29 +33,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="gameInsert">
-		insert into game 
-			(gnum,gametitle,gametitle_eng,players,playtime,
-			 ages,language,gamephoto_url,release_year)
-		values 
-			(seq_game.nextval,#{gametitle},#{gametitle_eng},#{players},
-			 #{playtime},#{ages},#{language},'dd',#{release_year})
+			 insert into game
+			(gnum,bggnum,gametitle,gametitle_eng,players,playtime,
+			 ages,language,release_year,create_user)
+		values
+			(seq_game.nextval,#{bggnum},#{gametitle},#{gametitle_eng},#{players},
+			 #{playtime},#{ages},#{language},#{release_year},#{create_user})
 	</insert>
 	
 	<update id="increaseViewcnt">
-		update game set viewcount = viewcount+1
+		update game
+		set viewcount = viewcount+1, totalviewcount = totalviewcount+1
 		where gnum=#{gnum}
 	</update>
 	
 	<select id="view" resultType="gameDto">
-	 	select g.gnum, bggnum, gametitle, gametitle_eng, players,
-	 		   playtime, ages, language, release_year, create_date, viewcount, ga.fullname gamephoto_url
-		  from game g,
-        	   (select gnum, fullname
-                  from (select row_number() over(partition by gnum order by create_date desc) rnum, gnum, fullname
-                        from game_attach
-                       ) a
-                 where rnum = 1) ga
-         where g.gnum = ga.gnum(+) and g.gnum=#{gnum}
+
+         select g.gnum, bggnum, gametitle, gametitle_eng, players, playtime, ages, language,
+         	   release_year, g.create_date, totalviewcount, ga.fullname gamephoto_url
+		  from game g
+		  left join (
+        	   select gnum, fullname
+              from (select row_number() over(partition by gnum order by create_date desc) rnum, gnum, fullname
+                    from game_attach )
+             where rnum = 1 ) ga on g.gnum = ga.gnum
+      where g.gnum=#{gnum}
+
 	</select>
 
 	<select id="getAuto" resultType="gameDto">
@@ -65,13 +69,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                         from game_attach
                        ) a
                  where rnum = 1) ga
-		where g.gnum = ga.gnum(+) and gametitle like #{input}||'%'
+		where g.gnum = ga.gnum(+) and gametitle like #{input}||'%' and g.del = 'n'
 	</select>
 
 	<!--첨부파일 정보 저장-->
 	<insert id="addAttach">
-		insert into game_attach (fullname, gnum)
-		values (#{fullName}, seq_game.currval)
+		insert into game_attach (fullname, gnum, create_user)
+		values (#{fullName}, seq_game.currval, #{userid})
 	</insert>
 
 	<delete id="deleteFile">
@@ -89,6 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				from ${mappingTable} mapping, ${filter} filter
 			</otherwise>
 		</choose>
+		, (select gnum from game where del='n') g
 		<where>
 			<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
 				mapping.anum = filter.anum and filter.anum=#{num}
@@ -105,6 +110,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
 				mapping.pnum = filter.pnum and filter.pnum=#{num}
 			</if>
+			and mapping.gnum=g.gnum
 		</where>
 
 	</select>
@@ -116,65 +122,182 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<bind name="filterColumn" value="filter+'.'+filter"/>
 	<bind name="mappingTable" value="'game_'+filter"/>
 		select *
-		  from (select a.*, rownum rn
-				  from (
-				  select game.gnum, bggnum, gametitle, gametitle_eng, players,
-	 		    			   playtime, ages, language, release_year, bgg_game_score,
-	 		    			   bggrank, create_date, viewcount,  gamephoto_url, ${filterColumn}
-    	   				from (select g.gnum, bggnum, gametitle, gametitle_eng, players,
-	 		 						 playtime, ages, language, release_year, bgg_game_score,
-	 		 						 bggrank, create_date, viewcount, ga.fullname gamephoto_url
-    		   	   				from game g,
-                    				 (select gnum, fullname
-                       	   				from (select row_number() over(partition by gnum order by create_date desc) rnum,
-                       	   							 gnum, fullname
-                                   				from game_attach
-                                			 )
-                      	  			   where rnum = 1
-                        			 ) ga
-    		  	  			   where g.gnum = ga.gnum(+)
-    						 ) game,
-							 (select gnum, filter.${filter}
+
+		from   (
+				select a.*, rownum rn
+			    from   (
+					  	select game.gnum, bggnum, gametitle, gametitle_eng, players,
+					  		   playtime, ages, language, release_year, create_date, totalviewcount,
+					  		   gamephoto_url, ${filterColumn}
+					    from   (
+					  		    select g.gnum, bggnum, gametitle, gametitle_eng, players,
+									   playtime, ages, language, release_year, create_date, totalviewcount,
+									   ga.fullname gamephoto_url
+								from   game g,
+									   (select gnum, fullname
+										from   (
+												select row_number() over(partition by gnum order by create_date desc) rnum,
+													   gnum, fullname
+												from   game_attach
+												)
+										where rnum = 1
+										) ga
+								where g.gnum = ga.gnum(+) and g.del = 'n'
+								) game,
+								(select gnum, filter.${filter}
+
 						<choose>
 							<when test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
-								from game_category mapping, category filter
+								from    game_category mapping, category filter
 							</when>
 							<otherwise>
 								from ${mappingTable} mapping, ${filter} filter
 							</otherwise>
 						</choose>
-						<where>
-							<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
-								mapping.anum = filter.anum and filter.anum=#{num}
-							</if>
-							<if test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
-								mapping.cnum = filter.cnum and filter.cnum=#{num}
-							</if>
-							<if test="filter != null and 'designer'.equalsIgnoreCase(filter)">
-								mapping.dnum = filter.dnum and filter.dnum=#{num}
-							</if>
-							<if test="filter != null and 'mechanic'.equalsIgnoreCase(filter)">
-								mapping.mnum = filter.mnum and filter.mnum=#{num}
-							</if>
-							<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
-								mapping.pnum = filter.pnum and filter.pnum=#{num}
-							</if>
-						</where>
-							 ) ${filter}
-    	  		 		where game.gnum = ${filter}.gnum
-				 		order by viewcount desc, game.gnum
-				 		) a
-			  	)
-		  where rn between #{start} and #{end}
+							<where>
+								<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
+									 mapping.anum = filter.anum and filter.anum=#{num}
+								</if>
+								<if test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
+									 mapping.cnum = filter.cnum and filter.cnum=#{num}
+								</if>
+								<if test="filter != null and 'designer'.equalsIgnoreCase(filter)">
+									 mapping.dnum = filter.dnum and filter.dnum=#{num}
+								</if>
+								<if test="filter != null and 'mechanic'.equalsIgnoreCase(filter)">
+									 mapping.mnum = filter.mnum and filter.mnum=#{num}
+								</if>
+								<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
+									 mapping.pnum = filter.pnum and filter.pnum=#{num}
+								</if>
+							</where>
+								) ${filter}
+						where game.gnum = ${filter}.gnum
+						order by totalviewcount desc, game.gnum
+						) a
+				)
+		where rn between #{start} and #{end}
 	</select>
 
 	<update id="gameupdate">
 		update game
-		set gametitle=#{gametitle}, gametitle_eng=#{gametitle_eng}, players=#{players},
-			playtime=#{playtime}, ages=#{ages}, language=#{language},
-			bggnum=#{bggnum}, release_year=#{release_year}
+
+		set bggnum=#{bggnum}, gametitle=#{gametitle}, gametitle_eng=#{gametitle_eng}, players=#{players},
+			playtime=#{playtime}, ages=#{ages}, language=#{language}, release_year=#{release_year},
+			update_user=#{update_user}, update_date=sysdate
+
 		where gnum=#{gnum}
 	</update>
+
+	<insert id="expansion_insert">
+		insert into expansion (gnum, userid, exnum)
+		values (seq_game.currval, #{userid},
+			     (select gnum
+			      from   game
+			      where  gametitle=#{expansion})
+			    )
+	</insert>
+
+	<insert id="reimplement_insert">
+		insert into reimplement (gnum, userid, renum)
+		values (seq_game.currval, #{userid},
+					(select gnum
+					 from   game
+					 where  gametitle=#{reimplement})
+				)
+	</insert>
+
+	<insert id="expansion_update">
+		insert into expansion (gnum, userid, exnum)
+		values (#{gnum}, #{userid},
+			     (select gnum
+			      from   game
+			      where  gametitle=#{expansion})
+			    )
+	</insert>
+
+	<insert id="reimplement_update">
+		insert into reimplement (gnum, userid, renum)
+		values (#{gnum}, #{userid},
+					(select gnum
+					 from   game
+					 where  gametitle=#{reimplement})
+				)
+	</insert>
+
+	<select id="getExpansion" resultType="gameDto">
+		select g.gnum, bggnum, gametitle, gametitle_eng, players, playtime, ages, language,
+       		   release_year, g.create_date, totalviewcount, ga.fullname gamephoto_url
+		from   game g
+		left join (
+     		select gnum, fullname
+     		from   (select row_number() over(partition by gnum order by create_date desc) rnum, gnum, fullname
+             		from   game_attach )
+             		where  rnum = 1 ) ga
+		on     g.gnum = ga.gnum
+		right join (select gnum, exnum
+     				from   EXPANSION ) ex
+		on     g.gnum = ex.${strOn}
+		where  ex.${strWhere}= #{gnum}
+	</select>
+
+	<select id="getReimplement" resultType="gameDto">
+		select g.gnum, bggnum, gametitle, gametitle_eng, players, playtime, ages, language,
+       		   release_year, g.create_date, totalviewcount, ga.fullname gamephoto_url
+		from   game g
+		left join (
+     		select gnum, fullname
+     		from   (select row_number() over(partition by gnum order by create_date desc) rnum, gnum, fullname
+             		from   game_attach )
+             		where  rnum = 1 ) ga
+		on     g.gnum = ga.gnum
+		right join (select gnum, renum
+     				from   reimplement ) re
+		on     g.gnum = re.${strOn}
+		where  re.${strWhere}= #{gnum} and g.del = 'n'
+	</select>
+
+	<update id="delete">
+		update game
+		set del = 'y', update_date = sysdate, update_user = #{userid}
+		where gnum=#{gnum}
+	</update>
+
+	<select id="viewExpansion" resultType="String">
+		select gametitle
+		from (select gnum, gametitle
+			  from   game
+			  where  del='n'
+			  ) g, expansion e
+		where g.gnum = e.exnum and e.gnum = #{gnum}
+	</select>
+
+	<select id="viewReimplement" resultType="String">
+		select gametitle
+		from (select gnum, gametitle
+			  from   game
+			  where  del='n'
+			  ) g, reimplement r
+		where g.gnum = r.renum and r.gnum = #{gnum}
+	</select>
+
+	<select id="getExnum" resultType="int">
+		select  nvl(max(g.gnum),0)
+		from    expansion e,
+        		(select gnum,GAMETITLE
+         		 from   GAME
+         		 where  del = 'n' and GAMETITLE = #{expansion}) g
+		where   e.exnum = g.gnum and e.gnum = #{gnum}
+	</select>
+
+	<select id="getRenum" resultType="int">
+		select  nvl(max(g.gnum),0)
+		from    reimplement r,
+        		(select gnum,GAMETITLE
+         		 from   GAME
+         		 where  del = 'n' and GAMETITLE = #{expansion}) g
+		where   r.renum = g.gnum and r.gnum = #{gnum}
+	</select>
 	
 </mapper>
 

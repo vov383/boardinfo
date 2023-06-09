@@ -392,6 +392,8 @@
 
   <div id="contentsMain">
 
+
+
     <%--리뷰 수정 페이지--%>
     <form name="reviewInsertSave" method="get" action="${path}/review/reviewinsertsave.do">
 
@@ -411,8 +413,8 @@
         </p>
       <p>제목 : <input type="text" name="title" value="${vo.title}"></p>
       <p>게임ID(임시) : <input type="text" name="gnum" value="${vo.gnum}"></p>
-      <p>모임ID(임시) : <input type="text" name="gatheringId" value="${vo.gatheringId}"></p>
-      <p>작성자 : <input type="text" name="createUser" value="${vo.nickName}" /></p>
+      <%--<p>모임ID(임시) : <input type="text" name="gatheringId" value="${vo.gatheringId}"></p>--%>
+      <p>작성자 : <input type="text" name="createUser" value="${vo.nickName}"  readonly/></p>
       <%-- 체크 에디터 적용 테스트 --%>
       <p>리뷰작성<textarea name = "reviewDetail" id="reviewDetailID" rows = "5" cols = "80">${vo.reviewDetail}</textarea></p>
         <script>
@@ -457,14 +459,13 @@
         </p>
 --%>
 
-
-
-
-
-
-
         <%--<p>모임ID(임시) : <input type="text" name="gatheringId"></p>--%>
-        <%--<p>작성자ID(임시) : <input type="text" name="createUser"></p>--%>
+
+       <%--로그인 아이디 불러오기--%>
+        <c:forEach items="${list}" var="vo">
+        <p><input type="text" name="createUser" value="${vo.nickName}"></p>
+        </c:forEach>
+
         <%-- 체크 에디터 적용 테스트 --%>
         <p>리뷰작성<textarea name = "reviewDetail" id="reviewDetailID2" rows = "5" cols = "80"></textarea></p>
         <script>
@@ -475,11 +476,14 @@
             filebrowserUploadUrl : "${path}/imageUpload.do"
           });
         </script>
+
       </c:if>
     </form>
 
 
   </div>
+
+
 </div>
 <%--!!!F;O;O;T;E;R 첨부해주세요--%>
 <%@include file="../include/footer.jsp" %>

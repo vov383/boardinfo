@@ -13,12 +13,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="insert">
-		insert into designer
-		values (seq_designer.nextval, #{designer})
+		insert into designer (dnum, designer, userid)
+		values (seq_designer.nextval, #{designer}, #{userid})
 	</insert>
 	
 	<insert id="insertmapping">
-		insert into game_designer
+		insert into game_designer (gnum,dnum)
 		values (seq_game.currval,seq_designer.currval)
 	</insert>
 	
@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="insertmapping_dnum">
-		insert into game_designer
+		insert into game_designer (gnum, dnum)
 		values (seq_game.currval,#{dnum})
 	</insert>
 
@@ -53,9 +53,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<insert id="insertmapping_update">
-		insert into game_designer
+		insert into game_designer (gnum, dnum)
 		values (#{gnum},#{dnum})
 	</insert>
+
+	<select id="viewDesigner" resultType="String">
+		select d.designer
+		from designer d, game_designer gd
+		where d.dnum = gd.dnum and gd.gnum = #{gnum}
+	</select>
 	
 </mapper>
 

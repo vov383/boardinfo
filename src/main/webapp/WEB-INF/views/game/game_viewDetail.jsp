@@ -15,7 +15,9 @@
         <link rel="stylesheet" href="${path}/include/js/style_game.css">
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
+
         <style>
+
 
             #contentsMain{
                 border-top: 2px solid black;
@@ -78,6 +80,7 @@
                 flex-direction: column;
                 height: 260px;
                 justify-content: space-between;
+
                 text-align: left;
             }
 
@@ -567,6 +570,12 @@
                 border: 1px solid black;
                 cursor: pointer;
             }
+
+
+
+
+
+
         </style>
    </head>
 
@@ -588,6 +597,10 @@
 
 
 	<div align="center">
+        <form name="updateViewForm" method="post" action="${path}/game/updateView.do">
+            <input type="hidden" name="gnum" value="${map.dto.gnum}">
+        </form>
+        <div id="btnGameUpdate">수정</div>
 
            <div id="gameInfoUpper">
 
@@ -609,6 +622,7 @@
                </div>
 
            	<div id="upperRightSide">
+
                 <div>
                     <div id="titleArea"><h2>${map.dto.gametitle}</h2><span>(${map.dto.gametitle_eng})</span><span>${map.dto.release_year}</span></div>
                     <div>
@@ -740,6 +754,48 @@
                     </c:forEach>
                 </div>
             </div>
+
+
+            <div  class="game_detail_filter_div">
+                <div class="game_detail_filter">확장(원본)</div>
+                <div class="game_detail_filtered_list">
+                    <c:forEach var="item" items="${map.exmap.origin}">
+                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div  class="game_detail_filter_div">
+                <div class="game_detail_filter">확장</div>
+                <div class="game_detail_filtered_list">
+                    <c:forEach var="item" items="${map.exmap.expansion}">
+                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div  class="game_detail_filter_div">
+                <div class="game_detail_filter">재구현(원본)</div>
+                <div class="game_detail_filtered_list">
+                    <c:forEach var="item" items="${map.remap.origin}">
+                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
+                    </c:forEach>
+                </div>
+            </div>
+
+            <div  class="game_detail_filter_div">
+                <div class="game_detail_filter">재구현</div>
+                <div class="game_detail_filtered_list">
+                    <c:forEach var="item" items="${map.remap.expansion}">
+                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
+                    </c:forEach>
+                </div>
+            </div>
+
+        </div>
+
+        <hr style="clear: both;">
+
 
         </div>
 
@@ -1122,6 +1178,7 @@
 
 
        <%--캐러셀관련--%>
+
        $('.slide-1').on('click', function() {
            $('.slide-container').css('transform', 'translateX(0%)');
        });

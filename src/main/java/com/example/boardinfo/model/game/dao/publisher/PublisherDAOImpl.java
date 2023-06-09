@@ -23,20 +23,18 @@ public class PublisherDAOImpl implements PublisherDAO {
 	}
 	
 	@Override
-	public void insert_publisher(String publisher) {
-		sqlSession.insert("publisher.insert", publisher);
+	public void insert_publisher(String publisher, String userid) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("publisher",publisher);
+		map.put("userid",userid);
+		sqlSession.insert("publisher.insert", map);
 	}
 	
 	@Override
 	public void insert_publisher_mapping() {
 		sqlSession.insert("publisher.insertmapping");
 	}
-	
-	@Override
-	public int publishernum(String publisher) {
-		return sqlSession.selectOne("publisher.publisher_num", publisher);
-	}
-	
+
 	@Override
 	public void insert_publisher_mapping(int pnum) {
 		sqlSession.insert("publisher.insertmapping_pnum",pnum);
@@ -60,5 +58,10 @@ public class PublisherDAOImpl implements PublisherDAO {
 		map.put("pnum", pnum);
 		map.put("gnum",gnum);
 		sqlSession.insert("publisher.insertmapping_update", map);
+	}
+
+	@Override
+	public List<String> viewPublisher(int gnum) {
+		return sqlSession.selectList("publisher.viewPublisher", gnum);
 	}
 }

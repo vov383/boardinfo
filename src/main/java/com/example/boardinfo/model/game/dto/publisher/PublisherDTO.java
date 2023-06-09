@@ -4,12 +4,17 @@ public class PublisherDTO {
 
     private int pnum;
     private String publisher;
+    private String userid;
 
     public PublisherDTO() {}
 
-    public PublisherDTO(int pnum, String publisher) {
-        this.pnum = pnum;
-        this.publisher = publisher;
+    @Override
+    public String toString() {
+        return "PublisherDTO{" +
+                "pnum=" + pnum +
+                ", publisher='" + publisher + '\'' +
+                ", userid='" + userid + '\'' +
+                '}';
     }
 
     public int getPnum() {
@@ -28,11 +33,17 @@ public class PublisherDTO {
         this.publisher = publisher;
     }
 
-    @Override
-    public String toString() {
-        return "PublisherDTO{" +
-                "pnum=" + pnum +
-                ", publisher='" + publisher + '\'' +
-                '}';
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public PublisherDTO(int pnum, String publisher, String userid) {
+        this.pnum = pnum;
+        this.publisher = publisher;
+        this.userid = userid;
     }
 }

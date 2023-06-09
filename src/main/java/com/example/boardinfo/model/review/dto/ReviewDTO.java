@@ -1,11 +1,12 @@
 package com.example.boardinfo.model.review.dto;
 
-public class ReviewDTO {
+public class ReviewDTO extends PageDTO {
 
 	/*리뷰 목록 조회시 사용*/
 	private String regNum;			// 리뷰 테이블 PK
 	private String category;		// 카테고리 : 게임, 모임
 	private String nickName;		// 회원 닉네임
+	private String userid;			// 회원 id
 	private String views;			// 조회수
 	private String gnum;			// 게임 테이블 PK
 	private String gametitle;		// 게임 타이틀
@@ -47,6 +48,14 @@ public class ReviewDTO {
 
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
+	}
+
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
 
 	public String getViews() {
@@ -121,14 +130,6 @@ public class ReviewDTO {
 		this.reviewDetail = reviewDetail;
 	}
 
-	public String getGood() {
-		return good;
-	}
-
-	public void setGood(String good) {
-		this.good = good;
-	}
-
 	public String getDel() {
 		return del;
 	}
@@ -183,5 +184,13 @@ public class ReviewDTO {
 
 	public void setReviewpk(String reviewpk) {
 		this.reviewpk = reviewpk;
+	}
+
+	public String getGood() {
+		return good;
+	}
+
+	public void setGood(String good) {
+		this.good = good;
 	}
 }

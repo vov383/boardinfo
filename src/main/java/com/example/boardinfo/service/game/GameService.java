@@ -30,5 +30,6 @@ public interface GameService {
   Map<String, Object> filteredGamelist(String filter,int num, int curPage);
   GameDTO updateView(int gnum);
   void gameupdate(GameDTO dto);
-
+  void deleteGame(int gnum, String userid);
+  Map<String, Object> parseInsert(int bggnum);
 }

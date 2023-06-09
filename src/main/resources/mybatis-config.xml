@@ -4,6 +4,12 @@
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 
+	<!--sql 변수값에 null값 허용-->
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+
+
 	<typeAliases>
 
 		<typeAlias type="com.example.boardinfo.model.game.dto.GameDTO" alias="gameDto"/>

@@ -23,18 +23,16 @@ public class DesignerDAOImpl implements DesignerDAO {
 	}
 	
 	@Override
-	public void insert_designer(String designer) {
-		sqlSession.insert("designer.insert", designer);
+	public void insert_designer(String designer, String userid) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("designer",designer);
+		map.put("userid",userid);
+		sqlSession.insert("designer.insert", map);
 	}
 	
 	@Override
 	public void insert_designer_mapping() {
 		sqlSession.insert("designer.insertmapping");
-	}
-	
-	@Override
-	public int designernum(String designer) {
-		return sqlSession.selectOne("designer.designer_num", designer);
 	}
 	
 	@Override
@@ -62,5 +60,10 @@ public class DesignerDAOImpl implements DesignerDAO {
 		map.put("dnum", dnum);
 		map.put("gnum",gnum);
 		sqlSession.insert("designer.insertmapping_update", map);
+	}
+
+	@Override
+	public List<String> viewDesigner(int gnum) {
+		return sqlSession.selectList("designer.viewDesigner", gnum);
 	}
 }

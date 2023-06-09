@@ -9,7 +9,7 @@
 	<%@ include file="../include/js/header.jsp" %>
 	<script src="${path}/include/js/jquery-3.6.3.min.js"></script>
 	<style>
-		.childReplyInputArea{
+		.childReplyInputArea form  {
 			display: none;
 		}
 	</style>
@@ -53,7 +53,6 @@
 							<form method="post" name="childReplyForm" action="${path}/tbComment/childCommentInsert.do">
 								<textarea name="childComment" id="childComment" cols="3" rows="60"></textarea>
 								<button type="submit">작성 완료</button>
-
 							</form>
 						</div>
 					</td>
@@ -89,9 +88,8 @@
 		document.commentChangeForm.submit();
 	}
 	function childReplyInsert(tb_num) {
-		const childReplyElement = document.getElementsByClassName("childReplyInputArea");
+		const childReplyElement = document.getElementsByName("childReplyForm");
 		childReplyElement.style.display = "block";
-
 	}
 </script>
 </body>

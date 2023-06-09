@@ -12,6 +12,8 @@ public interface ReviewDAO {
 	/*리뷰 목록 조회*/
     List<ReviewDTO> reviewlist(reviewSerchDTO reviewserchDTO);
 
+    int reviewListCnt(reviewSerchDTO reviewserchDTO);
+
     /*조회수 증가*/
     void reviewViews(reviewSerchDTO reviewserchDTO);
 
@@ -29,6 +31,12 @@ public interface ReviewDAO {
 
     /*리뷰 댓글 입력*/
     void reviewReply(ReplyCommentsDTO replyCommentsDTO);
+
+    /*리뷰 댓글 수정*/
+    void reviewReplyUpdate(ReplyCommentsDTO replyCommentsDTO);
+
+    /*리뷰 댓글 삭제*/
+    void reviewReplyDel(ReplyCommentsDTO replyCommentsDTO);
 
     /*리뷰 댓글 출력*/
     List<ReplyCommentsDTO> reviewReplyOut(reviewSerchDTO reviewserchDTO);

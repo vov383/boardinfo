@@ -21,6 +21,13 @@ $(function() {
         $("#userid").focus();
         return;
       }
+	  //아이디 정규식
+	  var exp = /^[a-z0-9]{4,15}$/;
+	  if(!exp.test(userid)){
+		  	alert("아이디는 영문소문자, 숫자를 포함해 4~15 사이로 입력하세요.");
+		  	$("#userid").focus();
+		  	return;
+	  	}
       $.ajax({
         url: "${path}/member/check_id.do",
         type: "POST",
@@ -209,7 +216,7 @@ id="userid" type="text"maxlength='15' onkeyup="duplication_check()">
 </div>
 <div class="form-group">
 닉네임 <input class="form-control" placeholder="닉네임" name="nickname" 
-id="nickname" type="text" maxlength="15" onkeyup="duplication_check2()">
+id="nickname" type="text" maxlength="12" onkeyup="duplication_check2()">
 <div align="right">
 <button type="button" class="btn btn-dark button" id="btnNickCheck" >중복확인</button>
 </div>

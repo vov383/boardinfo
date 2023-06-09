@@ -15,6 +15,9 @@ public interface ReviewService {
 	/*리뷰 목록 조회*/
     List<ReviewDTO> reviewlist(reviewSerchDTO reviewserchDTO);
 
+	/*리뷰 목록 조회*/
+    int reviewListCnt(reviewSerchDTO reviewserchDTO);
+
 //    주는놈 메소드(받는놈);
 
 
@@ -32,6 +35,12 @@ public interface ReviewService {
 
     /*리뷰 댓글 입력*/
     void reviewReply(ReplyCommentsDTO replyCommentsDTO, HttpSession session);
+
+    /*리뷰 댓글 수정*/
+    void reviewReplyUpdate(ReplyCommentsDTO replyCommentsDTO, HttpSession session);
+
+    /*리뷰 댓글 삭제*/
+    void reviewReplyDel(ReplyCommentsDTO replyCommentsDTO, HttpSession session);
 
     /*리뷰 댓글 출력*/
     List<ReplyCommentsDTO> reviewReplyOut(reviewSerchDTO reviewserchDTO);
