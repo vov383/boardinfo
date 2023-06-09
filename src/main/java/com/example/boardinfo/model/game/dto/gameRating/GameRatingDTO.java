@@ -1,24 +1,26 @@
 package com.example.boardinfo.model.game.dto.gameRating;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDateTime;
+
 public class GameRatingDTO {
     private int gnum;
     private String userid;
-    private int rating;
-    private int weight;
+    private float rating;
+    private float weight;
     private int participant1;
     private int participant2;
     private int participant3;
     private int participant4;
     private int participant5;
     private String rating_comment;
+    private int likeCount;
+    private int myLike;
 
-    public int getRating() {
-        return rating;
-    }
+    private String create_date;
+    private String update_date;
 
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
 
     public int getGnum() {
         return gnum;
@@ -36,11 +38,19 @@ public class GameRatingDTO {
         this.userid = userid;
     }
 
-    public int getWeight() {
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    public float getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(float weight) {
         this.weight = weight;
     }
 
@@ -91,7 +101,40 @@ public class GameRatingDTO {
     public void setRating_comment(String rating_comment) {
         this.rating_comment = rating_comment;
     }
-    
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public int getMyLike() {
+        return myLike;
+    }
+
+    public void setMyLike(int myLike) {
+        this.myLike = myLike;
+    }
+
+
+    public String getCreate_date() {
+        return create_date;
+    }
+
+    public void setCreate_date(String create_date) {
+        this.create_date = create_date;
+    }
+
+    public String getUpdate_date() {
+        return update_date;
+    }
+
+    public void setUpdate_date(String update_date) {
+        this.update_date = update_date;
+    }
+
     @Override
     public String toString() {
         return "GameRatingDTO{" +
@@ -105,7 +148,10 @@ public class GameRatingDTO {
                 ", participant4=" + participant4 +
                 ", participant5=" + participant5 +
                 ", rating_comment='" + rating_comment + '\'' +
+                ", likeCount=" + likeCount +
+                ", myLike=" + myLike +
+                ", create_date=" + create_date +
+                ", update_date=" + update_date +
                 '}';
     }
-
 }

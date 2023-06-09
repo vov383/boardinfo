@@ -237,16 +237,13 @@ public class GameServiceImpl implements GameService {
     List<MechanicDTO> mlist = mechanicDao.view(gnum);
     List<PublisherDTO> plist = publisherDao.view(gnum);
     
-    
-    HashMap<String, Object> statisticMap = gameRatingDao.getStatistic(gnum);
+
 
     //확장
     Map<String, Object> expansionMap = gameDao.getExpansion(gnum);
 
     //재구현
     Map<String, Object> reimplementMap = gameDao.getReimplement(gnum);
-
-    
 
     int bggnum = dto.getBggnum();
 
@@ -259,8 +256,6 @@ public class GameServiceImpl implements GameService {
     map.put("plist", plist);
 
     map.put("bgg_thumbnail", GameUtils.setStr(bggnum,"thumbnail"));
-
-    map.put("statisticMap", statisticMap);
 
     map.put("exmap", expansionMap);
     map.put("remap", reimplementMap);
