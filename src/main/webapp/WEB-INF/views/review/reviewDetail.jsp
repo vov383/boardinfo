@@ -233,7 +233,6 @@
             $("#replyRegNumEdit").val(replyRegNum);
             $("#regNumEdit").val(regNum);
             $("#commentDetailEdit").val($("#"+replyRegNum+regNum).val());
-
             document.formreviewreplyedit.submit();
 
 /*
@@ -272,15 +271,26 @@
             document.formreviewreplydel.submit();
         }
 
-        // 대댓글 입력
-        function btnTopReplySave(replyRegNum, regNum, topReplyRegNum){
-            $("#reviewReplyKey").val($('input[name=regNumHidden]').val());
-            document.formreviewreply.submit();
+        // 답글 입력
+        function btnTopReplySave(topReply){
+            $("#topRegNum").val($('input[name=regNumHidden]').val());
+            $("#topReplyRegNum").val(topReply);
+            // document.formreviewtopreply_topReply.submit();
+            $("form[name=formreviewtopreply_"+topReply+"]").submit();
         }
 
-        <button type="button" onclick="btnTopReplySave('${vo.replyRegNum}','${vo.regNum}','${topReplyRegNum}')">
+        /*<input type="hidden" name="replyRegNum" id="topReplyRegNum" value="${vo.replyRegNum}">
+                    <input type="hidden" name="regNum" id="topRegNum" value="${vo.regNum}">*/
 
-        // 대댓글 입력창 보이기 안보이기
+        // 댓글
+        /*function btnReply(){
+            $("#reviewReplyKey").val($('input[name=regNumHidden]').val());
+            document.formreviewreply.submit();
+        }*/
+
+
+
+        /*대댓글 입력창 보이기 안보이기*/
         function btnTopReply(replyRegNum, regNum, topReplyRegNum){
             if ($("td[name=topReplyInset"+replyRegNum+regNum+topReplyRegNum+"]").attr("style") == "display: none") {
                 $("td[name=topReplyInset"+replyRegNum+regNum+topReplyRegNum+"]").attr("style","display: none");
@@ -417,7 +427,8 @@
             <tr>
                 <td width="100"><b>${vo.nickname}</b></td>
 
-                <td>${vo.createDate}</td>
+                <%--<td>${vo.createDate}</td>--%>
+                <td>${vo.replyRegNum}</td>
 
 
                 <c:if test="${userid eq vo.createUser}">
@@ -448,21 +459,37 @@
                     </textarea></td>
 
 
-            <%--대댓글 입력--%>
-            <form name="formtopReplyInset" method="post" action="${path}/review/topreplyinsetsave.do">
-                <input type="hidden" name="topReplyRegNum" value="${vo.topReplyRegNum}">
+            <%--답글 입력--%>
+            <%--<form name="formtopReplyInset" method="post" action="${path}/review/topreplyinsetsave.do">
+                <input type="hidden" name="replyRegNum" id="topreplyRegNum">
+                <input type="hidden" name="regNum" id="topregNum">
             <tr>
-                <td colspan="4" name="topReplyInset${vo.replyRegNum}${vo.regNum}${topReplyRegNum}">
-                    <textarea id="${vo.replyRegNum}${vo.regNum}${topReplyRegNum}" rows = "3" cols = "80" <%--style="display: none"--%>>
-                        <%--대댓글 입력란--%>
+                <td colspan="4" name="topReplyInset${vo.replyRegNum}${vo.regNum}">
+                    <textarea id="${vo.replyRegNum}${vo.regNum}" rows = "3" cols = "80" &lt;%&ndash;style="display: none"&ndash;%&gt;>
+                        &lt;%&ndash;대댓글 입력란&ndash;%&gt;
                     </textarea></td>
-                <td name="topReplyInsetSave" <%--style="display: none"--%>>
-                    <button type="button" onclick="btnTopReplySave('${vo.replyRegNum}','${vo.regNum}','${topReplyRegNum}')">
+                <td name="topReplyInsetSave" &lt;%&ndash;style="display: none"&ndash;%&gt;>
+                    <button type="button" onclick="btnTopReplySave('${vo.replyRegNum}','${vo.regNum}')">
                         저장
                     </button>
                 </td>
             </tr>
-            </form>
+            </form>--%>
+
+                    <%--답글 입력--%>
+                <form name="formreviewtopreply_${vo.replyRegNum}" method="post" action="${path}/review/topreplyinsetsave.do">
+                    <input type="hidden" name="topReplyRegNum" id="topReplyRegNum" value="${vo.replyRegNum}">
+                    <input type="hidden" name="regNum" id="topRegNum" value="${vo.regNum}">
+
+                    <p>Comment 작성</p>
+                    <hr/> <%--구분선--%>
+                    <p>
+                        <textarea name = "commentDetail" id="topreplyinset" rows = "3" cols = "80"></textarea>
+                        <button type="button" onclick="btnTopReplySave('${vo.replyRegNum}')">답글 저장</button>
+                    </p>
+                </form>
+
+
             </tr>
             <p></p>
         </table>

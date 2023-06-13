@@ -95,12 +95,10 @@ public class ReviewDAOImpl implements ReviewDAO {
         return sqlSession.selectList("review.reviewReplyOut", reviewserchDTO);
     }
 
-    /*리뷰 댓글 입력*/
+    /*리뷰 답글 입력*/
     @Override
     public void topreplyinsetsave(ReplyCommentsDTO replyCommentsDTO) {
-
-        sqlSession.insert("review.reviewReply", replyCommentsDTO);
-
+        sqlSession.insert("review.topreplyinsetsave", replyCommentsDTO);
     }
 
 

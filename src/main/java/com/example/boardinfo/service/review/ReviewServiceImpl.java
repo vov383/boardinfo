@@ -158,7 +158,8 @@ public class ReviewServiceImpl implements ReviewService {
 	public void topreplyinsetsave(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
 		String userid = (String) session.getAttribute("userid");
 		replyCommentsDTO.setCreateUser(userid);
-		reviewDAO.topreplyinsetsave(replyCommentsDTO);
+//		reviewDAO.topreplyinsetsave(replyCommentsDTO);
+		reviewDAO.reviewReply(replyCommentsDTO);
 
 	}
 

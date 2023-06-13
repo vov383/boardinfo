@@ -146,10 +146,10 @@ public class ReviewController {
 	// 리뷰 대댓글 입력
 	@RequestMapping("topreplyinsetsave.do")
 	public ModelAndView topreplyinsetsave(@ModelAttribute ReplyCommentsDTO replyCommentsDTO, HttpSession session) {
-
-		/*댓글 입력*/
+System.out.println("1");
+		/*답글 입력*/
 		reviewservice.topreplyinsetsave(replyCommentsDTO, session);
-
+		System.out.println("2");
 		/*댓글의 상단 리뷰 내용 출력*/
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("review/reviewDetail");
