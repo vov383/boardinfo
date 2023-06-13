@@ -45,6 +45,8 @@ public interface ReviewService {
     /*리뷰 댓글 출력*/
     List<ReplyCommentsDTO> reviewReplyOut(reviewSerchDTO reviewserchDTO);
 
+    /*리뷰 대댓글 입력*/
+    void topreplyinsetsave(ReplyCommentsDTO replyCommentsDTO, HttpSession session);
 
 
 

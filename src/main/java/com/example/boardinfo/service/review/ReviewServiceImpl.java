@@ -152,6 +152,17 @@ public class ReviewServiceImpl implements ReviewService {
 		return list;
 	}
 
+	/*리뷰 대댓글 입력*/
+	@Transactional
+	@Override
+	public void topreplyinsetsave(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
+		String userid = (String) session.getAttribute("userid");
+		replyCommentsDTO.setCreateUser(userid);
+		reviewDAO.topreplyinsetsave(replyCommentsDTO);
+
+	}
+
+
 
 
 

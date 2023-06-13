@@ -157,7 +157,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
 
 
-	<!--리뷰 댓글-->
+	<!--리뷰 댓글 및 대댓글 입력-->
 	<insert id="reviewReply" parameterType="hashMap">
 		INSERT INTO REPLY_COMMENTS ( REPLY_REG_NUM
 								   , REG_NUM
@@ -202,8 +202,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		  AND REPLY_REG_NUM = #{replyRegNum}
 	</update>
 
-
-
+	<!--리뷰 댓글 조회-->
 	<select id="reviewReplyOut" parameterType="hashMap" resultType="com.example.boardinfo.model.review.dto.ReplyCommentsDTO">
 		SELECT RC.REPLY_REG_NUM 			AS REPLYREGNUM
 			 , RC.REG_NUM 					AS REGNUM
@@ -223,14 +222,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		  AND RC.CREATE_USER = M.USERID(+)
 		ORDER BY RC.CREATE_DATE
 	</select>
-
-
-
-
-
-
-
-
 
 
 
