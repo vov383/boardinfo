@@ -424,7 +424,7 @@
                             repliesContainer.append(reply);
                         }
 
-                        }
+                    }
 
                     $("#countReplies").text(list.length==null ? 0 : list.length);
 

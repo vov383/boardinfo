@@ -48,6 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
 	
 	<select id="view" resultType="gameDto">
+
          select g.gnum, bggnum, gametitle, gametitle_eng, players, playtime, ages, language,
          	   release_year, g.create_date, totalviewcount, ga.fullname gamephoto_url
 		  from game g
@@ -57,6 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     from game_attach )
              where rnum = 1 ) ga on g.gnum = ga.gnum
       where g.gnum=#{gnum}
+
 	</select>
 
 	<select id="getAuto" resultType="gameDto">
@@ -115,10 +117,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 
+
 	<select id="filteredList" resultType="gameDto">
 	<bind name="filterColumn" value="filter+'.'+filter"/>
 	<bind name="mappingTable" value="'game_'+filter"/>
 		select *
+
 		from   (
 				select a.*, rownum rn
 			    from   (
@@ -141,6 +145,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 								where g.gnum = ga.gnum(+) and g.del = 'n'
 								) game,
 								(select gnum, filter.${filter}
+
 						<choose>
 							<when test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
 								from    game_category mapping, category filter
@@ -176,9 +181,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<update id="gameupdate">
 		update game
+
 		set bggnum=#{bggnum}, gametitle=#{gametitle}, gametitle_eng=#{gametitle_eng}, players=#{players},
 			playtime=#{playtime}, ages=#{ages}, language=#{language}, release_year=#{release_year},
 			update_user=#{update_user}, update_date=sysdate
+
 		where gnum=#{gnum}
 	</update>
 

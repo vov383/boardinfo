@@ -56,6 +56,10 @@
 
 /*    background: #3D3D43;*/
 /*}*/
+a {
+    text-decoration: none;
+    color: black;
+}
 
 #contents{
     display: flex;
@@ -64,6 +68,20 @@
     align-items: center;
     max-width: 1120px;
     padding : 130px;
+}
+#contentsHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+.h2 {
+    font-size: 1.2em;
+    font-weight: bold;
+    flex:0.2;
+    align-items: center;
+    justify-content: flex-start;
+    padding-right: 8px;
 }
 
 * li {
@@ -74,7 +92,14 @@
     flex-direction: row;
     justify-content: center;
 }
-
+.button{
+    font-size: .9em;
+    padding: 8px 10px;
+    white-space: nowrap;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    height: 100%;
+}
 .imgSection {
     display: flex;
     flex-direction: column;
@@ -183,12 +208,12 @@
 }
 
 .categoryAndTitle .category {
-    display: flex;
-    margin-right: 10px;
-    /*color: var(--default-anchor-color);*/
-    word-break: keep-all;
-    /*background-color: var(--alpha-5);*/
-    border-radius: 6px;
+    font-size: .9em;
+    padding: 8px 10px;
+    white-space: nowrap;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    height: 100%;
 }
 
 .categoryAndTitle .category span {
@@ -285,7 +310,9 @@
     white-space: nowrap;
     margin-bottom: 5px;
 }
-
+.userInfo > div {
+    padding-right: 4px;
+}
 .replyUpper .userProfile {
     flex: 0 0 32px;
     width: 32px;
@@ -325,6 +352,7 @@
 
 .replyContent {
     flex: .9;
+
 }
  textarea {/*background: #E5E5E5;*/
     flex: 1;
@@ -335,6 +363,9 @@
     resize: none;
     background-color: transparent;
     border: 0;
+}
+form[name=newReplyForm] .replyContent {
+    background-color: #f0f0f0;
 }
 
 form[name=newReplyForm] .submit {

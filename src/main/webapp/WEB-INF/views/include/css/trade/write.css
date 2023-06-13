@@ -1,30 +1,67 @@
-@media (max-width: 950px) {
-    #contents {
-        position: relative;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-    }
+/*@media (max-width: 950px) {*/
+/*    #contents {*/
+/*        position: relative;*/
+/*        display: flex;*/
+/*        flex-direction: row;*/
+/*        align-items: center;*/
+/*        justify-content: center;*/
+/*        width: 100%;*/
+/*    }*/
 
-    #contentsMain {
-        width: 100%;
-        min-width: auto;
-    }
+/*    #contentsMain {*/
+/*        width: 100%;*/
+/*        min-width: auto;*/
+/*    }*/
 
-}
-
-#contents {
+/*}*/
+.dot {
     position: relative;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    margin: 0;
     justify-content: center;
-    width: 100%;
+    width: 14px;
+    height: 100%;
+}
+a {
+    text-decoration: none;
+    color: black;
+}
+#contents {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    max-width: 1120px;
+    min-height: 100%;
+    padding: 129px 0 0 0;
+    font-size: 16px;
+}
+#contentsHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
 }
 
+.h2 {
+    font-size: 1.2em;
+    font-weight: bold;
+    flex:0.2;
+    align-items: center;
+    justify-content: flex-start;
+    padding-right: 8px;
+}
+
+.btnContainer button {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 20px;
+    margin: 0;
+    font-size: 1em;
+    background-color: #f0f0f0;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+}
 
 #contentsMain {
     display: flex;
@@ -36,6 +73,7 @@
 form[name="insertForm"] {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     gap: 15px;
     width: 100%;
 }
@@ -45,10 +83,24 @@ form {
     align-items: center;
     justify-content: center;
 }
+.postUpper {
+    display: flex;
+    flex-direction: column;
+    width : 100%;
+}
+.category {
+    font-size: .9em;
+    padding: 8px 10px;
+    white-space: nowrap;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    height: 100%;
+}
 
 #categoryContainer {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: center;
     padding: 0;
     font-weight: 700;
     border-radius: 8px;
@@ -58,17 +110,18 @@ form {
     /*display: none;*/
 }
 
-#contentsMain .title {
+.inputContainer {
     display: flex;
-    width: 100%;
+    flex-direction: column;
 }
 
 #title {
-    padding: 0 10px;
+    margin-bottom: 10px;
+    padding: 0 20px;
 }
 
 #price {
-    padding: 0 10px;
+    padding: 0 20px;
 }
 
 #contentsMain input[type="text"] {
@@ -90,6 +143,8 @@ form {
 .labelAndItem {
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
 .labelAndItem span:first-of-type {
@@ -98,8 +153,16 @@ form {
     margin-right: 25px
 }
 
-.labelAndItem .input {
-    padding: 8px;
+.labelAndItem button {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 20px;
+    margin: 0;
+    font-size: 1em;
+    background-color: #f0f0f0;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
 input[type=text] {
@@ -112,9 +175,6 @@ input[type=text] {
     /*border: 1px solid var(--alpha-30);*/
     border-radius: 8px;
 }
-
-
-
 
 
 
