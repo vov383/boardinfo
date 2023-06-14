@@ -63,11 +63,14 @@ public class TBoardServiceImpl implements TBoardService {
 	public void insert(TBoardDTO dto, MultipartFile[] files, String uploadPath) throws Exception {
 			int result =  tboardDao.insert(dto);
 			if(result == 1){/*insert에 성공하면*/
-				if(files==null) return; //첨부파일이 없으면 skip
 
 				for(int i=0; i< files.length; i++) {
 					String fileName = files[i].getOriginalFilename();
 					byte[] fileData = files[i].getBytes();
+					/* 이미지를 업로드 안했을 경우 fileName이 ""라서 break로 반복문 탈출! */
+					if(fileName == null || fileName.equals("")){
+						break;
+					}
 					//파일 업로드
 					String uploadedFileName = UploadFileUtils.uploadFile(uploadPath, fileName, fileData);
 					logger.info("uploadedFileName :" + uploadedFileName);

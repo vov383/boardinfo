@@ -477,275 +477,259 @@
         </div>
         <div class="listAndEdit">
             <div class="left">
-                <div class="button"><a href="${path}/tboard/list.do"><img src="${path}/images/trade/listBtn.png" alt=""></a>
-                </div>
+                <div class="button"><a href="${path}/tboard/list.do">목록</a></div>
             </div>
+            <div class="dot"></div>
             <div class="right">
-                <div class="button"><a class="btnChange"><img src="${path}/images/trade/changeBtn.png" alt=""></a></div>
+                <div class="button"><a class="btnChange">수정|삭제</a></div>
             </div>
         </div>
         <div id="contentsMain">
-            <section class="imgSection">
-                <div class="img-slider">
-                    <div class="slider-wrap">
-                        <div class="img-slider-track"></div>
+            <section class="imgSection"></section>
+            <section class="titleSection">
+                <div class="profileAndNickName">
+                    <div class="left">
+                        <div class="userImg"><a class="userProfile"><img src="${path}/images/trade/defaultProfile.png"
+                                                                         alt="유저 프로필 사진"></a></div>
+                        <div class="dot"></div>
+                        <div class="nickName"><a class="userNickName">유저 닉네임(${dto.create_user})</a></div>
+                        <div class="dot"></div>
+                        <div class="dateTime"><i class="fa-regular fa-timer"></i><fmt:formatDate
+                                value="${dto.create_date}"
+                                pattern="yyyy-MM-dd hh:mm:ss"/></div>
+                        <div class="dot"></div>
                     </div>
                 </div>
-                <div class="moveImgRight">
-                    <a id="slideRightBtn"><img src="${path}/images/trade/moveToRightImgBtn.png" alt=""></a>
+                <div class="categoryAndTitle">
+                    <div class="category">
+                        <c:choose>
+                            <c:when test="${dto.category == 's'}">
+                                판매
+                            </c:when>
+                            <c:when test="${dto.category == 'b'}">
+                                구매
+                            </c:when>
+                            <c:when test="${dto.category == 'n'}">
+                                나눔
+                            </c:when>
+                            <c:otherwise>
+                                완료
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                    <div class="title">${dto.title}</div>
                 </div>
-                <nav class="imgSlideNav">
-                    <ul>
-                        <li class="imgList"></li>
-                    </ul>
-                </nav>
+                <div class="price">${dto.price}원</div>
             </section>
-        <section class="titleSection">
-            <div class="profileAndNickName">
-                <div class="left">
-                    <div class="userImg"><a class="userProfile"><img src="${path}/images/trade/defaultProfile.png"
-                                                                     alt="유저 프로필 사진"></a></div>
-                    <div class="dot"></div>
-                    <div class="nickName"><a class="userNickName">유저 닉네임(${dto.create_user})</a></div>
-                    <div class="dot"></div>
-                    <div class="dateTime"><fmt:formatDate value="${dto.create_date}"
-                                                          pattern="yyyy-MM-dd hh:mm:ss"/></div>
-                    <div class="dot"></div>
-                </div>
-            </div>
-            <div class="categoryAndTitle">
-                <div class="category">
-                            <span>
-                                <c:choose>
-                                    <c:when test="${dto.category == 's'}">
-                                        <img alt="판매" src="${path}/images/trade/sell.png">
-                                    </c:when>
-                                    <c:when test="${dto.category == 'b'}">
-                                        <img alt="구매" src="${path}/images/trade/buy.png">
-                                    </c:when>
-                                    <c:when test="${dto.category == 'n'}">
-                                        <img alt="나눔" src="${path}/images/trade/nanum.png">
-                                    </c:when>
-                                    <c:otherwise>
-                                        <img alt="거래완료" src="${path}/images/trade/trade_fin.png">
-                                    </c:otherwise>
-                                </c:choose>
-                            </span>
-                </div>
-                <span class="title">
-                            <h1>${dto.title}</h1>
-                        </span>
-            </div>
-            <div class="price">${dto.price}원</div>
-        </section>
 
-        <section class="descriptionSection">
-            <div id="description" name="description">
-                ${dto.description}
-            </div>
-            <div class="placeContainer">
-                <div id="placeUpper">
-                    <div>
-                        <div class="map_wrap">
-                            <div id="map"></div>
-                            <div class="hAddr">
-                                <span class="title">주소정보</span>
-                                <span id="centerAddr"></span>
+            <section class="descriptionSection">
+                <div id="description" name="description">
+                    ${dto.description}
+                </div>
+                <div class="placeContainer">
+                    <div id="placeUpper">
+                        <div>
+                            <div class="map_wrap">
+                                <div id="map"></div>
+                                <div class="hAddr">
+                                    <span class="title">주소정보</span>
+                                    <span id="centerAddr"></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <script type="text/javascript"
-                            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=aaa4a3ee6e039439424a544717323d1a&libraries=services"></script>
-                    <script>
+                        <script type="text/javascript"
+                                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=aaa4a3ee6e039439424a544717323d1a&libraries=services"></script>
+                        <script>
 
-                        var mapContainer = document.getElementById('map'); // 지도를 표시할 div
+                            var mapContainer = document.getElementById('map'); // 지도를 표시할 div
 
-                        var mapOption =
-                            {
-                                center: new kakao.maps.LatLng("${dto.lat}", "${dto.lng}"), // 지도의 중심좌표
-                                level: 3 // 지도의 확대 레벨
-                            };
-
-                        // 지도를 생성합니다
-                        var map = new kakao.maps.Map(mapContainer, mapOption);
-
-                        // 주소-좌표 변환 객체를 생성합니다
-                        var geocoder = new kakao.maps.services.Geocoder();
-
-                        var imageSrc = 'https://img.freepik.com/icones-gratuites/espace-reserve_318-556820.jpg?w=360', // 마커이미지의 주소입니다
-                            imageSize = new kakao.maps.Size(44, 48); // 마커이미지의 크기입니다
-
-                        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-                        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-                        let mainMarker;
-
-                        // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
-                        var infowindow = new kakao.maps.InfoWindow({
-                            zIndex: 4,
-                            disableAutoPan: true
-                        });
-
-                        var infoDiv = document.getElementById('centerAddr');
-
-
-                        makeMap("${dto.lat}", "${dto.lng}");
-
-                        function makeMap(lat, lan) {
-                            mapOption =
+                            var mapOption =
                                 {
-                                    center: new kakao.maps.LatLng(lat, lan), // 지도의 중심좌표
-                                    level: 4 // 지도의 확대 레벨
+                                    center: new kakao.maps.LatLng("${dto.lat}", "${dto.lng}"), // 지도의 중심좌표
+                                    level: 3 // 지도의 확대 레벨
                                 };
 
                             // 지도를 생성합니다
-                            map = new kakao.maps.Map(mapContainer, mapOption);
+                            var map = new kakao.maps.Map(mapContainer, mapOption);
 
-                            //마커 생성
-                            const markerPosition = new window.kakao.maps.LatLng(lat, lan);
+                            // 주소-좌표 변환 객체를 생성합니다
+                            var geocoder = new kakao.maps.services.Geocoder();
 
-                            //마커 생성
-                            mainMarker = new window.kakao.maps.Marker({
-                                position: markerPosition,
-                                image: markerImage
+                            var imageSrc = 'https://img.freepik.com/icones-gratuites/espace-reserve_318-556820.jpg?w=360', // 마커이미지의 주소입니다
+                                imageSize = new kakao.maps.Size(44, 48); // 마커이미지의 크기입니다
+
+                            // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+                            var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+                            let mainMarker;
+
+                            // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
+                            var infowindow = new kakao.maps.InfoWindow({
+                                zIndex: 4,
+                                disableAutoPan: true
                             });
 
-                            mainMarker.setMap(map);
-                            mainMarker.setZIndex(3);
+                            var infoDiv = document.getElementById('centerAddr');
 
-                            // 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
-                            searchDetailAddrFromCoords(map.getCenter(), displayCenterInfo);
-                        }
 
-                        function searchDetailAddrFromCoords(coords, callback) {
-                            // 좌표로 법정동 상세 주소 정보를 요청합니다
-                            geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
-                        }
+                            makeMap("${dto.lat}", "${dto.lng}");
 
-                        //지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
-                        function displayCenterInfo(result, status) {
-                            if (status === kakao.maps.services.Status.OK) {
-                                infoDiv.innerHTML = result[0].address.address_name;
+                            function makeMap(lat, lan) {
+                                mapOption =
+                                    {
+                                        center: new kakao.maps.LatLng(lat, lan), // 지도의 중심좌표
+                                        level: 4 // 지도의 확대 레벨
+                                    };
 
-                                let content = "";
+                                // 지도를 생성합니다
+                                map = new kakao.maps.Map(mapContainer, mapOption);
 
-                                if ("${dto.place_name}" != null && "${dto.place_name}" != "") {
-                                    content = "<div id='infoWindow'><span>" + "${dto.place_name}" + "</span></div>";
-                                } else
-                                    content = '<div id="infoWindow"><span>' + result[0].address.address_name + '</span></div>';
+                                //마커 생성
+                                const markerPosition = new window.kakao.maps.LatLng(lat, lan);
 
-                                var position = new kakao.maps.LatLng("${dto.lat}", "${dto.lng}");
-                                var customOverlay = new kakao.maps.CustomOverlay({
-                                    position: position,
-                                    content: content,
-                                    xAnchor: 0.5, // 커스텀 오버레이의 x축 위치입니다. 1에 가까울수록 왼쪽에 위치합니다. 기본값은 0.5 입니다
-                                    yAnchor: 2.6 // 커스텀 오버레이의 y축 위치입니다. 1에 가까울수록 위쪽에 위치합니다. 기본값은 0.5 입니다
+                                //마커 생성
+                                mainMarker = new window.kakao.maps.Marker({
+                                    position: markerPosition,
+                                    image: markerImage
                                 });
 
-                                customOverlay.setMap(map);
-                                map.setCenter(customOverlay.getPosition());
+                                mainMarker.setMap(map);
+                                mainMarker.setZIndex(3);
+
+                                // 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
+                                searchDetailAddrFromCoords(map.getCenter(), displayCenterInfo);
                             }
-                        }
-                    </script>
-                    <div class="addressContainer">
-                        <ul>
-                            <li>장소:&nbsp&nbsp${dto.address1} ${dto.address2} ${dto.address3}</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div id="descriptionSub">
-                <div class="interestCount">
-                    <a href="#"><i class="fa-solid fa-heart"></i></a>
-                </div>
 
-                <div class="viewCount">
-                    <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="eye"
-                         class="svg-inline--fa fa-eye fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 576 512">
-                        <path fill="currentColor"
-                              d="M288 144a110.94 110.94 0 0 0-31.24 5 55.4 55.4 0 0 1 7.24 27 56 56 0 0 1-56 56 55.4 55.4 0 0 1-27-7.24A111.71 111.71 0 1 0 288 144zm284.52 97.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400c-98.65 0-189.09-55-237.93-144C98.91 167 189.34 112 288 112s189.09 55 237.93 144C477.1 345 386.66 400 288 400z"></path>
-                    </svg>
-                    ${dto.view_count}
-                </div>
+                            function searchDetailAddrFromCoords(coords, callback) {
+                                // 좌표로 법정동 상세 주소 정보를 요청합니다
+                                geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+                            }
 
-                <i class="fa-regular fa-comment-dots"></i>[<span id="countReplies"></span>]
-                </ul>
-            </div>
-        </section>
+                            //지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
+                            function displayCenterInfo(result, status) {
+                                if (status === kakao.maps.services.Status.OK) {
+                                    infoDiv.innerHTML = result[0].address.address_name;
 
-        <section class="otherItemList">
-            <p>작성자 님의 다른 상품 목록</p>
-            <div class="otherItemContainer">
-            </div>
-            <button onclick="viewMoreItem('${dto.create_user}')"><img src="${path}/images/trade/moreBtn.png" alt="">
-            </button>
-            <div class="moreOtherItem"></div>
-        </section>
-        <section class="replySection">
-            <div id="replyList"></div>
+                                    let content = "";
 
-            <div class="replyContainer">
-                <div class="contentContainer">
-                    <form name="newReplyFrom">
-                        <input type="hidden" name="tb_num" value="${dto.tb_num}">
-                        <div class="replyInput">
-                            <div class="replyContent">
-                                <textarea name="content" class="replyContent" cols="30" rows="10"></textarea>
-                            </div>
-                            <div class="submit">
-                                <button class="btnCommentInsert">댓글등록</button>
-                            </div>
+                                    if ("${dto.place_name}" != null && "${dto.place_name}" != "") {
+                                        content = "<div id='infoWindow'><span>" + "${dto.place_name}" + "</span></div>";
+                                    } else
+                                        content = '<div id="infoWindow"><span>' + result[0].address.address_name + '</span></div>';
+
+                                    var position = new kakao.maps.LatLng("${dto.lat}", "${dto.lng}");
+                                    var customOverlay = new kakao.maps.CustomOverlay({
+                                        position: position,
+                                        content: content,
+                                        xAnchor: 0.5, // 커스텀 오버레이의 x축 위치입니다. 1에 가까울수록 왼쪽에 위치합니다. 기본값은 0.5 입니다
+                                        yAnchor: 2.6 // 커스텀 오버레이의 y축 위치입니다. 1에 가까울수록 위쪽에 위치합니다. 기본값은 0.5 입니다
+                                    });
+
+                                    customOverlay.setMap(map);
+                                    map.setCenter(customOverlay.getPosition());
+                                }
+                            }
+                        </script>
+                        <div class="addressContainer">
+                            <ul>
+                                <li>장소:&nbsp&nbsp${dto.address1} ${dto.address2} ${dto.address3}</li>
+                            </ul>
                         </div>
-                    </form>
-                </div>
-            </div>
-
-        </section>
-
-        <%--<div class="reply" id="${re_dto.reply_reg_num}">
-            <div class="replyUpper">
-                <div class="userInfo">
-                    <div class="userProfile">
-                        <img src="" alt="">
                     </div>
                 </div>
-                <div class="userNickName"></div>
-                <div class="create_date"></div>
-            </div>
-            <div class="replyMain">
-                <div class="replyContent"></div>
-            </div>
-            <div class="replySub">
+                <div id="descriptionSub">
+                    <div class="interestCount">
+                        <a href="#"><i class="fa-solid fa-heart"></i></a>
+                    </div>
+
+                    <div class="viewCount">
+                        <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="eye"
+                             class="svg-inline--fa fa-eye fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 576 512">
+                            <path fill="currentColor"
+                                  d="M288 144a110.94 110.94 0 0 0-31.24 5 55.4 55.4 0 0 1 7.24 27 56 56 0 0 1-56 56 55.4 55.4 0 0 1-27-7.24A111.71 111.71 0 1 0 288 144zm284.52 97.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400c-98.65 0-189.09-55-237.93-144C98.91 167 189.34 112 288 112s189.09 55 237.93 144C477.1 345 386.66 400 288 400z"></path>
+                        </svg>
+                        ${dto.view_count}
+                    </div>
+
+                    <i class="fa-regular fa-comment-dots"></i><span id="countReplies"></span>
+                </div>
+            </section>
+
+            <section class="otherItemList">
+                <p>작성자 님의 다른 상품 목록</p>
+                <div class="otherItemContainer">
+                    <div class="otherItemCard">
+
+                    </div>
+                </div>
+                <button onclick="viewMoreItem('${dto.create_user}')">더보기
+                </button>
+                <div class="moreOtherItem"></div>
+            </section>
+            <section class="replySection">
+                <div id="replyList"></div>
+
+                <div class="replyContainer">
+                    <div class="contentContainer">
+                        <form name="newReplyFrom">
+                            <input type="hidden" name="tb_num" value="${dto.tb_num}">
+                            <div class="replyInput">
+                                <div class="replyContent">
+                                    <textarea name="content" class="replyContent" cols="30" rows="10"></textarea>
+                                </div>
+                                <div class="submit">
+                                    <a href="#" class="btnCommentInsert">댓글등록</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </section>
+
+            <%--<div class="reply" id="${re_dto.reply_reg_num}">
+                <div class="replyUpper">
+                    <div class="userInfo">
+                        <div class="userProfile">
+                            <img src="" alt="">
+                        </div>
+                    </div>
+                    <div class="userNickName"></div>
+                    <div class="create_date"></div>
+                </div>
+                <div class="replyMain">
+                    <div class="replyContent"></div>
+                </div>
+                <div class="replySub">
+                    <div class="left">
+                        <div class="button">
+                            <a href="">
+                                <img src="" alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="button">
+                            <a href="">
+                                <img src="" alt="">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>--%>
+
+            <div class="listAndEdit">
                 <div class="left">
-                    <div class="button">
-                        <a href="">
-                            <img src="" alt="">
-                        </a>
-                    </div>
+                    <div class="button"><a href="${path}/tboard/list.do">목록</a></div>
                 </div>
+                <div class="dot"></div>
                 <div class="right">
-                    <div class="button">
-                        <a href="">
-                            <img src="" alt="">
-                        </a>
-                    </div>
+                    <div class="button"><a class="btnChange">수정|삭제</a></div>
                 </div>
-            </div>
-        </div>--%>
-
-        <div class="listAndEdit">
-            <div class="left">
-                <div class="button"><a href="${path}/tboard/list.do"><img
-                        src="${path}/images/trade/listBtn.png" alt=""></a></div>
-            </div>
-            <div class="right">
-                <div class="button"><a class="btnChange"><img
-                        src="${path}/images/trade/changeBtn.png" alt=""></a></div>
             </div>
         </div>
-</div>
-</main>
+    </main>
 </div>
 
 <footer>

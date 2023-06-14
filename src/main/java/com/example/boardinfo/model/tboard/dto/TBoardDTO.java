@@ -4,7 +4,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 public class TBoardDTO {
 
@@ -34,11 +33,12 @@ public class TBoardDTO {
 	private String address2;
 	private String address3;
 	private String place_name;
-	private double lat;
-	private double lng;
+	private Double lat;
+	private Double lng;
 
 	private int interestCount;/*좋아요 수*/
 	private MultipartFile[] files;
+	private String first_image;/*리스트에서 썸네일로 쓰려고 db에 미포함*/
 	//getter, setter
 	public int getTb_num() {
 		return tb_num;
@@ -56,7 +56,8 @@ public class TBoardDTO {
 		return title;
 	}
 	public void setTitle(String title) {
-		this.title = title;
+		this.title =
+				title;
 	}
 	public int getPrice() {
 		return price;
@@ -136,6 +137,7 @@ public class TBoardDTO {
 
 	public void setAddress2(String address2) {
 		this.address2 = address2;
+
 	}
 
 	public String getAddress3() {
@@ -158,7 +160,7 @@ public class TBoardDTO {
 		this.place_name = place_name;
 	}
 
-	public double getLat() {
+	public Double getLat() {
 		return lat;
 	}
 
@@ -166,7 +168,7 @@ public class TBoardDTO {
 		this.lat = lat;
 	}
 
-	public double getLng() {
+	public Double getLng() {
 		return lng;
 	}
 
@@ -184,6 +186,14 @@ public class TBoardDTO {
 
 	public void setFiles(MultipartFile[] files) {
 		this.files = files;
+	}
+
+	public String getFirst_image() {
+		return first_image;
+	}
+
+	public void setFirst_image(String first_image) {
+		this.first_image = first_image;
 	}
 
 	@Override
@@ -210,6 +220,7 @@ public class TBoardDTO {
 				", lng=" + lng +
 				", interestCount=" + interestCount +
 				", files=" + Arrays.toString(files) +
+				", fullName='" + first_image + '\'' +
 				'}';
 	}
 

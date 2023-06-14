@@ -187,6 +187,7 @@
 
         });
 
+
         function insert() {
             // debugger
             let title = $("#title").val().trim();
@@ -212,26 +213,16 @@
                 var imgTags = doc.getElementsByTagName('img');
                 debugger
 
+                const input = document.getElementById("input");
                 // Extract the information from the <img> tags
                 for (var i = 0; i < imgTags.length; i++) {
                     var imgSrc = imgTags[i].getAttribute('src'); // Get the 'src' attribute of the <img> tag
                     // Do whatever you need with the 'imgSrc' value
                     debugger
+
                 }
+
             }
-
-            var str = "";
-            //uploadedList 영역에 클래스 이름이 file인 히든 타입의 태그를 각각 반복시켜 (each함수)
-            $("#uploadedList .file").each(function (i) {
-                console.log(i);
-                //hidden태그 구성
-                str += "<input type='hidden' name='files[" + i + "]' value='"
-                    + $(this).val() + "'>";
-            });
-
-            //폼에 hidden 태그를 붙임
-            $("#insertForm").append(str);
-            console.log('insertForm => ', document.insertForm);
 
             document.insertForm.action = "${path}/tboard/insert.do";
             document.insertForm.submit();
