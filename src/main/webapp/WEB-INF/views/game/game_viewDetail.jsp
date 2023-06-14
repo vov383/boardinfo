@@ -15,20 +15,15 @@
         <link rel="stylesheet" href="${path}/include/js/style_game.css">
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-
         <style>
-
-
             #contentsMain{
                 border-top: 2px solid black;
             }
-
 
             #gameInfoUpper{
                 display: flex;
                 padding: 20px 20px 35px 20px;
             }
-
 
             #upperLeftSide{
                 padding-right: 45px;
@@ -39,7 +34,6 @@
                 height: 260px;
                 border: 1px solid black;
             }
-
 
             #upperRightSide{
                 display: flex;
@@ -58,7 +52,6 @@
                 margin: 0 2px 0 0;
                 padding: 0;
             }
-
 
             #titleArea h3{
                 font-size: 20px;
@@ -121,7 +114,6 @@
             .byUser{
                 color: #F9841A;
             }
-
 
             #ratingArea{
                 padding-top: 15px;
@@ -247,7 +239,7 @@
                 justify-content: center;
             }
 
-            .before:hover, .next:hover {
+            .before:hover, .next:hover, .hover_span:hover {
                 background-color: rgba(0,0,0,.1);
             }
 
@@ -571,11 +563,6 @@
                 cursor: pointer;
             }
 
-
-
-
-
-
         </style>
    </head>
 
@@ -597,10 +584,6 @@
 
 
 	<div align="center">
-        <form name="updateViewForm" method="post" action="${path}/game/updateView.do">
-            <input type="hidden" name="gnum" value="${map.dto.gnum}">
-        </form>
-        <div id="btnGameUpdate">수정</div>
 
            <div id="gameInfoUpper">
 
@@ -699,7 +682,13 @@
                             <img src="${path}/images/game/empty_star.png" class="e_star">
                         </span>
                     </div>
-                    <span>컬렉션 추가</span>
+                    <span class="hover_span">컬렉션 추가</span>
+
+                    <span class="hover_span" id="btnGameUpdate">게임정보수정</span>
+                    <form name="updateViewForm" method="post" action="${path}/game/updateView.do">
+                        <input type="hidden" name="gnum" value="${map.dto.gnum}">
+                    </form>
+
 
                 </div>
 
@@ -1174,6 +1163,10 @@
                });
            }
 
+
+           $("#btnGameUpdate").click(function(){
+               document.updateViewForm.submit();
+           });
        });
 
 

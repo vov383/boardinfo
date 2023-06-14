@@ -19,4 +19,7 @@ public interface GameRatingDAO {
     public List<GameRatingDTO> getTopRatings(int gnum, int number, String user_id);
     public int likeIt(int gnum, String writer_id, String user_id);
     public int unLikeIt(int gnum, String writer_id, String user_id);
+
+    //gnum에 해당하는 평점난이도 가져오기
+    Map<String, Object> getRateWeight(int gnum);
 }

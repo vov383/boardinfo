@@ -1,0 +1,28 @@
+#paginationArea{
+    display: flex;
+    margin: 20px auto 0 auto;
+}
+
+.pageItem{
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    line-height: 35px;
+    text-align: center;
+    margin: 0 3px;
+    font-size: 1.2em;
+}
+
+.pageItem:hover{
+    cursor: pointer;
+}
+
+.pageItem:not(#curPage):hover{
+    background-color: #D9D9D9;
+}
+
+#curPage{
+    border: 2px solid #1432B1;
+    color: #1432B1;
+    line-height: 31px;
+}
