@@ -1,5 +1,6 @@
 package com.example.boardinfo.service.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,8 +66,25 @@ public class GameServiceImpl implements GameService {
     List<GameDTO> list = gameDao.gamelist(map);
 
     for(GameDTO dto : list){
+      //bggnum을 통한 image파싱
       int bggnum = dto.getBggnum();
       dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
+
+      //gnum을 통해 rating과 weight를 넣자
+      int gnum = dto.getGnum();
+      Map<String, Object> rmap = gameRatingDao.getRateWeight(gnum);
+      if(rmap != null && rmap.get("AVGRATING") != null){
+        logger.info("평균값 찍혀나오는지 : " + rmap.get("AVGRATING"));
+        Double rate = Double.parseDouble(String.format("%.2f",rmap.get("AVGRATING")));
+        logger.info("평균값 형변환 잘되서 나오는지 : " + rate);
+        dto.setRate(rate);
+      }
+      if(rmap != null && rmap.get("AVGWEIGHT") != null){
+        logger.info("난이도값 찍혀나오는지 : " + rmap.get("AVGWEIGHT"));
+        Double weight = Double.parseDouble(String.format("%.2f",rmap.get("AVGWEIGHT")));
+        logger.info("난이도값 형변환 잘되서 나오는지 : " + weight);
+        dto.setWeight(weight);
+      }
     }
 
     map.put("list",list);
@@ -343,7 +361,7 @@ public class GameServiceImpl implements GameService {
     String artist = GameUtils.listToStr(alist);
     artist = GameUtils.removeLastChar(artist);
     dto.setArtist(artist);
-logger.info("artist값이 잘 null로 되나 : " + artist);
+
     //카테고리
     List<String> clist = categoryDao.viewGamecategory(gnum);
     String gamecategory = GameUtils.listToStr(clist);
