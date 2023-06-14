@@ -5,7 +5,7 @@
 <head>
 <link rel="stylesheet" type="text/css" href="../css/member.css">
 <meta charset="UTF-8">
-<title>아이디 찾기</title>
+<title>비밀번호 찾기</title>
 <%@ include file="../include/js/header.jsp"%>
 
 <style type="text/css">
@@ -46,10 +46,6 @@ body {
 .footer_col {
 	text-shadow: gray;
 }
-footer{
-	position : fixed;
-	bottom : 0
-}
 </style>
 <script type="text/javascript">
 	$(function() {
@@ -68,24 +64,23 @@ footer{
 		});
 	});
 
-	function searchId() {
-		let name = $("#inputName_1").val();
-		let hp = $("#inputPhone_1").val();
+	function searchPw() {
+		let userid = $("#inputID_1").val();
+		let email = $("#inputEmail_1").val();
 		$.ajax({
 			type : "post",
-			url : "${path}/member/userSearch",
+			url : "${path}/member/findPwCheck",
 			data : {
-				"name" : name,
-				"hp" : hp
+				"userid" : userid,
+				"email" : email
 			},
 			success : function(data) {
 				// debugger
 				if (data == 0) {
 					alert('회원정보를 확인하세요!');
 				} else {
-					var idv = data;
-					alert(data);
-					location.href = "${path}/member/member_login.do";
+					//회정정보가 맞다면 인증번호 송출
+					location.href ="${path}/member/find_pass.do"
 				}
 			}
 		});
@@ -93,15 +88,12 @@ footer{
 
 	function btncheck() {
 		if (window.event.keyCode === 13) {
-			$("#findidbtn").click();
+			$("#findpwbtn").click();
 		}
 	}
 </script>
 
 </head>
-	<header>
-     
-    </header>
 <body>
 	<div class="body">
 		<h2>
@@ -109,34 +101,34 @@ footer{
 				src="../resources/uploaded_image/boardinfo_logo.png"></a>
 		</h2>
 		<div class="input_section">
-			<form method="post" name="searchFormI">
+			<form method="post" name="searchFormP">
 				<fieldset>
-					<legend>아이디 찾기</legend>
+					<legend>비밀번호 찾기</legend>
 					<table>
 						<tr>
-							<td>이름</td>
-							<td><input type="text" name="name" id="inputName_1"
-								placeholder="ex)홍길동"></td>
+							<td>ID</td>
+							<td><input type="text" name="userid" id="inputID_1"
+								placeholder="아이디를 입력해주세요."></td>
 						</tr>
 						<tr>
-							<td>휴대폰번호</td>
-							<td><input type="text" name="hp" id="inputPhone_1"
-								placeholder="ex)01012345678" onkeyup="btncheck()"></td>
+							<td>EMAIL</td>
+							<td><input type="text" name="email" id="inputEmail_1"
+								placeholder="이메일을 입력해주세요." onkeyup="btncheck()"></td>
 						</tr>
 						<tr>
-							<td colspan="3"><button type="button" name="findidbtn"
-									id="findidbtn" onclick="searchId()">확인</button> <a
-								href="${path}/"><button type="button">메인으로</button></a></td>
+							<td colspan="3">
+							<button type="button" name="findpwbtn" id="findpwbtn" onclick="searchPw()">확인</button> 
+							<a href="${path}/"><button type="button">메인으로</button></a>
+							</td>
 						</tr>
 					</table>
 				</fieldset>
 			</form>
 		</div>
-		<a href="${path}/member/member_join.do">회원가입</a> |
+		<a href="${path}/member/member_join.do">회원가입</a> | 
 		<a href="${path}/member/member_login.do">로그인</a> | 
-		<a href="${path}/member/findpwmove.do">비밀번호 찾기</a> 
+		<a href="${path}/member/findidmove.do">아이디 찾기</a>
 	</div>
-	
+
 </body>
-	
 </html>

@@ -87,6 +87,14 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.selectOne("member.searchId" ,map);
 	}
 
+	@Override
+	public String get_PwCheck(String userid, String email) {
+		Map<String, String> map = new HashMap<>();
+		map.put("userid", userid);
+		map.put("email", email);
+		return sqlSession.selectOne("member.findPwCheck" ,map);
+	}
+
 
 
 	

@@ -5,7 +5,7 @@
 <head>
 <link rel="stylesheet" type="text/css" href="../css/member.css">
 <meta charset="UTF-8">
-<title>아이디 찾기</title>
+<title>비밀번호 찾기</title>
 <%@ include file="../include/js/header.jsp"%>
 
 <style type="text/css">
@@ -46,10 +46,6 @@ body {
 .footer_col {
 	text-shadow: gray;
 }
-footer{
-	position : fixed;
-	bottom : 0
-}
 </style>
 <script type="text/javascript">
 	$(function() {
@@ -68,40 +64,16 @@ footer{
 		});
 	});
 
-	function searchId() {
-		let name = $("#inputName_1").val();
-		let hp = $("#inputPhone_1").val();
-		$.ajax({
-			type : "post",
-			url : "${path}/member/userSearch",
-			data : {
-				"name" : name,
-				"hp" : hp
-			},
-			success : function(data) {
-				// debugger
-				if (data == 0) {
-					alert('회원정보를 확인하세요!');
-				} else {
-					var idv = data;
-					alert(data);
-					location.href = "${path}/member/member_login.do";
-				}
-			}
-		});
-	}
+
 
 	function btncheck() {
 		if (window.event.keyCode === 13) {
-			$("#findidbtn").click();
+			$("#findpwbtn").click();
 		}
 	}
 </script>
 
 </head>
-	<header>
-     
-    </header>
 <body>
 	<div class="body">
 		<h2>
@@ -111,32 +83,23 @@ footer{
 		<div class="input_section">
 			<form method="post" name="searchFormI">
 				<fieldset>
-					<legend>아이디 찾기</legend>
+					<legend>인증번호 체크</legend>
 					<table>
 						<tr>
-							<td>이름</td>
-							<td><input type="text" name="name" id="inputName_1"
-								placeholder="ex)홍길동"></td>
+							<td>인증번호</td>
+							<td><input type="text" name="pass_num" id="pass_num"
+								placeholder="인증번호 입력"></td>
 						</tr>
 						<tr>
-							<td>휴대폰번호</td>
-							<td><input type="text" name="hp" id="inputPhone_1"
-								placeholder="ex)01012345678" onkeyup="btncheck()"></td>
-						</tr>
-						<tr>
-							<td colspan="3"><button type="button" name="findidbtn"
-									id="findidbtn" onclick="searchId()">확인</button> <a
-								href="${path}/"><button type="button">메인으로</button></a></td>
+							<td colspan="3">
+							<button type="button" name="pass_check" id="pass_check" onclick="">인증번호 확인</button> 
+							</td>
 						</tr>
 					</table>
 				</fieldset>
 			</form>
 		</div>
-		<a href="${path}/member/member_join.do">회원가입</a> |
-		<a href="${path}/member/member_login.do">로그인</a> | 
-		<a href="${path}/member/findpwmove.do">비밀번호 찾기</a> 
 	</div>
-	
+
 </body>
-	
 </html>
