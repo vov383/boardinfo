@@ -1,29 +1,44 @@
 package com.example.boardinfo.model.tboard.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class TBoardDTO {
 
-	private int tb_num;
-	private String category;
-	private String title;
-	private int price;
-	private String description;
-	private int view_count;
-	private int re_count;
-	private String del;
-	private String create_user;
+	private int tb_num;/*pk 게시물번호*/
+	private String category;/*판매, 구매, 나눔, 완료*/
+	private String title;/*제목*/
+	private int price;/*가격*/
+	private String description;/*본문*/
+	private int view_count;/*조회수*/
+	private int re_count;/*댓글 수*/
+	private String del;/*삭제여부 'N' or 'Y'*/
+	private String create_user;/*작성자*/
 	private String nickname;
-	private Date create_date;
+	private Date create_date;/*작성일자*/
 	private String update_user;
 	private Date update_date;
+
+	/*거래장소
+	* 시, 도
+	* 시, 군, 구
+	* 상세주소
+	* 장소명
+	* 좌표값 위도
+	* 경도
+	* */
 	private String address1;
 	private String address2;
 	private String address3;
 	private String place_name;
 	private double lat;
 	private double lng;
-	private int interestCount;
+
+	private int interestCount;/*좋아요 수*/
+	private MultipartFile[] files;
 	//getter, setter
 	public int getTb_num() {
 		return tb_num;
@@ -163,6 +178,14 @@ public class TBoardDTO {
 		this.interestCount = interestCount;
 	}
 
+	public MultipartFile[] getFiles() {
+		return files;
+	}
+
+	public void setFiles(MultipartFile[] files) {
+		this.files = files;
+	}
+
 	@Override
 	public String toString() {
 		return "TBoardDTO{" +
@@ -175,7 +198,7 @@ public class TBoardDTO {
 				", re_count=" + re_count +
 				", del='" + del + '\'' +
 				", create_user='" + create_user + '\'' +
-				", nickName='" + nickname + '\'' +
+				", nickname='" + nickname + '\'' +
 				", create_date=" + create_date +
 				", update_user='" + update_user + '\'' +
 				", update_date=" + update_date +
@@ -186,6 +209,7 @@ public class TBoardDTO {
 				", lat=" + lat +
 				", lng=" + lng +
 				", interestCount=" + interestCount +
+				", files=" + Arrays.toString(files) +
 				'}';
 	}
 

@@ -9,14 +9,21 @@ import javax.servlet.http.HttpSession;
 
 import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
 import com.example.boardinfo.util.Pager;
+import com.example.boardinfo.util.UploadFileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.example.boardinfo.model.tboard.dao.TBoardDAO;
 import com.example.boardinfo.model.tboard.dto.TBoardDTO;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class TBoardServiceImpl implements TBoardService {
 
+	//로깅
+	private static final Logger logger = LoggerFactory.getLogger(TBoardServiceImpl.class);
 	@Inject
 	TBoardDAO tboardDao;
 
@@ -51,18 +58,28 @@ public class TBoardServiceImpl implements TBoardService {
 		return map;
 	}
 
+	@Transactional
 	@Override
-	public void insert(TBoardDTO dto) {
-		if(dto.getAddress1() == "" || dto.getAddress1().equals("")){tboardDao.insert(dto);
-		}else{
-			tboardDao.insertWithAddress(dto);
+	public void insert(TBoardDTO dto, MultipartFile[] files, String uploadPath) throws Exception {
+			int result =  tboardDao.insert(dto);
+			if(result == 1){/*insert에 성공하면*/
+				if(files==null) return; //첨부파일이 없으면 skip
+
+				for(int i=0; i< files.length; i++) {
+					String fileName = files[i].getOriginalFilename();
+					byte[] fileData = files[i].getBytes();
+					//파일 업로드
+					String uploadedFileName = UploadFileUtils.uploadFile(uploadPath, fileName, fileData);
+					logger.info("uploadedFileName :" + uploadedFileName);
+					TBAttachDTO fDto = new TBAttachDTO();
+					fDto.setFullName(uploadedFileName);
+					fDto.setFileData(fileData);
+					fDto.setFormatName(uploadedFileName.substring(uploadedFileName.lastIndexOf(".")+1));
+					fDto.setCreate_user(dto.getCreate_user());
+					int result2 = tboardDao.fileAttach(fDto);
+				}
 		}
 
-	}
-
-	@Override
-	public void fileAttach(TBAttachDTO f_dto) {
-		tboardDao.fileAttach(f_dto);
 	}
 
 	@Override
@@ -105,9 +122,27 @@ public class TBoardServiceImpl implements TBoardService {
 		tboardDao.deleteFile(fileName);
 	}
 
+//    @Override
+//    public void fileAttach(String create_user, List<MultipartFile> files, String uploadPath) throws Exception {
+//			for (int i = 0; i < files.size(); i++) {
+//				String fileName = files.get(i).getOriginalFilename();
+//				//파일을 바이트 배열로 변환
+//				byte[] fileData = files.get(i).getBytes();
+//
+//				String uploadedFileName = UploadFileUtils. uploadFile(uploadPath, fileName, fileData);
+//
+//				TBAttachDTO fDto = new TBAttachDTO();
+//
+//				fDto.setCreate_user(create_user);
+//				fDto.setFullName(uploadedFileName);
+//				fDto.setFormatName(uploadedFileName.substring(uploadedFileName.lastIndexOf(".")+1));
+//				fDto.setFileData(fileData);
+//				tboardDao.fileAttach(fDto);
+//			}
+//    }
 
 
-	@Override
+    @Override
 	public void increaseRecnt(int tb_num) {
 		tboardDao.increaseRecnt(tb_num);
 	}
