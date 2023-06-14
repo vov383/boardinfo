@@ -97,4 +97,24 @@ public class MemberServiceImpl implements MemberService {
 	    return false; // 탈퇴하지 않은 회원인 경우
 	}
 
+	@Override
+	public String get_searchId(String name, String hp) {
+		String result = memberDao.get_searchId(name, hp);
+	    
+	    if (result != null && result.length() >= 2) {
+	        if (result.length() < 7) {
+	            // 길이가 7 미만인 경우 뒷쪽 두 글자를 '*'로 변경
+	            result = result.substring(0, result.length() - 2) + "**";
+	        } else {
+	            // 길이가 8 이상인 경우 뒷쪽 4글자를 '*'로 변경
+	            result = result.substring(0, result.length() - 4) + "****";
+	        }
+	    }
+	    return result;
+	
+	}
+	
+
+
+
 }
