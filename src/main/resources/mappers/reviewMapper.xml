@@ -157,7 +157,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
 
 
-	<!--리뷰 댓글-->
+	<!--리뷰 댓글 입력-->
 	<insert id="reviewReply" parameterType="hashMap">
 		INSERT INTO REPLY_COMMENTS ( REPLY_REG_NUM
 								   , REG_NUM
@@ -168,9 +168,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 								   , CREATE_DATE
 								   , UPDATE_USER
 								   , UPDATE_DATE)
-		VALUES ( to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(REPLY_REG_NUM, 7)) + 1 from REPLY_COMMENTS where REPLY_REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'), 5, 0)
+		VALUES (to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(REPLY_REG_NUM, 7)) + 1 from REPLY_COMMENTS where REPLY_REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'), 5, 0)
 			   , #{regNum}
 			   , #{topReplyRegNum, jdbcType=VARCHAR}
+			   , #{commentDetail}
+			   , 'N'
+			   , #{createUser}
+			   , sysdate
+			   , #{createUser}
+			   , sysdate)
+	</insert>
+
+	<!--리뷰 답글 입력-->
+	<insert id="topreplyinsetsave" parameterType="hashMap">
+		INSERT INTO REPLY_COMMENTS ( REPLY_REG_NUM
+								   , REG_NUM
+								   , TOP_REPLY_REG_NUM
+								   , COMMENT_DETAIL
+								   , DEL
+								   , CREATE_USER
+								   , CREATE_DATE
+								   , UPDATE_USER
+								   , UPDATE_DATE)
+		VALUES 	 (
+				 #{replyRegNum}
+			   , #{regNum}
+			   , to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(TOP_REPLY_REG_NUM, 7)) + 1 from REPLY_COMMENTS where TOP_REPLY_REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'), 5, 0)
 			   , #{commentDetail}
 			   , 'N'
 			   , #{createUser}
@@ -202,8 +225,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		  AND REPLY_REG_NUM = #{replyRegNum}
 	</update>
 
-
-
+	<!--리뷰 댓글 조회-->
 	<select id="reviewReplyOut" parameterType="hashMap" resultType="com.example.boardinfo.model.review.dto.ReplyCommentsDTO">
 		SELECT RC.REPLY_REG_NUM 			AS REPLYREGNUM
 			 , RC.REG_NUM 					AS REGNUM
@@ -223,14 +245,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		  AND RC.CREATE_USER = M.USERID(+)
 		ORDER BY RC.CREATE_DATE
 	</select>
-
-
-
-
-
-
-
-
 
 
 

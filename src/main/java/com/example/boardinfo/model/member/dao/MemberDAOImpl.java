@@ -79,6 +79,15 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.selectOne("member.getDelValue",userid);
 	}
 
+	@Override
+	public String get_searchId(String name, String hp) {
+		Map<String, String> map = new HashMap<>();
+		map.put("name", name);
+		map.put("hp", hp);
+		return sqlSession.selectOne("member.searchId" ,map);
+	}
+
+
 
 	
 	

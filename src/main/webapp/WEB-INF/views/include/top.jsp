@@ -186,9 +186,6 @@ document.addEventListener('click', function(event) {
 </script>
 <style>
 
-.dropdown .dropbtn:hover {
-  background-color: #eaeaea;
-}
 
 .dropdown {
   position: relative;

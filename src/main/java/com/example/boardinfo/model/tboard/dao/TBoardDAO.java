@@ -9,7 +9,7 @@ import com.example.boardinfo.model.tboard.dto.TBoardDTO;
 public interface TBoardDAO {	
 	List<TBoardDTO> list(Map<String, Object> map);
 
-	void insert(TBoardDTO dto);
+	int insert(TBoardDTO dto);
 	
 	TBoardDTO viewPost(int tb_num);
 	
@@ -26,8 +26,6 @@ public interface TBoardDAO {
 
 	void deleteFile(String fileName);
 
-    void fileAttach(TBAttachDTO f_dto);
-
-    void insertWithAddress(TBoardDTO dto);
+    int fileAttach(TBAttachDTO fDto);
 
 }
