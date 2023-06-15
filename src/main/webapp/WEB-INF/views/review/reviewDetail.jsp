@@ -279,17 +279,6 @@
             $("form[name=formreviewtopreply_"+topReply+"]").submit();
         }
 
-        /*<input type="hidden" name="replyRegNum" id="topReplyRegNum" value="${vo.replyRegNum}">
-                    <input type="hidden" name="regNum" id="topRegNum" value="${vo.regNum}">*/
-
-        // 댓글
-        /*function btnReply(){
-            $("#reviewReplyKey").val($('input[name=regNumHidden]').val());
-            document.formreviewreply.submit();
-        }*/
-
-
-
         /*대댓글 입력창 보이기 안보이기*/
         function btnTopReply(replyRegNum, regNum, topReplyRegNum){
             if ($("td[name=topReplyInset"+replyRegNum+regNum+topReplyRegNum+"]").attr("style") == "display: none") {
@@ -423,14 +412,13 @@
 
         <c:forEach items="${commentList}" var="vo">
 
-        <table style="table-layout:fixed;" >
+        <table style="table-layout:fixed;" width="700">
             <tr>
-                <td width="100"><b>${vo.nickname}</b></td>
+                <td><b>${vo.nickname}</b></td>
+                <td>${vo.createDate}</td>
+                <td style="display: none">${vo.replyRegNum}</td>
 
-                <%--<td>${vo.createDate}</td>--%>
-                <td>${vo.replyRegNum}</td>
-
-
+                <%--로그인 id와 작성자가 같으면 수정, 삭제 버튼 보이기--%>
                 <c:if test="${userid eq vo.createUser}">
                 <td name="reply_show_${vo.replyRegNum}${vo.regNum}">
                     <button type="button" onclick="btnReplyEditMode('${vo.replyRegNum}','${vo.regNum}')">수정</button>
@@ -451,48 +439,46 @@
 
 
             </tr>
+
+            <%--댓글 답글 나누기, topReplyRegNum == null이면 댓글--%>
+            <c:if test="${null eq vo.topReplyRegNum}">
             <tr>   <%--댓글 보여주기, 수정시 입력창 활성화 style="display: none"--%>
-                <td colspan="4" name="reply_show_${vo.replyRegNum}${vo.regNum}"><pre>${vo.commentDetail}</pre></td>
+                <td colspan="4" name="reply_show_${vo.replyRegNum}${vo.regNum}">
+                    <pre>${vo.commentDetail}</pre>
+                </td>
                 <td colspan="4" name="reply_edit_${vo.replyRegNum}${vo.regNum}" style="display: none">
-                    <textarea id="${vo.replyRegNum}${vo.regNum}" rows = "3" cols = "80">
+                    <textarea id="${vo.replyRegNum}${vo.regNum}" rows = "2">
                             ${vo.commentDetail}
                     </textarea></td>
+            </c:if>
 
-
-            <%--답글 입력--%>
-            <%--<form name="formtopReplyInset" method="post" action="${path}/review/topreplyinsetsave.do">
-                <input type="hidden" name="replyRegNum" id="topreplyRegNum">
-                <input type="hidden" name="regNum" id="topregNum">
+            <%--댓글 답글 나누기, topReplyRegNum != null이 아니면 답글--%>
+            <c:if test="${null ne vo.topReplyRegNum}">
             <tr>
-                <td colspan="4" name="topReplyInset${vo.replyRegNum}${vo.regNum}">
-                    <textarea id="${vo.replyRegNum}${vo.regNum}" rows = "3" cols = "80" &lt;%&ndash;style="display: none"&ndash;%&gt;>
-                        &lt;%&ndash;대댓글 입력란&ndash;%&gt;
-                    </textarea></td>
-                <td name="topReplyInsetSave" &lt;%&ndash;style="display: none"&ndash;%&gt;>
-                    <button type="button" onclick="btnTopReplySave('${vo.replyRegNum}','${vo.regNum}')">
-                        저장
-                    </button>
+                <td colspan="4" name="reply_show_${vo.replyRegNum}${vo.regNum}">
+                    <pre>${vo.commentDetail}</pre>
                 </td>
-            </tr>
-            </form>--%>
+                <td colspan="4" name="reply_edit_${vo.replyRegNum}${vo.regNum}" style="display: none">
+                    <textarea id="${vo.replyRegNum}${vo.regNum}" rows = "2" cols = "20">
+                            ${vo.commentDetail}
+                    </textarea></td>
+            </c:if>
 
                     <%--답글 입력--%>
                 <form name="formreviewtopreply_${vo.replyRegNum}" method="post" action="${path}/review/topreplyinsetsave.do">
                     <input type="hidden" name="topReplyRegNum" id="topReplyRegNum" value="${vo.replyRegNum}">
                     <input type="hidden" name="regNum" id="topRegNum" value="${vo.regNum}">
-
-                    <p>Comment 작성</p>
-                    <hr/> <%--구분선--%>
-                    <p>
-                        <textarea name = "commentDetail" id="topreplyinset" rows = "3" cols = "80"></textarea>
-                        <button type="button" onclick="btnTopReplySave('${vo.replyRegNum}')">답글 저장</button>
-                    </p>
+                    <tr>
+                       <td colspan="4">
+                           <textarea name = "commentDetail" id="topreplyinset" rows = "2" cols = "80"></textarea>
+                           <button type="button" onclick="btnTopReplySave('${vo.replyRegNum}')">답글 저장</button>
+                       </td>
+                    </tr>
                 </form>
-
-
             </tr>
             <p></p>
         </table>
+            <hr/> <%--구분선--%>
 
         </c:forEach>
 

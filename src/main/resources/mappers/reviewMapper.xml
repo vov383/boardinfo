@@ -243,7 +243,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		  AND RC.REG_NUM = #{reviewDetailKey}
 		  AND RC.DEL = 'N'
 		  AND RC.CREATE_USER = M.USERID(+)
-		ORDER BY RC.CREATE_DATE
+		/*답글 진입*/
+		<if test="topReplyRegNum != '' and topReplyRegNum != null">
+			AND ((RC.TOP_REPLY_REG_NUM = #{topReplyRegNum})
+			OR RC.REPLY_REG_NUM=#{ReplyRegNum})
+		</if>
+		ORDER BY RC.TOP_REPLY_REG_NUM||RC.REPLY_REG_NUM, RC.CREATE_DATE
 	</select>
 
 
