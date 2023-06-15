@@ -21,5 +21,7 @@ public interface MemberService {
 	boolean checkDuplicateId(String userid);
 	boolean checkDuplicateNick(String nickname);
 	boolean getDelValue(String userid);
-	
+	String get_searchId(String name, String hp);
+	String get_PwCheck(String userid, String email);
+		
 }

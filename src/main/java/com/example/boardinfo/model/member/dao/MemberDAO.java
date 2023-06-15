@@ -15,5 +15,8 @@ public interface MemberDAO {
 	MemberDTO selectMemberById(String userid);
 	MemberDTO selectMemberByNick(String nickname);
 	MemberDTO getDelValue(String userid);
-	
+	String get_searchId(String name, String hp);
+	String get_PwCheck(String userid, String email);
+
+
 }

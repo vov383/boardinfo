@@ -54,20 +54,16 @@
 
 
     <insert id="insertBoard">
-        insert into t_board (tb_num, title, price,
-                             description, category, create_user)
-        values (seq_tboard.nextval, #{title}, #{price},
-                #{description}, #{category}, #{create_user})
-    </insert>
-
-    <insert id="insertBoardWithAddress">
-        insert into t_board (tb_num, title, price,
-                             description, category, create_user, nickname, address1, address2, address3,
-                             place_name, lat, lng)
-        values (seq_tboard.nextval, #{title}, #{price},
-                #{description}, #{category}, #{create_user},
-                #{nickname}, #{address1}, #{address2}, #{address3},
-                #{place_name}, #{lat}, #{lng})
+        <choose>
+            <when test="address1 != null and !address1.equals('')">
+                insert into t_board (tb_num, title, price, description, category, create_user, address1, address2, address3, place_name, lat, lng)
+                values (seq_tboard.nextval, #{title}, #{price}, #{description}, #{category}, #{create_user}, #{address1}, #{address2}, #{address3}, #{place_name}, #{lat}, #{lng})
+            </when>
+            <otherwise>
+                insert into t_board (tb_num, title, price, description, category, create_user)
+                values (seq_tboard.nextval, #{title}, #{price}, #{description}, #{category}, #{create_user})
+            </otherwise>
+        </choose>
     </insert>
 
     <select id="viewPost" resultType="tboardDto">
@@ -114,8 +110,7 @@
     <insert id="insertFile">
         insert into tb_files (file_reg_num, tb_num,
                               fullName, formatName, fileData, create_user)
-        values ((seq_tb_files.nextval), (seq_t_board.currval), #{fullName}, #{formatName},
-                #{fileData}, #{create_user})
+        values ((seq_tb_files.nextval), (seq_tboard.currval), #{fullName}, #{formatName}, #{fileData}, #{create_user})
     </insert>
 
     <delete id="deleteAttach">

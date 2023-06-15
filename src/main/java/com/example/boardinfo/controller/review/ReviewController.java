@@ -143,6 +143,29 @@ public class ReviewController {
 		return mav;
 	}
 
+	// 리뷰 대댓글 입력
+	@RequestMapping("topreplyinsetsave.do")
+	public ModelAndView topreplyinsetsave(@ModelAttribute ReplyCommentsDTO replyCommentsDTO, HttpSession session) {
+System.out.println("1");
+		/*답글 입력*/
+		reviewservice.topreplyinsetsave(replyCommentsDTO, session);
+		System.out.println("2");
+		/*댓글의 상단 리뷰 내용 출력*/
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("review/reviewDetail");
+		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
+		reviewserchDTO.setReviewDetailKey(replyCommentsDTO.getRegNum());
+		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+
+		/*댓글 출력*/
+		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+
+		String userid = (String) session.getAttribute("userid");
+		mav.addObject("userid", userid);
+
+		return mav;
+	}
+
 
 	// 리뷰 입력 및 수정할 페이지
 	@RequestMapping("reviewInsert.do")
