@@ -41,8 +41,10 @@ public class MemberServiceImpl implements MemberService {
 			MemberDTO dto2=viewMember(dto.getUserid());
 			session.setAttribute("userid", dto.getUserid());
 			session.setAttribute("name", dto2.getName());
+			session.setAttribute("nickname", dto2.getNickname());
 			System.out.println(session.getAttribute("userid"));
 			System.out.println(session.getAttribute("name"));
+			System.out.println(session.getAttribute("nickname"));
 		}
 		return result;
 	}
@@ -112,6 +114,12 @@ public class MemberServiceImpl implements MemberService {
 	    }
 	    return result;
 	
+	}
+
+	@Override
+	public String get_PwCheck(String userid, String email) {
+		String result=memberDao.get_PwCheck(userid,email);
+		return result;
 	}
 	
 

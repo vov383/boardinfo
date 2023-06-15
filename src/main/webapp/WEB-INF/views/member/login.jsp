@@ -47,29 +47,8 @@ function login_check() {
       $("#btnLogin").click();
     }
   }
+  
 
-function searchId() {
-    let name = $("#inputName_1").val();
-    let hp = $("#inputPhone_1").val();
-    $.ajax({
-        type: "post",
-        url: "${path}/member/userSearch",
-        data: {
-            "name" : name,
-            "hp" : hp
-        },
-        success: function(data){
-            // debugger
-            if(data == 0){
-            	$('#id_value').text("회원 정보를 확인하세요!");
-            }else{
-                var idv = data;
-                alert(data);
-            }
-        }
-    });
-
-}
 </script>
 </head>
 <body>
@@ -90,10 +69,10 @@ function searchId() {
 				<input type="checkbox" class="form-check-input" id="pwdCheck">
 				<label class="form-check-label" for="pwdCheck">ID 저장</label>
 			</div>
-				<div style="color: red;">로그인 하신 후 사용하세요.</div>
 			<button type="button" class="btn btn-primary" name="btnLogin"
 				id="btnLogin">로그인</button>
 			<c:if test="${param.message == 'nologin' }">
+				<div style="color: red;">로그인 하신 후 사용하세요.</div>
 			</c:if>
 			<c:if test="${message == 'error' }">
 				<div style="color: red;">아이디 또는 비밀번호가 일치하지 않습니다.</div>
@@ -103,23 +82,11 @@ function searchId() {
 			</c:if>
 		</form>
 		<div class="dropdown-divider"></div>
-		<a class="dropdown-item" href="${path}/">메인으로</a> <a
-			class="dropdown-item" href="${path}/member/member_join.do">회원가입</a> <a
-			class="dropdown-item" href="${path}/member/findidmove.do">아이디 찾기</a>
-		<a class="dropdown-item" href="#">비밀번호 찾기</a>
-
-		<div id="searchI">
-			<form name="searchFormI" method="post">
-				<input type="text" name="name" placeholder="이름 쓰세요" id="inputName_1">
-				<input type="text" name="hp" placeholder="hp 쓰세요" id="inputPhone_1">
-				<button type="button" onclick="searchId()">아이디 찾기</button>
-			</form>
-			<div class="resultContainer">
-				<div id="id_value"></div>
-				<div id="pw_value"></div>
-			</div>
+		<a class="dropdown-item" href="${path}/">메인으로</a> 
+		<a class="dropdown-item" href="${path}/member/member_join.do">회원가입</a> 
+		<a class="dropdown-item" href="${path}/member/findidmove.do">아이디 찾기</a>
+		<a class="dropdown-item" href="${path}/member/findpwmove.do">비밀번호 찾기</a>
 		</div>
-	</div>
 
 </body>
 </html>

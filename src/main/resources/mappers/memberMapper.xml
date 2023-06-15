@@ -91,6 +91,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where name = #{name} and hp = #{hp}
 	</select>
 	
+	<!-- 아이디 이메일 체크 (비밀번호 찾기)-->
+	<select id="findPwCheck" resultType="String">
+		select count(*) from member 
+        where userid = #{userid} and email = #{email}
+	</select>
+	
 </mapper>
 
 
