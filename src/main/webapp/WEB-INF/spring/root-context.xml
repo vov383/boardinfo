@@ -98,13 +98,14 @@
 
 	<!-- 트랜잭션 관련 어노테이션을 자동 인식하는 옵션 -->
 	<tx:annotation-driven/>
+	
 	<!-- 이메일 발송 bean 설정 -->
 	<bean id="mailSender"
 	class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="smtp.gmail.com" /> <!-- gmail을 사용 -->
         <property name="port" value="587" />
-        <property name="username" value="이메일주소" />
-        <property name="password" value="비밀번호" />
+        <property name="username" value="xod13579@gmail.com" />
+        <property name="password" value="obfnrozptlqomssm" />
         <property name="javaMailProperties">
             <props>
                 <prop key="mail.transport.protocol">smtp</prop>

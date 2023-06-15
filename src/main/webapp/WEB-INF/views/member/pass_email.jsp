@@ -81,7 +81,7 @@ body {
 				src="../resources/uploaded_image/boardinfo_logo.png"></a>
 		</h2>
 		<div class="input_section">
-			<form method="post" name="searchFormI">
+			<form method="post" action="pass_num.do${dice},${email}">
 				<fieldset>
 					<legend>인증번호 체크</legend>
 					<table>
@@ -91,8 +91,8 @@ body {
 								placeholder="인증번호 입력"></td>
 						</tr>
 						<tr>
-							<td colspan="3">
-							<button type="button" name="pass_check" id="pass_check" onclick="">인증번호 확인</button> 
+							<td colspan="3" align="center">
+							<button type="submit" name="pass_check" id="pass_check">인증번호 확인</button> 
 							</td>
 						</tr>
 					</table>

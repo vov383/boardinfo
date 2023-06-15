@@ -80,7 +80,8 @@ body {
 					alert('회원정보를 확인하세요!');
 				} else {
 					//회정정보가 맞다면 인증번호 송출
-					location.href ="${path}/member/find_pass.do"
+					document.searchFormP.action="${path}/member/find_pass.do";
+					document.searchFormP.submit();
 				}
 			}
 		});
