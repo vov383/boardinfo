@@ -55,15 +55,12 @@
 
     <insert id="insertBoard">
         <choose>
-            <when test="address1 != null || !address1.equals('')">
-                insert into t_board (tb_num, title, price,
-                description, category, create_user, address1, address2, address3,
-                place_name, lat, lng)
+            <when test="address1 != null and !address1.equals('')">
+                insert into t_board (tb_num, title, price, description, category, create_user, address1, address2, address3, place_name, lat, lng)
                 values (seq_tboard.nextval, #{title}, #{price}, #{description}, #{category}, #{create_user}, #{address1}, #{address2}, #{address3}, #{place_name}, #{lat}, #{lng})
             </when>
             <otherwise>
-                insert into t_board (tb_num, title, price,
-                description, category, create_user)
+                insert into t_board (tb_num, title, price, description, category, create_user)
                 values (seq_tboard.nextval, #{title}, #{price}, #{description}, #{category}, #{create_user})
             </otherwise>
         </choose>

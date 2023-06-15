@@ -54,6 +54,7 @@ public class TBoardController {
                 select_category, search_option, keyword, curPage);
         ModelAndView mav = new ModelAndView();
 //		logger.info("맵 : "+map);
+
         map.put("count", count);
 
         mav.setViewName("tboard/list");
@@ -74,15 +75,30 @@ public class TBoardController {
 //    @PostMapping("insert.do")
     @RequestMapping("insert.do")
     public String insert(
-            @RequestParam MultipartFile[] files,
-            @ModelAttribute TBoardDTO dto,
-            HttpSession session, HttpServletRequest request
+            @RequestParam(value="files", required = false) MultipartFile[] files,
+            @RequestParam(value="title") String title, @RequestParam(value="price") int price, @RequestParam(value="description") String description, @RequestParam(value="category") String category, @RequestParam(value="address1", required = false) String address1, @RequestParam(value="address2", required = false) String address2, @RequestParam(value="address3", required = false) String address3, @RequestParam(value="place_name", required = false) String place_name, @RequestParam(value="lat", required = false) Double lat, @RequestParam(value="lng", required = false) Double lng, HttpSession session, HttpServletRequest request
     ) throws Exception {
         //로그인 한 사람만 들어올 수 있으니까 HttpSession 써야함
-
+        
         if (session.getAttribute("userid") == null) {
             return "member/login";
         } else {
+            TBoardDTO dto = new TBoardDTO();
+            dto.setTitle(title);
+            dto.setPrice(price);
+            dto.setDescription(description);
+            dto.setCategory(category);
+            dto.setAddress1(address1);
+            dto.setAddress2(address2);
+            dto.setAddress3(address3);
+            dto.setPlace_name(place_name);
+
+            //여기서 lat이 null이라서 nullpointexception
+            //null 이 아닌 경우에만
+            if(lat != null){
+                dto.setLat(lat);
+                dto.setLng(lng);
+            }
             //이름이 없기 때문에 session에서 id를 가져와야 한다.
             String create_user = (String) session.getAttribute("userid");
             dto.setCreate_user(create_user);
