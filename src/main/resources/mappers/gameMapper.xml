@@ -13,23 +13,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="gameList" resultType="gameDto">
-		select *
-		from (select a.*, rownum rn
-
-				from (select g.gnum,g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year, ga.fullname gamephoto_url
-
-						from game g,
-    		    			(select gnum, fullname
-    		    			   from (select row_number() over(partition by gnum order by create_date desc) rnum, gnum, fullname
-    		    		        	   from game_attach
-    		    		        	) a
-    		    			  where rnum = 1
-    		    			) ga
-				 	  where g.gnum = ga.gnum(+) and g.del = 'n'
-				 	  order by gnum
-				 	 )a
-			 )
-		where rn between #{start} and #{end}
+		SELECT 	*
+		FROM 	(
+				SELECT 	a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year,
+						a.gamephoto_url, a.rank,a.vcnt, rownum rn
+				FROM 	(
+						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
+								ga.fullname AS gamephoto_url, RANK() OVER (ORDER BY gv.vcnt DESC) AS rank, gv.vcnt,
+								ROW_NUMBER() OVER (PARTITION BY g.gnum ORDER BY gv.vcnt DESC) AS game_rownum
+						FROM 	game g
+						LEFT JOIN 	(
+									SELECT 	gnum, fullname
+									FROM 	(
+											SELECT ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
+													gnum, fullname
+											FROM game_attach
+											)
+									WHERE rnum = 1
+									) ga
+						ON 		g.gnum = ga.gnum
+						LEFT JOIN 	(
+									SELECT 	gnum, SUM(VIEWCOUNT) AS vcnt
+									FROM 	VIEWCOUNT_DATE
+									WHERE 	<![CDATA[
+            								LOG_DATE >= NEXT_DAY(sysdate - 15, '일')
+            						AND 	LOG_DATE < NEXT_DAY(sysdate - 8, '일')
+        									]]>
+									GROUP BY gnum, LOG_DATE
+									HAVING 	SUM(VIEWCOUNT) IS NOT NULL
+									ORDER BY vcnt DESC NULLS LAST
+									) gv
+						ON 		g.gnum = gv.gnum
+						WHERE 	g.del = 'n'
+						ORDER BY rank, gnum
+						) a
+				WHERE game_rownum = 1
+				)
+		WHERE rn BETWEEN #{start} AND #{end}
 	</select>
 	
 	<insert id="gameInsert">
