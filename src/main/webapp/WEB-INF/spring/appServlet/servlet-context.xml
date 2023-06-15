@@ -58,7 +58,8 @@
 	
 	<!-- aop의 설정으로 Proxy 객체를 자동으로 생성 -->
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
-
+	
+	
 	
 	<!-- 웹소켓 핸들러 등록
 	<websocket:handlers>
