@@ -42,39 +42,18 @@ public class GameDTO {
 	//보드인이 평가한 랭킹과 난이도의 평균값
 	private Double rate;
 	private Double weight;
+	private int rank;
 
-	
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+
 	//getter setter tostring 생성자
 	public GameDTO() {}
-
-	public GameDTO(int gnum, int bggnum, String gametitle, String gametitle_eng, String players, String playtime, String ages, String language, int release_year, Date create_date, String create_user, Date update_date, String update_user, int totalviewcount, String designer, String gamecategory, String publisher, String artist, String mechanic, String expansion, String reimplement, String[] files, String bgg_thumbnail, String gamephoto_url, Double rate, Double weight) {
-		this.gnum = gnum;
-		this.bggnum = bggnum;
-		this.gametitle = gametitle;
-		this.gametitle_eng = gametitle_eng;
-		this.players = players;
-		this.playtime = playtime;
-		this.ages = ages;
-		this.language = language;
-		this.release_year = release_year;
-		this.create_date = create_date;
-		this.create_user = create_user;
-		this.update_date = update_date;
-		this.update_user = update_user;
-		this.totalviewcount = totalviewcount;
-		this.designer = designer;
-		this.gamecategory = gamecategory;
-		this.publisher = publisher;
-		this.artist = artist;
-		this.mechanic = mechanic;
-		this.expansion = expansion;
-		this.reimplement = reimplement;
-		this.files = files;
-		this.bgg_thumbnail = bgg_thumbnail;
-		this.gamephoto_url = gamephoto_url;
-		this.rate = rate;
-		this.weight = weight;
-	}
 
 	@Override
 	public String toString() {
@@ -105,7 +84,38 @@ public class GameDTO {
 				", gamephoto_url='" + gamephoto_url + '\'' +
 				", rate=" + rate +
 				", weight=" + weight +
+				", rank=" + rank +
 				'}';
+	}
+
+	public GameDTO(int gnum, int bggnum, String gametitle, String gametitle_eng, String players, String playtime, String ages, String language, int release_year, Date create_date, String create_user, Date update_date, String update_user, int totalviewcount, String designer, String gamecategory, String publisher, String artist, String mechanic, String expansion, String reimplement, String[] files, String bgg_thumbnail, String gamephoto_url, Double rate, Double weight, int rank) {
+		this.gnum = gnum;
+		this.bggnum = bggnum;
+		this.gametitle = gametitle;
+		this.gametitle_eng = gametitle_eng;
+		this.players = players;
+		this.playtime = playtime;
+		this.ages = ages;
+		this.language = language;
+		this.release_year = release_year;
+		this.create_date = create_date;
+		this.create_user = create_user;
+		this.update_date = update_date;
+		this.update_user = update_user;
+		this.totalviewcount = totalviewcount;
+		this.designer = designer;
+		this.gamecategory = gamecategory;
+		this.publisher = publisher;
+		this.artist = artist;
+		this.mechanic = mechanic;
+		this.expansion = expansion;
+		this.reimplement = reimplement;
+		this.files = files;
+		this.bgg_thumbnail = bgg_thumbnail;
+		this.gamephoto_url = gamephoto_url;
+		this.rate = rate;
+		this.weight = weight;
+		this.rank = rank;
 	}
 
 	public int getGnum() {

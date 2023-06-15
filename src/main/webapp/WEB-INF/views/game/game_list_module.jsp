@@ -80,8 +80,7 @@
             <tr>
 
                 <td>
-                    <p>${row.gnum}</p>
-                    <p>조회수 랭킹으로 변경예정</p>
+                    <p>${row.rank}</p>
                 </td>
                 <td>
                     <c:choose>
