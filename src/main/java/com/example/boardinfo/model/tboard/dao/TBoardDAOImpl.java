@@ -76,6 +76,4 @@ public class TBoardDAOImpl implements TBoardDAO {
 		return sqlSession.insert("tboard.insertFile", fDto);
 	}
 
-
-
 }

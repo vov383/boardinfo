@@ -158,15 +158,15 @@
 }
 
 #curPage {
-    border: 2px solid #1432B1;
     color: #1432B1;
-    line-height: 31px;
 }
 .pageItem {
+
     width: 35px;
     height: 35px;
+    border: 2px solid #1432B1;
     border-radius: 10px;
-    line-height: 35px;
+    line-height: 31px;
     text-align: center;
     margin: 0 3px;
     font-size: 1.2em;
