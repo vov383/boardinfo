@@ -21,10 +21,11 @@ public class GameDTO {
 	//private int viewcount; //조회수 매일 자정 viewcount_date 테이블에 저장후 초기화됨
 	private int totalviewcount; //조회수
 	//private String del; //삭제 글 표시여부
-	
+
 	//따로 테이블 만들어서 관리.
 	//게임등록시 값이 여러개일 경우 ',' 를 기준으로 spilt 할 수있게 문자열로 받은 다음
 	//서비스에서 각 테이블로 배열로 값을 보냄.
+	private String nameStr; //filteredList에 넘길 디자이너 카테고리 제작사 아트웍 메카니즘명
 	private String designer; //디자이너
 	private String gamecategory; //게임카테고리
 	private String publisher; //제작사
@@ -50,6 +51,14 @@ public class GameDTO {
 
 	public void setRank(int rank) {
 		this.rank = rank;
+	}
+
+	public String getNameStr() {
+		return nameStr;
+	}
+
+	public void setNameStr(String nameStr) {
+		this.nameStr = nameStr;
 	}
 
 	//getter setter tostring 생성자

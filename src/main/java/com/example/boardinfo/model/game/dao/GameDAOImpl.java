@@ -151,6 +151,12 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.update("game.delete", map);
 	}
 
+	@Override
+	public int countExRe(Map<String, Object> map) {
+
+		return sqlSession.selectOne("game.countExRe", map);
+	}
+
 	public List<String> viewExpansion(int gnum){
 		List<String> list = sqlSession.selectList("game.viewExpansion", gnum);
 		return list;
@@ -159,6 +165,11 @@ public class GameDAOImpl implements GameDAO {
 	public List<String> viewReimplement(int gnum){
 		List<String> list = sqlSession.selectList("game.viewReimplement", gnum);
 		return list;
+	}
+
+	@Override
+	public List<GameDTO> ExReList(Map<String, Object> map) {
+		return sqlSession.selectList("game.getExReList", map);
 	}
 
 	public int getExnum(int gnum, String expansion){

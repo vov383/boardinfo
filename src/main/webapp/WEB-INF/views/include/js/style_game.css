@@ -124,3 +124,8 @@ tr:last-child td:last-child {
 	border: 1px solid black;
 	margin-right: 50px;
 }
+
+.img_photo {
+	width: 70px;
+	height: 70px;
+}

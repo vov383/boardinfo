@@ -22,10 +22,34 @@
 			<h2>게임목록</h2>
 		</div>
 		<div id="contentsLocation">
-			홈&gt 게임목록&gt 전체게임목록
+			<span>홈</span>&gt
+			<span>게임목록</span>&gt
+
+			<c:choose>
+				<c:when test="${map.filter != null}">
+					<span>${map.filter} 별</span>
+				</c:when>
+				<c:otherwise>
+					<span>전체게임목록</span>
+				</c:otherwise>
+			</c:choose>
+
 			<a href="${path}/game/write.do" style="float: right">게임등록</a>
+
 		</div>
 		<div id="contentsMain">
+
+	<c:if test="${map.filter != null}">
+		<div>
+                <span>
+                    <h1>
+                        ${map.filter}
+                    :   ${map.list[0].nameStr}
+                        ( 총 ${map.count} 개의 게임 )
+                    </h1>
+                </span>
+		</div>
+	</c:if>
 
 	<c:import url="game_list_module.jsp" charEncoding="UTF-8">
 		<c:param name="map" value="${map}"/>

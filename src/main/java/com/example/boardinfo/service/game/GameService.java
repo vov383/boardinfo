@@ -32,4 +32,5 @@ public interface GameService {
   void gameupdate(GameDTO dto);
   void deleteGame(int gnum, String userid);
   Map<String, Object> parseInsert(int bggnum);
+  Map<String, Object> getExRe(String origin, String filter, int num);
 }

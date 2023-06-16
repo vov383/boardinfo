@@ -745,41 +745,11 @@
             </div>
 
 
-            <div  class="game_detail_filter_div">
-                <div class="game_detail_filter">확장(원본)</div>
-                <div class="game_detail_filtered_list">
-                    <c:forEach var="item" items="${map.exmap.origin}">
-                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
-                    </c:forEach>
-                </div>
-            </div>
+            <c:import url="game_ExReList_module.jsp" charEncoding="UTF-8">
+                <c:param name="gnum" value="${map.dto.gnum}"/>
+            </c:import>
 
-            <div  class="game_detail_filter_div">
-                <div class="game_detail_filter">확장</div>
-                <div class="game_detail_filtered_list">
-                    <c:forEach var="item" items="${map.exmap.expansion}">
-                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
-                    </c:forEach>
-                </div>
-            </div>
 
-            <div  class="game_detail_filter_div">
-                <div class="game_detail_filter">재구현(원본)</div>
-                <div class="game_detail_filtered_list">
-                    <c:forEach var="item" items="${map.remap.origin}">
-                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
-                    </c:forEach>
-                </div>
-            </div>
-
-            <div  class="game_detail_filter_div">
-                <div class="game_detail_filter">재구현</div>
-                <div class="game_detail_filtered_list">
-                    <c:forEach var="item" items="${map.remap.expansion}">
-                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
-                    </c:forEach>
-                </div>
-            </div>
 
         </div>
 
@@ -861,16 +831,15 @@
 
             <div id="topReviewList">
                 <span>더보기</span>
+            </div>
+
+
+
         </div>
 
+    </div>
 
-
-       </div>
-
-        </div>
-
-
-	</div>
+   </div>
 
 
 

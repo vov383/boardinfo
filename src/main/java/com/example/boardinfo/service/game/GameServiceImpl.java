@@ -256,13 +256,6 @@ public class GameServiceImpl implements GameService {
     List<PublisherDTO> plist = publisherDao.view(gnum);
     
 
-
-    //확장
-    Map<String, Object> expansionMap = gameDao.getExpansion(gnum);
-
-    //재구현
-    Map<String, Object> reimplementMap = gameDao.getReimplement(gnum);
-
     int bggnum = dto.getBggnum();
 
     Map<String, Object> map = new HashMap<>();
@@ -275,9 +268,7 @@ public class GameServiceImpl implements GameService {
 
     map.put("bgg_thumbnail", GameUtils.setStr(bggnum,"thumbnail"));
 
-    map.put("exmap", expansionMap);
-    map.put("remap", reimplementMap);
-    
+
     return map;
   }
 
@@ -342,6 +333,22 @@ public class GameServiceImpl implements GameService {
     for(GameDTO dto : list){
       int bggnum = dto.getBggnum();
       dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
+
+      //gnum을 통해 rating과 weight를 넣자
+      int gnum = dto.getGnum();
+      Map<String, Object> rmap = gameRatingDao.getRateWeight(gnum);
+      if(rmap != null && rmap.get("AVGRATING") != null){
+        logger.info("평균값 찍혀나오는지 : " + rmap.get("AVGRATING"));
+        Double rate = Double.parseDouble(String.format("%.2f",rmap.get("AVGRATING")));
+        logger.info("평균값 형변환 잘되서 나오는지 : " + rate);
+        dto.setRate(rate);
+      }
+      if(rmap != null && rmap.get("AVGWEIGHT") != null){
+        logger.info("난이도값 찍혀나오는지 : " + rmap.get("AVGWEIGHT"));
+        Double weight = Double.parseDouble(String.format("%.2f",rmap.get("AVGWEIGHT")));
+        logger.info("난이도값 형변환 잘되서 나오는지 : " + weight);
+        dto.setWeight(weight);
+      }
     }
 
     map.put("count", count);
@@ -596,6 +603,43 @@ public class GameServiceImpl implements GameService {
     map.put("mechanic",mechanic);
     map.put("publisher",publisher);
 
+    return map;
+  }
+
+
+  public Map<String,Object> getExRe(String origin, String filter, int num){
+    Map<String, Object> map = new HashMap<>();
+    map.put("origin", origin);  //child or parent
+    map.put("filter", filter);  //ex or re
+    map.put("num", num);
+
+    List<GameDTO> list = gameDao.ExReList(map);
+    for(GameDTO dto : list){
+      logger.info("값을 잘 받아왔나" + dto.getGametitle());
+      //bggnum을 통한 image파싱
+      int bggnum = dto.getBggnum();
+      dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
+
+      //gnum을 통해 rating과 weight를 넣자
+      int gnum = dto.getGnum();
+      Map<String, Object> rmap = gameRatingDao.getRateWeight(gnum);
+      if(rmap != null && rmap.get("AVGRATING") != null){
+        logger.info("평균값 찍혀나오는지 : " + rmap.get("AVGRATING"));
+        Double rate = Double.parseDouble(String.format("%.2f",rmap.get("AVGRATING")));
+        logger.info("평균값 형변환 잘되서 나오는지 : " + rate);
+        dto.setRate(rate);
+      }
+      if(rmap != null && rmap.get("AVGWEIGHT") != null){
+        logger.info("난이도값 찍혀나오는지 : " + rmap.get("AVGWEIGHT"));
+        Double weight = Double.parseDouble(String.format("%.2f",rmap.get("AVGWEIGHT")));
+        logger.info("난이도값 형변환 잘되서 나오는지 : " + weight);
+        dto.setWeight(weight);
+      }
+    }
+
+    map.clear();
+
+    map.put("list",list);
     return map;
   }
 }

@@ -30,4 +30,8 @@ public interface GameDAO {
 	List<String> viewReimplement(int gnum);
 	int getExnum(int gnum, String expansion);
 	int getRenum(int gnum, String reimplement);
+
+    int countExRe(Map<String, Object> map);
+
+	List<GameDTO> ExReList(Map<String, Object> map);
 }
