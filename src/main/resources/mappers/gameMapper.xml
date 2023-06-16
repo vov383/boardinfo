@@ -13,43 +13,121 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="gameList" resultType="gameDto">
-		SELECT 	gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, rank, rn, vcnt
-		FROM 	(
-				SELECT 	a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year,
-						a.gamephoto_url, a.rank, a.vcnt, rownum rn
-				FROM 	(
-						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
-								ga.fullname AS gamephoto_url, RANK() OVER (ORDER BY gv.vcnt DESC) AS rank, gv.vcnt,
-								ROW_NUMBER() OVER (PARTITION BY g.gnum ORDER BY gv.vcnt DESC) AS game_rownum
-						FROM 	game g
-						LEFT JOIN 	(
-									SELECT 	gnum, fullname
-									FROM 	(
-											SELECT ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
-													gnum, fullname
-											FROM game_attach
-											)
-									WHERE rnum = 1
-									) ga
-						ON 		g.gnum = ga.gnum
-						LEFT JOIN 	(
-									SELECT 	gnum, SUM(VIEWCOUNT) AS vcnt
-									FROM 	VIEWCOUNT_DATE
-									WHERE 	<![CDATA[
-            								LOG_DATE >= NEXT_DAY(sysdate - 15, '일')
-            						AND 	LOG_DATE < NEXT_DAY(sysdate - 8, '일')
-        									]]>
-									GROUP BY gnum, LOG_DATE
-									HAVING 	SUM(VIEWCOUNT) IS NOT NULL
-									ORDER BY vcnt DESC NULLS LAST
-									) gv
-						ON 		g.gnum = gv.gnum
-						WHERE 	g.del = 'n'
-						ORDER BY rank, gnum
-						) a
-				WHERE game_rownum = 1
-				)
+		SELECT gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, rank, rn,
+		vcnt, rate, weight
+		FROM (
+		SELECT a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year,
+		a.gamephoto_url, a.rank, a.vcnt, rownum rn, a.rate, a.weight
+		FROM (
+		SELECT g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
+		ga.fullname AS gamephoto_url, RANK() OVER (ORDER BY gv.vcnt DESC) AS rank, gv.vcnt,
+		ROW_NUMBER() OVER (PARTITION BY g.gnum ORDER BY gv.vcnt DESC) AS game_rownum,
+		gr.rate, gr.weight
+		FROM game g
+		LEFT JOIN (
+		SELECT gnum, fullname
+		FROM (
+		SELECT ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
+		gnum, fullname
+		FROM game_attach
+		)
+		WHERE rnum = 1
+		) ga
+		ON g.gnum = ga.gnum
+		LEFT JOIN (
+		SELECT gnum, SUM(VIEWCOUNT) AS vcnt
+		FROM VIEWCOUNT_DATE
+		WHERE<![CDATA[
+            LOG_DATE >= NEXT_DAY(sysdate - 15, '일')
+            AND LOG_DATE < NEXT_DAY(sysdate - 8, '일')
+        ]]>
+		GROUP BY gnum, LOG_DATE
+		HAVING SUM(VIEWCOUNT) IS NOT NULL
+		ORDER BY vcnt DESC NULLS LAST
+		) gv
+		ON g.gnum = gv.gnum
+		LEFT JOIN (
+		SELECT gnum, avg(rating) as rate, avg(weight) as weight
+		FROM game_rating
+		GROUP BY gnum
+		) gr
+		ON g.gnum = gr.gnum
+		WHERE g.del = 'n'
+		ORDER BY rank, gnum
+		) a
+		WHERE game_rownum = 1
+		)
+
 		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+
+	<select id="gameList_vcnt" resultType="gameDto">
+		SELECT gnum, bggnum, GAMETITLE, GAMETITLE_ENG, RELEASE_YEAR, gamephoto_url, rank, rn, totalviewcount,
+        rate, weight
+FROM (
+        SELECT a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.release_year,a.totalviewcount,
+                a.gamephoto_url, a.rank, rownum rn, a.rate, a.weight
+        FROM (
+                SELECT g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.release_year,g.totalviewcount,
+                        ga.fullname AS gamephoto_url, RANK() OVER (ORDER BY g.totalviewcount DESC) AS rank,
+                        gr.rate, gr.weight
+                FROM game g --게임
+                LEFT JOIN (
+                            SELECT gnum, fullname
+                            FROM (
+                                    SELECT ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
+                                            gnum, fullname
+                                    FROM game_attach
+                                    )
+                            WHERE rnum = 1
+                            ) ga --사진
+                ON g.gnum = ga.gnum
+                LEFT JOIN (
+                            SELECT gnum, avg(rating) as rate, avg(weight) as weight
+                            FROM game_rating
+                            GROUP BY gnum
+                            ) gr
+                ON g.gnum = gr.gnum
+                WHERE g.del = 'n'
+                ORDER BY rank, gnum
+                ) a
+        )
+
+WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+
+	<select id="gameList_rate" resultType="gameDto">
+		SELECT gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, rank, rn,
+		rate, weight
+FROM (
+        SELECT a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year,
+                a.gamephoto_url, a.rank, a.rate, a.weight, rownum rn
+        FROM (
+                SELECT g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
+                        ga.fullname AS gamephoto_url, RANK() OVER (ORDER BY gr.rate DESC nulls last) AS rank,
+                        gr.rate, gr.weight
+                FROM game g
+                LEFT JOIN (
+                            SELECT gnum, fullname
+                            FROM (
+                                    SELECT ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
+                                            gnum, fullname
+                                    FROM game_attach
+                                    )
+                            WHERE rnum = 1
+                            ) ga
+                ON g.gnum = ga.gnum
+                LEFT JOIN (
+                            SELECT gnum, avg(rating) as rate, avg(weight) as weight
+                            FROM game_rating
+                            GROUP BY gnum
+                            ) gr
+                ON g.gnum = gr.gnum
+                WHERE g.del = 'n'
+                ORDER BY rank, gnum
+                ) a
+        )
+WHERE rn BETWEEN #{start} AND #{end}
 	</select>
 	
 	<insert id="gameInsert">
@@ -82,14 +160,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="getAuto" resultType="gameDto">
-		select g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, ga.fullname gamephoto_url
-		from game g,
-			 (select gnum, fullname
-                  from (select row_number() over(partition by gnum order by create_date desc) rnum, gnum, fullname
+		select GNUM, BGGNUM, GAMETITLE_ENG, GAMETITLE, gamephoto_url, rn
+		from(select 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, ga.fullname gamephoto_url, rownum rn
+		from 	game g
+		left join 	(
+				select 	gnum, fullname
+                from 	(
+                		select row_number() over(partition by gnum order by create_date desc) rnum, gnum, fullname
                         from game_attach
-                       ) a
-                 where rnum = 1) ga
-		where g.gnum = ga.gnum(+) and gametitle like #{input}||'%' and g.del = 'n'
+                       	) a
+                where rnum = 1
+                ) ga
+        on 		g.GNUM = ga.GNUM
+		where 	gametitle like '%'||#{input}||'%' and g.del = 'n'
+		order by case when gametitle like '%'||#{input}||'%' then 1 else 2 end, gametitle) a
+		WHERE rn BETWEEN 1 AND 5
 	</select>
 
 	<!--첨부파일 정보 저장-->
@@ -141,75 +226,213 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="filteredList" resultType="gameDto">
 	<bind name="filterColumn" value="filter+'.'+filter"/>
 	<bind name="mappingTable" value="'game_'+filter"/>
-		SELECT 	gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, rank, rn, vcnt,
-				nameStr
-		FROM 	(
-				SELECT 	a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year,
-						a.gamephoto_url, a.rank, a.vcnt, rownum rn, a.nameStr
-				FROM 	(
-						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
-								ga.fullname AS gamephoto_url, RANK() OVER (ORDER BY gv.vcnt DESC) AS rank, gv.vcnt,
-								ROW_NUMBER() OVER (PARTITION BY g.gnum ORDER BY gv.vcnt DESC) AS game_rownum,
-								b.${filter} as nameStr
-						FROM 	game g
-						LEFT JOIN (
-						SELECT 	gnum, fullname
-						FROM 	(
-								SELECT 	ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
-										gnum, fullname
-								FROM 	game_attach
-								)
-						WHERE rnum = 1
-						) ga
-						ON 	g.gnum = ga.gnum
-						LEFT JOIN 	(
-									SELECT 	gnum, SUM(VIEWCOUNT) AS vcnt
-									FROM 	VIEWCOUNT_DATE
-									WHERE 	<![CDATA[
-            								LOG_DATE >= NEXT_DAY(sysdate - 15, '일')
-            						AND 	LOG_DATE < NEXT_DAY(sysdate - 8, '일')
-        									]]>
-									GROUP BY gnum, LOG_DATE
-									HAVING 	SUM(VIEWCOUNT) IS NOT NULL
-									ORDER BY vcnt DESC NULLS LAST
-									) gv
-						ON 	g.gnum = gv.gnum
+		SELECT gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, rank, rn, vcnt,
+		nameStr, rate, weight
+		FROM (
+		SELECT a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year,
+		a.gamephoto_url, a.rank, a.vcnt, rownum rn, a.nameStr, a.rate, a.weight
+		FROM (
+		SELECT g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
+		ga.fullname AS gamephoto_url, RANK() OVER (ORDER BY gv.vcnt DESC) AS rank, gv.vcnt,
+		ROW_NUMBER() OVER (PARTITION BY g.gnum ORDER BY gv.vcnt DESC) AS game_rownum,
+		b.${filter} as nameStr, gr.rate, gr.weight
+		FROM game g
+		LEFT JOIN (
+		SELECT gnum, fullname
+		FROM (
+		SELECT ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
+		gnum, fullname
+		FROM game_attach
+		)
+		WHERE rnum = 1
+		) ga
+		ON g.gnum = ga.gnum
+		LEFT JOIN (
+		SELECT gnum, SUM(VIEWCOUNT) AS vcnt
+		FROM VIEWCOUNT_DATE
+		WHERE <![CDATA[
+            LOG_DATE >= NEXT_DAY(sysdate - 15, '일')
+            AND LOG_DATE < NEXT_DAY(sysdate - 8, '일')
+        ]]>
+		GROUP BY gnum, LOG_DATE
+		HAVING SUM(VIEWCOUNT) IS NOT NULL
+		ORDER BY vcnt DESC NULLS LAST
+		) gv
+		ON g.gnum = gv.gnum
+		LEFT JOIN (
+		SELECT gnum, avg(rating) as rate, avg(weight) as weight
+		FROM game_rating
+		GROUP BY gnum
+		) gr
+		ON g.gnum = gr.gnum
 
-						left join 	(
-								<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
-									select 	gnum, f.${filter}, f.anum num
-									from    ${mappingTable} m, ${filter} f
-									where	 m.anum = f.anum
-								</if>
-								<if test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
-									select 	gnum, f.${filter}, f.cnum num
-									from    game_category m, category f
-									where 	m.cnum = f.cnum
-								</if>
-								<if test="filter != null and 'designer'.equalsIgnoreCase(filter)">
-									select 	gnum, f.${filter}, f.dnum num
-									from    ${mappingTable} m, ${filter} f
-									where	m.dnum = f.dnum
-								</if>
-								<if test="filter != null and 'mechanic'.equalsIgnoreCase(filter)">
-									select 	gnum, f.${filter}, f.mnum num
-									from    ${mappingTable} m, ${filter} f
-									where	m.mnum = f.mnum
-								</if>
-								<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
-									select 	gnum, f.${filter}, f.pnum num
-									from    ${mappingTable} m, ${filter} f
-									where 	m.pnum = f.pnum
-								</if>
-									) b
-						on 	g.gnum = b.gnum
-						WHERE 	g.del = 'n' and b.num=#{num}
-						ORDER BY rank, gnum
-						) a
-				WHERE game_rownum = 1
-				)
+		left join (
+		<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.anum num
+			from    ${mappingTable} m, ${filter} f
+			where m.anum = f.anum
+		</if>
+		<if test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.cnum num
+			from    game_category m, category f
+			where m.cnum = f.cnum
+		</if>
+		<if test="filter != null and 'designer'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.dnum num
+			from    ${mappingTable} m, ${filter} f
+			where m.dnum = f.dnum
+		</if>
+		<if test="filter != null and 'mechanic'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.mnum num
+			from    ${mappingTable} m, ${filter} f
+			where m.mnum = f.mnum
+		</if>
+		<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.pnum num
+			from    ${mappingTable} m, ${filter} f
+			where m.pnum = f.pnum
+		</if>
+		) b
+		on g.gnum = b.gnum
+		WHERE g.del = 'n' and b.num=#{num}
+		ORDER BY rank, gnum
+		) a
+		WHERE game_rownum = 1
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+
+	</select>
+
+	<select id="filteredList_rate" resultType="gameDto">
+	<bind name="filterColumn" value="filter+'.'+filter"/>
+	<bind name="mappingTable" value="'game_'+filter"/>
+		SELECT gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, rank, rn,
+		nameStr, rate, weight
+		FROM (
+		SELECT a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year,
+		a.gamephoto_url, a.rank, rownum rn, a.nameStr, a.rate, a.weight
+		FROM (
+		SELECT g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
+		ga.fullname AS gamephoto_url, RANK() OVER (ORDER BY gr.rate DESC nulls last) AS rank,
+		b.${filter} as nameStr, gr.rate, gr.weight
+		FROM game g
+		LEFT JOIN (
+		SELECT gnum, fullname
+		FROM (
+		SELECT ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
+		gnum, fullname
+		FROM game_attach
+		)
+		WHERE rnum = 1
+		) ga
+		ON g.gnum = ga.gnum
+		LEFT JOIN (
+		SELECT gnum, avg(rating) as rate, avg(weight) as weight
+		FROM game_rating
+		GROUP BY gnum
+		) gr
+		ON g.gnum = gr.gnum
+
+		left join (
+		<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.anum num
+			from    ${mappingTable} m, ${filter} f
+			where m.anum = f.anum
+		</if>
+		<if test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.cnum num
+			from    game_category m, category f
+			where m.cnum = f.cnum
+		</if>
+		<if test="filter != null and 'designer'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.dnum num
+			from    ${mappingTable} m, ${filter} f
+			where m.dnum = f.dnum
+		</if>
+		<if test="filter != null and 'mechanic'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.mnum num
+			from    ${mappingTable} m, ${filter} f
+			where m.mnum = f.mnum
+		</if>
+		<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.pnum num
+			from    ${mappingTable} m, ${filter} f
+			where m.pnum = f.pnum
+		</if>
+		) b
+		on g.gnum = b.gnum
+		WHERE g.del = 'n' and b.num=#{num}
+		ORDER BY rank, gnum
+		) a
+		)
 		WHERE rn BETWEEN #{start} AND #{end}
 	</select>
+
+	<select id="filteredList_vcnt" resultType="gameDto">
+	<bind name="filterColumn" value="filter+'.'+filter"/>
+	<bind name="mappingTable" value="'game_'+filter"/>
+		SELECT gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, rank, rn,
+		nameStr, rate, weight
+		FROM (
+		SELECT a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year,
+		a.gamephoto_url, a.rank, rownum rn, a.nameStr, a.rate, a.weight
+		FROM (
+		SELECT g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
+		ga.fullname AS gamephoto_url, RANK() OVER (ORDER BY g.totalviewcount DESC) AS rank,
+		b.${filter} as nameStr, gr.rate, gr.weight
+		FROM game g
+		LEFT JOIN (
+		SELECT gnum, fullname
+		FROM (
+		SELECT ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
+		gnum, fullname
+		FROM game_attach
+		)
+		WHERE rnum = 1
+		) ga
+		ON g.gnum = ga.gnum
+		LEFT JOIN (
+		SELECT gnum, avg(rating) as rate, avg(weight) as weight
+		FROM game_rating
+		GROUP BY gnum
+		) gr
+		ON g.gnum = gr.gnum
+
+		left join (
+		<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.anum num
+			from    ${mappingTable} m, ${filter} f
+			where m.anum = f.anum
+		</if>
+		<if test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.cnum num
+			from    game_category m, category f
+			where m.cnum = f.cnum
+		</if>
+		<if test="filter != null and 'designer'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.dnum num
+			from    ${mappingTable} m, ${filter} f
+			where m.dnum = f.dnum
+		</if>
+		<if test="filter != null and 'mechanic'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.mnum num
+			from    ${mappingTable} m, ${filter} f
+			where m.mnum = f.mnum
+		</if>
+		<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
+			select gnum, f.${filter}, f.pnum num
+			from    ${mappingTable} m, ${filter} f
+			where m.pnum = f.pnum
+		</if>
+		) b
+		on g.gnum = b.gnum
+		WHERE g.del = 'n' and b.num=#{num}
+		ORDER BY rank, gnum
+		) a
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+
 
 	<update id="gameupdate">
 		update game

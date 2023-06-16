@@ -38,12 +38,14 @@ public class GameController {
 	@Inject
 	GameRatingService gameRatingService;
 
-	//전체게임목록으로 이동
-	@RequestMapping("gamelist.do")
-	public ModelAndView gamelist(ModelAndView mav, @RequestParam(required = false, defaultValue = "1") int curPage) {
+	//게임목록 랭킹
+	@GetMapping("gamerank/{sort}")
+	public ModelAndView gamelist(ModelAndView mav, @PathVariable("sort")String sort,
+								 @RequestParam(required = false, defaultValue = "1") int curPage) {
 
 		mav.setViewName("game/game_list");
-		mav.addObject("map", gameService.gamelist(curPage));
+		mav.addObject("sort", sort);
+		mav.addObject("map", gameService.gamelist(curPage, sort));
 		return mav;
 	}
 
@@ -128,12 +130,14 @@ public class GameController {
 		return list;
 	}
 
-	@GetMapping ("search.do")
-	public ModelAndView sortGame(ModelAndView mav, @RequestParam("filter") String filter, @RequestParam("num") int num,
+	@GetMapping ("partrank/{sort}")
+	public ModelAndView sortGame(ModelAndView mav, @PathVariable("sort")String sort,
+								 @RequestParam("filter") String filter, @RequestParam("num") int num,
 								 @RequestParam(required = false, defaultValue = "1") int curPage) {
 
-		mav.setViewName("game/game_list");
-		mav.addObject("map", gameService.filteredGamelist(filter, num, curPage));
+		mav.setViewName("game/game_filteredList");
+		mav.addObject("sort",sort);
+		mav.addObject("map", gameService.filteredGamelist(filter, num, curPage, sort));
 
 		return mav;
 	}

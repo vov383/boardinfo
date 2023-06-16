@@ -52,7 +52,7 @@ public class GameServiceImpl implements GameService {
   GameRatingDAO gameRatingDao;
 
   @Override
-  public Map<String, Object> gamelist(int curPage) {
+  public Map<String, Object> gamelist(int curPage, String sort) {
     int count = gameDao.countList();
 
     Pager pager = new Pager(count, curPage, 10);
@@ -62,6 +62,7 @@ public class GameServiceImpl implements GameService {
     Map<String, Object> map = new HashMap<>();
     map.put("start",start);
     map.put("end",end);
+    map.put("sort", sort);
 
     List<GameDTO> list = gameDao.gamelist(map);
 
@@ -70,21 +71,6 @@ public class GameServiceImpl implements GameService {
       int bggnum = dto.getBggnum();
       dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
 
-      //gnum을 통해 rating과 weight를 넣자
-      int gnum = dto.getGnum();
-      Map<String, Object> rmap = gameRatingDao.getRateWeight(gnum);
-      if(rmap != null && rmap.get("AVGRATING") != null){
-        logger.info("평균값 찍혀나오는지 : " + rmap.get("AVGRATING"));
-        Double rate = Double.parseDouble(String.format("%.2f",rmap.get("AVGRATING")));
-        logger.info("평균값 형변환 잘되서 나오는지 : " + rate);
-        dto.setRate(rate);
-      }
-      if(rmap != null && rmap.get("AVGWEIGHT") != null){
-        logger.info("난이도값 찍혀나오는지 : " + rmap.get("AVGWEIGHT"));
-        Double weight = Double.parseDouble(String.format("%.2f",rmap.get("AVGWEIGHT")));
-        logger.info("난이도값 형변환 잘되서 나오는지 : " + weight);
-        dto.setWeight(weight);
-      }
     }
 
     map.put("list",list);
@@ -293,7 +279,7 @@ public class GameServiceImpl implements GameService {
     return publisherDao.getAutoPublisher(input);
   }
 
-  //top의 검색창 검색목록
+  //top의 검색창 게임 검색목록
   public List<GameDTO> getAutoGame(String input){
     List<GameDTO> list = gameDao.getAutoGame(input);
 
@@ -314,11 +300,12 @@ public class GameServiceImpl implements GameService {
 
   //아티스트,카테고리,디자이너,메카닉,퍼블리셔 개별 항목에 대응하는 게임목록 출력
 
-  public Map<String, Object> filteredGamelist(String filter,int num, int curPage){
+  public Map<String, Object> filteredGamelist(String filter,int num, int curPage, String sort){
 
     Map<String, Object> map = new HashMap<>();
     map.put("filter",filter);
     map.put("num", num);
+
 
     int count = gameDao.countList(map);
 
@@ -327,6 +314,7 @@ public class GameServiceImpl implements GameService {
     int end = pager.getPageEnd();
     map.put("start",start);
     map.put("end",end);
+    map.put("sort", sort);
 
     List<GameDTO> list = gameDao.filteredGamelist(map);
 
@@ -334,21 +322,6 @@ public class GameServiceImpl implements GameService {
       int bggnum = dto.getBggnum();
       dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
 
-      //gnum을 통해 rating과 weight를 넣자
-      int gnum = dto.getGnum();
-      Map<String, Object> rmap = gameRatingDao.getRateWeight(gnum);
-      if(rmap != null && rmap.get("AVGRATING") != null){
-        logger.info("평균값 찍혀나오는지 : " + rmap.get("AVGRATING"));
-        Double rate = Double.parseDouble(String.format("%.2f",rmap.get("AVGRATING")));
-        logger.info("평균값 형변환 잘되서 나오는지 : " + rate);
-        dto.setRate(rate);
-      }
-      if(rmap != null && rmap.get("AVGWEIGHT") != null){
-        logger.info("난이도값 찍혀나오는지 : " + rmap.get("AVGWEIGHT"));
-        Double weight = Double.parseDouble(String.format("%.2f",rmap.get("AVGWEIGHT")));
-        logger.info("난이도값 형변환 잘되서 나오는지 : " + weight);
-        dto.setWeight(weight);
-      }
     }
 
     map.put("count", count);
@@ -615,7 +588,6 @@ public class GameServiceImpl implements GameService {
 
     List<GameDTO> list = gameDao.ExReList(map);
     for(GameDTO dto : list){
-      logger.info("값을 잘 받아왔나" + dto.getGametitle());
       //bggnum을 통한 image파싱
       int bggnum = dto.getBggnum();
       dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
@@ -624,15 +596,11 @@ public class GameServiceImpl implements GameService {
       int gnum = dto.getGnum();
       Map<String, Object> rmap = gameRatingDao.getRateWeight(gnum);
       if(rmap != null && rmap.get("AVGRATING") != null){
-        logger.info("평균값 찍혀나오는지 : " + rmap.get("AVGRATING"));
         Double rate = Double.parseDouble(String.format("%.2f",rmap.get("AVGRATING")));
-        logger.info("평균값 형변환 잘되서 나오는지 : " + rate);
         dto.setRate(rate);
       }
       if(rmap != null && rmap.get("AVGWEIGHT") != null){
-        logger.info("난이도값 찍혀나오는지 : " + rmap.get("AVGWEIGHT"));
         Double weight = Double.parseDouble(String.format("%.2f",rmap.get("AVGWEIGHT")));
-        logger.info("난이도값 형변환 잘되서 나오는지 : " + weight);
         dto.setWeight(weight);
       }
     }

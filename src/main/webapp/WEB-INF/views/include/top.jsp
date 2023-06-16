@@ -49,9 +49,9 @@
 
       <li>
         <div class="dropdown">
-          <a href="${path}/game/gamelist.do" class="toMenu" title="게임정보">게임정보<img src="${path}/images/dropdown.png" width="34px"></a>
+          <a href="${path}/game/gamerank/index" class="toMenu" title="게임정보">게임정보<img src="${path}/images/dropdown.png" width="34px"></a>
           <div class="dropdown-content">
-            <a href="#">게임순위</a>
+            <a href="${path}/game/gamerank/week">게임순위</a>
             <a href="#">카테고리</a>
             <a href="#">디자이너</a>
             <a href="#">출판사</a>
