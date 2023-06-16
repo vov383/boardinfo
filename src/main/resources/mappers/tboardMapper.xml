@@ -137,7 +137,7 @@
         select fullName
         from tb_files
         where tb_num = #{tb_num}
-        order by FILE_REG_NUM;
+        order by FILE_REG_NUM
     </select>
 
     <insert id="insertFile">

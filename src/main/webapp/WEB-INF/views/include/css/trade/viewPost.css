@@ -60,6 +60,15 @@ a {
     text-decoration: none;
     color: black;
 }
+#ff8a3d
+button {
+    font-size: .9em;
+    padding: 8px 10px;
+    white-space: nowrap;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    height: 100%;
+}
 
 #contents{
     display: flex;
@@ -225,7 +234,10 @@ a {
     /*color: var(--default-font-color);*/
     word-break: break-word;
 }
-
+.price {
+    display: flex;
+    color : #ff8a3d;
+}
 .descriptionSection {
     display: flex;
     flex-direction: column;
