@@ -19,18 +19,18 @@
 <main>
 	<div id="contents">
 		<div id="contentsHeader">
-			<h2>게임목록</h2>
+			<h2>게임순위</h2>
 		</div>
 		<div id="contentsLocation">
 			<span>홈</span>&gt
-			<span>게임목록</span>&gt
+			<span>게임순위</span>&gt
 
 			<c:choose>
 				<c:when test="${map.filter != null}">
 					<span>${map.filter} 별</span>
 				</c:when>
 				<c:otherwise>
-					<span>전체게임목록</span>
+					<span>전체게임순위</span>
 				</c:otherwise>
 			</c:choose>
 
@@ -51,26 +51,32 @@
 		</div>
 	</c:if>
 
+		<div class="game_rank_div">
+			<ul>
+				<li><a href="${path}/game/gamerank/week">주간</a></li>
+				<li><a href="${path}/game/gamerank/day">일간</a></li>
+				<li><a href="${path}/game/gamerank/rate">평점</a></li>
+				<li><a href="${path}/game/gamerank/comment">댓글수</a></li>
+				<li><a href="${path}/game/gamerank/vcnt">조회수</a></li>
+			</ul>
+		</div>
+
+
 	<c:import url="game_list_module.jsp" charEncoding="UTF-8">
 		<c:param name="map" value="${map}"/>
+		<c:param name="sort" value="${sort}"/>
 	</c:import>
 
 		</div>
 
 	</div>
 
+
 </main>
 
 <footer>
 	<%@include file="../include/footer.jsp" %>
 </footer>
-
-<%--<script>--%>
-<%--	function list(page) {--%>
-<%--		location.href="${path}/game/gamelist.do?curPage="+page;--%>
-<%--	}--%>
-
-<%--</script>--%>
 
 
 </body>

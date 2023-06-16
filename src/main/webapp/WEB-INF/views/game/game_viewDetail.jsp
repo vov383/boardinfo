@@ -702,7 +702,7 @@
                 <span>카테고리</span>
                 <div>
                 <c:forEach var="category" items="${map.clist}">
-                    <a class="infoItems" href="${path}/game/search.do?filter=gamecategory&num=${category.cnum}">${category.gamecategory}</a>
+                    <a class="infoItems" href="${path}/game/partrank/index?filter=gamecategory&num=${category.cnum}">${category.gamecategory}</a>
                 </c:forEach>
                 </div>
             </div>
@@ -711,7 +711,7 @@
                 <span>아티스트</span>
                 <div>
                     <c:forEach var="artist" items="${map.alist}">
-                        <a class="infoItems" href="${path}/game/search.do?filter=artist&num=${artist.anum}">${artist.artist}</a>
+                        <a class="infoItems" href="${path}/game/partrank/index?filter=artist&num=${artist.anum}">${artist.artist}</a>
                     </c:forEach>
                 </div>
             </div>
@@ -720,7 +720,7 @@
                 <span>디자이너</span>
                 <div>
                     <c:forEach var="designer" items="${map.dlist}">
-                        <a class="infoItems" href="${path}/game/search.do?filter=designer&num=${designer.dnum}">${designer.designer}</a>
+                        <a class="infoItems" href="${path}/game/partrank/index?filter=designer&num=${designer.dnum}">${designer.designer}</a>
                     </c:forEach>
                 </div>
             </div>
@@ -730,7 +730,7 @@
                 <span>게임방식</span>
                 <div>
                     <c:forEach var="mechanic" items="${map.mlist}">
-                        <a class="infoItems" href="${path}/game/search.do?filter=mechanic&num=${mechanic.mnum}">${mechanic.mechanic}</a>
+                        <a class="infoItems" href="${path}/game/partrank/index?filter=mechanic&num=${mechanic.mnum}">${mechanic.mechanic}</a>
                     </c:forEach>
                 </div>
             </div>
@@ -739,7 +739,7 @@
                 <span>퍼블리셔</span>
                 <div>
                     <c:forEach var="publisher" items="${map.plist}">
-                        <a class="infoItems" href="${path}/game/search.do?filter=publisher&num=${publisher.pnum}">${publisher.publisher}</a>
+                        <a class="infoItems" href="${path}/game/partrank/index?filter=publisher&num=${publisher.pnum}">${publisher.publisher}</a>
                     </c:forEach>
                 </div>
             </div>
