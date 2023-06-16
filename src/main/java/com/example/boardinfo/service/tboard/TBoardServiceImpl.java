@@ -43,7 +43,7 @@ public class TBoardServiceImpl implements TBoardService {
 		map.put("keyword", "%"+keyword+"%");
 
 		int count = tboardDao.countArticle(map);
-		Pager pager = new Pager(12, curPage, 10);
+		Pager pager = new Pager(count, curPage, 9);
 		int start = pager.getPageBegin();
 		int end = pager.getPageEnd();
 
@@ -51,10 +51,12 @@ public class TBoardServiceImpl implements TBoardService {
 		map.put("end", end);
 
 		List<TBoardDTO> list = tboardDao.list(map);
+//		List<String> fList = tboardDao.getFirstImage();
+
 		map.put("keyword", keyword);
 		map.put("list", list);
+//		map.put("fList", fList);
 		map.put("pager", pager);
-
 		return map;
 	}
 
@@ -72,6 +74,7 @@ public class TBoardServiceImpl implements TBoardService {
 						break;
 					}
 					//파일 업로드
+					/* UploadFileUtils 는 이미지파일이면 썸네일 파일 명을 리턴함 */
 					String uploadedFileName = UploadFileUtils.uploadFile(uploadPath, fileName, fileData);
 					logger.info("uploadedFileName :" + uploadedFileName);
 					TBAttachDTO fDto = new TBAttachDTO();
@@ -86,8 +89,13 @@ public class TBoardServiceImpl implements TBoardService {
 	}
 
 	@Override
-	public TBoardDTO viewPost(int tb_num) {
-		return tboardDao.viewPost(tb_num);
+	public Map<String, Object> viewPost(int tb_num) {
+		List<String> fList = tboardDao.getAttach(tb_num);
+		TBoardDTO dto = tboardDao.viewPost(tb_num);
+		Map<String, Object> map = new HashMap<>();
+		map.put("fList", fList);
+		map.put("dto", dto);
+		return map;
 	}
 
 	@Override
@@ -124,25 +132,6 @@ public class TBoardServiceImpl implements TBoardService {
 	public void deleteFile(String fileName) {
 		tboardDao.deleteFile(fileName);
 	}
-
-//    @Override
-//    public void fileAttach(String create_user, List<MultipartFile> files, String uploadPath) throws Exception {
-//			for (int i = 0; i < files.size(); i++) {
-//				String fileName = files.get(i).getOriginalFilename();
-//				//파일을 바이트 배열로 변환
-//				byte[] fileData = files.get(i).getBytes();
-//
-//				String uploadedFileName = UploadFileUtils. uploadFile(uploadPath, fileName, fileData);
-//
-//				TBAttachDTO fDto = new TBAttachDTO();
-//
-//				fDto.setCreate_user(create_user);
-//				fDto.setFullName(uploadedFileName);
-//				fDto.setFormatName(uploadedFileName.substring(uploadedFileName.lastIndexOf(".")+1));
-//				fDto.setFileData(fileData);
-//				tboardDao.fileAttach(fDto);
-//			}
-//    }
 
 
     @Override

@@ -9,54 +9,12 @@
     <script src="${path}/include/js/jquery-3.6.3.min.js"></script>
     <link rel="stylesheet" href="${path}/include/css/trade/list.css">
     <script type="text/javascript">
-        $(document).ready(function() {
-            $.ajax({
-                url: '${path}/tboard/getListImage', // Replace with the actual URL for your controller
-                type: 'GET',
-                dataType: 'json',
-                success: function(response) {
-                    var productList = response.products; // Assuming the response contains an array of products
-
-                    var productContainer = $('#product-list');
-
-                    // Iterate over the product list and create cards
-                    productList.forEach(function(product) {
-                        // Create a card element for each product
-                        var card = $('<div class="product-card"></div>');
-
-                        // Set the card content, e.g., product name and price
-                        card.append('<h2>' + product.name + '</h2>');
-                        card.append('<p>Price: ' + product.price + '</p>');
-
-                        // Load the image using another AJAX request
-                        $.ajax({
-                            url: '/getImage', // Replace with the URL for retrieving images
-                            type: 'GET',
-                            data: { productId: product.id }, // Pass any necessary data, e.g., product ID
-                            success: function(imageUrl) {
-                                // Set the image source once it's retrieved
-                                card.append('<img src="' + imageUrl + '">');
-                            },
-                            error: function() {
-                                // Handle errors loading the image, if necessary
-                            }
-                        });
-
-                        // Add the card to the product container
-                        productContainer.append(card);
-                    });
-                },
-                error: function() {
-                    // Handle errors retrieving the product list, if necessary
-                }
-            });
-        });
 
         $(function () {
+            // debugger
             $("#btnWrite").on("click", function () {
                 location.href = "${path}/tboard/write.do";
             });
-
             function list(page) {
                 location.href = "${path}/tboard/list.do?curPage=" + page;
             }
@@ -137,7 +95,8 @@
                         <div class="itemCard">
                             <a href="#" target="_blank">
                                 <div class="imgCard-thumbnail">
-                                    <img src='${path}/resources/uploaded_image${row.first_image}' alt="이미지 자리">
+                                    <%-- 업로드 경로에서 썸네일 이미지 리턴 --%>
+                                    <img src='${path}/resources/uploaded_image${row.first_img}' alt="이미지 자리">
                                 </div>
                             </a>
                             <div class="info">

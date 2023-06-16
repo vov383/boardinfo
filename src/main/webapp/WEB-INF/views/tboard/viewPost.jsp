@@ -6,6 +6,9 @@
     <meta charset="UTF-8">
     <title>Insert title here</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <%@ include file="../include/js/header.jsp" %>
     <link rel="stylesheet" href="${path}/include/css/trade/viewPost.css">
     <style>
@@ -86,9 +89,15 @@
             margin-right: 6px;
         }
     </style>
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
     <script src="${path}/include/js/jquery-3.6.3.min.js"></script>
     <script type="text/javascript">
         $(function () {
+
+
             /* 댓글 목록 출력 */
             getReplies();
 
@@ -105,7 +114,7 @@
                 if (content.val() == "") {
                     return;
                 }
-                let queryString = form.serialize() + "&tb_num=" + "${dto.tb_num}";
+                let queryString = form.serialize() + "&tb_num=" + "${map.dto.tb_num}";
 
                 $.ajax({
                     type: "get",
@@ -194,52 +203,46 @@
 
             /* 분문 수정버튼 */
             $(".btnChange").on("click", function () {
-                let tb_num = ${dto.tb_num};
+                let tb_num = ${map.dto.tb_num};
                 location.href = "${path}/tboard/change.do?tb_num=" + tb_num;
             });
             /* 로그인버튼 */
             $("#btnMoveLogin").on("click", function () {
                 location.href = "${path}/member/member_login.do?message=nologin";
             });
-            /* 캐러셀 */
-            $('.slide-1').on('click', function () {
-                $('.slide-container').css('transform', 'translateX(0%)');
+            $(".imgSection").on("load", function () {
+
             });
 
-            $('.slide-2').on('click', function () {
-                $('.slide-container').css('transform', 'translateX(-33.333%');
-            });
-
-            $('.slide-3').on('click', function () {
-                $('.slide-container').css('transform', 'translateX(-66.666%');
-            });
-
-            let item = 1;
-
-            $('.next_div').on('click', function () {
-                if (item == 1) {
-                    $('.slide-container').css('transform', 'translateX(-33.333%');
-                    item += 1;
-                } else if (item == 2) {
-                    $('.slide-container').css('transform', 'translateX(-66.666%');
-                    item += 1;
-                } else if (item == 3) {
-                    $('.slide-container').css('transform', 'translateX(0%)');
-                    item = 1;
-                }
-            })
-
-            $('.before_div').on('click', function () {
-                if (item == 3) {
-                    $('.slide-container').css('transform', 'translateX(-33.333%');
-                    item -= 1;
-                } else if (item == 2) {
-                    $('.slide-container').css('transform', 'translateX(0%)');
-                    item -= 1;
-                }
-
-            })
         });
+        /* dom요소가 다 실행되고 나면 실행되는 함수 */
+        window.onload = function () {
+            /* 이미지 목록 출력 */
+            let tb_num = ${map.dto.tb_num};
+            /* 비동기 방식으로 첨부파일 가져옴... */
+            $.ajax({
+                url: "${path}/tboard/getAttach",
+                method: "get",
+                data: {"tb_num" : tb_num},
+                dataType: "json",
+                success: function (result) {
+                    /* 이미지 fullName으로 반복 */
+                    $.each(result, function (index, fullName) {
+                        /* img element 생성하고 src 설정하기
+                        * src에 대한 설명 => DB에는 이미지 파일이 경로와 s_가 더해져서 썸네일 파일명이 저장됨.
+                        * fullName.substring(0, 12)는 디렉토리
+                        * fullName.substring(14)는 s_를 뺀 나머지 uuid가 적용된 파일명 */
+                        var image = $("<img>").attr('src', '${path}/resources/uploaded_image'+ fullName.substr(0,12)+fullName.substr(14));
+
+                        /* imgSection에 image를 append */
+                        $(".imgSection").append(image);
+                    });
+                },
+                error: function(xhr, status, error){
+                    alert("AJax Fail");
+                }
+            }); //이미지 목록 ajax End
+        };
 
         /*댓글 목록 출력 함수*/
         function getReplies() {
@@ -247,7 +250,7 @@
             $.ajax({
                 type: "get",
                 url: "${path}/tbComment/replyList.do",
-                data: {tb_num: "${dto.tb_num}"},
+                data: {tb_num: "${map.dto.tb_num}"},
                 success: function (result) {
 
                     let re_list = result.re_list;
@@ -485,17 +488,18 @@
             </div>
         </div>
         <div id="contentsMain">
-            <section class="imgSection"></section>
+            <section class="imgSection">
+            </section>
             <section class="titleSection">
                 <div class="profileAndNickName">
                     <div class="left">
                         <div class="userImg"><a class="userProfile"><img src="${path}/images/trade/defaultProfile.png"
                                                                          alt="유저 프로필 사진"></a></div>
                         <div class="dot"></div>
-                        <div class="nickName"><a class="userNickName">유저 닉네임(${dto.create_user})</a></div>
+                        <div class="nickName"><a class="userNickName">유저 닉네임(${map.dto.create_user})</a></div>
                         <div class="dot"></div>
                         <div class="dateTime"><i class="fa-regular fa-timer"></i><fmt:formatDate
-                                value="${dto.create_date}"
+                                value="${map.dto.create_date}"
                                 pattern="yyyy-MM-dd hh:mm:ss"/></div>
                         <div class="dot"></div>
                     </div>
@@ -503,13 +507,13 @@
                 <div class="categoryAndTitle">
                     <div class="category">
                         <c:choose>
-                            <c:when test="${dto.category == 's'}">
+                            <c:when test="${map.dto.category == 's'}">
                                 판매
                             </c:when>
-                            <c:when test="${dto.category == 'b'}">
+                            <c:when test="${map.dto.category == 'b'}">
                                 구매
                             </c:when>
-                            <c:when test="${dto.category == 'n'}">
+                            <c:when test="${map.dto.category == 'n'}">
                                 나눔
                             </c:when>
                             <c:otherwise>
@@ -517,142 +521,156 @@
                             </c:otherwise>
                         </c:choose>
                     </div>
-                    <div class="title">${dto.title}</div>
+                    <div class="title">${map.dto.title}</div>
                 </div>
-                <div class="price">${dto.price}원</div>
+                <div class="price">
+                    <fmt:formatNumber value="${map.dto.price}" pattern="###,###" /><div class="dot"></div><span>원</span>
+                </div>
             </section>
 
             <section class="descriptionSection">
                 <div id="description" name="description">
-                    ${dto.description}
+                    ${map.dto.description}
                 </div>
-                <div class="placeContainer">
-                    <div id="placeUpper">
-                        <div>
-                            <div class="map_wrap">
-                                <div id="map"></div>
-                                <div class="hAddr">
-                                    <span class="title">주소정보</span>
-                                    <span id="centerAddr"></span>
+                <c:choose>
+                    <c:when test='${map.dto.address1 != null || map.dto.address1.equals("")}'>
+                        <div class="placeContainer">
+                            <div id="placeUpper">
+                                <div>
+                                    <div class="map_wrap">
+                                        <div id="map"></div>
+                                        <div class="hAddr">
+                                            <span class="title">주소정보</span>
+                                            <span id="centerAddr"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <script type="text/javascript"
+                                        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=aaa4a3ee6e039439424a544717323d1a&libraries=services"></script>
+                                <script>
+
+                                    var mapContainer = document.getElementById('map'); // 지도를 표시할 div
+
+                                    var mapOption =
+                                        {
+                                            center: new kakao.maps.LatLng("${map.dto.lat}", "${map.dto.lng}"), // 지도의 중심좌표
+                                            level: 3 // 지도의 확대 레벨
+                                        };
+
+                                    // 지도를 생성합니다
+                                    var map = new kakao.maps.Map(mapContainer, mapOption);
+
+                                    // 주소-좌표 변환 객체를 생성합니다
+                                    var geocoder = new kakao.maps.services.Geocoder();
+
+                                    var imageSrc = 'https://img.freepik.com/icones-gratuites/espace-reserve_318-556820.jpg?w=360', // 마커이미지의 주소입니다
+                                        imageSize = new kakao.maps.Size(44, 48); // 마커이미지의 크기입니다
+
+                                    // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+                                    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+                                    let mainMarker;
+
+                                    // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
+                                    var infowindow = new kakao.maps.InfoWindow({
+                                        zIndex: 4,
+                                        disableAutoPan: true
+                                    });
+
+                                    var infoDiv = document.getElementById('centerAddr');
+
+
+                                    makeMap("${map.dto.lat}", "${map.dto.lng}");
+
+                                    function makeMap(lat, lan) {
+                                        mapOption =
+                                            {
+                                                center: new kakao.maps.LatLng(lat, lan), // 지도의 중심좌표
+                                                level: 4 // 지도의 확대 레벨
+                                            };
+
+                                        // 지도를 생성합니다
+                                        map = new kakao.maps.Map(mapContainer, mapOption);
+
+                                        //마커 생성
+                                        const markerPosition = new window.kakao.maps.LatLng(lat, lan);
+
+                                        //마커 생성
+                                        mainMarker = new window.kakao.maps.Marker({
+                                            position: markerPosition,
+                                            image: markerImage
+                                        });
+
+                                        mainMarker.setMap(map);
+                                        mainMarker.setZIndex(3);
+
+                                        // 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
+                                        searchDetailAddrFromCoords(map.getCenter(), displayCenterInfo);
+                                    }
+
+                                    function searchDetailAddrFromCoords(coords, callback) {
+                                        // 좌표로 법정동 상세 주소 정보를 요청합니다
+                                        geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+                                    }
+
+                                    //지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
+                                    function displayCenterInfo(result, status) {
+                                        if (status === kakao.maps.services.Status.OK) {
+                                            infoDiv.innerHTML = result[0].address.address_name;
+
+                                            let content = "";
+
+                                            if ("${map.dto.place_name}" != null && "${map.dto.place_name}" != "") {
+                                                content = "<div id='infoWindow'><span>" + "${map.dto.place_name}" + "</span></div>";
+                                            } else
+                                                content = '<div id="infoWindow"><span>' + result[0].address.address_name + '</span></div>';
+
+                                            var position = new kakao.maps.LatLng("${map.dto.lat}", "${map.dto.lng}");
+                                            var customOverlay = new kakao.maps.CustomOverlay({
+                                                position: position,
+                                                content: content,
+                                                xAnchor: 0.5, // 커스텀 오버레이의 x축 위치입니다. 1에 가까울수록 왼쪽에 위치합니다. 기본값은 0.5 입니다
+                                                yAnchor: 2.6 // 커스텀 오버레이의 y축 위치입니다. 1에 가까울수록 위쪽에 위치합니다. 기본값은 0.5 입니다
+                                            });
+
+                                            customOverlay.setMap(map);
+                                            map.setCenter(customOverlay.getPosition());
+                                        }
+                                    }
+                                </script>
+                                <div class="addressContainer">
+                                    <ul>
+                                        <li>장소:&nbsp&nbsp${map.dto.address1} ${map.dto.address2} ${map.dto.address3}</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-
-                        <script type="text/javascript"
-                                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=aaa4a3ee6e039439424a544717323d1a&libraries=services"></script>
-                        <script>
-
-                            var mapContainer = document.getElementById('map'); // 지도를 표시할 div
-
-                            var mapOption =
-                                {
-                                    center: new kakao.maps.LatLng("${dto.lat}", "${dto.lng}"), // 지도의 중심좌표
-                                    level: 3 // 지도의 확대 레벨
-                                };
-
-                            // 지도를 생성합니다
-                            var map = new kakao.maps.Map(mapContainer, mapOption);
-
-                            // 주소-좌표 변환 객체를 생성합니다
-                            var geocoder = new kakao.maps.services.Geocoder();
-
-                            var imageSrc = 'https://img.freepik.com/icones-gratuites/espace-reserve_318-556820.jpg?w=360', // 마커이미지의 주소입니다
-                                imageSize = new kakao.maps.Size(44, 48); // 마커이미지의 크기입니다
-
-                            // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-                            var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-                            let mainMarker;
-
-                            // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
-                            var infowindow = new kakao.maps.InfoWindow({
-                                zIndex: 4,
-                                disableAutoPan: true
-                            });
-
-                            var infoDiv = document.getElementById('centerAddr');
-
-
-                            makeMap("${dto.lat}", "${dto.lng}");
-
-                            function makeMap(lat, lan) {
-                                mapOption =
-                                    {
-                                        center: new kakao.maps.LatLng(lat, lan), // 지도의 중심좌표
-                                        level: 4 // 지도의 확대 레벨
-                                    };
-
-                                // 지도를 생성합니다
-                                map = new kakao.maps.Map(mapContainer, mapOption);
-
-                                //마커 생성
-                                const markerPosition = new window.kakao.maps.LatLng(lat, lan);
-
-                                //마커 생성
-                                mainMarker = new window.kakao.maps.Marker({
-                                    position: markerPosition,
-                                    image: markerImage
-                                });
-
-                                mainMarker.setMap(map);
-                                mainMarker.setZIndex(3);
-
-                                // 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
-                                searchDetailAddrFromCoords(map.getCenter(), displayCenterInfo);
-                            }
-
-                            function searchDetailAddrFromCoords(coords, callback) {
-                                // 좌표로 법정동 상세 주소 정보를 요청합니다
-                                geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
-                            }
-
-                            //지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
-                            function displayCenterInfo(result, status) {
-                                if (status === kakao.maps.services.Status.OK) {
-                                    infoDiv.innerHTML = result[0].address.address_name;
-
-                                    let content = "";
-
-                                    if ("${dto.place_name}" != null && "${dto.place_name}" != "") {
-                                        content = "<div id='infoWindow'><span>" + "${dto.place_name}" + "</span></div>";
-                                    } else
-                                        content = '<div id="infoWindow"><span>' + result[0].address.address_name + '</span></div>';
-
-                                    var position = new kakao.maps.LatLng("${dto.lat}", "${dto.lng}");
-                                    var customOverlay = new kakao.maps.CustomOverlay({
-                                        position: position,
-                                        content: content,
-                                        xAnchor: 0.5, // 커스텀 오버레이의 x축 위치입니다. 1에 가까울수록 왼쪽에 위치합니다. 기본값은 0.5 입니다
-                                        yAnchor: 2.6 // 커스텀 오버레이의 y축 위치입니다. 1에 가까울수록 위쪽에 위치합니다. 기본값은 0.5 입니다
-                                    });
-
-                                    customOverlay.setMap(map);
-                                    map.setCenter(customOverlay.getPosition());
-                                }
-                            }
-                        </script>
-                        <div class="addressContainer">
-                            <ul>
-                                <li>장소:&nbsp&nbsp${dto.address1} ${dto.address2} ${dto.address3}</li>
-                            </ul>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="placeContainer">
+                            지정된 거래 장소가 없습니다.
                         </div>
-                    </div>
-                </div>
+                    </c:otherwise>
+                </c:choose>
+
                 <div id="descriptionSub">
                     <div class="interestCount">
-                        <a href="#"><i class="fa-solid fa-heart"></i></a>
+                        <a href="#">
+                            <%-- fontawsome 하트 모양 --%>
+                            <i class="fa-solid fa-heart"></i>
+                            좋아요 수 자리
+                        </a>
                     </div>
 
                     <div class="viewCount">
-                        <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="eye"
-                             class="svg-inline--fa fa-eye fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg"
-                             viewBox="0 0 576 512">
-                            <path fill="currentColor"
-                                  d="M288 144a110.94 110.94 0 0 0-31.24 5 55.4 55.4 0 0 1 7.24 27 56 56 0 0 1-56 56 55.4 55.4 0 0 1-27-7.24A111.71 111.71 0 1 0 288 144zm284.52 97.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400c-98.65 0-189.09-55-237.93-144C98.91 167 189.34 112 288 112s189.09 55 237.93 144C477.1 345 386.66 400 288 400z"></path>
-                        </svg>
-                        ${dto.view_count}
+                        <%-- fontawsome 눈 모양 --%>
+                        <i class="fa-solid fa-eye"></i>
+                        ${map.dto.view_count}
                     </div>
-
-                    <i class="fa-regular fa-comment-dots"></i><span id="countReplies"></span>
+                    <%-- fontawsome 댓글 모양 --%>
+                    <i class="fa-regular fa-comment-dots"></i>
+                    <%-- 댓글 개수 출력 영역 --%>
+                    <span id="countReplies"></span>
                 </div>
             </section>
 
@@ -663,7 +681,7 @@
 
                     </div>
                 </div>
-                <button onclick="viewMoreItem('${dto.create_user}')">더보기
+                <button onclick="viewMoreItem('${map.dto.create_user}')">더보기
                 </button>
                 <div class="moreOtherItem"></div>
             </section>
@@ -673,12 +691,12 @@
                 <div class="replyContainer">
                     <div class="contentContainer">
                         <form name="newReplyFrom">
-                            <input type="hidden" name="tb_num" value="${dto.tb_num}">
+                            <input type="hidden" name="tb_num" value="${map.dto.tb_num}">
                             <div class="replyInput">
                                 <div class="replyContent">
                                     <textarea name="content" class="replyContent" cols="30" rows="10"></textarea>
                                 </div>
-                                <div class="submit">
+                                <div class="button">
                                     <a href="#" class="btnCommentInsert">댓글등록</a>
                                 </div>
                             </div>

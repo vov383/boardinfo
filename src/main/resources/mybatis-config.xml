@@ -30,7 +30,7 @@
 			alias="tboardDto"/>
 		<typeAlias type="com.example.boardinfo.model.tboard.dto.TBCommentDTO"
 			alias="tbCommentDto" />
-		<typeAlias type="com.example.boardinfo.model.tboard.dto.TBCommentDTO"
+		<typeAlias type="com.example.boardinfo.model.tboard.dto.TBAttachDTO"
 			alias="tbFileDto"/>
 
 	</typeAliases>

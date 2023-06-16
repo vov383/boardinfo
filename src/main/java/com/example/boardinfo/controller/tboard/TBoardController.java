@@ -48,25 +48,23 @@ public class TBoardController {
         //레코드 갯수 계산
         int count = tboardService.countArticle(
                 select_category, search_option, keyword);
-//		logger.info("총 게시물 갯수 :"+count);
 
         Map<String, Object> map = tboardService.list(
                 select_category, search_option, keyword, curPage);
         ModelAndView mav = new ModelAndView();
-//		logger.info("맵 : "+map);
 
         map.put("count", count);
 
         mav.setViewName("tboard/list");
         mav.addObject("map", map);
-//		logger.info("맵 데이터 : "+map);
         return mav;
     }
 
     @RequestMapping("write.do")
     public String write(HttpSession session) {
         //글쓰기 폼 페이지로 이동
-        if (session.getAttribute("userid") == null) {
+        String userid = (String)session.getAttribute("userid");
+        if (userid == null || userid.equals("")) {
             return "member/login";
         }
         return "tboard/write";
@@ -117,19 +115,12 @@ public class TBoardController {
                              HttpSession session) throws Exception {
         //조회수 증가처리
         tboardService.increaseViewCount(tb_num, session);
-        TBoardDTO dto = tboardService.viewPost(tb_num);
-
-//		int re_count = tbcommentService.getCommentCount(tb_num);
-//		dto.setRe_count(re_count);
-//		Map<String, Object> map = new HashMap<>();
-//		map.put("dto", dto);
-//		map.put("re_count", re_count);
+        Map<String, Object> map = tboardService.viewPost(tb_num);
 
         ModelAndView mav = new ModelAndView();
 
         mav.setViewName("tboard/viewPost");
-//		mav.addObject("map", map);
-        mav.addObject("dto", dto);
+        mav.addObject("map", map);
 
         return mav;
 
@@ -138,10 +129,10 @@ public class TBoardController {
     @RequestMapping("change.do")
     public ModelAndView moveUpdatePage(int tb_num) {
 
-        TBoardDTO dto = tboardService.viewPost(tb_num);
+        Map<String, Object> map = tboardService.viewPost(tb_num);
         ModelAndView mav = new ModelAndView();
         mav.setViewName("tboard/updatePost");
-        mav.addObject("dto", dto);
+        mav.addObject("map", map);
         return mav;
 
     }

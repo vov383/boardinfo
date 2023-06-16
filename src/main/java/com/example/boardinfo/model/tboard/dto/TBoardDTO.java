@@ -38,7 +38,7 @@ public class TBoardDTO {
 
 	private int interestCount;/*좋아요 수*/
 	private MultipartFile[] files;
-	private String first_image;/*리스트에서 썸네일로 쓰려고 db에 미포함*/
+	private String first_img;/*리스트에서 썸네일로 쓰려고 db에 미포함*/
 	//getter, setter
 	public int getTb_num() {
 		return tb_num;
@@ -188,12 +188,12 @@ public class TBoardDTO {
 		this.files = files;
 	}
 
-	public String getFirst_image() {
-		return first_image;
+	public String getFirst_img() {
+		return first_img;
 	}
 
-	public void setFirst_image(String first_image) {
-		this.first_image = first_image;
+	public void setFirst_img(String first_img) {
+		this.first_img = first_img;
 	}
 
 	@Override
@@ -220,7 +220,7 @@ public class TBoardDTO {
 				", lng=" + lng +
 				", interestCount=" + interestCount +
 				", files=" + Arrays.toString(files) +
-				", fullName='" + first_image + '\'' +
+				", fullName='" + first_img + '\'' +
 				'}';
 	}
 
