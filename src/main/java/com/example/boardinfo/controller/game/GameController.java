@@ -132,7 +132,7 @@ public class GameController {
 	public ModelAndView sortGame(ModelAndView mav, @RequestParam("filter") String filter, @RequestParam("num") int num,
 								 @RequestParam(required = false, defaultValue = "1") int curPage) {
 
-		mav.setViewName("game/game_filteredList");
+		mav.setViewName("game/game_list");
 		mav.addObject("map", gameService.filteredGamelist(filter, num, curPage));
 
 		return mav;
@@ -163,7 +163,6 @@ public class GameController {
 	@RequestMapping("delete.do")
 	public String delete(@RequestParam("delete_gnum")int gnum, HttpSession session){
 		String userid = (String)session.getAttribute("userid");
-		logger.info("gnummmmmmmmmmmmmmmmmmmmmm : " + gnum);
 		gameService.deleteGame(gnum, userid);
 		return "home";
 	}
@@ -172,6 +171,17 @@ public class GameController {
 	@RequestMapping("parseAjax")
 	public Map<String, Object> parseInsert(@RequestParam("bggnum")int bggnum, Map<String, Object> map){
 		map = gameService.parseInsert(bggnum);
+		return map;
+	}
+
+	@ResponseBody
+	@RequestMapping("getExReAjax")
+	public Map<String, Object> getExReList(@RequestBody Map<String, Object> param){
+		String origin = (String) param.get("origin");
+		String filter = (String) param.get("filter");
+		int gnum = (int) param.get("num");
+
+		Map<String, Object> map = gameService.getExRe(origin, filter, gnum);
 		return map;
 	}
 }

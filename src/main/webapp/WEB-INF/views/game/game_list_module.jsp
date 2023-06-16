@@ -137,7 +137,11 @@
 
 <script>
     function list(page) {
-        location.href="${path}/game/gamelist.do?curPage="+page;
+        var currentPage = document.location.href;   //현재페이지 url
+        if(currentPage.includes("filter"))  //currentPage에 filter라는 문자열이 있으면
+            location.href="${path}/game/search.do?filter=${map.filter}&num=${map.num}&curPage="+page;
+        else
+            location.href="${path}/game/gamelist.do?curPage="+page;
     }
 
 </script>
