@@ -348,9 +348,10 @@
 
   <script>
     /*검색 스크립트*/
-    function searchFu() {
+    function searchFu(nowPage) {
       $("#searchTitleHidden").val($("#searchTitle").val());
-      /*alert($("#searchTitleHidden").val());*/
+      $("#nowPage").val(nowPage);
+      //alert($("#searchTitleHidden").val());
       document.reviewSearch.submit();
     }
 
@@ -386,6 +387,9 @@
 <%--검색 폼--%>
 <form name="reviewSearch" method="post" action="${path}/review/reviewlist.do">
   <input type="hidden" name="searchTitle" id="searchTitleHidden">
+  <input type="hidden" name="nowPage" id="nowPage" value="1">
+  <input type="hidden" name="cntPage" id="cntPage" value="10">
+  <input type="hidden" name="cntPerPage" id="cntPerPage" value="10">
 </form>
 
 <%--디테일 진입 폼--%>
@@ -406,7 +410,7 @@
     <%--검색 및 글쓰기 버튼--%>
     <div class="searchBox">
       <input type="text" id="searchTitle" placeholder="제목 및 내용을 검색하세요.">
-      <button type="button" id="search" onclick="searchFu()">검색</button>
+      <button type="button" id="search" onclick="searchFu('1')">검색</button>
       <button type="button" onclick="reviewInsert()">글쓰기</button>
     </div>
 
@@ -439,16 +443,39 @@
             <td style="width: 200px; text-align: center;">/댓글 연결 예정/</td>
             <td style="width: 200px; text-align: center;">${vo.gametitle}</td>
 
-
-
-
           </tr>
         </c:forEach>
       </table>
     </form>
 
+<%--      private int nowPage;                 // 현재 페이지--%>
+<%--      private int cntPage;                 // 화면 페이지 개수 (가로)--%>
+<%--      private int cntPerPage;              // 쿼리 리스트 개수 (세로)--%>
+<%--      private int total;                   // 쿼리 리스트 총 개수--%>
+<%--      private int lastPage;                // 마지막 번호 (시작번호는 1로고정)--%>
+<%--      private int startPage;               // 화면 페이지 가로 시작 번호--%>
+<%--      private int endPage;                 // 화면 페이지 가로 마지막 번호--%>
+<%--      private int start;                   // 쿼리 리스트 변수--%>
+<%--      private int end;                     // 쿼리 리스트 변수--%>
+
+       nowPage;   <c:out value="${page.nowPage   }"></c:out>
+       cntPage;   <c:out value="${page.cntPage   }"></c:out>
+       lastPage;  <c:out value="${page.lastPage  }"></c:out>
+       startPage; <c:out value="${page.startPage }"></c:out>
+       endPage;   <c:out value="${page.endPage   }"></c:out>
 
 
+      <div class="paging-btn">
+        <a href="">처음</a>
+        <a href="">이전</a>
+
+        <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
+          <a href="javascript:searchFu('${i}')">${i}</a>
+        </c:forEach>
+
+        <a href="">다음</a>
+        <a href="">마지막</a>
+      </div>
 
   </div>
 </div>

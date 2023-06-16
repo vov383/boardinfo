@@ -40,6 +40,9 @@ public class paging {
 
         /*화면 페이지 가로 시작 번호 (화면 페이지 가로 마지막 번호 - 화면 페이지 개수)*/
         page.setStartPage(page.getEndPage() - page.getCntPage() + 1);
+        if (page.getCntPage() > page.getStartPage()) {
+            page.setStartPage(1);
+        }
 
         /*쿼리 리스트 변수 (현재 페이지 * 쿼리 리스트 개수)*/
         page.setEnd(page.getNowPage() * page.getCntPerPage());
