@@ -26,10 +26,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="reviewList" parameterType="hashMap" resultType="com.example.boardinfo.model.review.dto.ReviewDTO">
 
 		<include refid = "pagingStart"/>
-
-		SELECT
-			   ROWNUM AS RNUM
-			 , R.REG_NUM AS REGNUM
+		SELECT A.*, ROWNUM AS RNUM
+		FROM (
+		    SELECT
+			   R.REG_NUM AS REGNUM
 		     , M.USERID
 			 , M.NICKNAME
 			 , R.CATEGORY
@@ -43,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			 , R.GAME_SCORE AS GAMESCORE
 			 , R.REVIEW_DETAIL AS REVIEWDETAIL
 			 , (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') AS GOOD
+		     , (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) AS RECNT
 			 , R.DEL
 			 , R.CREATE_USER AS CREATEUSER
 			 , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS CREATEDATE
@@ -63,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="reviewDetailKey != '' and reviewDetailKey != null">
 			AND R.REG_NUM = #{reviewDetailKey}
 		</if>
-		ORDER BY CREATEDATE
+		ORDER BY CREATEDATE DESC) A
 
 		<include refid = "pagingEnd"/>
 		<if test="reviewDetailKey == '' or reviewDetailKey == null">

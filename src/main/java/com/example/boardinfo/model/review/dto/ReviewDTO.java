@@ -24,6 +24,8 @@ public class ReviewDTO extends PageDTO {
 	private String goodkey;			// 좋아요 테이블 PK
 	private String reviewpk;		// 좋아요 테이블 → 리뷰 테이블 PK
 	private String good;			// 좋아요 (기본값 : N)
+	private String rnum;			// 게시글 순번
+	private String recnt;			// 댓글 개수
 
 
 	public String getRegNum() {
@@ -192,5 +194,21 @@ public class ReviewDTO extends PageDTO {
 
 	public void setGood(String good) {
 		this.good = good;
+	}
+
+	public String getRnum() {
+		return rnum;
+	}
+
+	public void setRnum(String rnum) {
+		this.rnum = rnum;
+	}
+
+	public String getRecnt() {
+		return recnt;
+	}
+
+	public void setRecnt(String recnt) {
+		this.recnt = recnt;
 	}
 }
