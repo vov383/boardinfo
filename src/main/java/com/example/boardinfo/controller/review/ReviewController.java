@@ -52,7 +52,7 @@ public class ReviewController {
 
 			/*내가 보는 리스트의 총개수*/
 			int cnt = reviewservice.reviewListCnt(reviewserchDTO);
-			page = paging.Paginggeqwjg(page, cnt);
+			page = paging.PagingMath(page, cnt);
 
 			reviewserchDTO.setStart(page.getStart());
 			reviewserchDTO.setEnd(page.getEnd());
