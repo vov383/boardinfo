@@ -32,7 +32,7 @@
 			alias="tbCommentDto" />
 		<typeAlias type="com.example.boardinfo.model.tboard.dto.TBAttachDTO"
 			alias="tbFileDto"/>
-
+		<typeAlias type="com.example.boardinfo.model.admin.dto.AdminDTO" alias="adminDto" />
 	</typeAliases>
 
 	<typeHandlers>
