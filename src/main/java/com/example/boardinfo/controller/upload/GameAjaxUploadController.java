@@ -117,8 +117,6 @@ public class GameAjaxUploadController {
 		if(mType != null) { //이미지파일이면 front + end = 원본파일명
 			String front = fileName.substring(0, 12);
 			String end = fileName.substring(14);
-			logger.info("checkroooooot : " + uploadPath + (front + end).replace(
-					'/', File.separatorChar));
 			new File(uploadPath + (front + end).replace(
 					'/', File.separatorChar)).delete();
 		}

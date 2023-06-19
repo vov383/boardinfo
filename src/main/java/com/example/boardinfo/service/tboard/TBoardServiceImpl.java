@@ -9,14 +9,21 @@ import javax.servlet.http.HttpSession;
 
 import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
 import com.example.boardinfo.util.Pager;
+import com.example.boardinfo.util.UploadFileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.example.boardinfo.model.tboard.dao.TBoardDAO;
 import com.example.boardinfo.model.tboard.dto.TBoardDTO;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class TBoardServiceImpl implements TBoardService {
 
+	//로깅
+	private static final Logger logger = LoggerFactory.getLogger(TBoardServiceImpl.class);
 	@Inject
 	TBoardDAO tboardDao;
 
@@ -36,7 +43,7 @@ public class TBoardServiceImpl implements TBoardService {
 		map.put("keyword", "%"+keyword+"%");
 
 		int count = tboardDao.countArticle(map);
-		Pager pager = new Pager(12, curPage, 10);
+		Pager pager = new Pager(count, curPage, 9);
 		int start = pager.getPageBegin();
 		int end = pager.getPageEnd();
 
@@ -44,30 +51,51 @@ public class TBoardServiceImpl implements TBoardService {
 		map.put("end", end);
 
 		List<TBoardDTO> list = tboardDao.list(map);
+//		List<String> fList = tboardDao.getFirstImage();
+
 		map.put("keyword", keyword);
 		map.put("list", list);
+//		map.put("fList", fList);
 		map.put("pager", pager);
-
 		return map;
 	}
 
+	@Transactional
 	@Override
-	public void insert(TBoardDTO dto) {
-		if(dto.getAddress1() == "" || dto.getAddress1().equals("")){tboardDao.insert(dto);
-		}else{
-			tboardDao.insertWithAddress(dto);
+	public void insert(TBoardDTO dto, MultipartFile[] files, String uploadPath) throws Exception {
+			int result =  tboardDao.insert(dto);
+			if(result == 1){/*insert에 성공하면*/
+
+				for(int i=0; i< files.length; i++) {
+					String fileName = files[i].getOriginalFilename();
+					byte[] fileData = files[i].getBytes();
+					/* 이미지를 업로드 안했을 경우 fileName이 ""라서 break로 반복문 탈출! */
+					if(fileName == null || fileName.equals("")){
+						break;
+					}
+					//파일 업로드
+					/* UploadFileUtils 는 이미지파일이면 썸네일 파일 명을 리턴함 */
+					String uploadedFileName = UploadFileUtils.uploadFile(uploadPath, fileName, fileData);
+					logger.info("uploadedFileName :" + uploadedFileName);
+					TBAttachDTO fDto = new TBAttachDTO();
+					fDto.setFullName(uploadedFileName);
+					fDto.setFileData(fileData);
+					fDto.setFormatName(uploadedFileName.substring(uploadedFileName.lastIndexOf(".")+1));
+					fDto.setCreate_user(dto.getCreate_user());
+					int result2 = tboardDao.fileAttach(fDto);
+				}
 		}
 
 	}
 
 	@Override
-	public void fileAttach(TBAttachDTO f_dto) {
-		tboardDao.fileAttach(f_dto);
-	}
-
-	@Override
-	public TBoardDTO viewPost(int tb_num) {
-		return tboardDao.viewPost(tb_num);
+	public Map<String, Object> viewPost(int tb_num) {
+		List<String> fList = tboardDao.getAttach(tb_num);
+		TBoardDTO dto = tboardDao.viewPost(tb_num);
+		Map<String, Object> map = new HashMap<>();
+		map.put("fList", fList);
+		map.put("dto", dto);
+		return map;
 	}
 
 	@Override
@@ -106,8 +134,7 @@ public class TBoardServiceImpl implements TBoardService {
 	}
 
 
-
-	@Override
+    @Override
 	public void increaseRecnt(int tb_num) {
 		tboardDao.increaseRecnt(tb_num);
 	}

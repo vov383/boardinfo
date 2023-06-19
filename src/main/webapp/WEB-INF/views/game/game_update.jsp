@@ -650,14 +650,20 @@
 			
 			var value = $(this).text();
 
-		    // 선택된 값 배열에서 해당 값을 제거
-		    selectedCategories = selectedCategories.filter(function(selected) {
-		      	return selected !== value;
-		    });
+		    // 선택된 값 db에 존재할 경우 삭제되도록 처리
+			$.ajax({
+				type: "POST",
+				url: "${path}/game/autoUpdate_delete.do/"+value+"/${dto.gnum}",
+			});
+			
+			// 선택된 값 배열에서 해당 값을 제거
+			selectedCategories = selectedCategories.filter(function(selected) {
+				return selected !== value;
+			});
 
-		    // 선택된 값 표시가 삭제되도록 처리
-		    $(this).remove();
-		    
+			// 선택된 값 표시가 삭제되도록 처리
+			$(this).remove();
+
 		    updateGameCategoryInput();
 		  });
 		

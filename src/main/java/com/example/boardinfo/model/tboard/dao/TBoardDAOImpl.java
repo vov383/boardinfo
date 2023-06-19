@@ -28,12 +28,8 @@ public class TBoardDAOImpl implements TBoardDAO {
 		return sqlSession.selectList("tboard.selectBoardList", map);
 	}
 	@Override
-	public void insert(TBoardDTO dto) {
-		sqlSession.insert("tboard.insertBoard", dto);
-	}
-	@Override
-	public void insertWithAddress(TBoardDTO dto) {
-		sqlSession.insert("tboard.insertBoardWithAddress", dto);
+	public int insert(TBoardDTO dto) {
+		return sqlSession.insert("tboard.insertBoard", dto);
 	}
 
 
@@ -76,10 +72,8 @@ public class TBoardDAOImpl implements TBoardDAO {
 	}
 
 	@Override
-	public void fileAttach(TBAttachDTO f_dto) {
-		sqlSession.insert("tboard.insertFile", f_dto);
+	public int fileAttach(TBAttachDTO fDto) {
+		return sqlSession.insert("tboard.insertFile", fDto);
 	}
-
-
 
 }

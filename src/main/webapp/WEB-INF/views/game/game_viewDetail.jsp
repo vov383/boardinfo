@@ -15,20 +15,15 @@
         <link rel="stylesheet" href="${path}/include/js/style_game.css">
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-
         <style>
-
-
             #contentsMain{
                 border-top: 2px solid black;
             }
-
 
             #gameInfoUpper{
                 display: flex;
                 padding: 20px 20px 35px 20px;
             }
-
 
             #upperLeftSide{
                 padding-right: 45px;
@@ -39,7 +34,6 @@
                 height: 260px;
                 border: 1px solid black;
             }
-
 
             #upperRightSide{
                 display: flex;
@@ -58,7 +52,6 @@
                 margin: 0 2px 0 0;
                 padding: 0;
             }
-
 
             #titleArea h3{
                 font-size: 20px;
@@ -121,7 +114,6 @@
             .byUser{
                 color: #F9841A;
             }
-
 
             #ratingArea{
                 padding-top: 15px;
@@ -247,7 +239,7 @@
                 justify-content: center;
             }
 
-            .before:hover, .next:hover {
+            .before:hover, .next:hover, .hover_span:hover {
                 background-color: rgba(0,0,0,.1);
             }
 
@@ -569,11 +561,6 @@
                 cursor: pointer;
             }
 
-
-
-
-
-
         </style>
    </head>
 
@@ -595,10 +582,6 @@
 
 
 	<div align="center">
-        <form name="updateViewForm" method="post" action="${path}/game/updateView.do">
-            <input type="hidden" name="gnum" value="${map.dto.gnum}">
-        </form>
-        <div id="btnGameUpdate">수정</div>
 
            <div id="gameInfoUpper">
 
@@ -702,7 +685,13 @@
                             <img src="${path}/images/game/empty_star.png" class="e_star">
                         </span>
                     </div>
-                    <span>컬렉션 추가</span>
+                    <span class="hover_span">컬렉션 추가</span>
+
+                    <span class="hover_span" id="btnGameUpdate">게임정보수정</span>
+                    <form name="updateViewForm" method="post" action="${path}/game/updateView.do">
+                        <input type="hidden" name="gnum" value="${map.dto.gnum}">
+                    </form>
+
 
                 </div>
 
@@ -716,7 +705,7 @@
                 <span>카테고리</span>
                 <div>
                 <c:forEach var="category" items="${map.clist}">
-                    <a class="infoItems" href="${path}/game/search.do?filter=gamecategory&num=${category.cnum}">${category.gamecategory}</a>
+                    <a class="infoItems" href="${path}/game/partrank/index?filter=gamecategory&num=${category.cnum}">${category.gamecategory}</a>
                 </c:forEach>
                 </div>
             </div>
@@ -725,7 +714,7 @@
                 <span>아티스트</span>
                 <div>
                     <c:forEach var="artist" items="${map.alist}">
-                        <a class="infoItems" href="${path}/game/search.do?filter=artist&num=${artist.anum}">${artist.artist}</a>
+                        <a class="infoItems" href="${path}/game/partrank/index?filter=artist&num=${artist.anum}">${artist.artist}</a>
                     </c:forEach>
                 </div>
             </div>
@@ -734,7 +723,7 @@
                 <span>디자이너</span>
                 <div>
                     <c:forEach var="designer" items="${map.dlist}">
-                        <a class="infoItems" href="${path}/game/search.do?filter=designer&num=${designer.dnum}">${designer.designer}</a>
+                        <a class="infoItems" href="${path}/game/partrank/index?filter=designer&num=${designer.dnum}">${designer.designer}</a>
                     </c:forEach>
                 </div>
             </div>
@@ -744,7 +733,7 @@
                 <span>게임방식</span>
                 <div>
                     <c:forEach var="mechanic" items="${map.mlist}">
-                        <a class="infoItems" href="${path}/game/search.do?filter=mechanic&num=${mechanic.mnum}">${mechanic.mechanic}</a>
+                        <a class="infoItems" href="${path}/game/partrank/index?filter=mechanic&num=${mechanic.mnum}">${mechanic.mechanic}</a>
                     </c:forEach>
                 </div>
             </div>
@@ -753,47 +742,17 @@
                 <span>퍼블리셔</span>
                 <div>
                     <c:forEach var="publisher" items="${map.plist}">
-                        <a class="infoItems" href="${path}/game/search.do?filter=publisher&num=${publisher.pnum}">${publisher.publisher}</a>
+                        <a class="infoItems" href="${path}/game/partrank/index?filter=publisher&num=${publisher.pnum}">${publisher.publisher}</a>
                     </c:forEach>
                 </div>
             </div>
 
 
-            <div  class="game_detail_filter_div">
-                <div class="game_detail_filter">확장(원본)</div>
-                <div class="game_detail_filtered_list">
-                    <c:forEach var="item" items="${map.exmap.origin}">
-                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
-                    </c:forEach>
-                </div>
-            </div>
+            <c:import url="game_ExReList_module.jsp" charEncoding="UTF-8">
+                <c:param name="gnum" value="${map.dto.gnum}"/>
+            </c:import>
 
-            <div  class="game_detail_filter_div">
-                <div class="game_detail_filter">확장</div>
-                <div class="game_detail_filtered_list">
-                    <c:forEach var="item" items="${map.exmap.expansion}">
-                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
-                    </c:forEach>
-                </div>
-            </div>
 
-            <div  class="game_detail_filter_div">
-                <div class="game_detail_filter">재구현(원본)</div>
-                <div class="game_detail_filtered_list">
-                    <c:forEach var="item" items="${map.remap.origin}">
-                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
-                    </c:forEach>
-                </div>
-            </div>
-
-            <div  class="game_detail_filter_div">
-                <div class="game_detail_filter">재구현</div>
-                <div class="game_detail_filtered_list">
-                    <c:forEach var="item" items="${map.remap.expansion}">
-                        <a href="${path}/game/view.do?gnum=${item.gnum}">${item.gametitle}</a>
-                    </c:forEach>
-                </div>
-            </div>
 
         </div>
 
@@ -875,16 +834,15 @@
 
             <div id="topReviewList">
                 <span>더보기</span>
+            </div>
+
+
+
         </div>
 
+    </div>
 
-
-       </div>
-
-        </div>
-
-
-	</div>
+   </div>
 
 
 
@@ -1177,6 +1135,10 @@
                });
            }
 
+
+           $("#btnGameUpdate").click(function(){
+               document.updateViewForm.submit();
+           });
        });
 
 

@@ -9,11 +9,12 @@
     <script src="${path}/include/js/jquery-3.6.3.min.js"></script>
     <link rel="stylesheet" href="${path}/include/css/trade/list.css">
     <script type="text/javascript">
+
         $(function () {
+            // debugger
             $("#btnWrite").on("click", function () {
                 location.href = "${path}/tboard/write.do";
             });
-
             function list(page) {
                 location.href = "${path}/tboard/list.do?curPage=" + page;
             }
@@ -94,7 +95,8 @@
                         <div class="itemCard">
                             <a href="#" target="_blank">
                                 <div class="imgCard-thumbnail">
-                                    <img src="" alt="이미지 자리">
+                                    <%-- 업로드 경로에서 썸네일 이미지 리턴 --%>
+                                    <img src='${path}/resources/uploaded_image${row.first_img}' alt="이미지 자리">
                                 </div>
                             </a>
                             <div class="info">
@@ -127,22 +129,18 @@
                                         </c:choose>
                                     </span>
                                     <div class="place">
-                                        직거래 장소, 없으면 택배거래 라고 표시하고
+                                        <span>${row.address1}</span>
+                                        <span class="dot"></span>
+                                        <span>${row.address2}</span>
                                     </div>
                                     <div class="price">
                                             ${row.price}
                                     </div>
                                     <div class="subInfo">
                                         <div class="viewCount">
-                                                <%--조회수 눈알모양, 사이즈 조절은 css로 함--%>
-                                            <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="eye"
-                                                 class="svg-inline--fa fa-eye fa-w-18" role="img"
-                                                 xmlns="http://www.w3.org/2000/svg"
-                                                 viewBox="0 0 576 512">
-                                                <path fill="currentColor"
-                                                      d="M288 144a110.94 110.94 0 0 0-31.24 5 55.4 55.4 0 0 1 7.24 27 56 56 0 0 1-56 56 55.4 55.4 0 0 1-27-7.24A111.71 111.71 0 1 0 288 144zm284.52 97.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400c-98.65 0-189.09-55-237.93-144C98.91 167 189.34 112 288 112s189.09 55 237.93 144C477.1 345 386.66 400 288 400z"></path>
-                                            </svg>
-                                                ${row.view_count}
+                                            <%--조회수 눈알모양, 폰트어썸에서 가져옴--%>
+                                        <i class="fa-solid fa-eye"></i>
+                                        ${row.view_count}
                                         </div>
                                         <div class="dot"></div>
                                         <div class="interestCount">

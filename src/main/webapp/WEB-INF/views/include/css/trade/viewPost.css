@@ -60,6 +60,15 @@ a {
     text-decoration: none;
     color: black;
 }
+#ff8a3d
+button {
+    font-size: .9em;
+    padding: 8px 10px;
+    white-space: nowrap;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    height: 100%;
+}
 
 #contents{
     display: flex;
@@ -225,7 +234,10 @@ a {
     /*color: var(--default-font-color);*/
     word-break: break-word;
 }
-
+.price {
+    display: flex;
+    color : #ff8a3d;
+}
 .descriptionSection {
     display: flex;
     flex-direction: column;
@@ -265,6 +277,10 @@ a {
     margin-right: 4px;
 }
 
+.fa-comment-dots:before, .fa-commenting:before {
+    content: "\f4ad";
+    margin-right: 4px;
+}
 .otherItemList {
     box-sizing: border-box;
     position: relative;
@@ -354,7 +370,7 @@ a {
     flex: .9;
 
 }
- textarea {/*background: #E5E5E5;*/
+textarea {/*background: #E5E5E5;*/
     flex: 1;
     width: 100%;
     height: 90px;
@@ -362,7 +378,6 @@ a {
     /*color: var(--default-font-color);*/
     resize: none;
     background-color: transparent;
-    border: 0;
 }
 form[name=newReplyForm] .replyContent {
     background-color: #f0f0f0;
@@ -377,3 +392,4 @@ form[name=newReplyForm] .submit {
     align-items: center;
     justify-content: center;
 }
+

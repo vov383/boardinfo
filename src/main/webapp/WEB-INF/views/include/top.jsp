@@ -31,7 +31,7 @@
    <c:otherwise>
     <!-- 로그인한 상태 -->
     <div class="dropdown">
-          <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.name} 님<img src="${path}/images/dropdown.png" width="16px"></a></div>
+          <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.nickname} 님<img src="${path}/images/dropdown.png" width="16px"></a></div>
           <div class="dropdown-content">
           	<a href="#">내활동</a>
             <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
@@ -49,9 +49,9 @@
 
       <li>
         <div class="dropdown">
-          <a href="${path}/game/gamelist.do" class="toMenu" title="게임정보">게임정보<img src="${path}/images/dropdown.png" width="34px"></a>
+          <a href="${path}/game/gamerank/index" class="toMenu" title="게임정보">게임정보<img src="${path}/images/dropdown.png" width="34px"></a>
           <div class="dropdown-content">
-            <a href="#">게임순위</a>
+            <a href="${path}/game/gamerank/week">게임순위</a>
             <a href="#">카테고리</a>
             <a href="#">디자이너</a>
             <a href="#">출판사</a>
@@ -186,9 +186,6 @@ document.addEventListener('click', function(event) {
 </script>
 <style>
 
-.dropdown .dropbtn:hover {
-  background-color: #eaeaea;
-}
 
 .dropdown {
   position: relative;

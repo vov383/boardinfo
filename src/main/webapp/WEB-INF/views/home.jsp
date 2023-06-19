@@ -155,7 +155,7 @@
 	<div align="center">
 		<h1><a href="${path}/sample/sample.do" style="color: black;">SAMPLE CLICK</a></h1>
         <br>
-        <h1><a href="${path}/game/gamelist.do" style="color: black;">game list</a></h1>
+
         <br>
         <h1><a href="${path}/tboard/list.do" style="color: black;">중고거래 게시판</a></h1>
         <h1><a href="${path}/member/member_list.do" style="color: black;">인터셉터 확인</a></h1>

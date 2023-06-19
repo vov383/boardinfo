@@ -38,12 +38,14 @@ public class GameController {
 	@Inject
 	GameRatingService gameRatingService;
 
-	//전체게임목록으로 이동
-	@RequestMapping("gamelist.do")
-	public ModelAndView gamelist(ModelAndView mav, @RequestParam(required = false, defaultValue = "1") int curPage) {
+	//게임목록 랭킹
+	@GetMapping("gamerank/{sort}")
+	public ModelAndView gamelist(ModelAndView mav, @PathVariable("sort")String sort,
+								 @RequestParam(required = false, defaultValue = "1") int curPage) {
 
 		mav.setViewName("game/game_list");
-		mav.addObject("map", gameService.gamelist(curPage));
+		mav.addObject("sort", sort);
+		mav.addObject("map", gameService.gamelist(curPage, sort));
 		return mav;
 	}
 
@@ -128,12 +130,20 @@ public class GameController {
 		return list;
 	}
 
-	@GetMapping ("search.do")
-	public ModelAndView sortGame(ModelAndView mav, @RequestParam("filter") String filter, @RequestParam("num") int num,
+	@RequestMapping("autoUpdate_delete.do/{value}/{gnum}")
+	public void autoUpdate_delete(@PathVariable("value") String value, @PathVariable("gnum") int gnum){
+		gameService.autoUpdate_delete(value, gnum);
+
+	}
+
+	@GetMapping ("partrank/{sort}")
+	public ModelAndView sortGame(ModelAndView mav, @PathVariable("sort")String sort,
+								 @RequestParam("filter") String filter, @RequestParam("num") int num,
 								 @RequestParam(required = false, defaultValue = "1") int curPage) {
 
 		mav.setViewName("game/game_filteredList");
-		mav.addObject("map", gameService.filteredGamelist(filter, num, curPage));
+		mav.addObject("sort",sort);
+		mav.addObject("map", gameService.filteredGamelist(filter, num, curPage, sort));
 
 		return mav;
 	}
@@ -163,7 +173,6 @@ public class GameController {
 	@RequestMapping("delete.do")
 	public String delete(@RequestParam("delete_gnum")int gnum, HttpSession session){
 		String userid = (String)session.getAttribute("userid");
-		logger.info("gnummmmmmmmmmmmmmmmmmmmmm : " + gnum);
 		gameService.deleteGame(gnum, userid);
 		return "home";
 	}
@@ -172,6 +181,17 @@ public class GameController {
 	@RequestMapping("parseAjax")
 	public Map<String, Object> parseInsert(@RequestParam("bggnum")int bggnum, Map<String, Object> map){
 		map = gameService.parseInsert(bggnum);
+		return map;
+	}
+
+	@ResponseBody
+	@RequestMapping("getExReAjax")
+	public Map<String, Object> getExReList(@RequestBody Map<String, Object> param){
+		String origin = (String) param.get("origin");
+		String filter = (String) param.get("filter");
+		int gnum = (int) param.get("num");
+
+		Map<String, Object> map = gameService.getExRe(origin, filter, gnum);
 		return map;
 	}
 }

@@ -25,15 +25,18 @@
 		<!-- 연결문자열에 log4jdbc가 추가됨 -->
 
 
-<!--
-		<property name="url"
-		value="jdbc:log4jdbc:oracle:thin:@192.168.30.213:1521:xe" />
-		<property name="username" value="boardinfo" />
--->
+
+
+
+<!--		<property name="url"-->
+<!--		value="jdbc:log4jdbc:oracle:thin:@192.168.30.213:1521:xe" />-->
+<!--		<property name="username" value="boardinfo" />-->
+
+
+
 
 
  		<property name="url"
-
  			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe" />
  		<property name="username" value="spring" />
 
@@ -106,11 +109,32 @@
 	<tx:annotation-driven/>
 
 
+
 	<bean id="autoScheduler" class="com.example.boardinfo.scheduler.GatheringScheduler" />
 	<task:scheduler id="jobScheduler" pool-size="10"/>
 	<task:executor id="taskExecutor" pool-size="10" />
 	<task:annotation-driven executor="taskExecutor"
 							scheduler="jobScheduler" />
+
+	
+	<!-- 이메일 발송 bean 설정 -->
+	<bean id="mailSender"
+	class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.gmail.com" /> <!-- gmail을 사용 -->
+        <property name="port" value="587" />
+        <property name="username" value="xod13579@gmail.com" />
+        <property name="password" value="obfnrozptlqomssm" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.transport.protocol">smtp</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.debug">true</prop>
+            </props>
+        </property>
+    </bean>
+
+
 
 </beans>
 

@@ -1,6 +1,7 @@
 package com.example.boardinfo.model.game.dao;
 
 import java.awt.image.ImageProducer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,35 @@ public class GameDAOImpl implements GameDAO {
 	
 	@Override
 	public List<GameDTO> gamelist(Map<String, Object> map){
-		return sqlSession.selectList("game.gameList", map);
+		List<GameDTO> list = new ArrayList<>();
+		String sort = (String)map.get("sort");
+		switch (sort){
+			case "index":
+				list = sqlSession.selectList("game.gameList", map);
+				break;
+			case "week":
+				list = sqlSession.selectList("game.gameList", map);
+				break;
+			case "day":
+				list = sqlSession.selectList("game.gameList_day", map);
+				break;
+			case "rate":
+				list = sqlSession.selectList("game.gameList_rate", map);
+				break;
+			case "comment":
+				list = sqlSession.selectList("game.gameList_comment", map);
+				break;
+			case "vcnt":
+				list = sqlSession.selectList("game.gameList_vcnt", map);
+				break;
+			default:
+				list = null;
+		}
+		return list;
+
+
+
+
 	}
 	
 	@Override
@@ -47,6 +76,9 @@ public class GameDAOImpl implements GameDAO {
 		return sqlSession.selectList("game.getAuto", input);
 	}
 
+
+
+
 	public void addAttach(String fullName, String userid){
 		Map<String, Object> map = new HashMap<>();
 		map.put("fullName",fullName);
@@ -63,8 +95,33 @@ public class GameDAOImpl implements GameDAO {
 
 	public List<GameDTO> filteredGamelist(Map<String, Object> map) {
 
-		return sqlSession.selectList("game.filteredList", map);
+		List<GameDTO> list = new ArrayList<>();
+		String sort = (String)map.get("sort");
+		switch (sort){
+			case "index":
+				list = sqlSession.selectList("game.filteredList", map);
+				break;
+			case "week":
+				list = sqlSession.selectList("game.filteredList", map);
+				break;
+			case "day":
+				list = sqlSession.selectList("game.filteredList_day", map);
+				break;
+			case "rate":
+				list = sqlSession.selectList("game.filteredList_rate", map);
+				break;
+			case "comment":
+				list = sqlSession.selectList("game.filteredList_comment", map);
+				break;
+			case "vcnt":
+				list = sqlSession.selectList("game.filteredList_vcnt", map);
+				break;
+			default:
+				list = null;
+		}
+		return list;
 	}
+
 	public void gameupdate(GameDTO dto){
 		sqlSession.update("game.gameupdate", dto);
 	}
@@ -151,6 +208,12 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.update("game.delete", map);
 	}
 
+	@Override
+	public int countExRe(Map<String, Object> map) {
+
+		return sqlSession.selectOne("game.countExRe", map);
+	}
+
 	public List<String> viewExpansion(int gnum){
 		List<String> list = sqlSession.selectList("game.viewExpansion", gnum);
 		return list;
@@ -159,6 +222,11 @@ public class GameDAOImpl implements GameDAO {
 	public List<String> viewReimplement(int gnum){
 		List<String> list = sqlSession.selectList("game.viewReimplement", gnum);
 		return list;
+	}
+
+	@Override
+	public List<GameDTO> ExReList(Map<String, Object> map) {
+		return sqlSession.selectList("game.getExReList", map);
 	}
 
 	public int getExnum(int gnum, String expansion){

@@ -108,6 +108,7 @@ tr:last-child td:last-child {
 	cursor: pointer;
 }
 
+
 #artistSuggestions, #designerSuggestions, #publisherSuggestions, #exSuggestions, #reSuggestions{
 	width: 300px;
 	background-color: white;
@@ -124,3 +125,73 @@ tr:last-child td:last-child {
 	border: 1px solid black;
 	margin-right: 50px;
 }
+
+/*게임정보창의 확장 재구현 표시 부분*/
+.game_detail_filter_div {
+	width: 100%;
+}
+
+.game_detail_filter_div ul {
+	width: 100%;
+	padding-inline-start: inherit;
+}
+
+.game_detail_filter_div ul li {
+	list-style: none;
+	float: left;
+	width: 20%;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	cursor: pointer;
+	background-color: #FFC61A;
+}
+.game_detail_filter_div ul li a {
+	display: block;
+	background-color: inherit;
+	color: inherit;
+}
+
+#btnHidden {
+	background: #F9841A;
+}
+
+.game_detail_filter_div ul li.active a {
+	background: #1432B1;
+	color: wheat;
+}
+
+/*게임랭킹창의 랭킹 기준 표시 부분*/
+.game_rank_div {
+	width: 100%;
+}
+
+.game_rank_div ul {
+	width: 40%;
+	padding-inline-start: inherit;
+}
+
+.game_rank_div ul li {
+	list-style: none;
+	float: left;
+	width: 20%;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+}
+
+.game_rank_div ul li a {
+	display: block;
+	color: rgba(0,0,0,0.6);
+}
+
+.game_rank_div ul li a:hover {
+	font-size: 1.3em;
+	color: black;
+}
+
+.game_rank_div ul li a.selected {
+	font-size: 1.3em;
+	color: black;
+}
+

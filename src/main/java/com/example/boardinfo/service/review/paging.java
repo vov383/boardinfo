@@ -27,7 +27,7 @@ public class paging {
 
 
     /*페이지 계산*/
-    public static PageDTO Paginggeqwjg(PageDTO page, int cnt) {
+    public static PageDTO PagingMath(PageDTO page, int cnt) {
 
         /*쿼리 총 개수*/
         page.setTotal(cnt);
@@ -36,10 +36,13 @@ public class paging {
         page.setLastPage((int)Math.ceil((double)cnt / (double)page.getCntPerPage()));
 
         /*화면 페이지 가로 마지막 번호 (현재 페이지 + 화면 페이지 개수)*/
-        page.setEndPage(page.getNowPage() + page.getCntPage() - 1);
+        page.setEndPage((int)Math.ceil((double)page.getNowPage() / ((double)page.getCntPage())) * page.getCntPage());
 
         /*화면 페이지 가로 시작 번호 (화면 페이지 가로 마지막 번호 - 화면 페이지 개수)*/
         page.setStartPage(page.getEndPage() - page.getCntPage() + 1);
+        if (page.getCntPage() > page.getStartPage()) {
+            page.setStartPage(1);
+        }
 
         /*쿼리 리스트 변수 (현재 페이지 * 쿼리 리스트 개수)*/
         page.setEnd(page.getNowPage() * page.getCntPerPage());

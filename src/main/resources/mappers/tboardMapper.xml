@@ -7,14 +7,45 @@
 <mapper namespace="tboard">
     <select id="selectBoardList" resultType="tboardDto">
         <include refid="paging_header"/>
-        select * from t_board
+        select t.tb_num,
+        t.title,
+        t.price,
+        t.description,
+        t.view_count,
+        t.re_count,
+        t.category,
+        t.create_user,
+        t.create_date,
+        t.del,
+        t.update_user,
+        t.update_date,
+        t.address1,
+        t.address2,
+        f.fullName as first_img
+
+        from t_board t
+        LEFT JOIN (
+            SELECT
+                MIN(file_reg_num) AS min_file_reg_num,
+                FULLNAME,
+                TB_NUM
+            FROM
+                TB_FILES
+            GROUP BY
+                TB_NUM,
+                FULLNAME
+            ) f ON t.TB_NUM = f.TB_NUM
+
+        where t.del = 'N'
+
         <include refid="search"/>
-        order by tb_num desc
+        order by t.tb_num desc
         <include refid="paging_footer"/>
     </select>
 
     <select id="countArticle" resultType="int">
         select count(*) from t_board
+        where del = 'N'
         <include refid="search"/>
     </select>
 
@@ -27,14 +58,14 @@
     <sql id="search">
         <choose>
             <when test="search_option != 'all' ">
-                where del = 'N'
+
                 <if test="select_category != 'all' ">
                     and category = #{select_category}
                 </if>
                 and ${search_option} like #{keyword}
             </when>
             <otherwise>
-                where del = 'N'
+
                 <if test="select_category != 'all' ">
                     and category = #{select_category}
                 </if>
@@ -54,20 +85,18 @@
 
 
     <insert id="insertBoard">
-        insert into t_board (tb_num, title, price,
-                             description, category, create_user)
-        values (seq_tboard.nextval, #{title}, #{price},
-                #{description}, #{category}, #{create_user})
-    </insert>
-
-    <insert id="insertBoardWithAddress">
-        insert into t_board (tb_num, title, price,
-                             description, category, create_user, nickname, address1, address2, address3,
-                             place_name, lat, lng)
-        values (seq_tboard.nextval, #{title}, #{price},
-                #{description}, #{category}, #{create_user},
-                #{nickname}, #{address1}, #{address2}, #{address3},
-                #{place_name}, #{lat}, #{lng})
+        <choose>
+            <when test="address1 != null and !address1.equals('')">
+                insert into t_board (tb_num, title, price, description, category, create_user, address1, address2,
+                address3, place_name, lat, lng)
+                values (seq_tboard.nextval, #{title}, #{price}, #{description}, #{category}, #{create_user},
+                #{address1}, #{address2}, #{address3}, #{place_name}, #{lat}, #{lng})
+            </when>
+            <otherwise>
+                insert into t_board (tb_num, title, price, description, category, create_user)
+                values (seq_tboard.nextval, #{title}, #{price}, #{description}, #{category}, #{create_user})
+            </otherwise>
+        </choose>
     </insert>
 
     <select id="viewPost" resultType="tboardDto">
@@ -104,19 +133,32 @@
         where tb_num = #{tb_num}
     </update>
 
-    <select id="getAttachList" resultType="tbFileDto">
+    <select id="getAttachList" resultType="String">
         select fullName
         from tb_files
         where tb_num = #{tb_num}
-        order by create_date desc
+        order by FILE_REG_NUM
     </select>
 
     <insert id="insertFile">
         insert into tb_files (file_reg_num, tb_num,
                               fullName, formatName, fileData, create_user)
-        values ((seq_tb_files.nextval), (seq_t_board.currval), #{fullName}, #{formatName},
-                #{fileData}, #{create_user})
+        values ((seq_tb_files.nextval), (seq_tboard.currval), #{fullName}, #{formatName}, #{fileData}, #{create_user})
     </insert>
+
+    <select id="getFirstImageList" resultType="String">
+        SELECT tb_num, LISTAGG(fullName, ',') WITHIN GROUP (ORDER BY file_reg_num) AS fileNames
+        FROM TB_FILES
+        WHERE (tb_num
+            , file_reg_num) IN (
+            SELECT tb_num
+            , MIN (file_reg_num)
+            FROM TB_FILES
+            GROUP BY tb_num
+            )
+        GROUP BY tb_num
+    </select>
+
 
     <delete id="deleteAttach">
         update into tb_files ()

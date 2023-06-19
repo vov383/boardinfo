@@ -64,4 +64,15 @@ public class CategoryDAOImpl implements CategoryDAO {
   public List<String> viewGamecategory(int gnum){
     return  sqlSession.selectList("category.viewGamecategory", gnum);
   }
+
+
+  public void deleteGame_Category(String category, int gnum) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("category", category);
+    map.put("gnum",gnum);
+    sqlSession.delete("category.deleteGame_Category", map);
+
+  }
+
+
 }

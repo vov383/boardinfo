@@ -21,10 +21,11 @@ public class GameDTO {
 	//private int viewcount; //조회수 매일 자정 viewcount_date 테이블에 저장후 초기화됨
 	private int totalviewcount; //조회수
 	//private String del; //삭제 글 표시여부
-	
+
 	//따로 테이블 만들어서 관리.
 	//게임등록시 값이 여러개일 경우 ',' 를 기준으로 spilt 할 수있게 문자열로 받은 다음
 	//서비스에서 각 테이블로 배열로 값을 보냄.
+	private String nameStr; //filteredList에 넘길 디자이너 카테고리 제작사 아트웍 메카니즘명
 	private String designer; //디자이너
 	private String gamecategory; //게임카테고리
 	private String publisher; //제작사
@@ -39,8 +40,27 @@ public class GameDTO {
 	private String bgg_thumbnail;
 	//테이블에 없지만 값을 dto에만 존재
 	private String gamephoto_url; //게임사진파일경로
+	//보드인이 평가한 랭킹과 난이도의 평균값
+	private Double rate;
+	private Double weight;
+	private int rank;
 
-	
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+
+	public String getNameStr() {
+		return nameStr;
+	}
+
+	public void setNameStr(String nameStr) {
+		this.nameStr = nameStr;
+	}
+
 	//getter setter tostring 생성자
 	public GameDTO() {}
 
@@ -71,7 +91,40 @@ public class GameDTO {
 				", files=" + Arrays.toString(files) +
 				", bgg_thumbnail='" + bgg_thumbnail + '\'' +
 				", gamephoto_url='" + gamephoto_url + '\'' +
+				", rate=" + rate +
+				", weight=" + weight +
+				", rank=" + rank +
 				'}';
+	}
+
+	public GameDTO(int gnum, int bggnum, String gametitle, String gametitle_eng, String players, String playtime, String ages, String language, int release_year, Date create_date, String create_user, Date update_date, String update_user, int totalviewcount, String designer, String gamecategory, String publisher, String artist, String mechanic, String expansion, String reimplement, String[] files, String bgg_thumbnail, String gamephoto_url, Double rate, Double weight, int rank) {
+		this.gnum = gnum;
+		this.bggnum = bggnum;
+		this.gametitle = gametitle;
+		this.gametitle_eng = gametitle_eng;
+		this.players = players;
+		this.playtime = playtime;
+		this.ages = ages;
+		this.language = language;
+		this.release_year = release_year;
+		this.create_date = create_date;
+		this.create_user = create_user;
+		this.update_date = update_date;
+		this.update_user = update_user;
+		this.totalviewcount = totalviewcount;
+		this.designer = designer;
+		this.gamecategory = gamecategory;
+		this.publisher = publisher;
+		this.artist = artist;
+		this.mechanic = mechanic;
+		this.expansion = expansion;
+		this.reimplement = reimplement;
+		this.files = files;
+		this.bgg_thumbnail = bgg_thumbnail;
+		this.gamephoto_url = gamephoto_url;
+		this.rate = rate;
+		this.weight = weight;
+		this.rank = rank;
 	}
 
 	public int getGnum() {
@@ -266,32 +319,19 @@ public class GameDTO {
 		this.gamephoto_url = gamephoto_url;
 	}
 
-	public GameDTO(int gnum, int bggnum, String gametitle, String gametitle_eng, String players, String playtime, String ages, String language, int release_year, Date create_date, String create_user, Date update_date, String update_user, int totalviewcount, String designer, String gamecategory, String publisher, String artist, String mechanic, String expansion, String reimplement, String[] files, String bgg_thumbnail, String gamephoto_url) {
-		this.gnum = gnum;
-		this.bggnum = bggnum;
-		this.gametitle = gametitle;
-		this.gametitle_eng = gametitle_eng;
-		this.players = players;
-		this.playtime = playtime;
-		this.ages = ages;
-		this.language = language;
-		this.release_year = release_year;
-		this.create_date = create_date;
-		this.create_user = create_user;
-		this.update_date = update_date;
-		this.update_user = update_user;
-		this.totalviewcount = totalviewcount;
-		this.designer = designer;
-		this.gamecategory = gamecategory;
-		this.publisher = publisher;
-		this.artist = artist;
-		this.mechanic = mechanic;
-		this.expansion = expansion;
-		this.reimplement = reimplement;
-		this.files = files;
-		this.bgg_thumbnail = bgg_thumbnail;
-		this.gamephoto_url = gamephoto_url;
+	public Double getRate() {
+		return rate;
+	}
 
+	public void setRate(Double rate) {
+		this.rate = rate;
+	}
 
+	public Double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Double weight) {
+		this.weight = weight;
 	}
 }

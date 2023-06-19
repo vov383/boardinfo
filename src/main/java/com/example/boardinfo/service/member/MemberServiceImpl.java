@@ -41,8 +41,10 @@ public class MemberServiceImpl implements MemberService {
 			MemberDTO dto2=viewMember(dto.getUserid());
 			session.setAttribute("userid", dto.getUserid());
 			session.setAttribute("name", dto2.getName());
+			session.setAttribute("nickname", dto2.getNickname());
 			System.out.println(session.getAttribute("userid"));
 			System.out.println(session.getAttribute("name"));
+			System.out.println(session.getAttribute("nickname"));
 		}
 		return result;
 	}
@@ -98,7 +100,32 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+
 	public String getNickname(String user_id) {
 		return memberDao.getNickname(user_id);
 	}
+
+	public String get_searchId(String name, String hp) {
+		String result = memberDao.get_searchId(name, hp);
+	    
+	    if (result != null && result.length() >= 2) {
+	        if (result.length() < 7) {
+	            // 길이가 7 미만인 경우 뒷쪽 두 글자를 '*'로 변경
+	            result = result.substring(0, result.length() - 2) + "**";
+	        } else {
+	            // 길이가 8 이상인 경우 뒷쪽 4글자를 '*'로 변경
+	            result = result.substring(0, result.length() - 4) + "****";
+	        }
+	    }
+	    return result;
+	
+	}
+
+	@Override
+	public String get_PwCheck(String userid, String email) {
+		String result=memberDao.get_PwCheck(userid,email);
+		return result;
+	}
+	
+
 }

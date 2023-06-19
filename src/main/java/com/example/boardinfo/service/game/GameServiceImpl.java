@@ -1,5 +1,6 @@
 package com.example.boardinfo.service.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ public class GameServiceImpl implements GameService {
   GameRatingDAO gameRatingDao;
 
   @Override
-  public Map<String, Object> gamelist(int curPage) {
+  public Map<String, Object> gamelist(int curPage, String sort) {
     int count = gameDao.countList();
 
     Pager pager = new Pager(count, curPage, 10);
@@ -61,12 +62,15 @@ public class GameServiceImpl implements GameService {
     Map<String, Object> map = new HashMap<>();
     map.put("start",start);
     map.put("end",end);
+    map.put("sort", sort);
 
     List<GameDTO> list = gameDao.gamelist(map);
 
     for(GameDTO dto : list){
+      //bggnum을 통한 image파싱
       int bggnum = dto.getBggnum();
       dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
+
     }
 
     map.put("list",list);
@@ -238,13 +242,6 @@ public class GameServiceImpl implements GameService {
     List<PublisherDTO> plist = publisherDao.view(gnum);
     
 
-
-    //확장
-    Map<String, Object> expansionMap = gameDao.getExpansion(gnum);
-
-    //재구현
-    Map<String, Object> reimplementMap = gameDao.getReimplement(gnum);
-
     int bggnum = dto.getBggnum();
 
     Map<String, Object> map = new HashMap<>();
@@ -257,9 +254,7 @@ public class GameServiceImpl implements GameService {
 
     map.put("bgg_thumbnail", GameUtils.setStr(bggnum,"thumbnail"));
 
-    map.put("exmap", expansionMap);
-    map.put("remap", reimplementMap);
-    
+
     return map;
   }
 
@@ -284,7 +279,7 @@ public class GameServiceImpl implements GameService {
     return publisherDao.getAutoPublisher(input);
   }
 
-  //top의 검색창 검색목록
+  //top의 검색창 게임 검색목록
   public List<GameDTO> getAutoGame(String input){
     List<GameDTO> list = gameDao.getAutoGame(input);
 
@@ -293,10 +288,19 @@ public class GameServiceImpl implements GameService {
         int bggnum = dto.getBggnum();
         dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
       }
-
     }
     return list;
   }
+
+  @Override
+  public void autoUpdate_delete(String value, int gnum) {
+    int checkCategory = categoryDao.check_category(value, gnum);
+    if(checkCategory > 0){
+      categoryDao.deleteGame_Category(value, gnum);
+    }
+
+  }
+
   //게임등록페이지의 사진 드롭 후 제거시 사진경로 삭제
   public void deleteFile(String fileName){
     gameDao.delteFile(fileName);
@@ -305,11 +309,12 @@ public class GameServiceImpl implements GameService {
 
   //아티스트,카테고리,디자이너,메카닉,퍼블리셔 개별 항목에 대응하는 게임목록 출력
 
-  public Map<String, Object> filteredGamelist(String filter,int num, int curPage){
+  public Map<String, Object> filteredGamelist(String filter,int num, int curPage, String sort){
 
     Map<String, Object> map = new HashMap<>();
     map.put("filter",filter);
     map.put("num", num);
+
 
     int count = gameDao.countList(map);
 
@@ -318,12 +323,14 @@ public class GameServiceImpl implements GameService {
     int end = pager.getPageEnd();
     map.put("start",start);
     map.put("end",end);
+    map.put("sort", sort);
 
     List<GameDTO> list = gameDao.filteredGamelist(map);
 
     for(GameDTO dto : list){
       int bggnum = dto.getBggnum();
       dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
+
     }
 
     map.put("count", count);
@@ -343,7 +350,7 @@ public class GameServiceImpl implements GameService {
     String artist = GameUtils.listToStr(alist);
     artist = GameUtils.removeLastChar(artist);
     dto.setArtist(artist);
-logger.info("artist값이 잘 null로 되나 : " + artist);
+
     //카테고리
     List<String> clist = categoryDao.viewGamecategory(gnum);
     String gamecategory = GameUtils.listToStr(clist);
@@ -578,6 +585,38 @@ logger.info("artist값이 잘 null로 되나 : " + artist);
     map.put("mechanic",mechanic);
     map.put("publisher",publisher);
 
+    return map;
+  }
+
+
+  public Map<String,Object> getExRe(String origin, String filter, int num){
+    Map<String, Object> map = new HashMap<>();
+    map.put("origin", origin);  //child or parent
+    map.put("filter", filter);  //ex or re
+    map.put("num", num);
+
+    List<GameDTO> list = gameDao.ExReList(map);
+    for(GameDTO dto : list){
+      //bggnum을 통한 image파싱
+      int bggnum = dto.getBggnum();
+      dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
+
+      //gnum을 통해 rating과 weight를 넣자
+      int gnum = dto.getGnum();
+      Map<String, Object> rmap = gameRatingDao.getRateWeight(gnum);
+      if(rmap != null && rmap.get("AVGRATING") != null){
+        Double rate = Double.parseDouble(String.format("%.2f",rmap.get("AVGRATING")));
+        dto.setRate(rate);
+      }
+      if(rmap != null && rmap.get("AVGWEIGHT") != null){
+        Double weight = Double.parseDouble(String.format("%.2f",rmap.get("AVGWEIGHT")));
+        dto.setWeight(weight);
+      }
+    }
+
+    map.clear();
+
+    map.put("list",list);
     return map;
   }
 }

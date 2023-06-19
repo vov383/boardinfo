@@ -348,9 +348,10 @@
 
   <script>
     /*검색 스크립트*/
-    function searchFu() {
+    function searchFu(nowPage) {
       $("#searchTitleHidden").val($("#searchTitle").val());
-      /*alert($("#searchTitleHidden").val());*/
+      $("#nowPage").val(nowPage);
+      //alert($("#searchTitleHidden").val());
       document.reviewSearch.submit();
     }
 
@@ -360,8 +361,6 @@
       location.href="${path}/review/reviewInsert.do";
     }
 
-
-
     /*리뷰 디테일 진입, 조회수 증가*/
     function reviewDetail(regNum) {
       $("#reviewDetailKey").val(regNum);
@@ -369,11 +368,7 @@
       document.reviewDetail.submit();
     }
 
-
-
   </script>
-
-
 
 
 
@@ -386,6 +381,9 @@
 <%--검색 폼--%>
 <form name="reviewSearch" method="post" action="${path}/review/reviewlist.do">
   <input type="hidden" name="searchTitle" id="searchTitleHidden">
+  <input type="hidden" name="nowPage" id="nowPage" value="1">
+  <input type="hidden" name="cntPage" id="cntPage" value="10">
+  <input type="hidden" name="cntPerPage" id="cntPerPage" value="10">
 </form>
 
 <%--디테일 진입 폼--%>
@@ -406,7 +404,7 @@
     <%--검색 및 글쓰기 버튼--%>
     <div class="searchBox">
       <input type="text" id="searchTitle" placeholder="제목 및 내용을 검색하세요.">
-      <button type="button" id="search" onclick="searchFu()">검색</button>
+      <button type="button" id="search" onclick="searchFu('1')">검색</button>
       <button type="button" onclick="reviewInsert()">글쓰기</button>
     </div>
 
@@ -415,6 +413,7 @@
     <form name="reviewlist" method="post" action="${path}/review/reviewlist.do">
       <table style="table-layout:fixed;">
         <tr>
+          <th style="width: 200px;">No.</th>
           <th style="width: 200px;">카테고리</th>
           <th style="width: 200px;">&#x1f495</th> <%--좋아요--%>
           <th style="width: 200px;">제목</th>
@@ -430,25 +429,71 @@
         </script>--%>
         <c:forEach items="${list}" var="vo">
           <tr>
+            <td style="width: 200px; text-align: center;">${vo.rnum}</td>
             <td style="width: 200px; text-align: center;">${vo.category}</td>
             <td style="width: 200px; text-align: center;">${vo.good}</td>
             <td style="width: 200px; text-align: center;"><a href="javascript:reviewDetail('${vo.regNum}')">${vo.title}</a></td>
             <td style="width: 200px; text-align: center;">${vo.nickName}</td>
             <td style="width: 200px; text-align: center;">${vo.createDate}</td>
             <td style="width: 200px; text-align: center;">${vo.views}</td>
-            <td style="width: 200px; text-align: center;">/댓글 연결 예정/</td>
+            <td style="width: 200px; text-align: center;">${vo.recnt}</td>
             <td style="width: 200px; text-align: center;">${vo.gametitle}</td>
-
-
-
 
           </tr>
         </c:forEach>
       </table>
     </form>
 
+<%--      private int nowPage;                 // 현재 페이지--%>
+<%--      private int cntPage;                 // 화면 페이지 개수 (가로)--%>
+<%--      private int cntPerPage;              // 쿼리 리스트 개수 (세로)--%>
+<%--      private int total;                   // 쿼리 리스트 총 개수--%>
+<%--      private int lastPage;                // 마지막 번호 (시작번호는 1로고정)--%>
+<%--      private int startPage;               // 화면 페이지 가로 시작 번호--%>
+<%--      private int endPage;                 // 화면 페이지 가로 마지막 번호--%>
+<%--      private int start;                   // 쿼리 리스트 변수--%>
+<%--      private int end;                     // 쿼리 리스트 변수--%>
+
+<%--
+       nowPage;   <c:out value="${page.nowPage   }"></c:out>
+       cntPage;   <c:out value="${page.cntPage   }"></c:out>
+       lastPage;  <c:out value="${page.lastPage  }"></c:out>
+       startPage; <c:out value="${page.startPage }"></c:out>
+       endPage;   <c:out value="${page.endPage   }"></c:out>
+--%>
+
+      <div class="paging-btn">
+
+          <%--페이징--%>
+          <c:if test="${1 ne page.nowPage}">
+              <a href="javascript:searchFu('1')">처음</a>
+          </c:if>
+
+          <c:if test="${1 < page.nowPage}">
+              <a href="javascript:searchFu('${page.nowPage-1}')">이전</a>
+          </c:if>
+
+          <%--현재 페이지--%>
+          <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
+              <c:if test="${i eq page.nowPage}">
+                  ${i}
+              </c:if>
+              <c:if test="${i ne page.nowPage}">
+                  <a href="javascript:searchFu('${i}')">${i}</a>
+              </c:if>
+
+          </c:forEach>
+
+          <c:if test="${page.lastPage > page.nowPage}">
+              <a href="javascript:searchFu('${page.nowPage+1}')">다음</a>
+          </c:if>
+
+          <c:if test="${page.lastPage ne page.nowPage}">
+              <a href="javascript:searchFu('${page.endPage}')">마지막</a>
+          </c:if>
 
 
+      </div>
 
   </div>
 </div>

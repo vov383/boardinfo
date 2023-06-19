@@ -10,13 +10,14 @@
     <script src="${path}/include/js/common.js"></script>
 
     <script src="${path}/include/js/jquery-3.6.3.min.js"></script>
-
+    <script src="${path}/include/js/imgDragNdrop.js"></script>
     <!-- ckeditor의 라이브러리 -->
     <script src="${path}/ckeditor/ckeditor.js"></script>
 
     <!-- 카카오 지도 api -->
     <script type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=aaa4a3ee6e039439424a544717323d1a&libraries=services">
+
     </script>
 
     <style type="text/css">
@@ -26,56 +27,67 @@
             border: 1px dotted gray;
             background-color: #f0f0f0;
         }
+
         .map_wrap {
-            position:relative;
+            position: relative;
         }
+
         .title {
-            font-weight:bold;
-            display:block;
+            font-weight: bold;
+            display: block;
         }
+
         .hAddr {
             /*position:absolute;*/
-            right:10px;
-            bottom:10px;
+            right: 10px;
+            bottom: 10px;
             border-radius: 2px;
-            background:#fff;
-            background:rgba(255,255,255,0.8);
-            z-index:1;
-            padding:5px;
+            background: #fff;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1;
+            padding: 5px;
         }
+
         #centerAddr {
             display: block;
             margin-top: 2px;
             font-weight: normal;
         }
-        #infoWindow{
+
+        #infoWindow {
             background-color: white;
             border: 1px solid black;
             border-radius: 6px;
             padding: 10px 10px;
         }
-        #infoWindow > span{
+
+        #infoWindow > span {
             display: block;
             line-height: 16px;
             max-width: 300px;
             word-break: break-all;
         }
-        #postInfo{
+
+        #postInfo {
             text-align: right;
             padding-bottom: 5px;
         }
-        #postInfo > span{
+
+        #postInfo > span {
             padding: 0 10px;
             border-right: 1px solid black;
         }
-        #postUpper{
+
+        #postUpper {
             display: flex;
             border-top: 2px solid black;
         }
-        #postUpper > div:first-of-type{
+
+        #postUpper > div:first-of-type {
             padding: 30px 0;
         }
-        #map{
+
+        #map {
             width: 400px;
             height: 280px;
             border: 1px solid black;
@@ -84,7 +96,8 @@
             overflow: hidden;
             position: relative;
         }
-        .status{
+
+        .status {
             width: 85px;
             border: 1px solid black;
             border-radius: 10px;
@@ -92,14 +105,15 @@
             margin-right: 6px;
         }
     </style>
-    <script type="text/javascript">
+    <script>
+
         $(function () {
             //목록 버튼
             $("#btnList").on("click", function () {
                 location.href = "${path}/tboard/list.do";
             });
 
-            //파일을 마우스로 드래그해서 업로드 영역에 올릴 때 파일이 열리는 기본효과 막는 처리
+            // //파일을 마우스로 드래그해서 업로드 영역에 올릴 때 파일이 열리는 기본효과 막는 처리
             $(".fileDrop").on("dragenter dragover", function (e) {
                 e.preventDefault(); //얘가 막는 처리
             });
@@ -132,7 +146,6 @@
                             + fileInfo.fullName + "'>";
                         html += "<a href='#' class='file_del' data-src='"
                             + this + "'>[삭제]</a></div>";
-
                         $("#uploadedList").append(html);
                     }
                 });
@@ -142,7 +155,7 @@
             //id가 uploadedList인 태그의 class가 file_del인 태그 클릭
             $("#uploadedList").on("click", ".file_del", function (e) {
                 let that = $(this); //this는 현재 클릭한 태그
-//data: {fileName: $(this).attr("data-src") },
+                //data: {fileName: $(this).attr("data-src") },
                 $.ajax({
                     type: "post",
                     url: "${path}/upload/deleteFile",
@@ -171,9 +184,12 @@
                     }
                 }
             });
+
         });
 
+
         function insert() {
+            // debugger
             let title = $("#title").val().trim();
             $("#title").val(title);
             if (title == '') {
@@ -184,21 +200,30 @@
             }
 
             if (CKEDITOR.instances.description.getData().length < 1) {
-                alert("모임 소개글을 입력해 주세요.");
-                $("#cke_gathering_content").focus();
+                alert("상품 설명을 입력해 주세요.");
                 return;
+            } else {
+                var editor = CKEDITOR.instances.description; // Assuming 'gathering_content' is the CKEditor instance name
+                var content = editor.getData(); // Retrieve the CKEditor content
+
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(content, 'text/html');
+
+                // Get all <img> tags
+                var imgTags = doc.getElementsByTagName('img');
+                debugger
+
+                const input = document.getElementById("input");
+                // Extract the information from the <img> tags
+                for (var i = 0; i < imgTags.length; i++) {
+                    var imgSrc = imgTags[i].getAttribute('src'); // Get the 'src' attribute of the <img> tag
+                    // Do whatever you need with the 'imgSrc' value
+                    debugger
+
+                }
+
             }
 
-            var str = "";
-            //uploadedList 영역에 클래스 이름이 file인 히든 타입의 태그를 각각 반복시켜 (each함수)
-            $("#uploadedList .file").each(function (i) {
-                console.log(i);
-                //hidden태그 구성
-                str += "<input type='hidden' name='files[" + i + "]' value='"
-                    + $(this).val() + "'>";
-            });
-            //폼에 hidden 태그를 붙임
-            $("#form1").append(str);
             document.insertForm.action = "${path}/tboard/insert.do";
             document.insertForm.submit();
         }
@@ -213,7 +238,12 @@
 
             window.open("${path}/gathering/locationSearch.do", "날짜검색 - 모임모집", "left=" + left + ", top=" + top + ", width=820, height=580");
         }
-
+        function locationReset() {
+            let locations = ["locationFull", "address1", "address2", "address3", "place_name", "lat", "lng", "centerAddr"];
+            for(let i=0; i<locations.length; i++) {
+                document.getElementById(locations[i]).value = null;
+            }
+        }
 
     </script>
 </head>
@@ -231,20 +261,24 @@
         </div>
     </div>
     <div id="contentsMain">
-        
-
-        <form name="insertForm" method="post" enctype="multipart/form-data">
+        <form id="insertForm" name="insertForm" method="post" enctype="multipart/form-data">
             <div class="postUpper">
                 <div id="categoryContainer">
                     <span>카테고리</span>
                     <input type="radio" id="s" name="category" value="s" checked="checked">
-                    <label for="s"><div class="category">판매</div></label>
+                    <label for="s">
+                        <div class="category">판매</div>
+                    </label>
                     <div class="dot"></div>
                     <input type="radio" id="b" name="category" value="b">
-                    <label for="b"><div class="category">구매</div></label>
+                    <label for="b">
+                        <div class="category">구매</div>
+                    </label>
                     <div class="dot"></div>
                     <input type="radio" id="n" name="category" value="n">
-                    <label for="n"><div class="category">나눔</div></label>
+                    <label for="n">
+                        <div class="category">나눔</div>
+                    </label>
                 </div>
                 <div class="inputContainer">
                     <input name="title" id="title" placeholder="제목" maxlength="100">
@@ -252,35 +286,27 @@
                 </div>
             </div>
 
-            <div class="fileDrop"></div>
-            <div id="uploadedList"></div>
+            <section class="imageContainer">
+                <label class="label" id="label" for="input">
+                    <div class="inner" id="inner">드래그하거나 클릭해서 업로드</div>
+                </label>
+                <input id="input" class="input" accept="image/*" type="file" name="files" multiple="true" hidden="true">
+                <p class="preview-title">미리보기</p>
+                <div class="preview" id="preview"></div>
+            </section>
+
+            <div> 첨부파일을 등록하세요
+                <div class="fileDrop"></div>
+                <div id="uploadedList"></div>
+            </div>
+
             <div id="postMain">
                 <textarea id="description" name="description" placeholder="상품설명을 자유롭게 적어보세요"></textarea>
-                <input type="hidden" id="uploadedImages" name="uploadedImages">
                 <script>
                     CKEDITOR.replace("description", {
                         filebrowserUploadUrl: "${path}/tupload/imageUpload.do"
                     });
-                    CKEDITOR.on('fileUploadRequest', function (evt) {
-                        var fileLoader = evt.data.fileLoader;
-
-                        var reader = new FileReader();
-                        reader.onload = function () {
-                            // Retrieve the current array of uploaded images
-                            var uploadedImages = document.getElementById('uploadedImages').value;
-
-                            // Create a new array or use the existing one
-                            var imagesArray = uploadedImages ? JSON.parse(uploadedImages) : [];
-
-                            // Add the base64-encoded image data to the array
-                            imagesArray.push(reader.result);
-
-                            // Update the value of the hidden input field with the updated array
-                            document.getElementById('uploadedImages').value = JSON.stringify(imagesArray);
-                        };
-                        reader.readAsDataURL(fileLoader.file);
-                    });
-                </script>   `
+                </script>
             </div>
             <%--거래 희망 장소--%>
             <div class="placeContainer">
@@ -399,6 +425,8 @@
                         <input type="hidden" name="lat" id="lat">
                         <input type="hidden" name="lng" id="lng">
                         <button type="button" id="locationSearchBtn" onclick="locationSearch()">검색</button>
+                        <div class="dot"></div>
+                        <button type="button" id="locationResetBtn" onclick="locationReset()">초기화</button>
                     </div>
                 </div>
                 <div class="btnContainer" style="display: flex; justify-content: center">
@@ -413,6 +441,9 @@
 <footer>
     <%@include file="../include/footer.jsp" %>
 </footer>
-</body>
+<script>
 
+</script>
+</body>
+<script src="${path}/include/js/imgDragNdrop.js"></script>
 </html>

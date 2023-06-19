@@ -147,4 +147,11 @@ public class GameRatingDAOImpl implements GameRatingDAO  {
 		map.put("user_id", user_id);
 		return session.delete("gameRating.unLikeIt", map);
 	}
+
+	@Override
+	public Map<String, Object> getRateWeight(int gnum) {
+		Map<String, Object> statisticMap = session.selectOne("gameRating.avgRatingAndWeight", gnum);
+
+		return statisticMap;
+	}
 }

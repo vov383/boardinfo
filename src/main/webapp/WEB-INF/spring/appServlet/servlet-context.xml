@@ -29,8 +29,7 @@
 	<resources location="/WEB-INF/views/include/" mapping="/include/**" />
 	<resources location="/WEB-INF/views/images/" mapping="/images/**" />
 	<resources location="/WEB-INF/views/ckeditor/" mapping="/ckeditor/**" />
-
-	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources
 		in the /WEB-INF/views directory -->
 	<beans:bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -58,7 +57,8 @@
 	
 	<!-- aop의 설정으로 Proxy 객체를 자동으로 생성 -->
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
-
+	
+	
 	
 	<!-- 웹소켓 핸들러 등록
 	<websocket:handlers>
