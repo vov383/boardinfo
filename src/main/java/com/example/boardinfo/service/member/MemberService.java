@@ -21,5 +21,5 @@ public interface MemberService {
 	boolean checkDuplicateId(String userid);
 	boolean checkDuplicateNick(String nickname);
 	boolean getDelValue(String userid);
-	
+    public String getNickname(String user_id);
 }

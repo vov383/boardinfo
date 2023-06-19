@@ -79,8 +79,8 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.selectOne("member.getDelValue",userid);
 	}
 
-
-	
-	
-
+	@Override
+	public String getNickname(String user_id) {
+		return sqlSession.selectOne("member.getNickname", user_id);
+	}
 }

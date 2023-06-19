@@ -97,4 +97,8 @@ public class MemberServiceImpl implements MemberService {
 	    return false; // 탈퇴하지 않은 회원인 경우
 	}
 
+	@Override
+	public String getNickname(String user_id) {
+		return memberDao.getNickname(user_id);
+	}
 }

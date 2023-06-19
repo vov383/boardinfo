@@ -130,7 +130,7 @@
             font-size: 17px;
         }
 
-        button[id*="bigBtn-"]{
+        button[id*="bigBtn-"], button[class*="bigBtn-"]{
             width: 120px;
             height: 40px;
             font-size: 16px;
@@ -145,16 +145,16 @@
             color: white;
         }
 
-        #bigBtn-cancel{
+        .bigBtn-cancel{
             background-color: white;
             border: 1px solid black;
+            margin-left: 5px;
         }
 
         #bigBtn-chat{
             background-color: #F9841A;
             border: 0;
             color: white;
-
         }
 
        #postMain{
@@ -266,6 +266,51 @@
             clear: both;
         }
 
+        /*여기부터 모달*/
+        .popup-wrap{
+            background-color:rgba(0,0,0,.3);
+            z-index: 1000;
+            justify-content:center;
+            align-items: center;
+            position: fixed;
+            display: none;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            padding: 15px;
+        }
+
+        .popup{
+            overflow: hidden;
+            box-shadow: 5px 10px 10px 1px rgba(0,0,0,.3);
+        }
+
+        .popup-body{
+            max-width: 480px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            background-color:#ffffff;
+        }
+
+        .popup div{
+            font-size: 16px;
+        }
+
+        .popup-body > div:last-of-type{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        .popup-body button:first-of-type{
+            margin-right: 10px;
+        }
+
+
     </style>
 
     <script>
@@ -287,9 +332,15 @@
 
                 }
 
+                if("${dto.attendSystem}"=='p') {
+                    document.body.style.overflowY = "hidden";
+                    $(".popup-wrap").css('display','flex').hide().fadeIn();
+                    return;
+                }
+
                 if(confirm("이 모임에 참여하시겠습니까?")){
-                   if("${dto.attendSystem=='o'}"){
-                       $.ajax({
+
+                  $.ajax({
                            type: "get",
                            url : "${path}/gathering/addAttendee.do",
                            data : {
@@ -300,21 +351,10 @@
                                location.reload();
                            },
                            error: function(e){
-                               if(e.status==999){
-                                   if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
-                                       location.href= "${path}/member/member_login.do";
-                                       return;
-                               }
-                               }
-                               else{
                                    alert("에러가 발생했습니다.");
-                               }
                            }
                        });
                    }
-
-               }
-
 
             });
 
@@ -464,13 +504,100 @@
         }
 
         function editPost(){
-            document.form1.action = "${path}/gathering/edit/${dto.gathering_id}";
-            document.form1.submit();
+            location.href="${path}/gathering/edit/${dto.gathering_id}";
         }
 
         function deletePost(){
+            if(Number("${dto.attendee_count}") > 1){
+                if(!confirm("게시글을 삭제하면 모든 채팅 내역이 삭제되며 모든 모임원이 자동으로 모임에서 나가게 됩니다. " +
+                    "다른 모임원들과 상의하여 신중하게 결정해주세요!\n\n정말로 게시글을 삭제하시겠습니까?")){
+                    return;
+                }
+            }
+
+            else{
+                if(!confirm("게시글을 삭제하면 모든 채팅 내역이 삭제됩니다.\n정말로 게시글을 삭제하시겠습니까?")){
+                    return;
+                }
+            }
+
+            location.href="${path}/gathering/delete.do?gathering_id=${dto.gathering_id}";
+        }
+
+
+        function withdraw(){
+            if(confirm("정말로 이 모임을 탈퇴하시겠습니까?\n(자동으로 채팅방에서 나가게 됩니다.)")){
+                $.ajax({
+                        type: "get",
+                        url : "${path}/gathering/withdraw.do",
+                        data : {
+                            "gathering_id": "${dto.gathering_id}"
+                        },
+                        success: function(result){
+                            alert(result.message);
+                            location.reload();
+                            },
+                        error: function(e){
+                            if(e.status==999){
+                                if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
+                                    location.href= "${path}/member/member_login.do";
+                                    return;
+                                }
+                            }
+                            else{
+                                alert("에러가 발생했습니다.");
+                            }
+                        }
+                    });
+                }
 
         }
+
+
+        function modalClose(){
+            $(".popup-wrap").fadeOut(); //페이드아웃 효과
+            $("input[name='answer']").val('');
+            document.body.style.overflowY = "auto";
+        }
+
+        function submitApplication(){
+            $.ajax({
+                type: "get",
+                url : "${path}/gathering/addAttendee.do",
+                data : {
+                    "answer": $("input[name='answer']").val(),
+                    "gathering_id": "${dto.gathering_id}"
+                },
+                success: function(result){
+                    alert(result.message);
+                    location.reload();
+                },
+                error: function(e){
+                    alert("에러가 발생했습니다.");
+                }
+            });
+        }
+
+
+        function cancelApplication(){
+            if(confirm("모임 참가 신청을 취소하시겠습니까?")){
+                $.ajax({
+                    type: "get",
+                    url : "${path}/gathering/cancelApplication.do",
+                    data : {
+                        "gathering_id": "${dto.gathering_id}"
+                    },
+                    success: function(result){
+                        alert(result.message);
+                        location.reload();
+                    },
+                    error: function(e){
+                            alert("에러가 발생했습니다.");
+                    }
+                });
+            }
+        }
+
 
     </script>
 
@@ -594,6 +721,7 @@
         map.setCenter(customOverlay.getPosition());
     }
   }
+
 </script>
 				 
                 <div id="profileArea">
@@ -637,10 +765,19 @@
                         <!--모집완료, 모집마감 고려해서 다시 짜기-->
                         <c:choose>
                             <c:when test="${type == 'WAIT'}">
-                                <button type="button" id="bigBtn-cancel">신청취소</button>
+                                <button type="button" class="bigBtn-cancel" onclick="cancelApplication()">신청취소</button>
                             </c:when>
                             <c:when test="${type == 'ATTENDING'}">
-                                <button type="button" id="bigBtn-chat" onclick="location.href='${path}/chatRoom/enter.do?gathering_id=' + ${dto.gathering_id}">채팅하기</button>
+                                <div>
+                                <button type="button" id="bigBtn-chat"
+                                        onclick="location.href='${path}/gathering/chatRoom/${dto.gathering_id}'">
+                                    채팅하기</button>
+                                    <c:if test="${dto.writer_id != sessionScope.userid}">
+                                    <button type="button" class="bigBtn-cancel"
+                                        onclick="withdraw()">
+                                    탈퇴하기</button>
+                                    </c:if>
+                                </div>
                             </c:when>
                             <c:otherwise>
                                 <button type="button" id="bigBtn-apply">참가신청</button>
@@ -657,19 +794,26 @@
                 <div id="replyUpper">
                     <span>댓글[<span id="countReplies"></span>]</span>
                     <span>이 모임에 대해 궁금한 사항이 있으면 댓글을 달아보세요.</span>
-
-                    <form name="form1" action="" type="post">
-                    <c:if test="${sessionScope.usreid==dto.writer_id}">
+                    <c:if test="${sessionScope.userid==dto.writer_id}">
                         <button type="button" id="btn-Edit"
                                 onclick='editPost()'>수정
                         </button>
                         <button type="button" id="btn-Delete"
                                 onclick="deletePost()"> 삭제
                         </button>
-
                     </c:if>
+                    <form name="form1" action="${path}/gathering/list.do">
+                        <input type="hidden" name="showAvailable" value="${showAvailable}">
+                        <input type="hidden" name="option" value="${option}">
+                        <input type="hidden" name="keyword" value="${keyword}">
+                        <input type="hidden" name="from" value="${from}">
+                        <input type="hidden" name="to" value="${to}">
+                        <input type="hidden" name="curPage" value="${curPage}">
+                        <c:forEach var="address1" items="${address1List}">
+                            <input type="hidden" name="address1" type="hidden" value="${address1}">
+                        </c:forEach>
+                        <button type="submit" id="btn-GoList">목록</button>
                     </form>
-                    <button type="button" id="btn-GoList">목록</button>
                 </div>
                 <div id="replies">
                 </div>
@@ -680,9 +824,26 @@
                 </form>
             </div>
     </div>
+
+
+    <div class="popup-wrap">
+        <div class="popup">
+            <div class="popup-body">
+                <div>이 모임은 허가제 모입입니다.<br>
+                    다음 질문에 답한 뒤 모임장의 승인을 받아야 참석할 수 있습니다.</div>
+                <div>[질문]&nbsp;${dto.question}</div>
+                <input name="answer">
+                <div>
+                    <button type="button" onclick="submitApplication()">답변제출</button>
+                    <button type="button" onclick="modalClose()">취소</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 
 <%@include file="../include/footer.jsp" %>
-
 </body>
 </html>
