@@ -130,6 +130,12 @@ public class GameController {
 		return list;
 	}
 
+	@RequestMapping("autoUpdate_delete.do/{value}/{gnum}")
+	public void autoUpdate_delete(@PathVariable("value") String value, @PathVariable("gnum") int gnum){
+		gameService.autoUpdate_delete(value, gnum);
+
+	}
+
 	@GetMapping ("partrank/{sort}")
 	public ModelAndView sortGame(ModelAndView mav, @PathVariable("sort")String sort,
 								 @RequestParam("filter") String filter, @RequestParam("num") int num,

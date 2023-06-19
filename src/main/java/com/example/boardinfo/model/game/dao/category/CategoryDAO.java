@@ -16,4 +16,6 @@ public interface CategoryDAO {
   List<CategoryDTO> list();
   List<CategoryDTO> view(int gnum);
   List<String> viewGamecategory(int gnum);
+
+  void deleteGame_Category(String category, int gnum);
 }
