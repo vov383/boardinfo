@@ -48,6 +48,8 @@ public class GatheringDTO {
 	private int view_count;
 	private int reply_count;
 	private int attendee_count;
+	private String show;
+	private String finishChat;
 
 	
 
@@ -260,36 +262,19 @@ public class GatheringDTO {
 		this.nickname = nickname;
 	}
 
+	public String getShow() {
+		return show;
+	}
 
-	@Override
-	public String toString() {
-		return "GatheringDTO{" +
-				"gathering_id=" + gathering_id +
-				", writer_id='" + writer_id + '\'' +
-				", post_date=" + post_date +
-				", update_date=" + update_date +
-				", title='" + title + '\'' +
-				", gathering_content='" + gathering_content + '\'' +
-				", img_url='" + img_url + '\'' +
-				", nickname='" + nickname + '\'' +
-				", gathering_date=" + gathering_date +
-				", fee=" + fee +
-				", address1='" + address1 + '\'' +
-				", address2='" + address2 + '\'' +
-				", address3='" + address3 + '\'' +
-				", place_name='" + place_name + '\'' +
-				", lat=" + lat +
-				", lng=" + lng +
-				", maxPeople=" + maxPeople +
-				", attendSystem='" + attendSystem + '\'' +
-				", note='" + note + '\'' +
-				", question='" + question + '\'' +
-				", status='" + status + '\'' +
-				", club_id=" + club_id +
-				", is_public=" + is_public +
-				", view_count=" + view_count +
-				", reply_count=" + reply_count +
-				", attendee_count=" + attendee_count +
-				'}';
+	public void setShow(String show) {
+		this.show = show;
+	}
+
+	public String getFinishChat() {
+		return finishChat;
+	}
+
+	public void setFinishChat(String finishChat) {
+		this.finishChat = finishChat;
 	}
 }

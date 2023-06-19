@@ -93,18 +93,21 @@
 		display: flex;
 		justify-content: space-between;
 	}
-	
+
 	#chatRoomInfo > div:first-child{
 		flex-grow: 1;
 	}
-	
-	#chatRoomInfo > div:first-child > span:first-child{
-		padding-left: 10px;
+
+	#chatRoomInfo a{
+		color: black;
+		text-decoration: none;
 		font-size: 20px;
 		font-weight: bold;
+		padding-left: 10px;
 	}
-	
-	#chatRoomInfo > div:first-child > span:nth-child(2) {
+
+
+	#chatRoomInfo > div:first-child > span {
 		font-size: 18px;
 		margin-left: 20px;
 	}
@@ -116,6 +119,7 @@
 		font-weight: bold;
 		background-color: white;
 		width: 112px;
+		cursor: pointer;
 	}
 	
 	
@@ -187,7 +191,7 @@
 		position: relative;
 	}
 	
-	#msg{
+	#msg, #msg2{
 		flex-grow: 1;
 		height: 37px;
 		padding:  0 40px 0 15px;
@@ -195,11 +199,11 @@
 		color: white;
 	}
 	
-	#msg::placeholder{
+	#msg::placeholder, #msg2::placeholder{
 		color: #D9D9D9;
 	}
 	
-	#sendBtn{
+	#sendBtn, #sendBtn2{
 		width: 40px;
 		position: absolute;
 		z-index: 1;
@@ -214,83 +218,6 @@
 	
 
 </style>
-
-
-<script>
-	var sock = new SockJS('http://localhost:8098/ws-stomp');
-	var stomp = Stomp.over(sock);
-
-$(function(){
-
-	let msgArea = $("#msgArea");
-	let height = msgArea.prop('scrollHeight');
-	msgArea.scrollTop(height);
-
-
-	$("#sendBtn").click(function(){
-		sendMessage("SEND");
-		$('#msg').val('');
-	});
-
-	stomp.connect({}, function(){
-		stomp.subscribe("/sub/chat/room/" + "${gathering_id}", function(msg){
-			var chatMessageDto = JSON.parse(msg.body);
-			var sender = chatMessageDto.userId; //데이터를 보낸 사람
-			var message = chatMessageDto.message; //메시지
-			var cur_session = '${user_id}'; //현재 세션에 로그인한 사람
-
-			if(sender == cur_session){ //내가 보낸 메시지라면
-				var str =
-						"<div class='message_mine'><span class='chatTime'>오후 7:30</span>"
-						+ "<div class='messageContent'>"+message+"</div></div>";
-			}
-
-			else if(sender == 'SYSTEM'){
-				var str =
-						"<div class='message_notice'>"+
-						"<div class='messageContent'>"+message+"</div></div>";
-			}
-
-			else{
-				var str =
-						"<div class='message_yours'><div class='sender'>"+sender+"</div>"
-						+"<div><div class='messageContent'>"+message+"</div>"
-						+ "<span class='chatTime'>오후 7:30</span></div></div>";
-			}
-
-			let msgArea = $("#msgArea");
-			msgArea.append(str);
-
-			let height = msgArea.prop('scrollHeight');
-			let position = msgArea.scrollTop();
-
-			if(position>(height - 800)){
-				msgArea.scrollTop(height);
-			}
-
-		});
-
-	});
-
-	});
-
-
-
-
-function sendMessage(type){
-	
-	var messageDTO = {
-			userId: "${user_id}",
-			message: $("#msg").val(),
-			type: type,
-			gathering_id: "${gathering_id}",
-	};
-
-	stomp.send('/pub/chat/message', {}, JSON.stringify(messageDTO));
-}
-
-
-</script>
 
 </head>
 <body>
@@ -340,18 +267,72 @@ function sendMessage(type){
   <div id="msgBox">
   	<div id="chatRoomInfo">
   		<div>
-  			<span>수원 레드버튼에서 모여요~!</span>
-  			<span>3명 참가중</span>
+			<a href="${path}/gathering/view/${dto.gathering_id}">${dto.title}</a>
+  			<span>${dto.attendee_count}/${dto.maxPeople}명 참가중</span>
   		</div>
-  		<button type="button">채팅방 나가기</button>
+  		<button type="button" onclick="withdraw()">채팅방 나가기</button>
   	</div>
   	<div id="msgArea">
 
-		<c:forEach var="row" items="${list}">
+		<c:forEach var="row" items="${list}" varStatus="status">
+			<fmt:parseDate value="${row.formattedDate}"
+						   pattern="yyyy.MM.dd'T'HH:mm" var="parsedDateTime" type="both"/>
+			<c:set var="thisDate">
+				<fmt:formatDate value="${parsedDateTime}" pattern="yyyy.MM.dd"/>
+			</c:set>
+			<c:set var="thisTime">
+				<fmt:formatDate value="${parsedDateTime}" pattern="HH:mm"/>
+			</c:set>
+			<c:set var="thisTalker" value="${row.userId}"/>
+
+
+			<c:if test="${status.index==0}">
+				<c:set var="firstDate" value="${thisDate}"/>
+				<c:set var="firstTime" value="${thisTime}"/>
+				<c:set var="lastDate" value="${thisDate}"/>
+				<c:set var="lastTime" value="${thisTime}"/>
+				<c:set var="firstTalker" value="${row.userId}"/>
+				<c:set var="lastTalker" value="${row.userId}"/>
+				<div class='message_notice'>
+					<div class='messageContent chatDate'>
+							${thisDate}
+					</div>
+				</div>
+			</c:if>
+
+			<c:choose>
+				<c:when test="${lastDate==thisDate}">
+					<c:if test="${
+						list[status.index-1]!=null &&
+						lastTime == thisTime &&
+						lastTalker == thisTalker}">
+							<c:set var="thisTalker" value=""/>
+					</c:if>
+				</c:when>
+
+				<c:otherwise>
+					<c:set var="lastDate" value="${thisDate}"/>
+					<div class='message_notice'>
+						<div class='messageContent chatDate'>
+								${thisDate}
+						</div>
+					</div>
+				</c:otherwise>
+			</c:choose>
+
+			<c:if test="${
+						list[status.index+1]!=null &&
+						list[status.index+1].userId==row.userId &&
+						list[status.index+1].formattedDate==row.formattedDate}">
+				<c:set var="thisTime" value=""/>
+			</c:if>
+
 			<c:choose>
 				<c:when test="${row.userId==user_id}">
-					<div class='message_mine'>
-						<span class='chatTime'>오후 7:30</span>
+						<div class='message_mine'>
+						<span class='chatTime'>
+			              ${thisTime}
+						</span>
 						<div class='messageContent'>${row.message}</div>
 					</div>
 				</c:when>
@@ -364,24 +345,42 @@ function sendMessage(type){
 
 				<c:otherwise>
 					<div class='message_yours'>
-						<div class='sender'>${row.userId}</div>
+						<div class='sender'>
+								<c:if test="${thisTalker!=''}">
+									${row.nickname}
+								</c:if>
+					   </div>
 						<div>
 							<div class='messageContent'>${row.message}</div>
-							<span class='chatTime'>오후 7:30</span>
+							<span class='chatTime'>${thisTime}</span>
 						</div>
 					</div>
 				</c:otherwise>
 
 			</c:choose>
 
+			<c:set var="lastTime">
+				<fmt:formatDate value="${parsedDateTime}" pattern="HH:mm"/>
+			</c:set>
+			<c:set var="lastTalker" value="${row.userId}"/>
 
 		</c:forEach>
 
 	</div>
-	<div>
-	<input id="msg" placeholder="텍스트를 입력해주세요.">
-	<img id="sendBtn" src="${path}/images/chatSend.png" onclick="">
-	</div>
+		<c:choose>
+			<c:when test="${dto.finishChat == 'y'}">
+				<div>
+					<input id="msg2" placeholder="채팅이 종료된 모임입니다." disabled>
+					<img id="sendBtn2" src="${path}/images/gathering/chatSend.png">
+				</div>
+			</c:when>
+			<c:otherwise>
+				<div>
+					<input id="msg" placeholder="텍스트를 입력해주세요." onkeypress="enterChat(event)">
+					<img id="sendBtn" src="${path}/images/gathering/chatSend.png">
+				</div>
+			</c:otherwise>
+		</c:choose>
 </div>
   
   </div>
@@ -390,8 +389,332 @@ function sendMessage(type){
   </div>
 </div>
 
-<%@include file="../include/footer.jsp" %>  
-  
+<%@include file="../include/footer.jsp" %>
+
+
+
+<script>
+	var sock = new SockJS('http://localhost:8098/ws-stomp');
+	var stomp = Stomp.over(sock);
+
+	var curPage = 1;
+	var cur_session = '${user_id}'; //현재 세션에 로그인한 사람
+
+	let end = false;
+	let loading = false;
+	let size = 20;
+
+	let firstDate = "${firstDate}";
+
+	var nicknameMap = ${nicknameMap};
+
+	var lastTalker = "${lastTalker}";
+	var lastDate = "${lastDate}";
+	var lastTime = "${lastTime}";
+
+
+	$(function(){
+
+		let msgArea = $("#msgArea");
+		let height = msgArea.prop('scrollHeight');
+		msgArea.scrollTop(height);
+
+		msgArea.scroll(function() {
+
+			if(msgArea.scrollTop() < 200) {
+
+				if (end == false && loading == false){
+					loading = true;
+					curPage ++;
+
+					$.ajax({
+						type: "get",
+						url : "${path}/gathering/viewMoreChat.do",
+						async: false,
+						data : {
+							"gathering_id" : ${gathering_id},
+							"curPage" : curPage
+						},
+						success: function(result) {
+							list = result.list;
+
+							if(list.length < size) {
+								end = true;
+							}
+
+							let div = "";
+							let thisDate = "";
+							let thisTime = "";
+							let thisTalker = "";
+							let dateDiv = "";
+							let nextDate = "";
+							let thisNickname = "";
+
+							//이렇게 하면 안되고 text()로 값 꺼내와야 함
+
+							for (var i = 0; i < list.length; i++) {
+								thisTalker = list[i].userId;
+								if(nextDate!=""){
+									thisDate = nextDate;
+								}
+								else thisDate = list[i].formattedDate.substr(0, 10);
+								thisTime = list[i].formattedDate.substr(11);
+
+								if(list[i+1]!=null){
+									nextDate = list[i+1].formattedDate.substr(0, 10);
+								}
+								else nextDate = "";
+
+								if(list[i-1]!=null && list[i-1].userId == thisTalker &&
+										list[i-1].formattedDate == list[i].formattedDate){
+									thisTime = "";
+								}
+
+								if(list[i+1]!=null && list[i+1].userId == thisTalker
+										&& list[i+1].formattedDate == list[i].formattedDate){
+										thisTalker = "";
+								}
+
+								if(thisTalker != "") thisNickname = nicknameMap[thisTalker];
+
+								if(firstDate == thisDate && dateDiv=="") {
+									if ($('.chatDate')) {
+										$('.chatDate').eq(0).closest("div[class='message_notice']").remove();
+										dateDiv = "<div class='message_notice'><div class='messageContent chatDate'>" + thisDate + '</div></div>';
+									}
+								}
+
+								if (list[i].userId == cur_session) {
+									div = "<div class='message_mine'><span class='chatTime'>" + thisTime + "</span>" +
+											"<div class='messageContent'>" + list[i].message + "</div></div>" + div;
+								} else if (list[i].userId == 'SYSTEM') {
+
+									var index = list[i].message.indexOf("]");
+									var user = "";
+									if(index!=-1){
+										user = list[i].message.substr(1, index-1);
+										nickname = nicknameMap[user];
+										div = "<div class='message_notice'><div class='messageContent'>" + list[i].message.substr(index+1) + "</div></div>" + div;
+									}
+									else{
+										div = "<div class='message_notice'><div class='messageContent'>" + list[i].message + "</div></div>" + div;
+									}
+
+								} else {
+									div = "<div class='message_yours'><div class='sender'>" + thisNickname + "</div>"
+											+ "<div><div class='messageContent'>" + list[i].message + "</div>"
+											+ "<span class='chatTime'>" + thisTime + "</span></div></div>" + div;
+								}
+
+								if(firstDate != thisDate || i == list.length-1){
+									if(dateDiv!='')
+										div = dateDiv + div;
+									else
+										div = "<div class='message_notice'><div class='messageContent chatDate'>" + thisDate + '</div></div>' + div;
+								}
+
+
+								firstDate = thisDate;
+								firstTime = list[i].formattedDate.substr(11);
+								firstTalker = list[i].userId;
+								thisNickname = "";
+							}
+							let msgArea = $("#msgArea");
+							msgArea.prepend(div);
+
+						},
+						error: function(){
+							alert("에러가 발생했습니다.");
+						}
+					});
+				}
+			}
+
+			loading = false;
+
+		});
+
+
+
+		$("#sendBtn").click(function(){
+			if($('#msg').val()!=''){
+				sendMessage("SEND");
+				$('#msg').val('');
+			}
+		});
+
+
+		var finishChat = "${dto.finishChat}";
+
+		if(finishChat == 'n'){
+			stomp.connect({}, function(){
+				stomp.subscribe("/sub/chat/room/" + "${gathering_id}", function(msg){
+					var chatMessageDto = JSON.parse(msg.body);
+					var sender = chatMessageDto.userId; //데이터를 보낸 사람
+					var message = chatMessageDto.message; //메시지
+
+					var thisDate = chatMessageDto.formattedDate.substr(0, 10);
+					var thisTime = chatMessageDto.formattedDate.substr(11);
+					var nickname = "";
+					var cur_session = '${user_id}'; //현재 세션에 로그인한 사람
+
+
+					if(sender == cur_session){
+						if(lastTime == thisTime && lastDate == thisDate){
+							$(".message_mine:last-child").find("span[class='chatTime']").text("");
+						}
+
+						var str =
+								"<div class='message_mine'><span class='chatTime'>" + thisTime + "</span>"
+								+ "<div class='messageContent'>"+message+"</div></div>";
+					}
+
+					else if(sender == 'SYSTEM'){
+						var str = "";
+						var index = message.indexOf("]");
+						if(index!=-1){
+							var user = message.substr(1, index-1);
+							nickname = nicknameMap[user];
+							if(!nickname) {
+								$.ajax({
+									type: "get",
+									url : "${path}/gathering/getNickname.do",
+									async: false,
+									data : {
+										"user_id" : user
+									},
+									success: function(result){
+										if(result){
+											nicknameMap[user] = result.nickname;
+											nickname = result.nickname;
+										}
+										else alert("에러가 발생했습니다.");
+									},
+									error: function(){
+										alert("에러가 발생했습니다.");
+									}
+								});
+							}
+
+							str =
+									"<div class='message_notice'>"+
+									"<div class='messageContent'>"+nickname+message.substr(index+1)+"</div></div>";
+
+						}
+
+						else{
+							str =
+									"<div class='message_notice'>"+
+									"<div class='messageContent'>"+message+"</div></div>";
+
+						}
+					}
+
+					else{
+						if(lastTalker == sender && lastTime == thisTime && lastDate == thisDate){
+							$(".message_yours:last-child").find("span[class='chatTime']").text("");
+						}
+
+						else{
+							nickname = nicknameMap[sender];
+						}
+
+						var str =
+								"<div class='message_yours'><div class='sender'>"+nickname+"</div>"
+								+"<div><div class='messageContent'>"+message+"</div>"
+								+ "<span class='chatTime'>" + thisTime + "</span></div></div>";
+					}
+
+					let msgArea = $("#msgArea");
+					msgArea.append(str);
+
+					let height = msgArea.prop('scrollHeight');
+					let position = msgArea.scrollTop();
+
+					if(position>(height - 800)){
+						msgArea.scrollTop(height);
+					}
+
+					lastTime = thisTime;
+					lastDate = thisDate;
+					lastTalker = sender;
+					nickname = "";
+
+				});
+
+			});
+
+		}
+
+	});
+
+
+
+	function sendMessage(type){
+
+		var messageDTO = {
+			userId: "${user_id}",
+			message: $("#msg").val(),
+			type: type,
+			gathering_id: "${gathering_id}",
+		};
+
+		stomp.send('/pub/chat/message', {}, JSON.stringify(messageDTO));
+	}
+
+
+	function withdraw(){
+
+		if("${dto.writer_id}" == "${sessionScope.userid}") {
+			if (confirm("채팅방을 나가려면 게시글을 삭제해야 합니다.\n게시글 상세페이지로 이동하시겠습니까?")){
+				location.href="${path}/gathering/view/${dto.gathering_id}";
+				return;
+			}
+			else return;
+		}
+
+		if(confirm("채팅방을 나가려면 모임을 탈퇴해야 합니다.\n정말로 이 모임에서 탈퇴하시겠습니까?")){
+			$.ajax({
+				type: "get",
+				url : "${path}/gathering/withdraw.do",
+				data : {
+					"gathering_id": "${dto.gathering_id}"
+				},
+				success: function(result){
+					alert(result.message);
+					location.href="${path}/gathering/view/${dto.gathering_id}";
+				},
+				error: function(e){
+					if(e.status==999){
+						if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
+							location.href= "${path}/member/member_login.do";
+							return;
+						}
+					}
+					else{
+						alert("에러가 발생했습니다.");
+					}
+				}
+			});
+		}
+	}
+
+
+	function enterChat(e){
+		if(e.keyCode == 13){
+			if($('#msg').val()!=''){
+				sendMessage("SEND");
+				$('#msg').val('');
+			}
+		}
+		else return;
+	}
+
+
+
+</script>
+
+
 
 </body>
 </html>

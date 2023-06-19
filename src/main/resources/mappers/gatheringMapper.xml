@@ -14,33 +14,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			(gathering_id, writer_id, post_date, title, gathering_content, gathering_date,
 			maxpeople, attendsystem, note, question, address1, address2, address3, place_name, lat, lng)
 		values 
-			(#{gathering_id},'kim123',sysdate,#{title},#{gathering_content},#{gathering_date},
+			(#{gathering_id},#{writer_id},sysdate,#{title},#{gathering_content},#{gathering_date},
 			 #{maxPeople},#{attendSystem},#{note},#{question}, #{address1}, #{address2}, #{address3},
 			 #{place_name}, #{lat}, #{lng})
 	</insert>
+
+	<update id="deletePost">
+		update gathering
+		set show = 'n'
+		where gathering_id = #{gathering_id}
+	</update>
 
 
 	<select id="countList" resultType="int">
 		select count(*)
 		from gathering
-
-	<where>
-    <trim prefixOverrides="and">
-		<trim suffixOverrides="or">
-			<foreach item="address1" collection="address1List">
-				<choose>
-					<when test="address1=='전체'"></when>
-					<otherwise>
-						address1 like #{address1}||'%' or
-					</otherwise>
-				</choose>
-			</foreach>
-		</trim>
-
-		<if test="showAvailable==true">
-			and gathering_date <![CDATA[>]]> (sysdate+(3/24))
+		where
+		show = 'y'
+		<if test="address1List!=null and address1List.length!=0">
+			and (
+			<trim suffixOverrides="or">
+				<foreach item="address1" collection="address1List">
+					<choose>
+						<when test="address1=='전체'">
+							1=1 or
+						</when>
+						<otherwise>
+							address1 like #{address1}||'%' or
+						</otherwise>
+					</choose>
+				</foreach>
+			</trim>
+			)
 		</if>
 
+		<if test="showAvailable==true">
+			and (sysdate + 1/48 ) <![CDATA[<]]> gathering_date
+		</if>
 
 		<if test="from!=null">
 			and trunc(gathering_date, 'DD') <![CDATA[>]]>= #{from}
@@ -49,9 +59,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="to!=null">
 			and trunc(gathering_date, 'DD') <![CDATA[<]]>= #{to}
 		</if>
-	</trim>
-	</where>
-	</select>
+
+		<if test="keyword!=null and !keyword.equals('')">
+			<choose>
+				<when test="option.equals('title')">
+					and Lower(title) like lower('%'||#{keyword}||'%')
+				</when>
+				<when test="option.equals('gathering_content')">
+					and Lower(gathering_content) like lower('%'||#{keyword}||'%')
+				</when>
+				<when test="option.equals('location')">
+					and address1||address2||address3||place_name like lower('%'||#{keyword}||'%')
+				</when>
+				<when test="option.equals('writer')">
+					and (writer_id like lower('%'||#{keyword}||'%') or
+					nickname like lower('%'||#{keyword}||'%')
+					)
+				</when>
+				<otherwise>
+					and (Lower(title) like lower('%'||#{keyword}||'%')
+					or Lower(gathering_content) like lower('%'||#{keyword}||'%'))
+				</otherwise>
+			</choose>
+		</if>
+		</select>
 
 
 	<select id="checkIfAttendee" resultType="com.example.boardinfo.model.gathering.dto.AttendeeType">
@@ -78,25 +109,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where gathering_id = g.gathering_id and type = 'a') as attendee_count
 		from gathering g
 		join member m on g.writer_id = m.userid
-		<where>
-	    <trim prefixOverrides="and">
-		<trim suffixOverrides="or">
-			<foreach item="address1" collection="address1List">
-		    <choose>
-			<when test="address1=='전체'">
-			</when>
-			<otherwise>
-				address1 like #{address1}||'%' or
-			</otherwise>
-		</choose>
-	</foreach>
-	</trim>
-	
+	    where
+	        show = 'y'
+	        <if test="address1List!=null and address1List.length!=0">
+				and (
+				    <trim suffixOverrides="or">
+					<foreach item="address1" collection="address1List">
+						<choose>
+							<when test="address1=='전체'">
+				    			1=1 or
+							</when>
+							<otherwise>
+								address1 like #{address1}||'%' or
+							</otherwise>
+						</choose>
+					</foreach>
+				</trim>
+				)
+			</if>
+
 	<if test="showAvailable==true">
 	and (sysdate + 1/48 ) <![CDATA[<]]> gathering_date
 	</if>
-	
-	
+
 	<if test="from!=null">
 	and trunc(gathering_date, 'DD') <![CDATA[>]]>= #{from}
 	</if>
@@ -105,7 +140,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	and trunc(gathering_date, 'DD') <![CDATA[<]]>= #{to}
 	</if>
 
-		<if test="keyword!=null">
+		<if test="keyword!=null and !keyword.equals('')">
 			<choose>
 				<when test="option.equals('title')">
 					and Lower(title) like lower('%'||#{keyword}||'%')
@@ -127,8 +162,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				</otherwise>
 			</choose>
 		</if>
-	</trim>
-	</where>
 		order by gathering_id desc
 	)a
 	)
@@ -143,19 +176,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	where gathering_id = #{gathering_id} and type = 'a') as attendee_count
 	from gathering g
 	join member m on g.writer_id = m.userid
-	where gathering_id = #{gathering_id}
+	where gathering_id = #{gathering_id} and show = 'y'
 	</select>
 	
 	<update id="viewCount">
 	update gathering
 	set view_count = view_count+1
-	where gathering_id = #{gathering_id}
+	where gathering_id = #{gathering_id} and show = 'y'
 	</update>
 
 	<insert id="attend">
 		insert into attendee
-			(attendee_id, gathering_id, user_id, type, create_date)
-		values(attendee_id_seq.nextval, #{gathering_id}, #{user_id}, #{type}, sysdate)
+			(attendee_id, gathering_id, user_id, type, answer, create_date)
+		values(attendee_id_seq.nextval, #{gathering_id}, #{user_id}, #{type}, #{answer}, sysdate)
 	</insert>
 
 
@@ -244,12 +277,67 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				from attendee
 				where gathering_id = #{gathering_id} and type = 'a'
 			   ) as attendeeCount,
-			   attendSystem
+			   attendSystem, show
 		from gathering
 		where gathering_id = #{gathering_id}
 	</select>
 
 
+	<update id="withdraw">
+		update attendee
+		set type = 'l'
+		where attendee_id =
+			  (select max(attendee_id) from attendee
+			   where gathering_id = #{gathering_id} and user_id = #{user_id})
+	</update>
+
+
+	<select id="getWriterAndShow" resultType="hashMap">
+		select writer_id, show from gathering
+		where gathering_id = #{gathering_id}
+	</select>
+
+
+	<delete id="cancelApplication">
+		delete from attendee
+		where gathering_id = #{gathering_id} and user_id = #{user_id} and type = 'w'
+	</delete>
+
+
+	<select id="getIdAndNicknames" resultType="hashMap">
+		select user_id, nickname
+		from
+			(
+				select user_id
+				from attendee
+				where gathering_id = #{gathering_id}
+				group by user_id
+			) a
+				join member m on m.userid = a.user_id
+
+	</select>
+
+
+	<select id="countActiveGathering" resultType="int">
+		select count(*)
+		from attendee a
+				 join gathering g on a.gathering_id = g.gathering_id
+		where a.user_id = #{user_id} and (type = 'a' or type = 'w') and g.gathering_date > sysdate
+	</select>
+
+
+	<update id="finishChat">
+		update gathering
+		set finishChat = 'y'
+		where gathering_date + 3 <![CDATA[<]]>= sysdate and finishchat = 'n'
+	</update>
+
+
+	<select id="finishList" resultType="Integer">
+		select gathering_id
+		from gathering
+		where gathering_date + 3 <![CDATA[<]]>= sysdate and finishchat = 'n'
+	</select>
 
 </mapper>
 
