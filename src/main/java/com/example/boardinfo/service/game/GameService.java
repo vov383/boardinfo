@@ -33,4 +33,6 @@ public interface GameService {
   void deleteGame(int gnum, String userid);
   Map<String, Object> parseInsert(int bggnum);
   Map<String, Object> getExRe(String origin, String filter, int num);
+
+  void autoUpdate_delete(String value, int gnum);
 }

@@ -76,6 +76,9 @@ public class GameDAOImpl implements GameDAO {
 		return sqlSession.selectList("game.getAuto", input);
 	}
 
+
+
+
 	public void addAttach(String fullName, String userid){
 		Map<String, Object> map = new HashMap<>();
 		map.put("fullName",fullName);

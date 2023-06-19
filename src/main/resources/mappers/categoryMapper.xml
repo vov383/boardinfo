@@ -59,6 +59,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from category c, game_category gc
 		where c.cnum = gc.cnum and gc.gnum = #{gnum}
 	</select>
+
+	<delete id="deleteGame_Category">
+		delete
+		from 	game_category
+		where 	gnum = #{gnum}
+		and 	cnum =
+				(select	cnum
+				 from	category
+				 where	gamecategory=#{category})
+	</delete>
 	
 </mapper>
 

@@ -34,4 +34,7 @@ public interface GameDAO {
     int countExRe(Map<String, Object> map);
 
 	List<GameDTO> ExReList(Map<String, Object> map);
+
+
+
 }

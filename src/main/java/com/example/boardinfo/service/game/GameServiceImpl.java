@@ -288,10 +288,19 @@ public class GameServiceImpl implements GameService {
         int bggnum = dto.getBggnum();
         dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
       }
-
     }
     return list;
   }
+
+  @Override
+  public void autoUpdate_delete(String value, int gnum) {
+    int checkCategory = categoryDao.check_category(value, gnum);
+    if(checkCategory > 0){
+      categoryDao.deleteGame_Category(value, gnum);
+    }
+
+  }
+
   //게임등록페이지의 사진 드롭 후 제거시 사진경로 삭제
   public void deleteFile(String fileName){
     gameDao.delteFile(fileName);

@@ -577,7 +577,8 @@ WHERE rn BETWEEN #{start} AND #{end}
          		 where  del = 'n' and GAMETITLE = #{expansion}) g
 		where   r.renum = g.gnum and r.gnum = #{gnum}
 	</select>
-	
+
+
 </mapper>
 
 
