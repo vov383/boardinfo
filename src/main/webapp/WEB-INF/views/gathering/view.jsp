@@ -94,7 +94,7 @@
         .status{
             width: 85px;
             border: 1px solid black;
-            border-radius: 10px;
+            border-radius: 5px;
             padding: 0 10px;
             margin-right: 6px;
 ]        }
@@ -247,11 +247,16 @@
         }
 
 
-        .btn-AddReply{
+        .btn-AddReply, .btn-editReply, .btn-cancelReply{
             background-color: #3D3D43;
             border: 0;
             color: white;
         }
+
+        .btn-cancelReply{
+            margin-right: 5px;
+        }
+
 
         footer{
             font-size: 15px;
@@ -419,16 +424,17 @@
                             if("${sessionScope.userid}" == list[i].creator_id){
                                 addReplySpan =
                                     "<span class='addRe_reply'><img src='${path}/images/reply_arrow.png' width='15px'>" +
-                                    "<img ><a href='javascript:showRe_reply('" + list[i].reply_id + "," +
-                                    list[i].parent_reply + "," + list[i].inner_order + "')>답글</a>" +
-                                    "&nbsp&nbsp<a href='javascript:editReply()'>수정</a>&nbsp&nbsp<a href='javascript:deleteReply()'>삭제</a>";
+                                    "<img ><a href='javascript:showRe_reply(" + list[i].reply_id + "," +
+                                    list[i].parent_reply + "," + list[i].inner_order + ")'>답글</a>" +
+                                    "&nbsp&nbsp<a href='javascript:editReply(" +
+                                    list[i].reply_id + ")'>수정</a>&nbsp&nbsp<a href='javascript:deleteReply()'>삭제</a>";
                             }
 
                             else{
                                 addReplySpan =
                                     "<span class='addRe_reply'><img src='${path}/images/reply_arrow.png' width='15px'>" +
-                                    "<img ><a href='javascript:showRe_reply('" + list[i].reply_id + "," +
-                                    list[i].parent_reply + "," + list[i].inner_order + "')>답글</a>";
+                                    "<img ><a href='javascript:showRe_reply(" + list[i].reply_id + "," +
+                                    list[i].parent_reply + "," + list[i].inner_order + ")'>답글</a>";
                             }
 
 
@@ -596,6 +602,53 @@
                     }
                 });
             }
+        }
+
+
+        function editReply(reply_id){
+
+            let reply = $("#"+reply_id);
+            let original = reply.html();
+            let text = reply.children("div:eq(1)").text();
+
+            let edit_reply_form = $("<form>").addClass("edit-replyForm")
+                .attr({
+                    name: "replyForm",
+                    action: "${path}/gathering/editReply.do"
+                });
+
+            let textArea = $("<textarea>").attr({
+                name: "reply_text"
+            });
+
+            textArea.text(text);
+
+            let input = $("<input>").attr({
+                type: "hidden",
+                name: "reply_id",
+                value: reply_id
+            });
+
+            let button = $("<button>").attr({
+                type: "button",
+                class: "btn-editReply"
+            }).text("수정");
+
+
+            let button2 = $("<button>").attr({
+                type: "button",
+                class: "btn-cancelReply"
+            }).text("취소");
+
+
+            button2.click(function(){
+                $("#"+reply_id).html(original);
+            });
+
+
+            edit_reply_form.append(textArea, input, button2, button);
+            $("#" + reply_id).html(edit_reply_form);
+
         }
 
 

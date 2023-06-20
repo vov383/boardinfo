@@ -68,10 +68,6 @@ public class GatheringServiceImpl implements GatheringService {
 	public List<GatheringDTO> list(boolean showAvailable, String[] address1List
 			, LocalDate from, LocalDate to, int start, int end, String searchOption, String keyword) {
 
-		for(String address1 : address1List){
-			System.out.println(address1);
-		}
-
 		List<GatheringDTO> list =
 				gatheringDao.list(showAvailable, address1List, from, to, start, end, searchOption, keyword);
 
@@ -281,5 +277,17 @@ public class GatheringServiceImpl implements GatheringService {
 		return message;
 	}
 
+
+	@Override
+	public List<GatheringDTO> getHomeList(Integer size) {
+		List<GatheringDTO> list = gatheringDao.getHomeList(size);
+		for (GatheringDTO dto : list) {
+
+			//제주특별시, 세종특별시 두글자 처리
+			dto.setAddress1(dto.getAddress1().substring(0, 2));
+		}
+
+		return list;
+	}
 
 }

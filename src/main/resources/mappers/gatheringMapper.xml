@@ -339,6 +339,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where gathering_date + 3 <![CDATA[<]]>= sysdate and finishchat = 'n'
 	</select>
 
+
+	<select id="getHomeList" resultType="gatheringDTO">
+		select *
+		from
+			(
+				select a.*, row_number() over(order by post_date desc) rn
+				from
+					(
+						select g.gathering_id, g.post_date, g.title, g.address1,
+							   (select count(*)
+								from gathering_reply
+								where gathering_id = g.gathering_id) as reply_count
+						from gathering g
+						where show = 'y'
+					)a
+			)
+		where rn between 1 and #{size}
+	</select>
+
+
 </mapper>
 
 

@@ -75,7 +75,6 @@ public class GatheringDAOImpl implements GatheringDAO {
 
 	@Override
 	public int addReply(GatheringReplyDTO dto) {
-		System.out.print(dto);
 		int result = sqlSession.insert("gathering.addReply", dto);
 		return result;
 	}
@@ -180,5 +179,10 @@ public class GatheringDAOImpl implements GatheringDAO {
 	@Override
 	public List<Integer> finishList() {
 		return sqlSession.selectList("gathering.finishList");
+	}
+
+	@Override
+	public List<GatheringDTO> getHomeList(Integer size) {
+		return sqlSession.selectList("gathering.getHomeList", size);
 	}
 }

@@ -25,6 +25,5 @@ public interface GatheringService {
 	public String addAttendee(int gatheringId, String userId, String answer);
 	public String withDrawAttendee(int gatheringId, String userId);
     public String cancelApplication(int gatheringId, String userId);
-
-
+    public List<GatheringDTO> getHomeList(Integer size);
 }

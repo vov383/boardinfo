@@ -23,8 +23,6 @@ import com.example.boardinfo.util.Pager;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -128,7 +126,6 @@ public class GatheringController {
 			address1List = all;
 		}
 
-		logger.info("address1List : " + address1List.toString());
 		int count = gatheringService.countList(showAvailable, address1List, from, to, option, keyword);
 		Pager pager = new Pager(count, curPage, 15);
 		int start = pager.getPageBegin();
@@ -373,6 +370,21 @@ public class GatheringController {
 		map.put("nickname", nickname);
 		return map;
 	}
+
+
+	@ResponseBody
+	@GetMapping("/homeList")
+	public Map<String, List<GatheringDTO>> getHomeList(
+			@RequestParam(value="size", required=false) Integer size){
+
+		if(size == null) size = 8;
+		List<GatheringDTO> list = gatheringService.getHomeList(size);
+		Map<String, List<GatheringDTO>> map = new HashMap<>();
+		map.put("list", list);
+
+		return map;
+	}
+
 
 
 

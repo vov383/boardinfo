@@ -148,7 +148,7 @@
     .status{
       width: 85px;
       border: 1px solid black;
-      border-radius: 10px;
+      border-radius: 5px;
       padding: 0 10px;
       margin-right: 6px;
     }
@@ -412,7 +412,6 @@
                 <label for="${status.index}">${address1}</label>
               </li>
             </c:forEach>
-
 
             <c:forEach var="address1" items="${koreanAddress1List}" varStatus="status">
               <li>
