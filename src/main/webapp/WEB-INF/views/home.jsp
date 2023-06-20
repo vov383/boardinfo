@@ -10,185 +10,263 @@
         <title>BOARDINFO</title>
         <%@ include file="include/js/header.jsp" %>
 
-
         <style>
-            /*모달 내용 관련*/
-            #bigFrame{
-                width: 550px;
-                padding: 60px;
+
+            #main_lower{
                 display: flex;
                 flex-direction: column;
-
-                /*컨텐츠 내용 영역*/
-                word-break:break-word;
-                /*단어가 짤리지 않음*/
-                overflow-y:auto;
-                /*내부요소가 지정한 세로 값보다 클 경우 스크롤 생성*/
-                min-height:100px;
-                max-height:60vw;
             }
 
-            .labelAndStars{
+            #main_lower > div{
                 display: flex;
-                align-items: center;
-                margin-bottom: 30px;
+                flex-direction: row;
             }
 
-            #labelR{
-                width: 155px;
-            }
-
-            #labelW{
-                width: 135px;
-            }
-
-            .ratingStar, .weightStar{
-                cursor: pointer;
-            }
-
-            .star{
-                position: relative;
-            }
-
-            .star img:nth-child(3){
-                width: 40px;
-            }
-
-            .halfStar{
-                position: absolute;
-                width: 20px;
-                opacity: 0;
-                z-index: 2;
-                -webkit-user-drag: none;
-            }
-
-            .fullStar{
-                position: absolute;
-                width: 40px;
-                opacity: 0;
-                z-index: 1;
-                -webkit-user-drag: none;
-            }
-
-            #hollow{
-                opacity: 100%;
-                width: 20px;
-                height: 100%;
-            }
-
-
-            .columnFlex{
+            .boxForList{
+                flex-basis: 50%;
                 display: flex;
                 flex-direction: column;
-                margin-bottom: 30px;
+                border-bottom: 2px solid #d9d9d9;
             }
 
-            .columnFlex > span{
-                margin-bottom: 10px;
+            div[class='boxForList']:first-of-type{
+                margin-right: 70px;
             }
 
-            #ratingPeopleTable{
-                border-collapse: collapse;
+            .more{
+                padding: 5px 0 5px 10px;
+                text-decoration: none;
+                color: black;
             }
 
 
-            #ratingPeopleTable th, #ratingPeopleTable td{
-                height: 30px;
+            #main_lower > div:first-of-type > .boxForList{
+                margin-bottom: 50px;
+
             }
 
-            #ratingPeopleTable td:first-of-type{
-                padding-left: 20px;
+            .boxForList > div:first-of-type{
+                height: 40px;
+                border-bottom: 1px solid #d9d9d9;
+                display: flex;
+                justify-content: space-between;
             }
 
-            #ratingPeopleTable td:not(#ratingPeopleTable td:first-of-type){
-                text-align: center;
+            .boxForList > div:first-of-type > span:first-of-type{
+                font-size: 19px;
+                font-weight: bold;
             }
 
-            #ratingPeopleTable tr:nth-child(2n){
-                background-color: #F7F7F8;
+            .list{
+                padding: 8px 0;
+                display: flex;
+                flex-direction: column;
             }
 
-            .columnFlex textarea{
-                resize: none;
-                height: 180px;
-                padding: 10px;
+            .list > div{
+                padding: 3px 0;
             }
 
-            #bigFrame > div:last-of-type{
-                text-align: center;
+            .list a{
+                text-decoration: none;
+                color: black;
             }
 
-            #bigFrame > div:last-of-type > button{
-                width: 140px;
-                height: 45px;
-                font-size: 18px;
+            .list a:hover{
+                text-decoration: underline;
             }
 
-            #submitBtn{
-                background-color: #1432B1;
-                color: white;
-                border: none;
-                margin-right: 30px;
-                cursor: pointer;
+            .badge{
+                width: 85px;
+                border-radius: 5px;
+                padding: 0 10px;
+                margin-right: 6px;
+                background-color: #d9d9d9;
             }
 
-            #cancelBtn{
-                background-color: white;
-                border: 1px solid black;
-                cursor: pointer;
+            .reply{
+                margin-left: 10px;
+                color: #C53A32;
+                font-size: 0.8em;
             }
+
 
         </style>
+
+
+        <script>
+
+            $(function() {
+
+
+                $.ajax({
+                    type: "get",
+                    url : "${path}/review/homeList.do",
+                    data : {
+                        "size" : 8
+                    },
+                    success: function(result){
+                        if(result){
+                            let list = result.list;
+                            let communityList = $("#communityList");
+                            let str = "";
+
+                            for(var i=0; i<list.length; i++){
+                                let reply = list[i].recnt == 0 ? "" : list[i].recnt;
+                                str += "<div><span class='badge'>"+list[i].category+"</span>" +
+                                    "<a href='${path}/review/reviewdetail.do?reviewDetailKey=" + list[i].regNum + "'>"+list[i].title
+                                    +"</a><span class='reply'>"+reply+"</span></div>";
+                            }
+
+
+                        communityList.append(str);
+
+                        }
+                        else alert("에러가 발생했습니다.");
+                    },
+                    error: function(){
+                        alert("에러가 발생했습니다.");
+                    }
+
+                });
+
+                $.ajax({
+                    type: "get",
+                    url : "${path}/gathering/homeList.do",
+                    data : {
+                        "size" : 8
+                    },
+                    success: function(result){
+                        if(result){
+                            let list = result.list;
+                            let gatheringList = $("#gatheringList");
+                            let str = "";
+
+                            for(var i=0; i<list.length; i++){
+                                let reply = list[i].reply_count == 0 ? "" : list[i].reply_count;
+                                str += "<div><span class='badge'>"+list[i].address1+"</span>" +
+                                    "<a href='${path}/gathering/view/" + list[i].gathering_id + "'>"+list[i].title
+                                    +"</a><span class='reply'>"+reply+"</span></div>";
+                            }
+
+                            gatheringList.append(str);
+
+                        }
+                        else alert("에러가 발생했습니다.");
+                    },
+                    error: function(){
+                        alert("에러가 발생했습니다.");
+                    }
+
+            });
+
+
+                $.ajax({
+                    type: "get",
+                    url : "${path}/tboard/homeList.do",
+                    data : {
+                        "size" : 8
+                    },
+                    success: function(result){
+                        if(result){
+                            let list = result.list;
+                            let tboardList = $("#tboardList");
+                            let str = "";
+
+                            for(var i=0; i<list.length; i++){
+                                let reply = list[i].re_count == 0 ? "" : list[i].re_count;
+                                str += "<div><span class='badge'>"+list[i].category+"</span>" +
+                                    "<a href='${path}/tboard/view/" + list[i].tb_num + "'>"+list[i].title
+                                    +"</a><span class='reply'>"+reply+"</span></div>";
+                            }
+
+
+
+                            tboardList.append(str);
+
+                        }
+                        else alert("에러가 발생했습니다.");
+                    },
+                    error: function(){
+                        alert("에러가 발생했습니다.");
+                    }
+
+                });
+
+            });
+
+
+        </script>
+
 
    </head>
 
    <body>
 
-    <header>
-        <%@include file="include/top.jsp" %>
-    </header>
+   <%@include file="include/top.jsp" %>
 
-    <main>
+   <div id="contents">
+       <div id="contentsMain">
 
-        <br><br><br><br><br>
+           <div id="main_lower">
 
-	<div align="center">
+               <div>
+                   <div class="boxForList">
+                       <div><span>HOT! 보드인이 주목중인 게시글</span><span>&gt</span></div>
+                       <div class="list">
+                           <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                           <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                           <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                           <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                           <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                           <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                           <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                           <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                       </div>
+                   </div>
+
+                   <div class="boxForList">
+                       <div><span>커뮤니티</span>
+                           <span><a class="more" href="${path}/review/reviewlist.do">&gt</a></span></div>
+                       <div class="list" id="communityList">
+                       </div>
+                   </div>
+
+               </div>
+
+               <div>
+                   <div class="boxForList">
+                       <div><span>오프모임</span>
+                           <span><a class="more" href="${path}/gathering/list.do">&gt</a></span></div>
+                       <div class="list" id="gatheringList">
+                       </div>
+                   </div>
+                   <div class="boxForList">
+                       <div><span>중고장터</span>
+                           <span><a class="more" href="${path}/tboard/list.do">&gt</a></span></div>
+                       <div class="list" id="tboardList">
+                       </div>
+                   </div>
+
+               </div>
+
+
+           </div>
+
+       </div>
+   </div>
+
+
 		<h1><a href="${path}/sample/sample.do" style="color: black;">SAMPLE CLICK</a></h1>
         <br>
 
         <br>
-        <h1><a href="${path}/tboard/list.do" style="color: black;">중고거래 게시판</a></h1>
         <h1><a href="${path}/member/member_list.do" style="color: black;">인터셉터 확인</a></h1>
-        <br>
-        <h1><a href="${path}/chat/goChat.do" style="color: black;">sjTest</a></h1>
-        <h1><a href="${path}/gathering/list.do" style="color: black;">모임리스트</a></h1>
-        <h1><a href="${path}/gathering/add.do" style="color: black;">모임만들기</a></h1>
-        <h1><a href="${path}/mongo/insert.do" style="color: black;">테스트insert</a></h1>
-        
-        <br>
         <h1><a href="${path}/review/reviewlist.do" style="color: black;">Review List</a></h1>
-<%--
-        <h1><a href="${path}/review/reviewInsert.do" style="color: black;">Review Insert</a></h1>
-        <h1><a href="${path}/review/reviewBlobInsert.do" style="color: black;">Review Blob Test</a></h1>
---%>
-
-    </div>
-  <div>
-  	<!-- 실제로 서비스되는 디렉토리(배포 디렉토리) 값 가져오기 -->
-		<%= application.getRealPath("/resources/ckimg/") %>
-
-		<%= application.getRealPath("/resources/uploaded_image/") %>
-  </div>
 
 
- 
-    </main>
-
-    <footer>
        <%@include file="include/footer.jsp" %>
-    </footer>
+   </body>
 
 
-    </body>
-    
 </html>

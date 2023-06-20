@@ -211,4 +211,9 @@ public class ReviewDTO extends PageDTO {
 	public void setRecnt(String recnt) {
 		this.recnt = recnt;
 	}
+
+
+	
+
+
 }
