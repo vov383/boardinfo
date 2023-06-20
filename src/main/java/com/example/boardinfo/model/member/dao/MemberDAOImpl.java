@@ -100,6 +100,14 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.selectOne("member.findPwCheck" ,map);
 	}
 
+	@Override
+	public void pass_change(Map<String, Object> map, MemberDTO dto) {
+		map.get("passwd");
+		map.get("email");
+		sqlSession.update("member.pass_change",map);
+		
+	}
+
 
 
 	

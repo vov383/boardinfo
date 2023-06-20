@@ -1,6 +1,7 @@
 package com.example.boardinfo.service.member;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -126,6 +127,18 @@ public class MemberServiceImpl implements MemberService {
 		String result=memberDao.get_PwCheck(userid,email);
 		return result;
 	}
+
+	@Override
+	public void pass_change(Map<String, Object> map, MemberDTO dto) {
+		memberDao.pass_change(map,dto);
+		
+	}
+
+
+
+	
+
+	
 	
 
 }
