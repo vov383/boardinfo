@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -118,54 +119,50 @@ public class AdminController {
         return "home";
 
     }
-    //회원 상세정보
+    /*관리자 상세정보*/
     @RequestMapping("admin_view.do")
-    public String view(@RequestParam String admin_id, Model model) {
+    public ModelAndView view(@RequestParam String admin_id) {
+        ModelAndView mav = new ModelAndView();
         //모델에 자료 저장
-        model.addAttribute("dto", adminService.viewAdmin(admin_id));
-        return "admin/view";
+        mav.setViewName("admin/admin_view");
+        AdminDTO dto = adminService.viewAdmin(admin_id);
+        mav.addObject("dto", dto);
+        return mav;
+    }
+    @RequestMapping("pass_check.do")
+    public String checkPw(AdminDTO dto, Model model) {
+        //비밀번호 체크
+        boolean result=adminService.checkPw(dto.getAdmin_id(), dto.getPasswd());
+        if(result) {//비번이 맞으면
+            model.addAttribute("dto", adminService.viewAdmin(dto.getAdmin_id()));
+            return "admin/edit";
+        }else {//비번이 틀리면
+            model.addAttribute("dto", dto);
+            model.addAttribute("message", "비밀번호를 확인하세요.");
+            return "admin/admin_view";
+        }
     }
     //회원 상세정보 수정
-//    @RequestMapping("update.do")
-//    public String update(AdminDTO aDto, HttpServletRequest request, HttpServletResponse response,
-//                         @RequestParam MultipartFile profile_img) {
-//        OutputStream out = null;
-//        response.setCharacterEncoding("utf-8");
-//        response.setContentType("text/html; charset=utf-8");
-//
-//        try {
-//            //업로드한 파일 이름
-//            String fileName=profile_img.getOriginalFilename();
-//            //파일을 바이트 배열로 변환
-//            byte[] bytes=profile_img.getBytes();
-//            out = new FileOutputStream(new File(uploadPath+"/"+fileName));
-//            //서버로 업로드
-//            out.write(bytes);
-//
-//            aDto.setProfile(fileName);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                if(out != null) {
-//                    out.close();
-//                }
-//            } catch (Exception e2) {
-//                e2.printStackTrace();
-//            }
-//        }
-//        adminService.updateAdmin(aDto);
-//        HttpSession session = request.getSession();
-//        session.setAttribute("name",aDto.getName());
-//        return "home";
-//    }
-//
-//    //회원 삭제 (del='n'  ->  del='y')로 변경 후 보이지 않게 처리
-//    @RequestMapping("delete.do")
-//    public String delete(@RequestParam("userid") String userid,HttpSession session ) {
-//        memberService.deleteMember(userid, session);
-//
-//        return "home";
-//    }
+    @RequestMapping("update.do")
+    public String update(AdminDTO aDto, HttpServletRequest request, HttpServletResponse response,
+                         @RequestParam MultipartFile profile_img,
+                         HttpSession session) {
+        if(profile_img.isEmpty()){
+            /*이미지 없이 insert*/
+            adminService.updateAdmin(aDto, session);
+
+        }else{
+            /*프로필 이미지와 함께 insert*/
+            adminService.updateAdmin(aDto, response, profile_img, session);
+        }
+        return "home";
+    }
+
+    //회원 삭제 (del='n'  ->  del='y')로 변경 후 보이지 않게 처리
+    @RequestMapping("delete.do")
+    public String delete(@RequestParam("admin_id") String admin_id,HttpSession session ) {
+        adminService.deleteAdmin(admin_id, session);
+
+        return "home";
+    }
 }

@@ -27,11 +27,6 @@ public class AdminDAOImpl implements AdminDAO{
     }
 
     @Override
-    public void insertAdmin(AdminDTO aDto) {
-        sqlSession.insert("admin.insertAdmin", aDto);
-    }
-
-    @Override
     public boolean loginCheck(AdminDTO aDto) {
         String name = sqlSession.selectOne("admin.login_check", aDto);
 
@@ -69,17 +64,22 @@ public class AdminDAOImpl implements AdminDAO{
         return sqlSession.selectOne("admin.selectAdminByNick", nickname);
     }
     @Override
+    public void insertAdmin(AdminDTO aDto) {
+        sqlSession.insert("admin.insertAdmin", aDto);
+    }
+    @Override
     public AdminDTO getAdminObject(String admin_id) {
         return sqlSession.selectOne("admin.getAdminDto", admin_id);
     }
     @Override
-    public void updateAdmin(AdminDTO aDto) {
-        sqlSession.selectOne("admin.updateAdmin",aDto);
+    public AdminDTO updateAdmin(AdminDTO aDto) {
+        AdminDTO editedDto = sqlSession.selectOne("admin.updateAdmin",aDto);
+        return editedDto;
     }
 
     @Override
     public void deleteAdmin(String admin_id) {
-        sqlSession.update("admin.deleteMember",admin_id);
+        sqlSession.update("admin.deleteAdmin",admin_id);
     }
 
     @Override
@@ -91,8 +91,5 @@ public class AdminDAOImpl implements AdminDAO{
     public void memberBlock(String userid) {
 
     }
-
-
-
 
 }

@@ -100,13 +100,15 @@ public class AdminServiceImpl implements AdminService {
         return adminDao.checkPw(admin_id, passwd);
     }
 
+
+
     @Override
     public void insertAdmin(AdminDTO aDto) {
-
+        adminDao.insertAdmin(aDto);
     }
     @Resource(name = "uploadPath") //servlet-context에 설정된 id값과 맞춤
     String uploadPath;
-    /*admin id C*/
+    /*admin C*/
     @Override
     public void insertAdmin(AdminDTO aDto, HttpServletResponse response, MultipartFile profile_img) {
 
@@ -137,24 +139,66 @@ public class AdminServiceImpl implements AdminService {
                 }
             }
     }
-
-
-
-    /*admin id U*/
+    /*admin R*/
     @Override
-    public void updateAdmin(AdminDTO aDto) {
+    public AdminDTO viewAdmin(String admin_id) {
+        return adminDao.selectAdminByid(admin_id);
+    }
 
+    /*admin U*/
+    @Override
+    public void updateAdmin(AdminDTO aDto, HttpSession session) {
+        AdminDTO editedDto = adminDao.updateAdmin(aDto);
+        /*세션에 nickname 수정*/
+        String nickname = editedDto.getNickname();
+        session.setAttribute("nickname", nickname);
     }
 
     @Override
-    public void deleteAdmin(String admin_id) {
+    public void updateAdmin(AdminDTO aDto, HttpServletResponse response, MultipartFile profile_img, HttpSession session) {
+        OutputStream out = null;
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html; charset=utf-8");
+        try {
+            //업로드한 파일 이름
+            String fileName=profile_img.getOriginalFilename();
+            //파일을 바이트 배열로 변환
+            byte[] bytes=profile_img.getBytes();
 
+            /*uid 적용한 파일명과 경로가 db에 저장되어야함
+             * uploadPath는 insert와 같은 @Resource(name = "uploadPath"), servlet-context에 설정된 id값과 맞춤*/
+
+            String uploadedFileName = UploadFileUtils.uploadFile(uploadPath, fileName, bytes);
+            aDto.setProfile(uploadedFileName);
+
+            AdminDTO editedDto = adminDao.updateAdmin(aDto);
+            /*세션에 nickname 수정*/
+            String nickname = editedDto.getNickname();
+            session.setAttribute("nickname", nickname);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(out != null) {
+                    out.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
     }
-
+    /*admin D*/
+    @Override
+    public void deleteAdmin(String admin_id, HttpSession session) {
+        adminDao.deleteAdmin(admin_id);
+        /*세션 초기화*/
+        session.invalidate();
+    }
     @Override
     public AdminDTO viewMember(String admin_id) {
         return null;
     }
+
 
     @Override
     public void memberWarn(String userid) {
@@ -186,9 +230,8 @@ public class AdminServiceImpl implements AdminService {
 
     }
 
-    @Override
-    public Object viewAdmin(String admin_id) {
-        return null;
-    }
+
+
+
 
 }
