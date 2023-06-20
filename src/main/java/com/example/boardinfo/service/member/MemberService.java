@@ -1,6 +1,7 @@
 package com.example.boardinfo.service.member;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -24,6 +25,8 @@ public interface MemberService {
     public String getNickname(String user_id);
 	String get_searchId(String name, String hp);
 	String get_PwCheck(String userid, String email);
+	void pass_change(Map<String, Object> map, MemberDTO dto);
+
 		
 
 }
