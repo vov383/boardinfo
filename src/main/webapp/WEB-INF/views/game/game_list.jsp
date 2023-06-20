@@ -19,19 +19,26 @@
 <main>
 	<div id="contents">
 		<div id="contentsHeader">
-			<h2>게임순위</h2>
+			<h2>게임목록</h2>
 		</div>
 		<div id="contentsLocation">
 			<span>홈</span>&gt
-			<span>게임순위</span>&gt
+			<span>게임목록</span>&gt
 
 			<c:choose>
-				<c:when test="${map.filter != null}">
-					<span>${map.filter} 별</span>
+				<c:when test="${map.sort != null and 'week'.equalsIgnoreCase(sort)}">
+					<span>보드인포 랭킹</span>
 				</c:when>
-				<c:otherwise>
-					<span>전체게임순위</span>
-				</c:otherwise>
+				<c:when test="${map.sort != null and 'newbie'.equalsIgnoreCase(sort)}">
+					<span>신규등록</span>
+				</c:when>
+				<c:when test="${map.sort != null and 'rate'.equalsIgnoreCase(sort)}">
+					<span>평점 랭킹</span>
+				</c:when>
+				<c:when test="${map.sort != null and 'vcnt'.equalsIgnoreCase(sort)}">
+					<span>조회수 랭킹</span>
+				</c:when>
+
 			</c:choose>
 
 			<a href="${path}/game/write.do" style="float: right">게임등록</a>
@@ -39,24 +46,11 @@
 		</div>
 		<div id="contentsMain">
 
-	<c:if test="${map.filter != null}">
-		<div>
-                <span>
-                    <h1>
-                        ${map.filter}
-                    :   ${map.list[0].nameStr}
-                        ( 총 ${map.count} 개의 게임 )
-                    </h1>
-                </span>
-		</div>
-	</c:if>
-
 		<div class="game_rank_div">
 			<ul>
 				<li><a href="${path}/game/gamerank/week">주간</a></li>
-				<li><a href="${path}/game/gamerank/day">일간</a></li>
 				<li><a href="${path}/game/gamerank/rate">평점</a></li>
-				<li><a href="${path}/game/gamerank/comment">댓글수</a></li>
+				<li><a href="${path}/game/gamerank/newbie">신규</a></li>
 				<li><a href="${path}/game/gamerank/vcnt">조회수</a></li>
 			</ul>
 		</div>

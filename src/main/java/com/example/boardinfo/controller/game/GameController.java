@@ -88,7 +88,6 @@ public class GameController {
 		//평가정보
 		Map<String, Object> statisticMap = gameRatingService.getStatistic(gnum, (String)session.getAttribute("userid"));
 
-
 		mav.setViewName("game/game_viewDetail");
 		mav.addObject("map", map);
 		mav.addObject("statisticMap", statisticMap);
@@ -130,9 +129,10 @@ public class GameController {
 		return list;
 	}
 
-	@RequestMapping("autoUpdate_delete.do/{value}/{gnum}")
-	public void autoUpdate_delete(@PathVariable("value") String value, @PathVariable("gnum") int gnum){
-		gameService.autoUpdate_delete(value, gnum);
+	@RequestMapping("autoUpdate_delete.do/{value}/{gnum}/{filter}")
+	public void autoUpdate_delete(@PathVariable("value") String value, @PathVariable("gnum") int gnum,
+									@PathVariable("filter") String filter){
+		gameService.autoUpdate_delete(value, gnum,filter);
 
 	}
 
@@ -184,6 +184,7 @@ public class GameController {
 		return map;
 	}
 
+	//ajax방식으로 게임정보창의 확장재구현게임목록 표시
 	@ResponseBody
 	@RequestMapping("getExReAjax")
 	public Map<String, Object> getExReList(@RequestBody Map<String, Object> param){
@@ -193,5 +194,13 @@ public class GameController {
 
 		Map<String, Object> map = gameService.getExRe(origin, filter, gnum);
 		return map;
+	}
+
+	@RequestMapping("gameListMain.do")
+	public ModelAndView gameListMain(Map<String, Object> map, ModelAndView mav){
+		map = gameService.gameListMain();
+		mav.setViewName("game/game_main_carousel");
+		mav.addObject("map", map);
+		return mav;
 	}
 }

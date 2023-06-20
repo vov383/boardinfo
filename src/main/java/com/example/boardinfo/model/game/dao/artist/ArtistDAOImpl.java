@@ -67,4 +67,12 @@ public class ArtistDAOImpl implements ArtistDAO {
 	public List<String> viewArtist(int gnum){
 		return sqlSession.selectList("artist.viewArtist", gnum);
 	}
+
+	@Override
+	public void deleteGame_Artist(String value, int gnum) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("artist", value);
+		map.put("gnum",gnum);
+		sqlSession.delete("artist.deleteGame_Artist", map);
+	}
 }

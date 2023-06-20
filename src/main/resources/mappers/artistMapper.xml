@@ -62,7 +62,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			from artist a, game_artist ga
 			where a.anum = ga.anum and ga.gnum = #{gnum}
 	</select>
-	
+
+	<delete id="deleteGame_Artist">
+		delete
+		from 	game_artist
+		where 	gnum = #{gnum}
+		and 	anum =
+				(select	anum
+				 from	artist
+				 where	artist=#{artist})
+	</delete>
+
 </mapper>
 
 

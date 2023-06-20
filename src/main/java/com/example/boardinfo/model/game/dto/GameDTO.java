@@ -13,6 +13,16 @@ public class GameDTO {
 	private String playtime; //플레이시간 nn 모르면 정보없음입력
 	private String ages; //사용연령 nn 모르면 정보없음입력
 	private String language; //언어 nn
+	private String theme;
+
+	public String getTheme() {
+		return theme;
+	}
+
+	public void setTheme(String theme) {
+		this.theme = theme;
+	}
+
 	private int release_year; //게임발매년도
 	private Date create_date; //업로드날짜 nn sysout기본
 	private String create_user; //업로드한 유저명
@@ -43,88 +53,10 @@ public class GameDTO {
 	//보드인이 평가한 랭킹과 난이도의 평균값
 	private Double rate;
 	private Double weight;
-	private int rank;
+	private int tot;
+	private int game_rank;
 
-	public int getRank() {
-		return rank;
-	}
-
-	public void setRank(int rank) {
-		this.rank = rank;
-	}
-
-	public String getNameStr() {
-		return nameStr;
-	}
-
-	public void setNameStr(String nameStr) {
-		this.nameStr = nameStr;
-	}
-
-	//getter setter tostring 생성자
-	public GameDTO() {}
-
-	@Override
-	public String toString() {
-		return "GameDTO{" +
-				"gnum=" + gnum +
-				", bggnum=" + bggnum +
-				", gametitle='" + gametitle + '\'' +
-				", gametitle_eng='" + gametitle_eng + '\'' +
-				", players='" + players + '\'' +
-				", playtime='" + playtime + '\'' +
-				", ages='" + ages + '\'' +
-				", language='" + language + '\'' +
-				", release_year=" + release_year +
-				", create_date=" + create_date +
-				", create_user='" + create_user + '\'' +
-				", update_date=" + update_date +
-				", update_user='" + update_user + '\'' +
-				", totalviewcount=" + totalviewcount +
-				", designer='" + designer + '\'' +
-				", gamecategory='" + gamecategory + '\'' +
-				", publisher='" + publisher + '\'' +
-				", artist='" + artist + '\'' +
-				", mechanic='" + mechanic + '\'' +
-				", expansion='" + expansion + '\'' +
-				", reimplement='" + reimplement + '\'' +
-				", files=" + Arrays.toString(files) +
-				", bgg_thumbnail='" + bgg_thumbnail + '\'' +
-				", gamephoto_url='" + gamephoto_url + '\'' +
-				", rate=" + rate +
-				", weight=" + weight +
-				", rank=" + rank +
-				'}';
-	}
-
-	public GameDTO(int gnum, int bggnum, String gametitle, String gametitle_eng, String players, String playtime, String ages, String language, int release_year, Date create_date, String create_user, Date update_date, String update_user, int totalviewcount, String designer, String gamecategory, String publisher, String artist, String mechanic, String expansion, String reimplement, String[] files, String bgg_thumbnail, String gamephoto_url, Double rate, Double weight, int rank) {
-		this.gnum = gnum;
-		this.bggnum = bggnum;
-		this.gametitle = gametitle;
-		this.gametitle_eng = gametitle_eng;
-		this.players = players;
-		this.playtime = playtime;
-		this.ages = ages;
-		this.language = language;
-		this.release_year = release_year;
-		this.create_date = create_date;
-		this.create_user = create_user;
-		this.update_date = update_date;
-		this.update_user = update_user;
-		this.totalviewcount = totalviewcount;
-		this.designer = designer;
-		this.gamecategory = gamecategory;
-		this.publisher = publisher;
-		this.artist = artist;
-		this.mechanic = mechanic;
-		this.expansion = expansion;
-		this.reimplement = reimplement;
-		this.files = files;
-		this.bgg_thumbnail = bgg_thumbnail;
-		this.gamephoto_url = gamephoto_url;
-		this.rate = rate;
-		this.weight = weight;
-		this.rank = rank;
+	public GameDTO() {
 	}
 
 	public int getGnum() {
@@ -239,6 +171,14 @@ public class GameDTO {
 		this.totalviewcount = totalviewcount;
 	}
 
+	public String getNameStr() {
+		return nameStr;
+	}
+
+	public void setNameStr(String nameStr) {
+		this.nameStr = nameStr;
+	}
+
 	public String getDesigner() {
 		return designer;
 	}
@@ -333,5 +273,90 @@ public class GameDTO {
 
 	public void setWeight(Double weight) {
 		this.weight = weight;
+	}
+
+	public int getTot() {
+		return tot;
+	}
+
+	public void setTot(int tot) {
+		this.tot = tot;
+	}
+
+	public int getGame_rank() {
+		return game_rank;
+	}
+
+	public void setGame_rank(int game_rank) {
+		this.game_rank = game_rank;
+	}
+
+	public GameDTO(int gnum, int bggnum, String gametitle, String gametitle_eng, String players, String playtime, String ages, String language, String theme, int release_year, Date create_date, String create_user, Date update_date, String update_user, int totalviewcount, String nameStr, String designer, String gamecategory, String publisher, String artist, String mechanic, String expansion, String reimplement, String[] files, String bgg_thumbnail, String gamephoto_url, Double rate, Double weight, int tot, int game_rank) {
+		this.gnum = gnum;
+		this.bggnum = bggnum;
+		this.gametitle = gametitle;
+		this.gametitle_eng = gametitle_eng;
+		this.players = players;
+		this.playtime = playtime;
+		this.ages = ages;
+		this.language = language;
+		this.theme = theme;
+		this.release_year = release_year;
+		this.create_date = create_date;
+		this.create_user = create_user;
+		this.update_date = update_date;
+		this.update_user = update_user;
+		this.totalviewcount = totalviewcount;
+		this.nameStr = nameStr;
+		this.designer = designer;
+		this.gamecategory = gamecategory;
+		this.publisher = publisher;
+		this.artist = artist;
+		this.mechanic = mechanic;
+		this.expansion = expansion;
+		this.reimplement = reimplement;
+		this.files = files;
+		this.bgg_thumbnail = bgg_thumbnail;
+		this.gamephoto_url = gamephoto_url;
+		this.rate = rate;
+		this.weight = weight;
+		this.tot = tot;
+		this.game_rank = game_rank;
+	}
+
+	@Override
+	public String toString() {
+		return "GameDTO{" +
+				"gnum=" + gnum +
+				", bggnum=" + bggnum +
+				", gametitle='" + gametitle + '\'' +
+				", gametitle_eng='" + gametitle_eng + '\'' +
+				", players='" + players + '\'' +
+				", playtime='" + playtime + '\'' +
+				", ages='" + ages + '\'' +
+				", language='" + language + '\'' +
+				", theme='" + theme + '\'' +
+				", release_year=" + release_year +
+				", create_date=" + create_date +
+				", create_user='" + create_user + '\'' +
+				", update_date=" + update_date +
+				", update_user='" + update_user + '\'' +
+				", totalviewcount=" + totalviewcount +
+				", nameStr='" + nameStr + '\'' +
+				", designer='" + designer + '\'' +
+				", gamecategory='" + gamecategory + '\'' +
+				", publisher='" + publisher + '\'' +
+				", artist='" + artist + '\'' +
+				", mechanic='" + mechanic + '\'' +
+				", expansion='" + expansion + '\'' +
+				", reimplement='" + reimplement + '\'' +
+				", files=" + Arrays.toString(files) +
+				", bgg_thumbnail='" + bgg_thumbnail + '\'' +
+				", gamephoto_url='" + gamephoto_url + '\'' +
+				", rate=" + rate +
+				", weight=" + weight +
+				", tot=" + tot +
+				", game_rank=" + game_rank +
+				'}';
 	}
 }

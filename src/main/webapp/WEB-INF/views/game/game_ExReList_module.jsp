@@ -108,30 +108,30 @@
                     for (var i = 0; i < map.list.length; i++) {
                         var row = map.list[i];
                         var tableRow = '<tr>';
-                        tableRow += '<td><p>' + row.rank + '</p></td>';
+                        tableRow += '<td><p>' + row.game_rank + '</p></td>';
                         tableRow += '<td id="imgTd">';
                         // 게임 이미지 로직 추가
                         if (row.gamephoto_url != null) {
-                            tableRow += '<img src="${path}/resources/updated_game' + row.gamephoto_url + '" onerror="this.src=\'../images/game/no-image-icon.png\'" width="70px" height="70px">';
+                            tableRow += '<img src="${path}/resources/updated_game' + row.gamephoto_url + '" onerror="this.src=\'${path}/images/game/no-image-icon.png\'" width="70px" height="70px">';
                         } else {
-                            if (row.bggnum != null) {
-                                tableRow += '<img src="' + row.bgg_thumbnail + '" onerror="this.src=\'../images/game/no-image-icon.png\'" width="70px" height="70px"';
+                            if (row.bgg_thumbnail != null) {
+                                tableRow += '<img src="' + row.bgg_thumbnail + '" onerror="this.src=\'${path}/images/game/no-image-icon.png\'" width="70px" height="70px"';
                             } else {
-                                tableRow += '<img src="../images/game/no-image-icon.png" width="70px" height="70px">';
+                                tableRow += '<img src="${path}/images/game/no-image-icon.png" width="70px" height="70px">';
                             }
                         }
                         tableRow += '</td>';
                         tableRow += '<td><a href="${path}/game/view.do?gnum=' + row.gnum + '">' + row.gametitle + '<br>(' + row.gametitle_eng + ')</a></td>';
                         tableRow += '<td>' + row.category + '</td>';
                         if (row.rate != null && row.rate != "") {
-                            tableRow += '<td><strong>' + row.rate + '</strong></td>';
+                            tableRow += '<td><strong>' + row.rate + '(' + row.tot + ')</strong></td>';
                         } else {
-                            tableRow += '<td><strong>-.-</strong></td>';
+                            tableRow += '<td><strong>-</strong></td>';
                         }
                         if (row.weight != null && row.weight != "") {
-                            tableRow += '<td><strong>' + row.weight + '</strong></td>';
+                            tableRow += '<td><strong>' + row.weight + '(' + row.tot + ')</strong></td>';
                         } else {
-                            tableRow += '<td><strong>-.-</strong></td>';
+                            tableRow += '<td><strong>-</strong></td>';
                         }
                         tableRow += '<td>' + row.totalviewcount + '</td>';
                         tableRow += '</tr>';

@@ -16,4 +16,6 @@ public interface MechanicDAO {
     List<MechanicDTO> view(int gnum);
 	void insert_mechanic_mapping(int gnum, int mnum);
     List<String> viewMechanic(int gnum);
+
+    void deleteGame_Mechanic(String value, int gnum);
 }

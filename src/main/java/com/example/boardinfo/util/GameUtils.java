@@ -145,17 +145,17 @@ public class GameUtils {
 
     //썸네일의 경로 문자열을 추출하는 메서드
     private static String parseThumbnail(Document doc) {
-        String result = "";
         NodeList nList = doc.getElementsByTagName("thumbnail");
-        for (int temp = 0; temp < nList.getLength(); temp++) {
-            Node nNode = nList.item(temp);
+        if (nList.getLength() > 0) {
+            Node nNode = nList.item(0);
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element eElement = (Element) nNode;
-                result = eElement.getTextContent();
+                return eElement.getTextContent();
             }
         }
-        return result;
+        return "";
     }
+
 
 
 

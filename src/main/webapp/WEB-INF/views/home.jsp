@@ -9,6 +9,10 @@
         <meta charset="utf-8">
         <title>BOARDINFO</title>
         <%@ include file="include/js/header.jsp" %>
+<%--        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">--%>
+<%--        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">--%>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
         <style>
 
@@ -89,7 +93,9 @@
                 color: #C53A32;
                 font-size: 0.8em;
             }
-
+            #carouselDiv {
+                height: 561px;
+            }
 
         </style>
 
@@ -97,7 +103,14 @@
         <script>
 
             $(function() {
-
+              
+              $.ajax({
+                  type: "POST",
+                  url: "${path}/game/gameListMain.do/",
+                  success:function(result){
+                    $("#carouselDiv").html(result);
+                  }
+              });
 
                 $.ajax({
                     type: "get",
@@ -198,7 +211,7 @@
 
         </script>
 
-
+       
    </head>
 
    <body>
@@ -207,6 +220,9 @@
 
    <div id="contents">
        <div id="contentsMain">
+
+        <br><br><br><br><br><br>
+        <div id="carouselDiv"></div>
 
            <div id="main_lower">
 
@@ -257,6 +273,7 @@
    </div>
 
 
+
 		<h1><a href="${path}/sample/sample.do" style="color: black;">SAMPLE CLICK</a></h1>
         <br>
 
@@ -267,6 +284,8 @@
 
        <%@include file="include/footer.jsp" %>
    </body>
+
+   
 
 
 </html>
