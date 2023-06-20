@@ -103,7 +103,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		address1, address2, place_name, maxpeople, view_count, nickname,
 		(select count(*)
 		from gathering_reply
-		where gathering_id = g.gathering_id) as reply_count,
+		where gathering_id = g.gathering_id and show='y') as reply_count,
 		(select count(*)
 		from attendee
 		where gathering_id = g.gathering_id and type = 'a') as attendee_count
@@ -243,7 +243,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 
 	<select id="getReplies" resultType="gatheringReplyDTO">
-		select reply_id, parent_reply, inner_order, depth, reply_text,
+		select reply_id, parent_reply, inner_order, depth, reply_text, show,
 		       creator_id, create_date as create_date, m.nickname
 		from gathering_reply
 		join member m on creator_id = m.userid
@@ -350,7 +350,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 						select g.gathering_id, g.post_date, g.title, g.address1,
 							   (select count(*)
 								from gathering_reply
-								where gathering_id = g.gathering_id) as reply_count
+								where gathering_id = g.gathering_id and show = 'y') as reply_count
 						from gathering g
 						where show = 'y'
 					)a
@@ -358,6 +358,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where rn between 1 and #{size}
 	</select>
 
+
+	<select id="getReplyWriter" resultType="String">
+		select creator_id
+		from gathering_reply
+		where reply_id = #{reply_id}
+	</select>
+
+
+	<update id="updateReply">
+		update gathering_reply
+		set reply_text = #{reply_text}, updater_id = #{updater_id}, update_date = sysdate
+		where reply_id = #{reply_id}
+	</update>
+
+
+	<update id="deleteReply">
+		update gathering_reply
+		set show = 'n', updater_id = #{updater_id}, update_date = sysdate
+		where reply_id = #{reply_id}
+	</update>
 
 </mapper>
 

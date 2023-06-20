@@ -197,9 +197,10 @@
             font-weight: bold;
         }
 
-        .reply > div:first-of-type > div > span:first-of-type{
-            padding-right: 10px;
-            margin-right: 10px;
+        .dateDiv{
+            font-size: 14px;
+            padding-top: 13px;
+            color: #5F5F5F;
         }
 
         .addRe_reply > a{
@@ -421,34 +422,45 @@
 
                             let addReplySpan = "";
 
-                            if("${sessionScope.userid}" == list[i].creator_id){
-                                addReplySpan =
-                                    "<span class='addRe_reply'><img src='${path}/images/reply_arrow.png' width='15px'>" +
-                                    "<img ><a href='javascript:showRe_reply(" + list[i].reply_id + "," +
-                                    list[i].parent_reply + "," + list[i].inner_order + ")'>답글</a>" +
-                                    "&nbsp&nbsp<a href='javascript:editReply(" +
-                                    list[i].reply_id + ")'>수정</a>&nbsp&nbsp<a href='javascript:deleteReply()'>삭제</a>";
-                            }
+                            if(list[i].show == 'y'){
+                                if("${sessionScope.userid}" == list[i].creator_id){
+                                    addReplySpan =
+                                        "<span class='addRe_reply'><img src='${path}/images/reply_arrow.png' width='15px'>" +
+                                        "<img ><a href='javascript:showRe_reply(" + list[i].reply_id + "," +
+                                        list[i].parent_reply + "," + list[i].inner_order + ")'>답글</a>" +
+                                        "&nbsp&nbsp<a href='javascript:editReply(" +
+                                        list[i].reply_id + ")'>수정</a>&nbsp&nbsp" +
+                                        "<a href='javascript:deleteReply(" + list[i].reply_id + ")'>삭제</a>";
+                                }
 
-                            else{
-                                addReplySpan =
-                                    "<span class='addRe_reply'><img src='${path}/images/reply_arrow.png' width='15px'>" +
-                                    "<img ><a href='javascript:showRe_reply(" + list[i].reply_id + "," +
-                                    list[i].parent_reply + "," + list[i].inner_order + ")'>답글</a>";
+                                else{
+                                    addReplySpan =
+                                        "<span class='addRe_reply'><img src='${path}/images/reply_arrow.png' width='15px'>" +
+                                        "<img ><a href='javascript:showRe_reply(" + list[i].reply_id + "," +
+                                        list[i].parent_reply + "," + list[i].inner_order + ")'>답글</a>";
+                                }
                             }
 
 
                             let reply = $("<div>").addClass("reply").attr("id", list[i].reply_id);
 
                             let writer = $("<span>").text(list[i].nickname);
-                            let text= $("<div>").text(list[i].reply_text);
+
+                            let text = "";
+                            if(list[i].show == 'y'){
+                                text= $("<div>").text(list[i].reply_text);
+                            }
+
+                            else{
+                                text= $("<div>").text("[삭제된 댓글입니다.]");
+                            }
 
                             if(list[i].depth > 0) {
                                 reply.addClass("re-reply");
                                 writer.html("<img width='10px' style='margin-right: 7px;' " +
                                     "src='${path}/images/re_reply.png'>" + writer.text());
-                                writer.css("padding-left", (list[i].depth * 18) + "px");
-                                text.css("padding-left", (list[i].depth * 18) + "px");
+                                let padding = Number(reply.css("padding-left"));
+                                reply.css("padding-left", (padding + list[i].depth * 18) + "px");
                             }
 
                             let bigDiv = $("<div>");
@@ -459,13 +471,12 @@
                             let formattedDate = new Date(date + 3240 * 10000)
                                 .toISOString().replace('T', ' ').replace(/\..*/,'');
 
-                            let span = $("<span>").text(formattedDate);
+                            let dateDiv = $("<div>").text(formattedDate);
+                            dateDiv.addClass('dateDiv');
 
-
-
-                            smallDiv.append(span, addReplySpan);
+                            smallDiv.append(addReplySpan);
                             bigDiv.append(writer, smallDiv);
-                            reply.append(bigDiv, text);
+                            reply.append(bigDiv, text, dateDiv);
 
                             repliesContainer.append(reply);
                         }
@@ -499,12 +510,24 @@
                 value: reply_id
             });
 
-          let button = $("<button>").attr({
+            let button2 = $("<button>").attr({
+                type: "button",
+                class: "btn-cancelReply"
+            }).text("취소");
+
+
+            button2.click(function(){
+                $("form[class='re-replyForm']").remove();
+            });
+
+            let button = $("<button>").attr({
                 type: "button",
                 class: "btn-AddReply"
             }).text("댓글쓰기");
 
-            re_reply_form.append(textArea, input, button);
+
+
+            re_reply_form.append(textArea, input, button2, button);
             $("#" + reply_id).append(re_reply_form);
 
         }
@@ -608,13 +631,11 @@
         function editReply(reply_id){
 
             let reply = $("#"+reply_id);
-            let original = reply.html();
             let text = reply.children("div:eq(1)").text();
 
             let edit_reply_form = $("<form>").addClass("edit-replyForm")
                 .attr({
-                    name: "replyForm",
-                    action: "${path}/gathering/editReply.do"
+                    name: "replyForm"
                 });
 
             let textArea = $("<textarea>").attr({
@@ -634,6 +655,31 @@
                 class: "btn-editReply"
             }).text("수정");
 
+            button.click(function(){
+               let form = $(this).closest("form[name='replyForm']");
+               let reply_text = form.find('textarea[name="reply_text"]');
+               reply_text.val(reply_text.val().trim());
+               if(reply_text.val()=='') return;
+
+               let queryString = form.serialize()+"&reply_id="+reply_id;
+
+                $.ajax({
+                    type: "get",
+                    url : "${path}/gathering/editReply.do",
+                    data : queryString,
+                    success: function(result){
+                        if(result.num > 0){
+                            getReplies();
+                        }
+                        else alert("에러가 발생했습니다.");
+                    },
+                    error: function(){
+                        alert("에러가 발생했습니다.");
+                    }
+                });
+
+            });
+
 
             let button2 = $("<button>").attr({
                 type: "button",
@@ -641,13 +687,43 @@
             }).text("취소");
 
 
-            button2.click(function(){
-                $("#"+reply_id).html(original);
-            });
-
 
             edit_reply_form.append(textArea, input, button2, button);
-            $("#" + reply_id).html(edit_reply_form);
+            let divs = reply.children("div");
+            divs.remove();
+            let original = divs;
+
+
+            button2.click(function(){
+                reply.find("form[class='edit-replyForm']").remove();
+                reply.prepend(original);
+            });
+
+            reply.prepend(edit_reply_form);
+
+        }
+
+
+        function deleteReply(reply_id){
+
+            if(confirm("이 댓글을 삭제하시겠습니까?")){
+                $.ajax({
+                    type: "get",
+                    url : "${path}/gathering/deleteReply.do",
+                    data : {
+                        "reply_id": reply_id
+                    },
+                    success: function(result){
+                        if(result.num > 0){
+                            getReplies();
+                        }
+                        else alert("에러가 발생했습니다.");
+                    },
+                    error: function(){
+                        alert("에러가 발생했습니다.");
+                    }
+                });
+            }
 
         }
 

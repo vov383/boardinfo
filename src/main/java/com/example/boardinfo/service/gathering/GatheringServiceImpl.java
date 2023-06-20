@@ -290,4 +290,20 @@ public class GatheringServiceImpl implements GatheringService {
 		return list;
 	}
 
+
+	@Override
+	public String getReplyWriter(int reply_id) {
+		return gatheringDao.getReplyWriter(reply_id);
+	}
+
+	@Override
+	public int updateReply(GatheringReplyDTO dto) {
+		return gatheringDao.updateReply(dto);
+	}
+
+
+	@Override
+	public int deleteReply(GatheringReplyDTO dto) {
+		return gatheringDao.deleteReply(dto);
+	}
 }

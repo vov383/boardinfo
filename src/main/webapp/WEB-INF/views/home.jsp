@@ -98,6 +98,38 @@
 
             $(function() {
 
+
+                $.ajax({
+                    type: "get",
+                    url : "${path}/review/homeList.do",
+                    data : {
+                        "size" : 8
+                    },
+                    success: function(result){
+                        if(result){
+                            let list = result.list;
+                            let communityList = $("#communityList");
+                            let str = "";
+
+                            for(var i=0; i<list.length; i++){
+                                let reply = list[i].recnt == 0 ? "" : list[i].recnt;
+                                str += "<div><span class='badge'>"+list[i].category+"</span>" +
+                                    "<a href='${path}/review/reviewdetail.do?reviewDetailKey=" + list[i].regNum + "'>"+list[i].title
+                                    +"</a><span class='reply'>"+reply+"</span></div>";
+                            }
+
+
+                        communityList.append(str);
+
+                        }
+                        else alert("에러가 발생했습니다.");
+                    },
+                    error: function(){
+                        alert("에러가 발생했습니다.");
+                    }
+
+                });
+
                 $.ajax({
                     type: "get",
                     url : "${path}/gathering/homeList.do",

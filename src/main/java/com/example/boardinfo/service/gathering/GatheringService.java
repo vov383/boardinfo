@@ -26,4 +26,7 @@ public interface GatheringService {
 	public String withDrawAttendee(int gatheringId, String userId);
     public String cancelApplication(int gatheringId, String userId);
     public List<GatheringDTO> getHomeList(Integer size);
+    public String getReplyWriter(int reply_id);
+	public int updateReply(GatheringReplyDTO dto);
+	public int deleteReply(GatheringReplyDTO dto);
 }

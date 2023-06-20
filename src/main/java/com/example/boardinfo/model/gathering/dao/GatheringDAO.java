@@ -39,4 +39,7 @@ public interface GatheringDAO {
 	public void finishChat();
     public List<Integer> finishList();
     public List<GatheringDTO> getHomeList(Integer size);
+    public String getReplyWriter(int replyId);
+	public int updateReply(GatheringReplyDTO dto);
+	public int deleteReply(GatheringReplyDTO dto);
 }
