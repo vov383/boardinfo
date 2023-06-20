@@ -6,13 +6,18 @@
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
 	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xmlns:task="http://www.springframework.org/schema/task"
+
 	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
 		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
 		http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-2.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+	    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+                        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<!-- 드라이버 클래스 이름이 변경됨 -->
@@ -23,17 +28,19 @@
 
 
 
-<!--		<property name="url"-->
-<!--		value="jdbc:log4jdbc:oracle:thin:@192.168.30.213:1521:xe" />-->
-<!--		<property name="username" value="boardinfo" />-->
+
+		<property name="url"
+		value="jdbc:log4jdbc:oracle:thin:@192.168.30.213:1521:xe" />
+		<property name="username" value="boardinfo" />
 
 
 
 
 
- 		<property name="url"
- 			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe" />
- 		<property name="username" value="spring" />
+<!--  		<property name="url" -->
+<!--  			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe" /> -->
+<!--  		<property name="username" value="spring" /> -->
+
 
 
 		<property name="password" value="1234" />
@@ -41,10 +48,10 @@
 	</bean>
 	<!-- 아파치 DBCP 설정 -->
 
-	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" 
-		destroy-method="close"> <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" 
-		/> <property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl" /> 
-		<property name="username" value="java" /> <property name="password" value="java1234" 
+	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close"> <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"
+		/> <property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl" />
+		<property name="username" value="java" /> <property name="password" value="java1234"
 		/> </bean> -->
 		
 	<!-- mongo 관련-->
@@ -102,6 +109,15 @@
 
 	<!-- 트랜잭션 관련 어노테이션을 자동 인식하는 옵션 -->
 	<tx:annotation-driven/>
+
+
+
+	<bean id="autoScheduler" class="com.example.boardinfo.scheduler.GatheringScheduler" />
+	<task:scheduler id="jobScheduler" pool-size="10"/>
+	<task:executor id="taskExecutor" pool-size="10" />
+	<task:annotation-driven executor="taskExecutor"
+							scheduler="jobScheduler" />
+
 	
 	<!-- 이메일 발송 bean 설정 -->
 	<bean id="mailSender"
@@ -119,7 +135,8 @@
             </props>
         </property>
     </bean>
-	<!--  -->
+
+
 
 </beans>
 

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="../css/member.css">
+<link rel="stylesheet" type="text/css" >
 <meta charset="UTF-8">
 <title>비밀번호 찾기</title>
 <%@ include file="../include/js/header.jsp"%>
@@ -77,11 +77,10 @@ body {
 <body>
 	<div class="body">
 		<h2>
-			<a href="${path}/"><img alt="로고"
-				src="../resources/uploaded_image/boardinfo_logo.png"></a>
+			<a href="${path}/"><img alt="로고" src="../resources/uploaded_image/boardinfo_logo.png"></a>
 		</h2>
 		<div class="input_section">
-			<form method="post" action="pass_num.do${dice},${email}">
+			<form method="post" action="pass_num/${dice}/${email}">
 				<fieldset>
 					<legend>인증번호 체크</legend>
 					<table>

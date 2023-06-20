@@ -28,4 +28,5 @@ public interface TBoardDAO {
 
     int fileAttach(TBAttachDTO fDto);
 
+    public List<TBoardDTO> getHomeList(Integer size);
 }

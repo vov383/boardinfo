@@ -30,4 +30,5 @@ public interface TBoardService {
 
     void deleteFile(String fileName);
 
+    public List<TBoardDTO> getHomeList(Integer size);
 }

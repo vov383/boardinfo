@@ -29,8 +29,8 @@ public class GatheringDAOImpl implements GatheringDAO {
 	}
 
 	@Override
-	public int deletePost() {
-		return 0;
+	public int deletePost(int gathering_id) {
+		return sqlSession.update("gathering.deletePost", gathering_id);
 	}
 
 	@Override
@@ -75,7 +75,6 @@ public class GatheringDAOImpl implements GatheringDAO {
 
 	@Override
 	public int addReply(GatheringReplyDTO dto) {
-		System.out.print(dto);
 		int result = sqlSession.insert("gathering.addReply", dto);
 		return result;
 	}
@@ -108,12 +107,17 @@ public class GatheringDAOImpl implements GatheringDAO {
 	}
 
 	@Override
-	public int countList(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to) {
+	public int countList(boolean showAvailable, String[] address1List,
+						 LocalDate from, LocalDate to,
+						 String option, String keyword) {
+
 		Map<String, Object> map = new HashMap<>();
 		map.put("showAvailable", showAvailable);
 		map.put("address1List", address1List);
 		map.put("from", from);
 		map.put("to", to);
+		map.put("option", option);
+		map.put("keyword", keyword);
 		return sqlSession.selectOne("gathering.countList", map);
 	}
 
@@ -140,4 +144,62 @@ public class GatheringDAOImpl implements GatheringDAO {
 	public GatheringDTO getAttendInfo(int gathering_id) {
 		return sqlSession.selectOne("gathering.getAttendInfo", gathering_id);
 	}
+
+	@Override
+	public int withdrawAttendee(int gathering_id, String user_id) {
+		Map<String, Object> map = new HashMap();
+		map.put("gathering_id", gathering_id);
+		map.put("user_id", user_id);
+		return sqlSession.update("gathering.withdraw", map);
+	}
+
+	@Override
+	public Map<String, String> getWriterAndShow(int gathering_id) {
+		return sqlSession.selectOne("gathering.getWriterAndShow", gathering_id);
+	}
+
+	@Override
+	public int cancelApplication(int gathering_id, String user_id) {
+		Map<String, Object> map = new HashMap();
+		map.put("gathering_id", gathering_id);
+		map.put("user_id", user_id);
+		return sqlSession.delete("gathering.cancelApplication", map);
+	}
+
+	@Override
+	public List<Map<String, String>> getIdAndNicknames(int gathering_id) {
+		return sqlSession.selectList("gathering.getIdAndNicknames", gathering_id);
+	}
+
+	@Override
+	public void finishChat() {
+		sqlSession.update("gathering.finishChat");
+	}
+
+	@Override
+	public List<Integer> finishList() {
+		return sqlSession.selectList("gathering.finishList");
+	}
+
+	@Override
+	public List<GatheringDTO> getHomeList(Integer size) {
+		return sqlSession.selectList("gathering.getHomeList", size);
+	}
+
+
+	@Override
+	public String getReplyWriter(int reply_id) {
+		return sqlSession.selectOne("gathering.getReplyWriter", reply_id);
+	}
+
+	@Override
+	public int updateReply(GatheringReplyDTO dto) {
+		return sqlSession.update("gathering.updateReply", dto);
+	}
+
+	@Override
+	public int deleteReply(GatheringReplyDTO dto) {
+		return sqlSession.update("gathering.deleteReply", dto);
+	}
 }
+

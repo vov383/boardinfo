@@ -76,4 +76,9 @@ public class TBoardDAOImpl implements TBoardDAO {
 		return sqlSession.insert("tboard.insertFile", fDto);
 	}
 
+
+	@Override
+	public List<TBoardDTO> getHomeList(Integer size) {
+		return sqlSession.selectList("tboard.getHomeList", size);
+	}
 }

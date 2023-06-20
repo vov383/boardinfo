@@ -114,7 +114,13 @@ public class ReviewDAOImpl implements ReviewDAO {
         sqlSession.insert("review.reviewBlob", testdto);
     }
 
-/*
+    @Override
+    public List<ReviewDTO> getHomeList(Integer size) {
+        return sqlSession.selectList("review.getHomeList", size);
+    }
+
+
+    /*
 
 	//댓글 및 답글 테이블
 	@Override

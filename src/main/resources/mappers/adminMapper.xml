@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="admin">
+    <!-- 관리자 로그인을 위한 아이디 비번 일치 체크 -->
+    <select id="login_check" resultType="String">
+        select name
+        from admin
+        where admin_id=#{admin_id} and passwd=#{passwd} and del= 'n'
+    </select>
+
+    <!-- 관리자 목록 -->
+    <select id="getAdminList" resultType="adminDto">
+        select *
+        from admin
+        where del = 'n'
+        order by name
+    </select>
+
+    <!--admin 아이디 생성을 위한 아이디 중복 체크-->
+    <select id="selectMemberById" resultType="adminDto" >
+        SELECT *
+        FROM admin
+        WHERE admin_id = #{admin_id}
+    </select>
+
+    <!--admin 닉네임 중복 체크-->
+    <select id="selectAdminByNick" resultType="adminDto" >
+        SELECT *
+        FROM admin
+        WHERE nickname = #{nickname}
+    </select>
+
+    <!--관리자 아이디 insert-->
+    <insert id="insertAdmin">
+        <choose>
+            <!-- profile이 null인 경우 -->
+            <when test="profile == null">
+                INSERT INTO admin (name, admin_id, passwd, nickname, email, hp)
+                VALUES (#{name}, #{admin_id}, #{passwd}, #{nickname}, #{email}, #{hp})
+            </when>
+            <!-- profile이 값을 가지고 있는 경우 -->
+            <otherwise>
+                INSERT INTO admin (profile, name, admin_id, passwd, nickname, email, hp)
+                VALUES (#{profile}, #{name}, #{admin_id}, #{passwd}, #{nickname}, #{email}, #{hp})
+            </otherwise>
+        </choose>
+    </insert>
+
+    <!-- 관리자 id view -->
+    <select id="viewAdmin" resultType="adminDto" >
+        select *
+        from admin
+        where admin_id=#{admin_id}
+    </select>
+
+
+    <select id="checkPw" resultType="int">
+        select count(*) from admin
+        where admin_id=#{admin_id} and passwd=#{passwd}
+    </select>
+
+    <update id="updateAdmin">
+        <choose>
+            <!-- profile이 null인 경우 -->
+            <when test="profile == null">
+                update admin
+                set name=#{name},nickname=#{nickname},email=#{email},hp=#{hp}
+                where admin_id=#{admin_id}
+            </when>
+            <!-- profile이 값을 가지고 있는 경우 -->
+            <otherwise>
+                update admin
+                set profile=#{profile},name=#{name},nickname=#{nickname},email=#{email},hp=#{hp}
+                where admin_id=#{admin_id}
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="deleteAdmin" parameterType="String">
+        update admin
+        set del = 'y'
+        where admin_id = #{admin_id}
+    </update>
+
+    <select id="getDelValue" resultType="adminDto">
+        SELECT *
+        FROM admin
+        WHERE admin_id = #{admin_id}
+    </select>
+
+    <select id="getAdminDto" resultType="adminDto">
+        select *
+        from admin
+        where admin_id = #{admin_id}
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
