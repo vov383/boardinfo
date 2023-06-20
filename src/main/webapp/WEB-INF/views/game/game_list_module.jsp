@@ -81,20 +81,20 @@
             <tr>
 
                 <td>
-                    <p>${row.rank}</p>
+                    <p>${row.game_rank}</p>
                 </td>
                 <td>
                     <c:choose>
                         <c:when test="${row.gamephoto_url != null}">
-                            <img src="${path}/resources/uploaded_game${row.gamephoto_url}"  onerror="this.src='../images/game/no-image-icon.png'" width="70px" height="70px">
+                            <img src="${path}/resources/uploaded_game${row.gamephoto_url}"  onerror="this.src='${path}/images/game/no-image-icon.png'" width="70px" height="70px">
                         </c:when>
                         <c:otherwise>
                             <c:choose>
-                                <c:when test="${row.bggnum != null}">
-                                    <img class="img_photo" src="${row.bgg_thumbnail}" onerror="this.src='../images/game/no-image-icon.png'" width="70px" height="70px" border="1px">
+                                <c:when test="${row.bgg_thumbnail != null}">
+                                    <img class="img_photo" src="${row.bgg_thumbnail}" onerror="this.src='${path}/images/game/no-image-icon.png'" width="70px" height="70px" border="1px">
                                 </c:when>
                                 <c:otherwise>
-                                    <img src="../images/game/no-image-icon.png" width="70px" height="70px">
+                                    <img src="${path}/images/game/no-image-icon.png" width="70px" height="70px">
                                 </c:otherwise>
                             </c:choose>
 
@@ -108,10 +108,10 @@
                 <td>
                     <c:choose>
                         <c:when test="${row.rate == null}">
-                            <strong>-.-</strong>
+                            <strong>-</strong>
                         </c:when>
                         <c:otherwise>
-                            <strong>${row.rate}</strong>
+                            <strong>${row.rate}(${row.tot})</strong>
                         </c:otherwise>
                     </c:choose>
                 </td>
@@ -121,7 +121,7 @@
                             <strong>-.-</strong>
                         </c:when>
                         <c:otherwise>
-                            <strong>${row.weight}</strong>
+                            <strong>${row.weight}(${row.tot})</strong>
                         </c:otherwise>
                     </c:choose>
                 </td>
@@ -140,7 +140,7 @@
     function list(page) {
         var currentPage = document.location.href;   //현재페이지 url
         if(currentPage.includes("filter"))  //currentPage에 filter라는 문자열이 있으면
-            location.href="${path}/game/search.do?filter=${map.filter}&num=${map.num}&curPage="+page;
+            location.href="${path}/game/partrank/${sort}?filter=${map.filter}&num=${map.num}&curPage="+page;
         else
             location.href="${path}/game/gamerank/${sort}?curPage="+page;
     }

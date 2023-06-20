@@ -62,6 +62,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from designer d, game_designer gd
 		where d.dnum = gd.dnum and gd.gnum = #{gnum}
 	</select>
+
+	<delete id="deleteGame_Designer">
+		delete
+		from 	game_designer
+		where 	gnum = #{gnum}
+		and 	dnum =
+				(select	dnum
+				 from	designer
+				 where	designer=#{designer})
+	</delete>
 	
 </mapper>
 

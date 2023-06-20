@@ -127,7 +127,6 @@ $(document).ready(function(){
                   var gnum = item.gnum;
                   var gamephoto_url = item.gamephoto_url;
                   var bgg_thumbnail = item.bgg_thumbnail;
-                  var bggnum = item.bggnum;
                   console.log(gnum);
                   console.log(gametitle);
 
@@ -138,8 +137,8 @@ $(document).ready(function(){
                   str += '<img src="${path}/resources/uploaded_game' + gamephoto_url + '"';
                   str += 'onerror="this.src=\'${path}/images/game/no-image-icon.png\'">';
                   } else {
-                    if(bggnum != null){ //보드게임긱 아이디가 존재하면
-                      str += '<img class="img_photo" src="' + bgg_thumbnail + '"';
+                    if(bgg_thumbnail != null){ //보드게임긱 아이디가 존재하면
+                      str += '<img src="' + bgg_thumbnail + '"';
                       str += 'onerror="this.src=\'${path}/images/game/no-image-icon.png\'">';
                     }else {
                       str += '<img src="${path}/images/game/no-image-icon.png">';

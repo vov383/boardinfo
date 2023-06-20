@@ -596,10 +596,19 @@
                            <div>이미지 보기</div>
                        </c:when>
                        <c:otherwise>
-                           <div>
-                               <img class="img_photo" src="${map.bgg_thumbnail}"onerror="this.src='../images/game/no-image-icon.png'">
-                           </div>
-                           <div>이미지 출처: boardgamegeek</div>
+                           <c:choose>
+                            <c:when test="${map.dto.bgg_thumbnail != null}">
+                               <div>
+                                   <img class="img_photo" src="${map.dto.bgg_thumbnail}"onerror="this.src='../images/game/no-image-icon.png'">
+                               </div>
+                               <div>이미지 출처: boardgamegeek</div>
+                            </c:when>
+                            <c:otherwise>
+                                <div>
+                                    <img class="img_photo" src="../images/game/no-image-icon.png">
+                                </div>
+                            </c:otherwise>
+                           </c:choose>
                        </c:otherwise>
                    </c:choose>
                </div>
@@ -621,7 +630,7 @@
                         </span>
                         <span>
                             <img src="../images/medal105.png" width="45px" height="45px" style="vertical-align: middle;">
-                            이번 주 게임 <strong>[ranking]</strong>위<a href="#" class="goTo">&gt</a>
+                            이번 주 게임 <strong>${map.dto.game_rank}</strong>위<a href="#" class="goTo">&gt</a>
                         </span>
                     </div>
 

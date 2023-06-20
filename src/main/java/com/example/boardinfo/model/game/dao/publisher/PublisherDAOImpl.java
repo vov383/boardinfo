@@ -64,4 +64,12 @@ public class PublisherDAOImpl implements PublisherDAO {
 	public List<String> viewPublisher(int gnum) {
 		return sqlSession.selectList("publisher.viewPublisher", gnum);
 	}
+
+	@Override
+	public void deleteGame_Publisher(String value, int gnum) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("publisher", value);
+		map.put("gnum",gnum);
+		sqlSession.delete("publisher.deleteGame_Publisher", map);
+	}
 }
