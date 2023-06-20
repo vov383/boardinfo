@@ -109,6 +109,26 @@
       font-size: 17px;
     }
 
+    #gatheringList > div:last-of-type{
+      text-align: right;
+    }
+
+    #emptyList{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #emptyList > img{
+      width: 260px;
+      margin: 40px 0;
+    }
+
+    #emptyList > span{
+      font-size: 20px;
+    }
+
+
     .gatheringPost{
       width: 100%;
       border: 1px solid #D9D9D9;
@@ -245,27 +265,27 @@
 
     window.onpageshow = function (event) {
       $("form[name='FormGatheringSearch']").find("input").attr("disabled", false);
+      $("input[name='from']").val("${from}");
+      $("input[name='to']").val("${to}");
     }
 
     $(function(){
-
 
       $("#showAvailable").change(function(){
         document.formGatheringSearch.submit();
       });
 
       $("input[name='address1']").change(function(){
-
         if($(this).val()!='전체'){
           $("input[name='address1']:input[value='전체']").prop("checked", false);
         }
-
         document.formGatheringSearch.submit();
       });
 
-      $("input[name='from']").change(function(){
 
-        let to = $("input[name='to']");
+      $("input[name='newFrom']").change(function(){
+
+        let to = $("input[name='newTo']");
 
         if(to.val()!=''){
           if($(this).val() > to.val()){
@@ -275,9 +295,8 @@
       });
 
 
-      $("input[name='to']").change(function(){
-
-        let from = $("input[name='from']");
+      $("input[name='newTo']").change(function(){
+        let from = $("input[name='newFrom']");
 
         if(from.val()!=''){
           if($(this).val() < from.val()){
@@ -287,8 +306,19 @@
       });
 
 
-      $("#dateResetBtn").click(function(){
+      $("#dateSearchBtn").click(function(){
+        $("input[name='newFrom']").attr("disabled", true);
+        $("input[name='newTo']").attr("disabled", true);
+        $("input[name='from']").val($("input[name='newFrom']").val());
+        $("input[name='to']").val($("input[name='newTo']").val());
+        document.formGatheringSearch.submit();
+      });
 
+
+
+      $("#dateResetBtn").click(function(){
+        $("input[name='newFrom']").attr("disabled", true);
+        $("input[name='newTo']").attr("disabled", true);
         $("input[name='from']").val('');
         $("input[name='to']").val('');
         document.formGatheringSearch.submit();
@@ -300,7 +330,6 @@
 
 
     function list(curPage){
-      //queryString이 비어있는 경우는 어떡하지?
       let queryString = $("form[name='formGatheringSearch']").serialize() + '&curPage=' + curPage;
       location.href="${path}/gathering/list.do?" + queryString;
     }
@@ -323,16 +352,29 @@
         let queryString = $("form[name='formGatheringSearch']").serialize() + '&' + $.param(data);
         location.href = "${path}/gathering/list.do?" + queryString;
       }
-
     }
 
 
+    function view(gathering_id){
+      $("input[name='newFrom']").attr("disabled", true);
+      $("input[name='newTo']").attr("disabled", true);
+
+      let queryString = $("form[name='formGatheringSearch']").serialize() + '&curPage=' + "${page.curPage}";
+      location.href="${path}/gathering/view/" + gathering_id + "?" + queryString;
+    }
 
   </script>
 
 
 </head>
 <body>
+
+
+<c:if test="${message!=null}">
+  <script>
+    alert("${message}");
+  </script>
+</c:if>
 
 <%@include file="../include/top.jsp" %>
 
@@ -383,12 +425,14 @@
         <div>
           <h3>모임날짜</h3>
           <div>
-            <input type="date" name="from" value="${from}">
+            <input type="date" name="newFrom" value="${from}">
+            <input type="hidden" name="from" value="${from}">
             <span>~</span>
-            <input type="date" name="to" value="${to}">
+            <input type="date" name="newTo" value="${to}">
+            <input type="hidden" name="to" value="${to}">
             <div>
               <button type="button" id="dateResetBtn">초기화</button>
-              <button type="submit" id="dateSubmitBtn">검색</button>
+              <button type="button" id="dateSearchBtn">검색</button>
             </div>
           </div>
         </div>
@@ -418,7 +462,7 @@
             <option value="title">제목</option>
             <option value="gathering_content">내용</option>
             <option value="location" selected>장소</option>
-            <option value="writer" selected>글쓴이</option>
+            <option value="writer">글쓴이</option>
           </c:when>
 
           <c:when test="${option=='writer'}">
@@ -443,20 +487,28 @@
       </form>
 
       <div id="gatheringList">
+        <c:if test="${fn:length(list)==0}">
+          <div id="emptyList">
+            <img src="${path}/images/gathering/meeting.png">
+            <span>아쉽게도 요건을 충족하는 모임을 찾지 못했습니다.</span>
+            <span>직접 모임을 주최하여 다양한 보드인을 만나보세요!</span>
+          </div>
+        </c:if>
+
         <c:forEach var="post" items="${list}">
           <div class="gatheringPost">
             <div class="postUpper">
               <div class="profile">
                 <span class="status">${post.status}</span>
                 <span>
-              <a class="title" href="${path}/gathering/view/${post.gathering_id}">${post.title}</a>
+              <a class="title" href="javascript:view(${post.gathering_id})">${post.title}</a>
               </span>
                 <span class="numPeople">(${post.attendee_count}/${post.maxPeople}명)</span>
               </div>
               <div class="detail">
                 <span class="location"><img src="${path}/images/location_pin.png" width="18px">${post.address1} ${post.address2}</span>
                 <span class="dateTime">
-	              <img src="${path}/images/date.png" width="18px">
+	              <img src="${path}/images/gathering/date.png" width="18px">
                   <fmt:parseDate value="${post.gathering_date}"
                                  pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both"/>
 	              <fmt:formatDate value="${parsedDateTime}" pattern="M.d a h:mm"/>
@@ -471,6 +523,11 @@
             </div>
           </div>
         </c:forEach>
+        <div>
+          <c:if test="${sessionScope.userid!=null}">
+            <button type="button" onclick="location.href='${path}/gathering/add.do'">글쓰기</button>
+          </c:if>
+        </div>
       </div>
 
       <div id="paginationArea">
