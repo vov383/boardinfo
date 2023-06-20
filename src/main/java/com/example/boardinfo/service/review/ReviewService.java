@@ -57,9 +57,11 @@ public interface ReviewService {
 	// 리뷰 입력 테스트
     void create(TestDTO testdto);
 
+    public List<ReviewDTO> getHomeList(Integer size);
 
 
-	/*public List<ReviewDTO> reviewDetail();*/
+
+    /*public List<ReviewDTO> reviewDetail();*/
 
 
 

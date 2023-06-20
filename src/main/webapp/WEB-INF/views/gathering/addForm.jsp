@@ -75,7 +75,6 @@
     }
 
     #locationSearchBtn{
-      cursor: pointer;
       width: 65px;
       margin-left: 5px;
     }

@@ -17,6 +17,8 @@ public class GatheringReplyDTO {
     private String updater_id;
     private Date update_date;
     private String nickname;
+    private String show;
+    private int sub_count;
 
     public int getReply_id() {
         return reply_id;
@@ -114,6 +116,22 @@ public class GatheringReplyDTO {
         this.nickname = nickname;
     }
 
+    public String getShow() {
+        return show;
+    }
+
+    public void setShow(String show) {
+        this.show = show;
+    }
+
+    public int getSub_count() {
+        return sub_count;
+    }
+
+    public void setSub_count(int sub_count) {
+        this.sub_count = sub_count;
+    }
+
     @Override
     public String toString() {
         return "GatheringReplyDTO{" +
@@ -129,6 +147,8 @@ public class GatheringReplyDTO {
                 ", updater_id='" + updater_id + '\'' +
                 ", update_date=" + update_date +
                 ", nickname='" + nickname + '\'' +
+                ", show='" + show + '\'' +
+                ", sub_count=" + sub_count +
                 '}';
     }
 }

@@ -17,30 +17,40 @@ import javax.servlet.http.HttpSession;
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
+import com.example.boardinfo.service.chat.ChatService;
+import com.example.boardinfo.service.member.MemberService;
 import com.example.boardinfo.util.Pager;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpRequest;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.boardinfo.controller.chat.ChatRoomController;
 import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.service.gathering.GatheringService;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("gathering/*")
-public class GatheringController {
-	
-	@Inject GatheringService gatheringService;
 
-	private SimpMessagingTemplate messagingTemplate;
-	
-	private static final Logger logger = 
-			LoggerFactory.getLogger(ChatRoomController.class);
+public class GatheringController {
+
+
+	@Inject
+	GatheringService gatheringService;
+
+	@Inject
+	ChatService chatService;
+
+	@Inject
+	MemberService memberService;
+
+
+	private static final Logger logger =
+			LoggerFactory.getLogger(GatheringController.class);
 
 
 	@GetMapping("/add.do")
@@ -56,16 +66,17 @@ public class GatheringController {
 
 		//에러처리 해야함
 		int new_gathering_id = gatheringService.addPost(dto);
-		/*
-		ChatMessageDTO notice = new ChatMessageDTO();
-		notice.setGathering_id(new_gathering_id);
-		notice.setUserId(user_id);
-		notice.setType(ChatMessageDTO.MessageType.ATTEND);
-		System.out.println(messagingTemplate);
-		messagingTemplate.convertAndSend("sub/chat/room/" +
-		notice.getGathering_id(), notice);
-		 */
 		return "redirect:/gathering/view/" + new_gathering_id;
+	}
+
+
+	@RequestMapping("/delete.do")
+	public String delete(@RequestParam int gathering_id, HttpSession session,
+						 RedirectAttributes redirectAttributes) {
+		String user_id = (String)session.getAttribute("userid");
+		String message = gatheringService.deletePost(gathering_id, user_id);
+		redirectAttributes.addFlashAttribute("message", message);
+		return "redirect:/gathering/list.do";
 	}
 
 	@RequestMapping("/locationSearch.do")
@@ -115,8 +126,7 @@ public class GatheringController {
 			address1List = all;
 		}
 
-		logger.info("address1List : " + address1List.toString());
-		int count = gatheringService.countList(showAvailable, address1List, from, to);
+		int count = gatheringService.countList(showAvailable, address1List, from, to, option, keyword);
 		Pager pager = new Pager(count, curPage, 15);
 		int start = pager.getPageBegin();
 		int end = pager.getPageEnd();
@@ -138,44 +148,66 @@ public class GatheringController {
 	@RequestMapping("view/{gathering_id}")
 	public ModelAndView view(@PathVariable int gathering_id, ModelAndView mav,
 			@CookieValue(value="gatheringView", required=false) Cookie cookie,
-			HttpServletResponse response, HttpSession session
+			HttpServletResponse response, HttpSession session,
+			@RequestParam(value="from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate from,
+			@RequestParam(value="to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate to,
+			@RequestParam(value="curPage", required=false, defaultValue="1") int curPage,
+			@RequestParam(value="address1", required=false) String[] address1List,
+			 @RequestParam(value="option", required=false) String option,
+			 @RequestParam(value="keyword", required = false) String keyword,
+							 HttpServletRequest request
 			) {
+
+		boolean showAvailable = false;
+		if(request.getParameter("showAvailable")!=null) showAvailable = true;
+		if(option==null) option = "all";
+
 
 		String user_id = null;
 		if(session!=null) user_id=(String)session.getAttribute("userid");
 
 		boolean updateViewCount = true;
 
-		/* 일단 제외시켜놨음~~~ 커뮤니티 특성상 굳이 조회수 증가를 막을 필요가 있을까 싶음
+		//다시 풀어놨음~~ 채팅때문에 접속이 빈번한 경우에 대비
 		if(cookie!=null) {
-			
 			String gatheringViewCookie = cookie.getValue();
-			
 				if(gatheringViewCookie.indexOf("["+gathering_id+"]")!=-1) {
 					updateViewCount = false;
 				}
-				
 				else{
 					response.addCookie(new Cookie("gatheringView", gatheringViewCookie + "_["+gathering_id+"]"));
 				}
 			}
-			
 			else {
 				response.addCookie(new Cookie("gatheringView", "["+gathering_id+"]"));
 			}
 
-		 */
-
-		mav.setViewName("/gathering/view");
-
 		GatheringDTO dto = gatheringService.view(gathering_id, updateViewCount);
-		AttendeeType type = null;
-		if(user_id!=null && !user_id.equals("")){
-			type = gatheringService.checkIfAttendee(gathering_id, user_id);
+
+		if(dto!=null){
+			mav.setViewName("/gathering/view");
+
+			AttendeeType type = null;
+			if(user_id!=null && !user_id.equals("")){
+				type = gatheringService.checkIfAttendee(gathering_id, user_id);
+			}
+			mav.addObject("dto", dto);
+			mav.addObject("type", type);
+
+			mav.addObject("option", option);
+			mav.addObject("keyword", keyword);
+			mav.addObject("from", from);
+			mav.addObject("to", to);
+			mav.addObject("curPage", curPage);
+			mav.addObject("address1List", address1List);
+			mav.addObject("showAvailable", showAvailable);
 		}
 
-		mav.addObject("dto", dto);
-		mav.addObject("type", type);
+		else{
+			mav.setViewName("redirect:/gathering/list.do");
+		}
+
+
 		return mav;
 	}
 
@@ -242,13 +274,158 @@ public class GatheringController {
 
 	@ResponseBody
 	@RequestMapping ("/addAttendee")
-	public Map<String, String> addAttendee(@RequestParam int gathering_id, HttpSession session){
+	public Map<String, String> addAttendee(@RequestParam int gathering_id, HttpSession session,
+										   @RequestParam(value="answer", required=false) String answer
+										   ){
 		String user_id = (String)session.getAttribute("userid");
-		String message = gatheringService.addAttendee(gathering_id, user_id);
+		String message = gatheringService.addAttendee(gathering_id, user_id, answer);
 		Map<String, String> map = new HashMap<>();
 		map.put("message", message);
 		return map;
 	}
+
+
+	@ResponseBody
+	@RequestMapping("/withdraw.do")
+	public Map<String, String> withdrawAttendee(@RequestParam int gathering_id, HttpSession session){
+		String user_id = (String)session.getAttribute("userid");
+		String message = gatheringService.withDrawAttendee(gathering_id, user_id);
+		Map<String, String> map = new HashMap<>();
+		map.put("message", message);
+		return map;
+	}
+
+
+	@ResponseBody
+	@RequestMapping("/cancelApplication.do")
+	public Map<String, String> cancelApplication(@RequestParam int gathering_id, HttpSession session) {
+		String user_id = (String)session.getAttribute("userid");
+		String message = gatheringService.cancelApplication(gathering_id, user_id);
+		Map<String, String> map = new HashMap<>();
+		map.put("message", message);
+		return map;
+	}
+
+
+
+
+	@GetMapping("/chatRoom/{gathering_id}")
+	public String ChatRoom(@PathVariable int gathering_id,
+							 Model model, HttpSession session) {
+
+		String user_id = (String) session.getAttribute("userid");
+
+		if (gatheringService.checkIfAttendee(gathering_id, user_id) == AttendeeType.ATTENDING) {
+			GatheringDTO dto = gatheringService.view(gathering_id, false);
+			List<ChatMessageDTO> list = chatService.chatList(gathering_id, 1, false);
+			Map<String, String> nicknameMap = chatService.getNicknameMap(gathering_id);
+
+			for(ChatMessageDTO item : list){
+				if(item.getUserId().equals("SYSTEM")){
+					String message = item.getMessage();
+					int index = message.indexOf("]");
+					if(index!=-1){
+						String user = message.substring(1, index);
+						item.setMessage(nicknameMap.get(user) + message.substring(index+1));
+					}
+				}
+				item.setNickname(nicknameMap.get(item.getUserId()));
+			}
+
+			Gson gson = new Gson();
+
+			//로그인 아이디를 model에 담아 뷰로 보냄
+			model.addAttribute("gathering_id", gathering_id);
+			model.addAttribute("user_id", user_id);
+			model.addAttribute("dto", dto);
+			model.addAttribute("list", list);
+			model.addAttribute("nicknameMap", gson.toJson(nicknameMap));
+			return "gathering/chat";
+		} else {
+
+			//멤버가 아니라면 다시 게시글로 보내주기
+			return "redirect:/gathering/view/" + gathering_id;
+		}
+	}
+
+
+	@ResponseBody
+	@GetMapping("/viewMoreChat.do")
+	public Map<String, Object> viewMoreChat(@RequestParam int gathering_id, @RequestParam int curPage) {
+
+		List<ChatMessageDTO> list = chatService.chatList(gathering_id, curPage, true);
+		System.out.println("curPage" + curPage);
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		return map;
+	}
+
+
+	@ResponseBody
+	@GetMapping("/getNickname.do")
+	public Map<String, String> getNickname(@RequestParam String user_id) {
+
+		String nickname = memberService.getNickname(user_id);
+		Map<String, String> map = new HashMap<>();
+		map.put("nickname", nickname);
+		return map;
+	}
+
+
+	@ResponseBody
+	@GetMapping("/homeList")
+	public Map<String, List<GatheringDTO>> getHomeList(
+			@RequestParam(value="size", required=false) Integer size){
+
+		if(size == null) size = 8;
+		List<GatheringDTO> list = gatheringService.getHomeList(size);
+		Map<String, List<GatheringDTO>> map = new HashMap<>();
+		map.put("list", list);
+
+		return map;
+	}
+
+
+	@ResponseBody
+	@GetMapping("/editReply.do")
+	public Map<String, Integer> editReply(@ModelAttribute GatheringReplyDTO dto, HttpSession session){
+		//본인이 쓴 댓글이 맞다면 수정할 수 있게 함
+		String writer = gatheringService.getReplyWriter(dto.getReply_id());
+		String user_id = (String)session.getAttribute("userid");
+
+		int num = 0;
+		if(writer.equals(user_id)){
+			dto.setUpdater_id(user_id);
+			num = gatheringService.updateReply(dto);
+		}
+
+		Map<String, Integer> map = new HashMap<>();
+		map.put("num", num);
+		return map;
+	}
+
+
+	@ResponseBody
+	@GetMapping("/deleteReply.do")
+	public Map<String, Integer> deleteReply(@RequestParam int reply_id, HttpSession session){
+		//본인이 쓴 댓글이 맞다면 삭제할 수 있게 함
+		String writer = gatheringService.getReplyWriter(reply_id);
+		String user_id = (String)session.getAttribute("userid");
+
+		int num = 0;
+		if(writer.equals(user_id)){
+			GatheringReplyDTO dto = new GatheringReplyDTO();
+			dto.setReply_id(reply_id);
+			dto.setUpdater_id(user_id);
+			num = gatheringService.deleteReply(dto);
+		}
+
+		Map<String, Integer> map = new HashMap<>();
+		map.put("num", num);
+		return map;
+	}
+
+
 
 
 }

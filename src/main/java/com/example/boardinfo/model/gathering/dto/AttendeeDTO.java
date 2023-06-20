@@ -10,12 +10,13 @@ public class AttendeeDTO {
     private int gathering_id;
     private Date create_date;
     private Date update_date;
+    private String answer;
 
 
-    public AttendeeDTO(){
+    public AttendeeDTO() {
     }
 
-    public AttendeeDTO(String user_id, int gathering_id, AttendeeType type){
+    public AttendeeDTO(String user_id, int gathering_id, AttendeeType type) {
         this.user_id = user_id;
         this.gathering_id = gathering_id;
         this.type = type;
@@ -69,6 +70,15 @@ public class AttendeeDTO {
         this.user_id = user_id;
     }
 
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+
     @Override
     public String toString() {
         return "AttendeeDTO{" +
@@ -78,6 +88,9 @@ public class AttendeeDTO {
                 ", gathering_id=" + gathering_id +
                 ", create_date=" + create_date +
                 ", update_date=" + update_date +
+                ", answer='" + answer + '\'' +
                 '}';
     }
 }
+
+
