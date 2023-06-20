@@ -5,6 +5,7 @@
 
 <!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>BOARDINFO</title>
@@ -130,8 +131,6 @@
                                 "<a href='${path}/review/reviewdetail.do?reviewDetailKey=" + list[i].regNum + "'>"+list[i].title
                                 +"</a><span class='reply'>"+reply+"</span></div>";
                         }
-
-
                         communityList.append(str);
 
                     }
@@ -286,71 +285,7 @@
 </body>
 
 
-        <br><br><br><br><br><br>
-        <div id="carouselDiv"></div>
-
-        <div id="main_lower">
-
-            <div>
-                <div class="boxForList">
-                    <div><span>HOT! 보드인이 주목중인 게시글</span><span>&gt</span></div>
-                    <div class="list">
-                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
-                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
-                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
-                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
-                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
-                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
-                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
-                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
-                    </div>
-                </div>
-
-                <div class="boxForList">
-                    <div><span>커뮤니티</span>
-                        <span><a class="more" href="${path}/review/reviewlist.do">&gt</a></span></div>
-                    <div class="list" id="communityList">
-                    </div>
-                </div>
-
-            </div>
-
-            <div>
-                <div class="boxForList">
-                    <div><span>오프모임</span>
-                        <span><a class="more" href="${path}/gathering/list.do">&gt</a></span></div>
-                    <div class="list" id="gatheringList">
-                    </div>
-                </div>
-                <div class="boxForList">
-                    <div><span>중고장터</span>
-                        <span><a class="more" href="${path}/tboard/list.do">&gt</a></span></div>
-                    <div class="list" id="tboardList">
-                    </div>
-                </div>
-
-            </div>
-
-
-        </div>
-
-    </div>
-</div>
-
-
-
-<h1><a href="${path}/sample/sample.do" style="color: black;">SAMPLE CLICK</a></h1>
-<br>
-
-<br>
-<h1><a href="${path}/member/member_list.do" style="color: black;">인터셉터 확인</a></h1>
-<h1><a href="${path}/review/reviewlist.do" style="color: black;">Review List</a></h1>
-
-
-<%@include file="include/footer.jsp" %>
-</body>
-
-
+   
 
 
 </html>
