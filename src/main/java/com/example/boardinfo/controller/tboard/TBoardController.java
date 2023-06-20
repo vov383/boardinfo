@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.review.dto.reviewSerchDTO;
 import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
 import com.example.boardinfo.util.UploadFileUtils;
@@ -160,10 +161,22 @@ public class TBoardController {
     @RequestMapping("imageUpload.do")
     public String imageUpload(
             ) {
-
-
-
-
         return "redirect:/tboard/list.do";
     }
+
+
+    @ResponseBody
+    @GetMapping("/homeList")
+    public Map<String, List<TBoardDTO>> getHomeList(
+            @RequestParam(value="size", required=false) Integer size){
+
+        if(size == null) size = 8;
+        List<TBoardDTO> list = tboardService.getHomeList(size);
+        Map<String, List<TBoardDTO>> map = new HashMap<>();
+        map.put("list", list);
+        return map;
+    }
+
+
+
 }

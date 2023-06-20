@@ -80,6 +80,11 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
+
+	public String getNickname(String user_id) {
+		return sqlSession.selectOne("member.getNickname", user_id);
+	}
+
 	public String get_searchId(String name, String hp) {
 		Map<String, String> map = new HashMap<>();
 		map.put("name", name);
@@ -95,9 +100,16 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.selectOne("member.findPwCheck" ,map);
 	}
 
+	@Override
+	public void pass_change(Map<String, Object> map, MemberDTO dto) {
+		map.get("passwd");
+		map.get("email");
+		sqlSession.update("member.pass_change",map);
+		
+	}
+
 
 
 	
 	
-
 }
