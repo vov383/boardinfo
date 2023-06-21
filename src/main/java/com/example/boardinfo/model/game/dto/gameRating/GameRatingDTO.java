@@ -1,9 +1,5 @@
 package com.example.boardinfo.model.game.dto.gameRating;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import java.time.LocalDateTime;
-
 public class GameRatingDTO {
     private int gnum;
     private String userid;

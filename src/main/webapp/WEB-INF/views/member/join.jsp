@@ -108,7 +108,7 @@ function check() {
 		$("#name").focus();
 		return;
 	}
-	
+
 	//아이디 체크
 	var userid = $("#userid").val();
 	if(userid==""){
@@ -130,7 +130,7 @@ function check() {
 	    $("#userid").focus();
 	    return;
 	}
-	
+
 	//비밀번호 체크
 	var passwd = $("#passwd").val();
 	var passwd2 = $("#passwd2").val();
@@ -139,7 +139,7 @@ function check() {
 		$("#passwd").focus();
 		return;
 	}
-	//비밀번호 정규식 
+	//비밀번호 정규식
 	var exp2 = /^[a-zA-Z0-9]{8,15}$/;
 	if(!exp2.test(passwd)){
 		alert("비밀번호는 영문 숫자 조합으로 8자 이상 입력하세요.");
@@ -164,7 +164,7 @@ function check() {
 		$("#name").focus();
 		return;
 	}
-	
+
 	//이메일 체크
 	var email = $("#email").val();
 	if(email==""){
@@ -187,7 +187,7 @@ function check() {
 		$("#hp").focus();
 		return;
 	}
-	
+
 	document.form1.action="${path}/member/member_insert.do";
 	document.form1.submit();
 	alert("정상적으로 회원가입 되었습니다.")
@@ -205,17 +205,17 @@ function check() {
 프로필 <input class="form-control" name="profile_img" id="profile" type="file">
 </div>
 <div class="form-group">
-이름 <input class="form-control" placeholder="이름" name="name" 
+이름 <input class="form-control" placeholder="이름" name="name"
 id="name" type="text" onkeyup="login_check()">
 </div>
 <div class="form-group" >
-아이디 <input class="form-control" placeholder="아이디" name="userid" 
-id="userid" type="text"maxlength='15' onkeyup="duplication_check()"> 
+아이디 <input class="form-control" placeholder="아이디" name="userid"
+id="userid" type="text"maxlength='15' onkeyup="duplication_check()">
 <div align="right">
 <button type="button" class="btn btn-dark button" id="btnIdCheck" >중복확인</button>
 </div>
 <div class="form-group">
-닉네임 <input class="form-control" placeholder="닉네임" name="nickname" 
+닉네임 <input class="form-control" placeholder="닉네임" name="nickname"
 id="nickname" type="text" maxlength="12" onkeyup="duplication_check2()">
 <div align="right">
 <button type="button" class="btn btn-dark button" id="btnNickCheck" >중복확인</button>
@@ -223,23 +223,23 @@ id="nickname" type="text" maxlength="12" onkeyup="duplication_check2()">
 </div>
 </div>
 <div class="form-group">
-비밀번호 <input class="form-control" placeholder="비밀번호" name="passwd" 
+비밀번호 <input class="form-control" placeholder="비밀번호" name="passwd"
 id="passwd" type="password" onkeyup="login_check()">
 <div class="form-group">
-비밀번호 확인 <input class="form-control" placeholder="비밀번호 확인" name="passwd2" 
+비밀번호 확인 <input class="form-control" placeholder="비밀번호 확인" name="passwd2"
 id="passwd2" type="password" >
 </div>
 </div>
 <div class="form-group">
-이메일 <input class="form-control" placeholder="이메일" name="email" 
+이메일 <input class="form-control" placeholder="이메일" name="email"
 id="email" type="text" onkeyup="login_check()">
 </div>
 <div class="form-group">
-휴대폰 <input class="form-control" placeholder="-빼고 입력하세요." name="hp" 
+휴대폰 <input class="form-control" placeholder="-빼고 입력하세요." name="hp"
 id="hp" type="tel" maxlength='12' onkeyup="login_check()">
 </div>
 <div align="right">
-<input type="button" class="btn btn-lg btn-success btn-block" 
+<input type="button" class="btn btn-lg btn-success btn-block"
 onclick="check()" value="확인" name="btnJoin" id="btnJoin">
 </div>
 </form>

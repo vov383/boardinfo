@@ -388,8 +388,33 @@ public class MemberController {
     	    mv.setViewName("home");
     	    return mv;
     }
+	/*마이페이지로 이동*/
+	@GetMapping("mypage/{userid}")
+	public ModelAndView moveToMyPage(@PathVariable(value="userid") String userid, ModelAndView mav) throws Exception{
+		try {
+			logger.info("@@@userid =>>"+userid+"@@@@@@@@@");
+			MemberDTO dto = memberService.viewMember(userid);
+			Map<String, Object> map = new HashMap<>();
+			map.put("dto", dto);
 
+			mav.setViewName("member/mypage");
+//			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
+
+			mav.addObject("map", map);
+//			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
+			return mav;
+		}catch (Exception e){
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			return new ModelAndView("home");
+
+		}
+
+	}
+
+}
 
 
 
 }
+

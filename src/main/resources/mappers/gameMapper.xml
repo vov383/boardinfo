@@ -202,7 +202,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 
-
 	<select id="filteredList" resultType="gameDto">
 	<bind name="filterColumn" value="filter+'.'+filter"/>
 	<bind name="mappingTable" value="'game_'+filter"/>
