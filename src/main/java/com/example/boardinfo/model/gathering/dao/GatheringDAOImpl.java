@@ -1,19 +1,17 @@
 package com.example.boardinfo.model.gathering.dao;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
 import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
+import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.example.boardinfo.model.gathering.dto.GatheringDTO;
+import javax.inject.Inject;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Repository
@@ -181,11 +179,16 @@ public class GatheringDAOImpl implements GatheringDAO {
 		return sqlSession.selectList("gathering.finishList");
 	}
 
+	/*모임 list를 userid로 get*/
+	@Override
+	public List<GatheringDTO> getGaListByUserid(String userid) {
+		return sqlSession.selectList("gathering.gaListByUserid", userid);
+	}
+
 	@Override
 	public List<GatheringDTO> getHomeList(Integer size) {
 		return sqlSession.selectList("gathering.getHomeList", size);
 	}
-
 
 	@Override
 	public String getReplyWriter(int reply_id) {
@@ -200,6 +203,7 @@ public class GatheringDAOImpl implements GatheringDAO {
 	@Override
 	public int deleteReply(GatheringReplyDTO dto) {
 		return sqlSession.update("gathering.deleteReply", dto);
+
 	}
 }
 

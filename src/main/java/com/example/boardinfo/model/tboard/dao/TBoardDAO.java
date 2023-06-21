@@ -1,10 +1,10 @@
 package com.example.boardinfo.model.tboard.dao;
 
-import java.util.List;
-import java.util.Map;
-
 import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
 import com.example.boardinfo.model.tboard.dto.TBoardDTO;
+
+import java.util.List;
+import java.util.Map;
 
 public interface TBoardDAO {	
 	List<TBoardDTO> list(Map<String, Object> map);
@@ -28,5 +28,10 @@ public interface TBoardDAO {
 
     int fileAttach(TBAttachDTO fDto);
 
+
+    List<TBoardDTO> getTbListByUserid(String userid);
+
     public List<TBoardDTO> getHomeList(Integer size);
+
 }
+

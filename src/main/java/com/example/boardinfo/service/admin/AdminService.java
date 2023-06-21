@@ -1,6 +1,7 @@
 package com.example.boardinfo.service.admin;
 
 import com.example.boardinfo.model.admin.dto.AdminDTO;
+import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.model.member.dto.MemberDTO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,4 +55,6 @@ public interface AdminService {
     void memberStatistics();
     /*리뷰 통계*/
     void reviewStatistics();
+
+    List<GameRatingDTO> gameRatinglist(String userid);
 }

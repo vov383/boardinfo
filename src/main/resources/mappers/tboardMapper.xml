@@ -164,6 +164,39 @@
         update into tb_files ()
     </delete>
 
+    <select id="getTbList" resultType="tboardDto">
+        select t.tb_num,
+               t.title,
+               t.price,
+               t.description,
+               t.view_count,
+               t.re_count,
+               t.category,
+               t.create_user,
+               t.create_date,
+               t.del,
+               t.update_user,
+               t.update_date,
+               t.address1,
+               t.address2,
+               f.fullName as first_img
+
+        from t_board t
+                 LEFT JOIN (
+            SELECT
+                MIN(file_reg_num) AS min_file_reg_num,
+                FULLNAME,
+                TB_NUM
+            FROM
+                TB_FILES
+            GROUP BY
+                TB_NUM,
+                FULLNAME
+        ) f ON t.TB_NUM = f.TB_NUM
+
+        where t.del = 'N' and CREATE_USER =#{userid}
+        order by t.tb_num desc
+    </select>
 
     <select id="getHomeList" resultType="tboardDto">
         select *
@@ -182,6 +215,5 @@
             )
         where rn between 1 and #{size}
     </select>
-
 
 </mapper>

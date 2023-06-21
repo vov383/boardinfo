@@ -202,7 +202,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 
-
 	<select id="filteredList" resultType="gameDto">
 	<bind name="filterColumn" value="filter+'.'+filter"/>
 	<bind name="mappingTable" value="'game_'+filter"/>
@@ -540,7 +539,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="weeklyList" resultType="gameDto">
-		select GNUM,GAMETITLE,GAMETITLE_ENG,BGG_THUMBNAIL,RELEASE_YEAR, game_rank
+		select GNUM,GAMETITLE,GAMETITLE_ENG,BGG_THUMBNAIL,RELEASE_YEAR, game_rank, bggnum
 		from game
 		where game_rank between 1 and 10
 		order by game_rank
@@ -558,12 +557,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				) RANKED_GAMES
 		WHERE game_rank BETWEEN 1 AND 10
 	</select>
-
-	<update id="upimg">
-		update 	GAME
-		set 	BGG_THUMBNAIL = #{uimg}
-		where	BGGNUM = #{bggnum}
-	</update>
 
 	<select id="gameList_newbie" resultType="gameDto">
 		SELECT 	gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, game_rank,

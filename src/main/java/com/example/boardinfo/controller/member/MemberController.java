@@ -23,11 +23,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -388,8 +384,31 @@ public class MemberController {
     	    mv.setViewName("home");
     	    return mv;
     }
+	/*마이페이지로 이동*/
+	@GetMapping("mypage/{userid}")
+	public ModelAndView moveToMyPage(@PathVariable(value="userid") String userid, ModelAndView mav) throws Exception{
+		try {
+			MemberDTO dto = memberService.viewMember(userid);
+			Map<String, Object> map = new HashMap<>();
+			map.put("dto", dto);
 
+			mav.setViewName("member/mypage");
+//			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
 
+			mav.addObject("map", map);
+//			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
+			return mav;
+		}catch (Exception e){
+			e.printStackTrace();
+			return new ModelAndView("home");
 
+		}
+
+	}
 
 }
+
+
+
+
+

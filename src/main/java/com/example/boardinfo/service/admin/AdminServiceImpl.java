@@ -2,6 +2,7 @@ package com.example.boardinfo.service.admin;
 
 import com.example.boardinfo.model.admin.dao.AdminDAO;
 import com.example.boardinfo.model.admin.dto.AdminDTO;
+import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.model.member.dao.MemberDAO;
 import com.example.boardinfo.model.member.dto.MemberDTO;
 import com.example.boardinfo.util.UploadFileUtils;
@@ -37,7 +38,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<MemberDTO> getMemberlist() {
-        return null;
+        return memberDao.list();
     }
 
 
@@ -50,8 +51,6 @@ public class AdminServiceImpl implements AdminService {
             AdminDTO aDto2 = adminDao.getAdminObject(aDto.getAdmin_id());
             session.setAttribute("admin_id", aDto2.getAdmin_id());
             session.setAttribute("nickname", aDto2.getNickname());
-//            logger.info("admin_id 세션 : "+(String)session.getAttribute("admin_id"));
-//            logger.info("nickname 세션 : "+(String)session.getAttribute("nickname"));
         }
         return result;
     }
@@ -215,6 +214,7 @@ public class AdminServiceImpl implements AdminService {
 
     }
 
+
     @Override
     public void gameStatistics() {
 
@@ -230,8 +230,10 @@ public class AdminServiceImpl implements AdminService {
 
     }
 
-
-
+    @Override
+    public List<GameRatingDTO> gameRatinglist(String userid) {
+        return adminDao.gameRatinglist(userid);
+    }
 
 
 }

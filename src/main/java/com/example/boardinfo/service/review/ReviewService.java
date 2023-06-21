@@ -56,6 +56,8 @@ public interface ReviewService {
 
     public List<ReviewDTO> getHomeList(Integer size);
 
+    List<ReviewDTO> getHotList(Integer size);
+
 
 
     /*public List<ReviewDTO> reviewDetail();*/
