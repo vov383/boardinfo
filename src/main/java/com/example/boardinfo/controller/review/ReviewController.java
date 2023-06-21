@@ -311,6 +311,7 @@ public class ReviewController {
 	// 리뷰 저장 후 페이지
 	@RequestMapping("reviewinsertsave.do")
 	public String insertPage(@ModelAttribute ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO, HttpSession session){
+
 		reviewservice.reviewCreate(reviewDTO, choiceGameDTO, session);
 
 //		ModelAndView mav = new ModelAndView();

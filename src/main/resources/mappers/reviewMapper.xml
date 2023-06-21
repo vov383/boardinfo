@@ -104,7 +104,7 @@
 	</select>
 
 	<!-- 리뷰 입력 -->
-	<insert id="reviewInsertPage" parameterType="hashMap" >
+	<insert id="reviewInsertPage" parameterType="com.example.boardinfo.model.review.dto.ReviewDTO" >
 		<selectKey keyProperty="regNum" resultType="String" order="BEFORE">
 			select  to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(REG_NUM, 7)) + 1 from review where REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'),5, 0) from dual
 		</selectKey>
@@ -112,16 +112,14 @@
 
 		INSERT INTO REVIEW (
 		REG_NUM
-		, CATEGORY, GNUM
-		, GATHERING_ID, TITLE
+		, CATEGORY
+		, TITLE
 		, REVIEW_DETAIL
 		, CREATE_USER
 		)
 		VALUES(
 		#{regNum}
 		,#{category}
-		,#{gnum}
-		,#{gatheringId, jdbcType=VARCHAR}
 		,#{title}
 		,#{reviewDetail}
 		,#{createUser}
@@ -134,19 +132,17 @@
 
 		INSERT INTO CHOICE_GAME (
 								  CHOICE_REG_NUM
-								, GAMETITLE
+								, GNUM
 								, REVIEWREGNUM
 								, DEL
 								, CREATE_USER
-								, CREATE_DATE
 		)
 		VALUES (
-					   to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(CHOICE_REG_NUM, 7)) + 1 from CHOICE_GAME where CHOICE_REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'),5, 0)
-			   , #{gametitle}
-			   , #{RegNum}
+				 to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(CHOICE_REG_NUM, 7)) + 1 from CHOICE_GAME where CHOICE_REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'),5, 0)
+			   , #{gameGnum}
+			   , #{regNum}
 			   , 'N'
 			   , #{createUser}
-			   , TO_DATE('2023-06-19 19:25:18', 'YYYY-MM-DD HH24:MI:SS')
 			   )
 
 	</insert>
@@ -266,9 +262,9 @@
 
 	<!--리뷰 댓글 조회-->
 	<select id="reviewReplyOut" parameterType="hashMap" resultType="com.example.boardinfo.model.review.dto.ReplyCommentsDTO">
-		SELECT RC.REPLY_REG_NUM 			AS REPLYREGNUM
+		SELECT RC.REPLY_REG_NUM 		AS REPLYREGNUM
 		, RC.REG_NUM 					AS REGNUM
-		, RC.TOP_REPLY_REG_NUM 		AS TOPREPLYREGNUM
+		, RC.TOP_REPLY_REG_NUM 			AS TOPREPLYREGNUM
 		, RC.COMMENT_DETAIL 			AS COMMENTDETAIL
 		, M.NICKNAME					AS NICKNAME
 		, RC.DEL 						AS DEL

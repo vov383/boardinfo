@@ -5,6 +5,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -20,7 +21,14 @@ public class ReviewDAOImpl implements ReviewDAO {
         return sqlSession.selectList("review.reviewList", reviewserchDTO);
     }
 
-    /*리뷰 목록 조회*/
+    /*게임 선택 목록*/
+    @Override
+    public List<ReviewDTO> gameGnum(reviewSerchDTO reviewserchDTO) {
+
+//        return sqlSession.selectList("review.reviewList", reviewserchDTO);
+    }
+
+    /*리뷰 글 카운트*/
     @Override
     public int reviewListCnt(reviewSerchDTO reviewserchDTO) {
         return sqlSession.selectOne("review.reviewListCnt", reviewserchDTO);
@@ -38,17 +46,15 @@ public class ReviewDAOImpl implements ReviewDAO {
     @Override
     public void reviewCreate(ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO) {
 
-        int key = sqlSession.insert("review.reviewInsertPage", reviewDTO);
-/*
-        choiceGameDTO.setReviewRegNum(String.valueOf(key+""));
+        sqlSession.insert("review.reviewInsertPage", reviewDTO);
 
-        System.out.println(key);
-        System.out.println(key);
-        System.out.println(key);
+        String[] gameGnum = reviewDTO.getGameGnum().split(",");
 
-        sqlSession.insert("review.reviewGameInsert", reviewDTO);
-*/
-
+        List<ReviewDTO> gameReview = null;
+        for (int i = 0; i < gameGnum.length; i++) {
+            reviewDTO.setGameGnum(gameGnum[i]);
+            sqlSession.insert("review.reviewGameInsert", reviewDTO);
+        }
     }
 
     /*리뷰 수정*/

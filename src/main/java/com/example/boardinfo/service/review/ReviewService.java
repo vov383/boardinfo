@@ -15,6 +15,9 @@ public interface ReviewService {
 	/*리뷰 목록 조회*/
     int reviewListCnt(reviewSerchDTO reviewserchDTO);
 
+    /*게임 선택 목록*/
+    List<ReviewDTO> gameGnum(reviewSerchDTO reviewserchDTO);
+
 //    주는놈 메소드(받는놈);
 
 
