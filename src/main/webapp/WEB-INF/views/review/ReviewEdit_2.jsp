@@ -4,8 +4,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>커뮤니티 - 게임포럼</title>
-<%@ include file="../include/js/header.jsp" %>
+  <title>커뮤니티 - 리뷰수정</title>
+  <%@ include file="../include/js/header.jsp" %>
 
   <style>
 
@@ -44,7 +44,7 @@
       top: 0;
       background-color: white;
       z-index: 450;
-      border-bottom: 1px solid #D9D9D9;
+      border-bottom: 1px solid #D9D9D9;      
     }
 
     #header-upper-box{
@@ -54,7 +54,7 @@
       align-items: center;
       height: 77px;
     }
-
+    
     #header-upper-box > div{
 	 display: flex;
      justify-content: space-between;
@@ -328,180 +328,77 @@
       bottom: 0;
       clear: both;
     }
-
-
+    
+    
     footer > div{
       width: 100%;
       max-width: 1120px;
     }
-
-
-    table{border-collapse:collapse; background-color:#fff8e1}
-    tr, td{border-color: #ffffff; border-style: solid;}
-    tr:nth-child(1n+2){background-color: #ffffff;}
-
-/*    !*짝수줄만 배경색을 다르게*!
-    tr:nth-child(2n+0){background-color: #ffffaf;}*/
-
-
   </style>
 
-  <script>
-    /*타이틀 및 내용 검색 스크립트*/
-    function searchFu(nowPage) {
-      $("#searchTitleHidden").val($("#searchTitle").val());
-      $("#nowPage").val(nowPage);
-      //alert($("#searchTitleHidden").val());
-      document.reviewSearch.submit();
-    }
-
-    /*리뷰 글쓰기 진입*/
-    function reviewInsert(regNum) {
-      /*alert("버튼 잘 눌리는지 테스트")*/
-      location.href="${path}/review/reviewInsert.do";
-    }
-
-    /*리뷰 디테일 진입, 조회수 증가*/
-    function reviewDetail(regNum) {
-      $("#reviewDetailKey").val(regNum);
-      /*alert($("#reviewDetailKey").val());*/
-      document.reviewDetail.submit();
-    }
-
-  </script>
+<%--  <script type="text/javascript">
+  function btnSaveClick() {
+  alert("asdsadasd"); // 테스트
+  document.revieweditsave.submit();
+  }
+  </script>--%>
 
 </head>
-
 
 <body>
 <%@include file="../include/top.jsp" %>
 
-<%--검색 폼--%>
-<form name="reviewSearch" method="post" action="${path}/review/reviewlist.do">
-  <input type="hidden" name="searchTitle" id="searchTitleHidden">
-    <%--페이징--%>
-  <input type="hidden" name="nowPage" id="nowPage" value="1">
-  <input type="hidden" name="cntPage" id="cntPage" value="10">
-  <input type="hidden" name="cntPerPage" id="cntPerPage" value="10">
-</form>
-
-<%--디테일 진입 폼--%>
-<form name="reviewDetail" method="post" action="${path}/review/reviewdetail.do">
-  <input type="hidden" name="reviewDetailKey" id="reviewDetailKey">
-</form>
-
-
 <div id="contents">
   <div id="contentsHeader">
-    <h2>커뮤니티</h2>
+    <h2>리뷰수정</h2>
   </div>
   <div id="contentsLocation">
-    홈&gt 커뮤니티&gt 게임포럼
+    홈 &gt 커뮤니티 &gt 리뷰수정
   </div>
+
   <div id="contentsMain">
 
-    <%--검색 및 글쓰기 버튼--%>
-    <div class="searchBox">
-      <input type="text" id="searchTitle" placeholder="제목 및 내용을 검색하세요.">
-      <button type="button" id="search" onclick="searchFu('1')">검색</button>
-      <button type="button" onclick="reviewInsert()">글쓰기</button>
-    </div>
+    <form name="formReviewEditSave" method="post" action="${path}/review/revieweditsave.do">
 
-
-    <%--본문--%>
-    <form name="reviewlist" method="post" action="${path}/review/reviewlist.do">
-      <table style="table-layout:fixed;">
-        <tr>
-          <th style="width: 200px;">No.</th>
-          <th style="width: 200px;">카테고리</th>
-          <th style="width: 200px;">&#x1f495</th> <%--좋아요--%>
-          <th style="width: 200px;">제목</th>
-          <th style="width: 200px;">닉네임</th>
-          <th style="width: 200px;">등록일자</th>
-          <th style="width: 200px;">&#128366;</th> <%--조회수--%>
-          <th style="width: 200px;">댓글</th>
-          <th style="width: 200px;">게임</th>
-        </tr>
-
-        <%--<script>
-          console.log(<c:out value="${list}"></c:out>)
-        </script>--%>
+      <table>
         <c:forEach items="${list}" var="vo">
-          <tr>
-            <td style="width: 200px; text-align: center;">${vo.rnum}</td>
-            <td style="width: 200px; text-align: center;">${vo.category}</td>
-            <td style="width: 200px; text-align: center;">${vo.good}</td>
-            <td style="width: 200px; text-align: center;"><a href="javascript:reviewDetail('${vo.regNum}')">${vo.title}</a></td>
-            <td style="width: 200px; text-align: center;">${vo.nickName}</td>
-            <td style="width: 200px; text-align: center;">${vo.createDate}</td>
-            <td style="width: 200px; text-align: center;">${vo.views}</td>
-            <td style="width: 200px; text-align: center;">${vo.recnt}</td>
-            <td style="width: 200px; text-align: center;">${vo.gametitle}</td>
-
-          </tr>
+          <script>
+            alert(${list})
+          </script>
+          <tr><td>카테고리 : <input type="text" name="category" placeholder="${vo.category}"></td></tr>
+          <tr><td>카테고리 : <input type="text" name="category"></td></tr>
+          <tr><td>제목 : <input type="text" name="title"></td></tr>
+          <tr><td>임시입력_gnum, 게임ID : <input type="text" name="gnum"></td></tr>
+          <tr><td>임시입력_gatheringId, 모임ID : <input type="text" name="gatheringId"></td></tr>
+          <tr><td>리뷰점수 : <input type="text" name="reviewScore"></td></tr>
+          <tr><td>난이도 : <input type="text" name="gameScore"></td></tr>
+          <tr><td>임시입력_ID : <input type="text" name="createUser"></td></tr>
+          <tr><td>리뷰작성 : <input type="text" name="reviewDetail"></td></tr>
         </c:forEach>
       </table>
+
+<%--
+      <table border="1" width="700px">
+      <c:forEach items="${list}" var="vo">
+      <p>카테고리 : <input type="text" name="category" placeholder="${vo.category}"></p>
+      <p>제목 : <input type="text" name="title" placeholder="${vo.title}"></p>
+      <p>임시입력_gnum, 게임ID : <input type="text" name="gnum" placeholder="${vo.gnum}"></p>
+      <p>임시입력_gatheringId, 모임ID : <input type="text" name="gatheringId" placeholder="${vo.gatheringId}"></p>
+      <p>리뷰점수 : <input type="text" name="reviewScore" placeholder="${vo.reviewScore}"></p>
+      <p>난이도 : <input type="text" name="gameScore" placeholder="${vo.gameScore}"></p>
+      <p>임시입력_ID : <input type="text" name="createUser" placeholder="${vo.createUser}"></p>
+      <p>리뷰작성 : <input type="text" name="reviewDetail" placeholder="${vo.reviewDetail}"></p>
+
+      <button type="button" id="btnsave" onclick="btnSaveClick()">값 보내기</button>
+      </c:forEach>
+      </table>
+--%>
+
     </form>
-
-<%--      private int nowPage;                 // 현재 페이지--%>
-<%--      private int cntPage;                 // 화면 페이지 개수 (가로)--%>
-<%--      private int cntPerPage;              // 쿼리 리스트 개수 (세로)--%>
-<%--      private int total;                   // 쿼리 리스트 총 개수--%>
-<%--      private int lastPage;                // 마지막 번호 (시작번호는 1로고정)--%>
-<%--      private int startPage;               // 화면 페이지 가로 시작 번호--%>
-<%--      private int endPage;                 // 화면 페이지 가로 마지막 번호--%>
-<%--      private int start;                   // 쿼리 리스트 변수--%>
-<%--      private int end;                     // 쿼리 리스트 변수--%>
-
-       nowPage;   <c:out value="${page.nowPage   }"></c:out>
-       cntPage;   <c:out value="${page.cntPage   }"></c:out>
-       lastPage;  <c:out value="${page.lastPage  }"></c:out>
-       startPage; <c:out value="${page.startPage }"></c:out>
-       endPage;   <c:out value="${page.endPage   }"></c:out>
-
-      <div class="paging-btn">
-
-          <%--페이징--%>
-          <c:if test="${1 ne page.nowPage}">
-              <a href="javascript:searchFu('1')">처음</a>
-          </c:if>
-
-          <c:if test="${1 < page.nowPage}">
-              <a href="javascript:searchFu('${page.nowPage-1}')">이전</a>
-          </c:if>
-
-          <%--현재 페이지--%>
-          <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
-              <c:if test="${i eq page.nowPage}">
-                  ${i}
-              </c:if>
-              <c:if test="${i ne page.nowPage}">
-                  <a href="javascript:searchFu('${i}')">${i}</a>
-              </c:if>
-
-          </c:forEach>
-
-          <c:if test="${page.lastPage > page.nowPage}">
-              <a href="javascript:searchFu('${page.nowPage+1}')">다음</a>
-          </c:if>
-
-          <c:if test="${page.lastPage ne page.nowPage}">
-              <a href="javascript:searchFu('${page.lastPage}')">마지막</a>
-          </c:if>
-
-
-      </div>
 
   </div>
 </div>
-<%--!!!F;O;O;T;E;R 첨부해주세요--%>
 <%@include file="../include/footer.jsp" %>
 
 </body>
-
 </html>
-
-
-
-
-
