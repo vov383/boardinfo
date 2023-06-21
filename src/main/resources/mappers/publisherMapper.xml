@@ -62,6 +62,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from publisher p, game_publisher gp
 		where p.pnum = gp.pnum and gp.gnum = #{gnum}
 	</select>
+
+	<delete id="deleteGame_Publisher">
+		delete
+		from 	game_publisher
+		where 	gnum = #{gnum}
+		and 	pnum =
+				(select	pnum
+				 from	publisher
+				 where	publisher=#{publisher})
+	</delete>
 	
 </mapper>
 

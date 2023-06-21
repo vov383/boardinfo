@@ -16,4 +16,6 @@ public interface DesignerDAO {
 	List<DesignerDTO> view(int gnum);
 	void insert_designer_mapping(int gnum, int dnum);
     List<String> viewDesigner(int gnum);
+
+    void deleteGame_Designer(String value, int gnum);
 }

@@ -59,6 +59,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			where m.mnum = gm.mnum and gm.gnum = #{gnum}
 	</select>
 
+	<delete id="deleteGame_Mechanic">
+		delete
+		from 	game_mechanic
+		where 	gnum = #{gnum}
+		and 	mnum =
+				(select	mnum
+				 from	mechanic
+				 where	mechanic=#{mechanic})
+	</delete>
+
 </mapper>
 
 

@@ -52,6 +52,9 @@ public interface ReviewDAO {
 
     List<ReviewDTO> getRvListByUserid(String userid);
 
+    public List<ReviewDTO> getHomeList(Integer size);
+
+
 	/*// 리뷰 입력 테스트
 	public void create(TestDTO testdto);*/
 

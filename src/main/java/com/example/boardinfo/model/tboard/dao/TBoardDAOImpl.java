@@ -80,4 +80,10 @@ public class TBoardDAOImpl implements TBoardDAO {
 		return sqlSession.selectList("tboard.getTbList",userid);
 	}
 
+
+	@Override
+	public List<TBoardDTO> getHomeList(Integer size) {
+		return sqlSession.selectList("tboard.getHomeList", size);
+	}
+
 }

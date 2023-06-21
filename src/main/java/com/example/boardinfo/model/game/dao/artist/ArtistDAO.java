@@ -16,4 +16,6 @@ public interface ArtistDAO {
     List<ArtistDTO> view(int gnum);
 	void insert_artist_mapping(int gnum,int anum);
     List<String> viewArtist(int gnum);
+
+    void deleteGame_Artist(String value, int gnum);
 }

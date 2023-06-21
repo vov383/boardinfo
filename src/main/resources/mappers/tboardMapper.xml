@@ -197,4 +197,23 @@
         where t.del = 'N' and CREATE_USER =#{userid}
         order by t.tb_num desc
     </select>
+
+    <select id="getHomeList" resultType="tboardDto">
+        select *
+        from
+            (
+                select a.*, row_number() over(order by a.create_date desc) rn
+                from
+                    (
+                        select tb_num, create_date, title, category,
+                               (select count(*)
+                                from tb_comments c
+                                where c.tb_num = t.tb_num and del='N') as re_count
+                        from t_board t
+                        where t.del = 'N'
+                    )a
+            )
+        where rn between 1 and #{size}
+    </select>
+
 </mapper>

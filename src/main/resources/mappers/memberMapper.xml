@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="login_check" resultType="String" parameterType="com.example.boardinfo.model.member.dto.MemberDTO">
 		select name
 		from member
-		where userid=#{userid} and passwd=#{passwd} and del= 'n'
+		where userid=#{userid} and passwd=#{passwd}
 	</select>
 	
 	<select id="viewMember" resultType="com.example.boardinfo.model.member.dto.MemberDTO" >
@@ -101,6 +101,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select count(*) from member 
         where userid = #{userid} and email = #{email}
 	</select>
+
+	<update id="pass_change" parameterType="hashMap">
+		update member 
+		set passwd = #{passwd}
+		where email = #{email}
+	</update>
 
 </mapper>
 

@@ -28,6 +28,10 @@ public interface TBoardDAO {
 
     int fileAttach(TBAttachDTO fDto);
 
+
     List<TBoardDTO> getTbListByUserid(String userid);
+
+    public List<TBoardDTO> getHomeList(Integer size);
+
 }
 

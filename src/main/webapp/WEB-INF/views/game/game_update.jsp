@@ -23,10 +23,10 @@
 	<main>
 		<div id="contents">
 			<div id="contentsHeader">
-				<h2>게임등록</h2>
+				<h2>게임수정</h2>
 			</div>
 			<div id="contentsLocation">
-				홈&gt 게임정보&gt 게임등록
+				홈&gt 게임정보&gt 게임수정
 			</div>
 			<div id="contentsMain">
 
@@ -649,11 +649,12 @@
 		$("#selectedCategory").on("click", ".selected-value", function() {
 			
 			var value = $(this).text();
+			var filter = "category"
 
 		    // 선택된 값 db에 존재할 경우 삭제되도록 처리
 			$.ajax({
 				type: "POST",
-				url: "${path}/game/autoUpdate_delete.do/"+value+"/${dto.gnum}",
+				url: "${path}/game/autoUpdate_delete.do/"+value+"/${dto.gnum}/"+filter,
 			});
 			
 			// 선택된 값 배열에서 해당 값을 제거
