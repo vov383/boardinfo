@@ -300,6 +300,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 
 
+	<select id="getHomeList" resultType="com.example.boardinfo.model.review.dto.ReviewDTO">
+		select *
+		from
+			(
+				select a.*, row_number() over(order by create_date desc) rn
+				from
+					(
+						select reg_num as regNum, category, title, create_date,
+							   (
+								   select count(*)
+								   from reply_comments c
+								   where c.reg_num = r.reg_num and c.del = 'N'
+							   ) as recnt
+						from review r
+						where del = 'N'
+						order by create_date desc
+					)a
+			)
+		where rn between 1 and #{size}
+	</select>
+
+
 </mapper>
 
 

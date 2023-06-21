@@ -1,5 +1,8 @@
 package com.example.boardinfo.model.chat.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class ChatMessageDTO {
@@ -12,7 +15,10 @@ public class ChatMessageDTO {
 	private String userId; //메시지 보낸 사람
 	private String message; //메시지 내용
 	private MessageType type; //메시지 타입
+
 	private Date insertDate; //메시지 보낸 날짜
+	private String formattedDate;
+	private String nickname;
 	private int gathering_id;
 	
 	
@@ -62,18 +68,32 @@ public class ChatMessageDTO {
 		this.gathering_id = gathering_id;
 	}
 
+	public String getFormattedDate() {
+		return formattedDate;
+	}
+
+	public void setFormattedDate(String formattedDate) {
+		this.formattedDate = formattedDate;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
 
 	@Override
 	public String toString() {
-		return "ChatMessageDTO [userId=" + userId + ", message=" + message + ", type=" + type + ", insertDate="
-				+ insertDate + ", gathering_id=" + gathering_id + "]";
+		return "ChatMessageDTO{" +
+				"userId='" + userId + '\'' +
+				", message='" + message + '\'' +
+				", type=" + type +
+				", insertDate=" + insertDate +
+				", formattedDate='" + formattedDate + '\'' +
+				", nickname='" + nickname + '\'' +
+				", gathering_id=" + gathering_id +
+				'}';
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 }

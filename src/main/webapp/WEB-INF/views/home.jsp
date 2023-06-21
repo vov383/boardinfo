@@ -1,195 +1,291 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="true" %> <!-- 세션사용여부 -->
 
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>BOARDINFO</title>
-        <%@ include file="include/js/header.jsp" %>
+
+<head>
+    <meta charset="utf-8">
+    <title>BOARDINFO</title>
+    <%@ include file="include/js/header.jsp" %>
+    <%--        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">--%>
+    <%--        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">--%>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+
+        #main_lower{
+            display: flex;
+            flex-direction: column;
+        }
+
+        #main_lower > div{
+            display: flex;
+            flex-direction: row;
+        }
+
+        .boxForList{
+            flex-basis: 50%;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 2px solid #d9d9d9;
+        }
+
+        div[class='boxForList']:first-of-type{
+            margin-right: 70px;
+        }
+
+        .more{
+            padding: 5px 0 5px 10px;
+            text-decoration: none;
+            color: black;
+        }
 
 
-        <style>
-            /*모달 내용 관련*/
-            #bigFrame{
-                width: 550px;
-                padding: 60px;
-                display: flex;
-                flex-direction: column;
+        #main_lower > div:first-of-type > .boxForList{
+            margin-bottom: 50px;
 
-                /*컨텐츠 내용 영역*/
-                word-break:break-word;
-                /*단어가 짤리지 않음*/
-                overflow-y:auto;
-                /*내부요소가 지정한 세로 값보다 클 경우 스크롤 생성*/
-                min-height:100px;
-                max-height:60vw;
-            }
+        }
 
-            .labelAndStars{
-                display: flex;
-                align-items: center;
-                margin-bottom: 30px;
-            }
+        .boxForList > div:first-of-type{
+            height: 40px;
+            border-bottom: 1px solid #d9d9d9;
+            display: flex;
+            justify-content: space-between;
+        }
 
-            #labelR{
-                width: 155px;
-            }
+        .boxForList > div:first-of-type > span:first-of-type{
+            font-size: 19px;
+            font-weight: bold;
+        }
 
-            #labelW{
-                width: 135px;
-            }
+        .list{
+            padding: 8px 0;
+            display: flex;
+            flex-direction: column;
+        }
 
-            .ratingStar, .weightStar{
-                cursor: pointer;
-            }
+        .list > div{
+            padding: 3px 0;
+        }
 
-            .star{
-                position: relative;
-            }
+        .list a{
+            text-decoration: none;
+            color: black;
+        }
 
-            .star img:nth-child(3){
-                width: 40px;
-            }
+        .list a:hover{
+            text-decoration: underline;
+        }
 
-            .halfStar{
-                position: absolute;
-                width: 20px;
-                opacity: 0;
-                z-index: 2;
-                -webkit-user-drag: none;
-            }
+        .badge{
+            width: 85px;
+            border-radius: 5px;
+            padding: 0 10px;
+            margin-right: 6px;
+            background-color: #d9d9d9;
+        }
 
-            .fullStar{
-                position: absolute;
-                width: 40px;
-                opacity: 0;
-                z-index: 1;
-                -webkit-user-drag: none;
-            }
+        .reply{
+            margin-left: 10px;
+            color: #C53A32;
+            font-size: 0.8em;
+        }
+        #carouselDiv {
+            height: 561px;
+        }
 
-            #hollow{
-                opacity: 100%;
-                width: 20px;
-                height: 100%;
-            }
+    </style>
 
 
-            .columnFlex{
-                display: flex;
-                flex-direction: column;
-                margin-bottom: 30px;
-            }
+    <script>
 
-            .columnFlex > span{
-                margin-bottom: 10px;
-            }
+        $(function() {
 
-            #ratingPeopleTable{
-                border-collapse: collapse;
-            }
+            $.ajax({
+                type: "POST",
+                url: "${path}/game/gameListMain.do/",
+                success:function(result){
+                    $("#carouselDiv").html(result);
+                }
+            });
+
+            $.ajax({
+                type: "get",
+                url : "${path}/review/homeList.do",
+                data : {
+                    "size" : 8
+                },
+                success: function(result){
+                    if(result){
+                        let list = result.list;
+                        let communityList = $("#communityList");
+                        let str = "";
+
+                        for(var i=0; i<list.length; i++){
+                            let reply = list[i].recnt == 0 ? "" : list[i].recnt;
+                            str += "<div><span class='badge'>"+list[i].category+"</span>" +
+                                "<a href='${path}/review/reviewdetail.do?reviewDetailKey=" + list[i].regNum + "'>"+list[i].title
+                                +"</a><span class='reply'>"+reply+"</span></div>";
+                        }
+                        communityList.append(str);
+
+                    }
+                    else alert("에러가 발생했습니다.");
+                },
+                error: function(){
+                    alert("에러가 발생했습니다.");
+                }
+
+            });
+
+            $.ajax({
+                type: "get",
+                url : "${path}/gathering/homeList.do",
+                data : {
+                    "size" : 8
+                },
+                success: function(result){
+                    if(result){
+                        let list = result.list;
+                        let gatheringList = $("#gatheringList");
+                        let str = "";
+
+                        for(var i=0; i<list.length; i++){
+                            let reply = list[i].reply_count == 0 ? "" : list[i].reply_count;
+                            str += "<div><span class='badge'>"+list[i].address1+"</span>" +
+                                "<a href='${path}/gathering/view/" + list[i].gathering_id + "'>"+list[i].title
+                                +"</a><span class='reply'>"+reply+"</span></div>";
+                        }
+
+                        gatheringList.append(str);
+
+                    }
+                    else alert("에러가 발생했습니다.");
+                },
+                error: function(){
+                    alert("에러가 발생했습니다.");
+                }
+
+            });
 
 
-            #ratingPeopleTable th, #ratingPeopleTable td{
-                height: 30px;
-            }
+            $.ajax({
+                type: "get",
+                url : "${path}/tboard/homeList.do",
+                data : {
+                    "size" : 8
+                },
+                success: function(result){
+                    if(result){
+                        let list = result.list;
+                        let tboardList = $("#tboardList");
+                        let str = "";
 
-            #ratingPeopleTable td:first-of-type{
-                padding-left: 20px;
-            }
+                        for(var i=0; i<list.length; i++){
+                            let reply = list[i].re_count == 0 ? "" : list[i].re_count;
+                            str += "<div><span class='badge'>"+list[i].category+"</span>" +
+                                "<a href='${path}/tboard/view/" + list[i].tb_num + "'>"+list[i].title
+                                +"</a><span class='reply'>"+reply+"</span></div>";
+                        }
 
-            #ratingPeopleTable td:not(#ratingPeopleTable td:first-of-type){
-                text-align: center;
-            }
 
-            #ratingPeopleTable tr:nth-child(2n){
-                background-color: #F7F7F8;
-            }
 
-            .columnFlex textarea{
-                resize: none;
-                height: 180px;
-                padding: 10px;
-            }
+                        tboardList.append(str);
 
-            #bigFrame > div:last-of-type{
-                text-align: center;
-            }
+                    }
+                    else alert("에러가 발생했습니다.");
+                },
+                error: function(){
+                    alert("에러가 발생했습니다.");
+                }
 
-            #bigFrame > div:last-of-type > button{
-                width: 140px;
-                height: 45px;
-                font-size: 18px;
-            }
+            });
 
-            #submitBtn{
-                background-color: #1432B1;
-                color: white;
-                border: none;
-                margin-right: 30px;
-                cursor: pointer;
-            }
+        });
 
-            #cancelBtn{
-                background-color: white;
-                border: 1px solid black;
-                cursor: pointer;
-            }
 
-        </style>
+    </script>
 
-   </head>
 
-   <body>
+</head>
 
-    <header>
-        <%@include file="include/top.jsp" %>
-    </header>
+<body>
 
-    <main>
+<%@include file="include/top.jsp" %>
 
-        <br><br><br><br><br>
+<div id="contents">
+    <div id="contentsMain">
 
-	<div align="center">
-		<h1><a href="${path}/sample/sample.do" style="color: black;">SAMPLE CLICK</a></h1>
-        <br>
+        <br><br><br><br><br><br>
+        <div id="carouselDiv"></div>
 
-        <br>
-        <h1><a href="${path}/tboard/list.do" style="color: black;">중고거래 게시판</a></h1>
-        <h1><a href="${path}/member/member_list.do" style="color: black;">인터셉터 확인</a></h1>
-        <br>
-        <h1><a href="${path}/chat/goChat.do" style="color: black;">sjTest</a></h1>
-        <h1><a href="${path}/gathering/list.do" style="color: black;">모임리스트</a></h1>
-        <h1><a href="${path}/gathering/add.do" style="color: black;">모임만들기</a></h1>
-        <h1><a href="${path}/mongo/insert.do" style="color: black;">테스트insert</a></h1>
-        
-        <br>
-        <h1><a href="${path}/review/reviewlist.do" style="color: black;">Review List</a></h1>
-        <h1><a href="${path}/review/freeBoardList.do" style="color: black;">Free Board List</a></h1>
-<%--
-        <h1><a href="${path}/review/reviewInsert.do" style="color: black;">Review Insert</a></h1>
-        <h1><a href="${path}/review/reviewBlobInsert.do" style="color: black;">Review Blob Test</a></h1>
---%>
+        <div id="main_lower">
+
+            <div>
+                <div class="boxForList">
+                    <div><span>HOT! 보드인이 주목중인 게시글</span><span>&gt</span></div>
+                    <div class="list">
+                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                        <div><span class="badge">후기</span>정말 재미있는 게임이네요<span class="reply">4</span></div>
+                    </div>
+                </div>
+
+                <div class="boxForList">
+                    <div><span>커뮤니티</span>
+                        <span><a class="more" href="${path}/review/reviewlist.do">&gt</a></span></div>
+                    <div class="list" id="communityList">
+                    </div>
+                </div>
+
+            </div>
+
+            <div>
+                <div class="boxForList">
+                    <div><span>오프모임</span>
+                        <span><a class="more" href="${path}/gathering/list.do">&gt</a></span></div>
+                    <div class="list" id="gatheringList">
+                    </div>
+                </div>
+                <div class="boxForList">
+                    <div><span>중고장터</span>
+                        <span><a class="more" href="${path}/tboard/list.do">&gt</a></span></div>
+                    <div class="list" id="tboardList">
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
 
     </div>
-  <div>
-  	<!-- 실제로 서비스되는 디렉토리(배포 디렉토리) 값 가져오기 -->
-		<%= application.getRealPath("/resources/ckimg/") %>
-
-		<%= application.getRealPath("/resources/uploaded_image/") %>
-  </div>
+</div>
 
 
- 
-    </main>
 
-    <footer>
-       <%@include file="include/footer.jsp" %>
-    </footer>
+<h1><a href="${path}/sample/sample.do" style="color: black;">SAMPLE CLICK</a></h1>
+<br>
+
+<br>
+<h1><a href="${path}/member/member_list.do" style="color: black;">인터셉터 확인</a></h1>
+<h1><a href="${path}/review/reviewlist.do" style="color: black;">Review List</a></h1>
 
 
-    </body>
-    
+<%@include file="include/footer.jsp" %>
+</body>
+
+
+   
+
+
 </html>

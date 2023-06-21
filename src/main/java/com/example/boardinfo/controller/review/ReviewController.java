@@ -1,13 +1,12 @@
 package com.example.boardinfo.controller.review;
 
+import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.review.dto.*;
 import com.example.boardinfo.service.review.ReviewService;
 import com.example.boardinfo.service.review.paging;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,6 +18,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("review/*")
@@ -62,9 +64,6 @@ public class ReviewController {
 
 
 //		}
-
-
-
 
 		return mav;
 	}
@@ -438,5 +437,19 @@ System.out.println("1");
 	}
 */
 
+
+	@ResponseBody
+	@GetMapping("/homeList")
+	public Map<String, List<ReviewDTO>> getHomeList(
+			@RequestParam(value="size", required=false) Integer size){
+
+		if(size == null) size = 8;
+		List<ReviewDTO> list = reviewservice.getHomeList(size);
+
+		Map<String, List<ReviewDTO>> map = new HashMap<>();
+		map.put("list", list);
+
+		return map;
+	}
 
 }

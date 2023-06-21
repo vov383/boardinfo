@@ -410,8 +410,6 @@
             /*둥글둥글한 디자인을 위해 각을 없앱니다.*/
                 overflow:hidden;
             /*각을 없앴을 때 내부 영역이 튀어나오는걸 방지*/
-                background-color:#1432B1;
-            /*배경색*/
             /*팝업이 허공에 떠있는 듯한 느낌을 주기 위한 그림자 효과.*/
                 box-shadow: 5px 10px 10px 1px rgba(0,0,0,.3);
             }
@@ -596,10 +594,19 @@
                            <div>이미지 보기</div>
                        </c:when>
                        <c:otherwise>
-                           <div>
-                               <img class="img_photo" src="${map.bgg_thumbnail}"onerror="this.src='../images/game/no-image-icon.png'">
-                           </div>
-                           <div>이미지 출처: boardgamegeek</div>
+                           <c:choose>
+                            <c:when test="${map.dto.bgg_thumbnail != null}">
+                               <div>
+                                   <img class="img_photo" src="${map.dto.bgg_thumbnail}"onerror="this.src='../images/game/no-image-icon.png'">
+                               </div>
+                               <div>이미지 출처: boardgamegeek</div>
+                            </c:when>
+                            <c:otherwise>
+                                <div>
+                                    <img class="img_photo" src="../images/game/no-image-icon.png">
+                                </div>
+                            </c:otherwise>
+                           </c:choose>
                        </c:otherwise>
                    </c:choose>
                </div>
@@ -607,21 +614,26 @@
            	<div id="upperRightSide">
 
                 <div>
-                    <div id="titleArea"><h2>${map.dto.gametitle}</h2><span>(${map.dto.gametitle_eng})</span><span>${map.dto.release_year}</span></div>
+                    <div id="titleArea"><h2>${map.dto.gametitle}</h2><span>(${map.dto.gametitle_eng})</span>
+                        <span>
+                            <c:if test="${map.dto.release_year > 0}">
+                            {map.dto.release_year}
+                            </c:if>
+                        </span></div>
                     <div>
                         <span>
                             <img src="${path}/images/game/yellow_star.png" width="45px" height="40px" style="vertical-align: middle;">
                             <c:choose>
                                 <c:when test="${statisticMap!=null}">
                                     <strong>
-                                    <fmt:formatNumber value="${statisticMap.AVGRATING}" pattern=".0"/>
+                                    <fmt:formatNumber value="${statisticMap.AVGRATING}" pattern="0.0"/>
                                     </strong> (${statisticMap.TOT}명)
                                 </c:when>
                                 <c:otherwise>- (0명)</c:otherwise></c:choose><a href="#" class="goTo">&gt</a>
                         </span>
                         <span>
                             <img src="../images/medal105.png" width="45px" height="45px" style="vertical-align: middle;">
-                            이번 주 게임 <strong>[ranking]</strong>위<a href="#" class="goTo">&gt</a>
+                            이번 주 게임 <strong>${map.dto.game_rank}</strong>위<a href="#" class="goTo">&gt</a>
                         </span>
                     </div>
 
@@ -637,7 +649,7 @@
                         <span>
                            <c:choose>
                            <c:when test="${statisticMap!=null}">
-                           <span class="byUser"><fmt:formatNumber value="${statisticMap.AVGWEIGHT}" pattern=".0"/></span>
+                           <span class="byUser"><fmt:formatNumber value="${statisticMap.AVGWEIGHT}" pattern="0.0"/></span>
                            </c:when>
                            <c:otherwise>
                            -
@@ -778,7 +790,7 @@
                                     <div>
                                         <c:choose>
                                             <c:when test="${statisticMap!=null}">
-                                                <p>평균 평점 <strong><fmt:formatNumber value="${statisticMap.AVGRATING}" pattern=".0"/></strong></p>
+                                                <p>평균 평점 <strong><fmt:formatNumber value="${statisticMap.AVGRATING}" pattern="0.0"/></strong></p>
                                                 <p>전체 평가 수 ${statisticMap.TOT}</p>
                                             </c:when>
                                             <c:otherwise>
@@ -810,7 +822,7 @@
                                     <div>
                                         <c:choose>
                                             <c:when test="${statisticMap!=null}">
-                                                <p>평균 난이도 <strong><fmt:formatNumber value="${statisticMap.AVGWEIGHT}" pattern=".0"/></strong></p>
+                                                <p>평균 난이도 <strong><fmt:formatNumber value="${statisticMap.AVGWEIGHT}" pattern="0.0"/></strong></p>
                                                 <p>전체 평가 수 <span id="weightPeopleCount"></span></p>
                                             </c:when>
                                             <c:otherwise>

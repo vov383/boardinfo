@@ -182,4 +182,9 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 */
 
+
+	@Override
+	public List<ReviewDTO> getHomeList(Integer size) {
+		return reviewDAO.getHomeList(size);
+	}
 }

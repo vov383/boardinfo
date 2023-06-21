@@ -66,4 +66,12 @@ public class DesignerDAOImpl implements DesignerDAO {
 	public List<String> viewDesigner(int gnum) {
 		return sqlSession.selectList("designer.viewDesigner", gnum);
 	}
+
+	@Override
+	public void deleteGame_Designer(String value, int gnum) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("designer", value);
+		map.put("gnum",gnum);
+		sqlSession.delete("designer.deleteGame_Designer", map);
+	}
 }

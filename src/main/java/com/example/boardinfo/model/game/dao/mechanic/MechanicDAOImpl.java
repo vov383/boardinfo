@@ -68,4 +68,12 @@ public class MechanicDAOImpl implements MechanicDAO {
   public List<String> viewMechanic(int gnum) {
     return sqlSession.selectList("mechanic.viewMechanic", gnum);
   }
+
+  @Override
+  public void deleteGame_Mechanic(String value, int gnum) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("mechanic", value);
+    map.put("gnum",gnum);
+    sqlSession.delete("mechanic.deleteGame_Mechanic", map);
+  }
 }
