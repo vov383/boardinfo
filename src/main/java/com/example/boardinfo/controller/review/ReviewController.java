@@ -44,12 +44,6 @@ public class ReviewController {
 		page = paging.Paging(page);
 		System.out.println("한글테스트 : " + new Gson().toJson(page));
 
-		/*userid가 null이면 로그인 페이지로 이동*/
-//		if (null == userid){
-//			mav.setViewName("member/login");
-
-		/*userid가 null이 아니면 리뷰 목록 조회로 이동*/
-//		} else {
 			mav.setViewName("review/gameReviewMain");
 
 			/*내가 보는 리스트의 총개수*/
@@ -61,9 +55,6 @@ public class ReviewController {
 
 			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 			mav.addObject("page", page);
-
-
-//		}
 
 		return mav;
 	}
@@ -119,20 +110,13 @@ public class ReviewController {
 
 		String userid = (String) session.getAttribute("userid");
 
-		/*userid가 null이면 로그인 페이지로 이동*/
-		if (null == userid){
-			mav.setViewName("member/login");
+		mav.setViewName("review/reviewDetail");
+		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+		mav.addObject("userid", userid);
 
-			/*userid가 null이 아니면 리뷰 상세 페이지 이동*/
-		} else {
-			mav.setViewName("review/reviewDetail");
-			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+		/*댓글 출력*/
+		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
 
-			mav.addObject("userid", userid);
-
-			/*댓글 출력*/
-			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
-		}
 
 /*		System.out.println("testestestestest");
 		System.out.println("testestestestest");
@@ -149,16 +133,22 @@ public class ReviewController {
 		//좋아요
 		reviewservice.reviewGoodCreate(reviewserchDTO, session);
 
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("review/reviewDetail");
-
 		String userid = (String) session.getAttribute("userid");
-		mav.addObject("userid", userid);
+		ModelAndView mav = new ModelAndView();
 
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+			/*userid가 null이면 로그인 페이지로 이동*/
+		if (null == userid){
+			mav.setViewName("member/login");
 
-		/*댓글 출력*/
-		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+			/*userid가 null이 아니면 좋아요 적용*/
+		} else {
+			mav.setViewName("review/reviewDetail");
+			mav.addObject("userid", userid);
+			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+
+			/*댓글 출력*/
+			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+		}
 
 		return mav;
 	}
@@ -167,21 +157,29 @@ public class ReviewController {
 	@RequestMapping("reviewreplysave.do")
 	public ModelAndView reviewReply(@ModelAttribute ReplyCommentsDTO replyCommentsDTO, HttpSession session) {
 
-		/*댓글 입력*/
-		reviewservice.reviewReply(replyCommentsDTO, session);
-
-		/*댓글의 상단 리뷰 내용 출력*/
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("review/reviewDetail");
-		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
-		reviewserchDTO.setReviewDetailKey(replyCommentsDTO.getRegNum());
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-
-		/*댓글 출력*/
-		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
-
 		String userid = (String) session.getAttribute("userid");
-		mav.addObject("userid", userid);
+		ModelAndView mav = new ModelAndView();
+
+		/*userid가 null이면 로그인 페이지로 이동*/
+		if (null == userid){
+			mav.setViewName("member/login");
+
+		/*userid가 null이 아니면 댓글 입력 페이지 이동*/
+		} else {
+			/*댓글 입력*/
+			reviewservice.reviewReply(replyCommentsDTO, session);
+
+			/*댓글의 상단 리뷰 내용 출력*/
+			mav.setViewName("review/reviewDetail");
+			reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
+			reviewserchDTO.setReviewDetailKey(replyCommentsDTO.getRegNum());
+			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+
+			/*댓글 출력*/
+			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+
+			mav.addObject("userid", userid);
+		}
 
 		return mav;
 	}
@@ -189,40 +187,60 @@ public class ReviewController {
 	// 리뷰 대댓글 입력
 	@RequestMapping("topreplyinsetsave.do")
 	public ModelAndView topreplyinsetsave(@ModelAttribute ReplyCommentsDTO replyCommentsDTO, HttpSession session) {
-System.out.println("1");
-		/*답글 입력*/
-		reviewservice.topreplyinsetsave(replyCommentsDTO, session);
-		System.out.println("2");
-		/*댓글의 상단 리뷰 내용 출력*/
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("review/reviewDetail");
-		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
-		reviewserchDTO.setReviewDetailKey(replyCommentsDTO.getRegNum());
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-
-		/*댓글 출력*/
-		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+//		System.out.println("1");
 
 		String userid = (String) session.getAttribute("userid");
-		mav.addObject("userid", userid);
+		ModelAndView mav = new ModelAndView();
 
+		/*userid가 null이면 로그인 페이지로 이동*/
+		if (null == userid){
+			mav.setViewName("member/login");
+
+			/*userid가 null이 아니면 답글 입력 페이지 이동*/
+		} else {
+			/*답글 입력*/
+			reviewservice.topreplyinsetsave(replyCommentsDTO, session);
+			System.out.println("2");
+
+			/*댓글의 상단 리뷰 내용 출력*/
+			mav.setViewName("review/reviewDetail");
+			reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
+			reviewserchDTO.setReviewDetailKey(replyCommentsDTO.getRegNum());
+			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+
+			/*댓글 출력*/
+			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+
+			mav.addObject("userid", userid);
+		}
 		return mav;
 	}
 
 
 	// 리뷰 입력 및 수정할 페이지
 	@RequestMapping("reviewInsert.do")
-	public ModelAndView reviewInsert(@ModelAttribute reviewSerchDTO reviewserchDTO){
-		/*첫 입력*/
+	public ModelAndView reviewInsert(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session){
+
+		String userid = (String) session.getAttribute("userid");
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("review/ReviewInsert");
 
-		/*System.out.println("getReviewDetailKey : " + reviewserchDTO.getReviewDetailKey());*/
+		/*userid가 null이면 로그인 페이지로 이동*/
+		if (null == userid){
+			mav.setViewName("member/login");
 
-		if (null == reviewserchDTO.getReviewDetailKey()) reviewserchDTO.setReviewDetailKey("1");
+			/*userid가 null이 아니면 답글 입력 페이지 이동*/
+		} else {
+			/*첫 입력*/
+			mav.setViewName("review/ReviewInsert");
 
-		/*수정*/
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+			/*System.out.println("getReviewDetailKey : " + reviewserchDTO.getReviewDetailKey());*/
+
+			if (null == reviewserchDTO.getReviewDetailKey()) reviewserchDTO.setReviewDetailKey("1");
+
+			/*수정*/
+			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+		}
+
 		return mav;
 	}
 
