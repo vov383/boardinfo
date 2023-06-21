@@ -105,7 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="pass_change" parameterType="hashMap">
 		update member 
 		set passwd = #{passwd}
-		where email = #{email}
+		where userid = #{userid}
 	</update>
 	
 </mapper>
