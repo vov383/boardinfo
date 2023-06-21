@@ -1,6 +1,5 @@
 package com.example.boardinfo.controller.review;
 
-import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.review.dto.*;
 import com.example.boardinfo.service.review.ReviewService;
 import com.example.boardinfo.service.review.paging;
@@ -32,6 +31,7 @@ public class ReviewController {
 	@RequestMapping("reviewlist.do")
 	public ModelAndView revewlist(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session, PageDTO page) {
 
+
 		String userid = (String) session.getAttribute("userid");
 		ModelAndView mav = new ModelAndView();
 
@@ -40,21 +40,23 @@ public class ReviewController {
 		System.out.println("pagepagepagepagepagepagepagepagepagepage : " + new Gson().toJson(page));
 		→ 0값으로 조회됨
 */
+		reviewserchDTO.setBoardDivision("'게임후기', '노하우', '질문'");
 
 		page = paging.Paging(page);
 		System.out.println("한글테스트 : " + new Gson().toJson(page));
 
-			mav.setViewName("review/gameReviewMain");
+		mav.setViewName("review/gameReviewMain");
 
-			/*내가 보는 리스트의 총개수*/
-			int cnt = reviewservice.reviewListCnt(reviewserchDTO);
-			page = paging.PagingMath(page, cnt);
+		/*내가 보는 리스트의 총개수*/
+		int cnt = reviewservice.reviewListCnt(reviewserchDTO);
+		page = paging.PagingMath(page, cnt);
 
-			reviewserchDTO.setStart(page.getStart());
-			reviewserchDTO.setEnd(page.getEnd());
+		reviewserchDTO.setStart(page.getStart());
+		reviewserchDTO.setEnd(page.getEnd());
 
-			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-			mav.addObject("page", page);
+		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+		mav.addObject("page", page);
+		mav.addObject("boardDivision", reviewserchDTO.getBoardDivision());
 
 		return mav;
 	}
@@ -73,6 +75,9 @@ public class ReviewController {
 		→ 0값으로 조회됨
 */
 
+
+		reviewserchDTO.setBoardDivision("'자유게시판'");
+
 		page = paging.Paging(page);
 		System.out.println("한글테스트 : " + new Gson().toJson(page));
 
@@ -82,17 +87,18 @@ public class ReviewController {
 
 		/*userid가 null이 아니면 리뷰 목록 조회로 이동*/
 //		} else {
-			mav.setViewName("review/freeBoard");
+		mav.setViewName("review/gameReviewMain");
 
-			/*내가 보는 리스트의 총개수*/
-			int cnt = reviewservice.reviewListCnt(reviewserchDTO);
-			page = paging.PagingMath(page, cnt);
+		/*내가 보는 리스트의 총개수*/
+		int cnt = reviewservice.reviewListCnt(reviewserchDTO);
+		page = paging.PagingMath(page, cnt);
 
-			reviewserchDTO.setStart(page.getStart());
-			reviewserchDTO.setEnd(page.getEnd());
+		reviewserchDTO.setStart(page.getStart());
+		reviewserchDTO.setEnd(page.getEnd());
 
-			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-			mav.addObject("page", page);
+		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+		mav.addObject("page", page);
+		mav.addObject("boardDivision", reviewserchDTO.getBoardDivision());
 
 
 //		}
@@ -136,7 +142,7 @@ public class ReviewController {
 		String userid = (String) session.getAttribute("userid");
 		ModelAndView mav = new ModelAndView();
 
-			/*userid가 null이면 로그인 페이지로 이동*/
+		/*userid가 null이면 로그인 페이지로 이동*/
 		if (null == userid){
 			mav.setViewName("member/login");
 
@@ -164,7 +170,7 @@ public class ReviewController {
 		if (null == userid){
 			mav.setViewName("member/login");
 
-		/*userid가 null이 아니면 댓글 입력 페이지 이동*/
+			/*userid가 null이 아니면 댓글 입력 페이지 이동*/
 		} else {
 			/*댓글 입력*/
 			reviewservice.reviewReply(replyCommentsDTO, session);
@@ -415,17 +421,17 @@ public class ReviewController {
 
 
 	// Blob Test, 입력P
-    @RequestMapping("reviewBlobInsert.do")
-    public String insert(@ModelAttribute TestDTO testdto){
-        return "/review/ReviewBlobInsert";
-    }
+	@RequestMapping("reviewBlobInsert.do")
+	public String insert(@ModelAttribute TestDTO testdto){
+		return "/review/ReviewBlobInsert";
+	}
 
-    // Blob Test, 저장P
-    @RequestMapping("reviewBlobInsertPage.do")
-    public String insertPage(@ModelAttribute TestDTO testdto){
-        reviewservice.create(testdto);
-        return "/review/ReviewBlobInsert";
-    }
+	// Blob Test, 저장P
+	@RequestMapping("reviewBlobInsertPage.do")
+	public String insertPage(@ModelAttribute TestDTO testdto){
+		reviewservice.create(testdto);
+		return "/review/ReviewBlobInsert";
+	}
 
 
 
