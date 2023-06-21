@@ -183,12 +183,12 @@ public class GatheringDAOImpl implements GatheringDAO {
 	@Override
 	public List<GatheringDTO> getGaListByUserid(String userid) {
 		return sqlSession.selectList("gathering.gaListByUserid", userid);
+	}
 
 	@Override
 	public List<GatheringDTO> getHomeList(Integer size) {
 		return sqlSession.selectList("gathering.getHomeList", size);
 	}
-
 
 	@Override
 	public String getReplyWriter(int reply_id) {

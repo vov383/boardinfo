@@ -164,7 +164,7 @@
         update into tb_files ()
     </delete>
 
-    <select id="getTbList" resultType="">
+    <select id="getTbList" resultType="tboardDto">
         select t.tb_num,
                t.title,
                t.price,

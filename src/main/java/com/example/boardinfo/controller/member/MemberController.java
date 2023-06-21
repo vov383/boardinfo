@@ -23,11 +23,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -392,7 +388,6 @@ public class MemberController {
 	@GetMapping("mypage/{userid}")
 	public ModelAndView moveToMyPage(@PathVariable(value="userid") String userid, ModelAndView mav) throws Exception{
 		try {
-			logger.info("@@@userid =>>"+userid+"@@@@@@@@@");
 			MemberDTO dto = memberService.viewMember(userid);
 			Map<String, Object> map = new HashMap<>();
 			map.put("dto", dto);
@@ -404,7 +399,6 @@ public class MemberController {
 //			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
 			return mav;
 		}catch (Exception e){
-			logger.error(e.getMessage());
 			e.printStackTrace();
 			return new ModelAndView("home");
 
@@ -416,5 +410,5 @@ public class MemberController {
 
 
 
-}
+
 
