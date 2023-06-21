@@ -4,8 +4,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>커뮤니티 - 게임포럼</title>
-<%@ include file="../include/js/header.jsp" %>
+
+    <%@ include file="../include/js/header.jsp" %>
+
+    <c:if test='${"\'자유게시판\'" eq boardDivision}'>
+        <title>커뮤니티 - 자유게시판</title>
+    </c:if>
+
+    <c:if test='${"\'자유게시판\'" ne boardDivision}'>
+        <title>커뮤니티 - 게임포럼</title>
+    </c:if>
+
 
   <style>
 
@@ -347,11 +356,21 @@
   </style>
 
   <script>
+
+
+
+
     /*타이틀 및 내용 검색 스크립트*/
     function searchFu(nowPage) {
       $("#searchTitleHidden").val($("#searchTitle").val());
       $("#nowPage").val(nowPage);
       //alert($("#searchTitleHidden").val());
+      //   name="forumBoardListHidden"
+        if ($("#boardListHidden").val() == "'자유게시판'") {
+            document.reviewSearch.action = "${path}/review/freeBoardList.do";
+        }else{
+            document.reviewSearch.action = "${path}/review/reviewlist.do";
+        }
       document.reviewSearch.submit();
     }
 
@@ -379,6 +398,7 @@
 <%--검색 폼--%>
 <form name="reviewSearch" method="post" action="${path}/review/reviewlist.do">
   <input type="hidden" name="searchTitle" id="searchTitleHidden">
+  <input type="hidden" name="forumBoardListHidden" id="boardListHidden" value="${boardDivision}">
     <%--페이징--%>
   <input type="hidden" name="nowPage" id="nowPage" value="1">
   <input type="hidden" name="cntPage" id="cntPage" value="10">
@@ -391,13 +411,25 @@
 </form>
 
 
+
 <div id="contents">
   <div id="contentsHeader">
     <h2>커뮤니티</h2>
   </div>
-  <div id="contentsLocation">
-    홈&gt 커뮤니티&gt 게임포럼
-  </div>
+
+
+    <c:if test='${"\'자유게시판\'" eq boardDivision}'>
+        <div id="contentsLocation">
+            홈&gt 커뮤니티&gt 자유게시판
+        </div>
+    </c:if>
+
+    <c:if test='${"\'자유게시판\'" ne boardDivision}'>
+        <div id="contentsLocation">
+            홈&gt 커뮤니티&gt 게임포럼
+        </div>
+    </c:if>
+
   <div id="contentsMain">
 
     <%--검색 및 글쓰기 버튼--%>
@@ -407,6 +439,10 @@
       <button type="button" onclick="reviewInsert()">글쓰기</button>
     </div>
 
+    <%--포럼게시판리스트--%>
+    <div class="boardDivision">
+      <button type="button" id="boardDivision" onclick="btnBoardDivision()">포럼게시판리스트</button>
+    </div>
 
     <%--본문--%>
     <form name="reviewlist" method="post" action="${path}/review/reviewlist.do">
@@ -488,7 +524,6 @@
           <c:if test="${page.lastPage ne page.nowPage}">
               <a href="javascript:searchFu('${page.lastPage}')">마지막</a>
           </c:if>
-
 
       </div>
 

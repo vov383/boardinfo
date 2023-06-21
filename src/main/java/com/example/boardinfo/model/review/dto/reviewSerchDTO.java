@@ -11,6 +11,7 @@ public class reviewSerchDTO {
 	private int end;                    // 쿼리 리스트 변수
 	private String ReplyRegNum;			// 댓글 키 값
 	private String topReplyRegNum;		// 답글 키 값
+	private String boardDivision;		// 포럼게시판 및 자유게시판 나누기
 
 
 
@@ -76,6 +77,14 @@ public class reviewSerchDTO {
 
 	public void setTopReplyRegNum(String topReplyRegNum) {
 		this.topReplyRegNum = topReplyRegNum;
+	}
+
+	public String getBoardDivision() {
+		return boardDivision;
+	}
+
+	public void setBoardDivision(String boardDivision) {
+		this.boardDivision = boardDivision;
 	}
 }
 

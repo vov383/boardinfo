@@ -65,9 +65,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			AND R.REG_NUM = #{reviewDetailKey}
 		</if>
   		  /*카테고리 정렬*/
-		<if test="searchTitle != '' and searchTitle != null">
-			AND R.CATEGORY in ('게임후기', '노하우', '질문')
-			-- 		  AND NOT R.CATEGORY = '자유게시판'
+		<if test="boardDivision != '' and boardDivision != null">
+			AND R.CATEGORY in (${boardDivision})
 		</if>
 
 		ORDER BY CREATEDATE DESC) A
@@ -88,14 +87,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE R.CREATE_USER = M.USERID(+)
 		  AND R.GNUM = G.GNUM(+)
 		  AND R.DEL = 'N'
-		  /*검색*/
+		/*검색*/
 		<if test="searchTitle != '' and searchTitle != null">
 			AND (R.TITLE LIKE '%'||#{searchTitle}||'%'
 			OR R.REVIEW_DETAIL LIKE '%'||#{searchTitle}||'%')
 		</if>
-		  /*디테일 진입*/
+		/*디테일 진입*/
 		<if test="reviewDetailKey != '' and reviewDetailKey != null">
 			AND R.REG_NUM = #{reviewDetailKey}
+		</if>
+		/*카테고리 정렬*/
+		<if test="boardDivision != '' and boardDivision != null">
+			AND R.CATEGORY in (${boardDivision})
 		</if>
 
 	</select>

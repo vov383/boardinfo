@@ -1,6 +1,5 @@
 package com.example.boardinfo.controller.review;
 
-import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.review.dto.*;
 import com.example.boardinfo.service.review.ReviewService;
 import com.example.boardinfo.service.review.paging;
@@ -32,6 +31,7 @@ public class ReviewController {
 	@RequestMapping("reviewlist.do")
 	public ModelAndView revewlist(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session, PageDTO page) {
 
+
 		String userid = (String) session.getAttribute("userid");
 		ModelAndView mav = new ModelAndView();
 
@@ -40,6 +40,7 @@ public class ReviewController {
 		System.out.println("pagepagepagepagepagepagepagepagepagepage : " + new Gson().toJson(page));
 		→ 0값으로 조회됨
 */
+		reviewserchDTO.setBoardDivision("'게임후기', '노하우', '질문'");
 
 		page = paging.Paging(page);
 		System.out.println("한글테스트 : " + new Gson().toJson(page));
@@ -55,6 +56,7 @@ public class ReviewController {
 
 			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 			mav.addObject("page", page);
+			mav.addObject("boardDivision", reviewserchDTO.getBoardDivision());
 
 		return mav;
 	}
@@ -73,6 +75,9 @@ public class ReviewController {
 		→ 0값으로 조회됨
 */
 
+
+		reviewserchDTO.setBoardDivision("'자유게시판'");
+
 		page = paging.Paging(page);
 		System.out.println("한글테스트 : " + new Gson().toJson(page));
 
@@ -82,7 +87,7 @@ public class ReviewController {
 
 		/*userid가 null이 아니면 리뷰 목록 조회로 이동*/
 //		} else {
-			mav.setViewName("review/freeBoard");
+			mav.setViewName("review/gameReviewMain");
 
 			/*내가 보는 리스트의 총개수*/
 			int cnt = reviewservice.reviewListCnt(reviewserchDTO);
@@ -93,6 +98,7 @@ public class ReviewController {
 
 			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 			mav.addObject("page", page);
+			mav.addObject("boardDivision", reviewserchDTO.getBoardDivision());
 
 
 //		}
