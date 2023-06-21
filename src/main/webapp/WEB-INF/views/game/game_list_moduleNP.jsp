@@ -6,7 +6,6 @@
 <%@ page session="true"%>
 <!-- 세션사용여부 -->
 <link rel="stylesheet" href="${path}/include/css/style_table.css">
-<link rel="stylesheet" href="${path}/include/css/pagenation.css">
 
 <div class="service_list_song type02 d_song_list">
 
@@ -52,48 +51,9 @@
 
         </thead>
 
-
-        <tfoot>
-
-        <tr>
-
-            <td colspan="8" align="center">
-
-                <div id="paginationArea">
-                    <c:if test="${map.pager.curPage > 1}">
-                        <div class="pageItem" onclick="list(1)">&lt&lt</div>
-                    </c:if>
-                    <c:if test="${map.pager.curPage > 1}">
-                        <div class="pageItem" onclick="list(${map.pager.prevPage})">&lt</div>
-                    </c:if>
-                    <c:forEach var="num" begin="${map.pager.blockStart}" end="${map.pager.blockEnd}">
-                        <c:choose>
-                            <c:when test="${num == map.pager.curPage}">
-                                <div id="curPage" class="pageItem" onclick="list(${num})">${num}</div>
-                            </c:when>
-                            <c:otherwise>
-                                <div class="pageItem" onclick="list(${num})">${num}</div>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
-                    <c:if test="${map.pager.curPage < map.pager.totPage}">
-                        <div class="pageItem" onclick="list(${map.pager.nextPage})">&gt</div>
-                    </c:if>
-                    <c:if test="${map.pager.curPage < map.pager.totPage}">
-                        <div class="pageItem" onclick="list(${map.pager.totPage})">&gt&gt</div>
-                    </c:if>
-                </div>
-
-            </td>
-
-        </tr>
-
-        </tfoot>
-
-
         <tbody>
 
-        <c:forEach var="row" items="${map.list}">
+        <c:forEach var="row" items="${gameMap.list}">
 
             <tr class="lst50" id="lst50" data-song-no="36430773">
 
@@ -182,14 +142,3 @@
         </tbody>
     </table>
 </div>
-
-<script>
-    function list(page) {
-        var currentPage = document.location.href;   //현재페이지 url
-        if(currentPage.includes("filter"))  //currentPage에 filter라는 문자열이 있으면
-            location.href="${path}/game/partrank/${sort}?filter=${map.filter}&num=${map.num}&curPage="+page;
-        else
-            location.href="${path}/game/gamerank/${sort}?curPage="+page;
-    }
-
-</script>

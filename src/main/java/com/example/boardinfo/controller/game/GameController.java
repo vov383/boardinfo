@@ -203,4 +203,13 @@ public class GameController {
 		mav.addObject("map", map);
 		return mav;
 	}
+
+	@GetMapping("searchAll.do")
+	public ModelAndView totalSearch(ModelAndView mav,@RequestParam("gameKeyword")String gameKeyword){
+		mav.setViewName("include/totalSearch");
+		mav.addObject("gameKeyword", gameKeyword);
+		mav.addObject("gameMap", gameService.totalSearch(gameKeyword));
+
+		return mav;
+	}
 }

@@ -415,7 +415,8 @@ public class ReviewController {
 	@ResponseBody
 	@GetMapping("/hotList")
 	public Map<String, List<ReviewDTO>> getHotList(
-			@RequestParam(value="size", required=false) Integer size){
+			@RequestParam(value="size", required=false) Integer size
+			){
 
 		if(size == null) size = 8;
 		List<ReviewDTO> list = reviewservice.getHotList(size);
@@ -424,5 +425,15 @@ public class ReviewController {
 		map.put("list", list);
 
 		return map;
+	}
+
+	@GetMapping("hotAll.do")
+	public ModelAndView getHotAll(ModelAndView mav, @RequestParam(required = false, defaultValue = "1") int curPage){
+		Map<String, Object> map = new HashMap<>();
+
+		map = reviewservice.getHotList(curPage);
+		mav.setViewName("review/reviewMain_hot");
+		mav.addObject("map", map);
+		return mav;
 	}
 }

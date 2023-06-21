@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ReviewDAOImpl implements ReviewDAO {
@@ -134,6 +135,16 @@ public class ReviewDAOImpl implements ReviewDAO {
     @Override
     public List<ReviewDTO> getHotList(Integer size) {
         return sqlSession.selectList("review.getHotList", size);
+    }
+
+    @Override
+    public int getHotListCnt(reviewSerchDTO dto) {
+        return sqlSession.selectOne("review.getHotListCnt",dto);
+    }
+
+    @Override
+    public List<ReviewDTO> getHotAll(reviewSerchDTO dto) {
+        return sqlSession.selectList("review.getHotAll", dto);
     }
 
     /*

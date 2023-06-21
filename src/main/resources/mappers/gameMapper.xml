@@ -152,7 +152,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 			) ga
         		on 		g.GNUM = ga.GNUM
 				where 	gametitle like '%'||#{input}||'%' and g.del = 'n'
-				order by 	case when gametitle like '%'||#{input}||'%' then 1 else 2 end, gametitle
+				order by 	case when gametitle like #{input}||'%' then 1 else 2 end, gametitle
 				) a
 		WHERE rn BETWEEN 1 AND 5
 	</select>
@@ -593,6 +593,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE game_rank BETWEEN #{start} AND #{end}
 	</select>
 
+	<select id="totalSearch" resultType="gameDto">
+		SELECT 	gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, game_rank,
+				rate, weight, bgg_thumbnail, tot
+		FROM 	(
+				SELECT 	a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.bgg_thumbnail,
+						a.game_rank, a.gamephoto_url, a.rate, a.weight,a.tot
+				FROM 	(
+						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
+								g.bgg_thumbnail, g.game_rank, ga.fullname AS gamephoto_url, gr.rate, gr.weight, gr.tot
+						FROM 	game g
+						LEFT JOIN 	(
+									SELECT 	gnum, fullname
+									FROM 	(
+											SELECT 	ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
+													gnum, fullname
+											FROM 	game_attach
+											)
+									WHERE 	rnum = 1
+									) ga
+						ON 		g.gnum = ga.gnum
+						LEFT JOIN 	(
+									SELECT 	gnum, avg(rating) as rate, avg(weight) as weight, count(*) tot
+									FROM 	game_rating
+									GROUP BY 	gnum
+									) gr
+						ON 		g.gnum = gr.gnum
+						where 	gametitle like '%'||#{gameKeyword}||'%' and g.del = 'n'
+						order by 	case when gametitle like #{gameKeyword}||'%' then 1 else 2 end, game_rank
+						) a
+				)
+	</select>
 
 </mapper>
 

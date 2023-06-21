@@ -37,5 +37,5 @@ public interface GameDAO {
     List<GameDTO> weeklyList(Map<String, Object> map);
 	List<GameDTO> newbieList(Map<String, Object> map);
 
-
+    List<GameDTO> totalSearch(String gameKeyword);
 }

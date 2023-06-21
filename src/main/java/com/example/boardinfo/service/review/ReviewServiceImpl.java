@@ -2,6 +2,7 @@ package com.example.boardinfo.service.review;
 
 import com.example.boardinfo.model.review.dao.ReviewDAO;
 import com.example.boardinfo.model.review.dto.*;
+
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +11,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -191,6 +194,27 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public List<ReviewDTO> getHotList(Integer size) {
 		return reviewDAO.getHotList(size);
+	}
+
+	@Override
+	public Map<String, Object> getHotList(int curPage) {
+		Map<String, Object> map = new HashMap<>();
+
+		reviewSerchDTO dto = new reviewSerchDTO();
+		int cnt = reviewDAO.getHotListCnt(dto);
+		PageDTO page = new PageDTO();
+		page = paging.Paging(page);
+		page = paging.PagingMath(page, cnt);
+
+		dto.setStart(page.getStart());
+		dto.setEnd(page.getEnd());
+
+		List<ReviewDTO> list = reviewDAO.getHotAll(dto);
+
+		map.put("list", list);
+		map.put("page", page);
+
+		return map;
 	}
 }
 
