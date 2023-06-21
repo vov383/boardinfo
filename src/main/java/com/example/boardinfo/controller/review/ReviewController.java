@@ -52,7 +52,6 @@ public class ReviewController {
 
 
 		page = paging.Paging(page);
-//		System.out.println("한글테스트 : " + new Gson().toJson(page));
 
 		mav.setViewName("review/gameReviewMain");
 
@@ -86,10 +85,6 @@ public class ReviewController {
 		mav.addObject("freeFlag", reviewserchDTO.getFreeFlag());
 
 
-/*		System.out.println("testestestestest");
-		System.out.println("testestestestest");
-		System.out.println("testestestestest");
-		System.out.println("reviewserchDTO : " + reviewserchDTO.getReviewDetailKey());*/
 		return mav;
 	}
 
@@ -164,7 +159,7 @@ public class ReviewController {
 		if (null == userid){
 			mav.setViewName("member/login");
 
-			/*userid가 null이 아니면 답글 입력 페이지 이동*/
+		/*userid가 null이 아니면 답글 입력 페이지 이동*/
 		} else {
 			/*답글 입력*/
 			reviewservice.topreplyinsetsave(replyCommentsDTO, session);
@@ -198,22 +193,19 @@ public class ReviewController {
 
 			/*userid가 null이 아니면 답글 입력 페이지 이동*/
 		} else {
-			/*첫 입력*/
+
+			/*첫 입력 페이지*/
 			mav.setViewName("review/ReviewInsert");
 
+		if (null == reviewserchDTO.getReviewDetailKey()) reviewserchDTO.setReviewDetailKey("1");
 
-			/*System.out.println("getReviewDetailKey : " + reviewserchDTO.getReviewDetailKey());*/
-
-			if (null == reviewserchDTO.getReviewDetailKey()) reviewserchDTO.setReviewDetailKey("1");
-
-			/*수정*/
+			/*수정 페이지*/
 			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 			mav.addObject("freeFlag", reviewserchDTO.getFreeFlag());
 		}
 
 		return mav;
 	}
-
 
 
 	// 댓글 수정할 페이지
@@ -336,13 +328,6 @@ public class ReviewController {
 	public ModelAndView edit(@ModelAttribute reviewSerchDTO reviewserchDTO){
 		ModelAndView mav = new ModelAndView();
 
-/*
-		System.out.println("testestestestest");
-		System.out.println("testestestestest");
-		System.out.println("testestestestest");
-		System.out.println("reviewserchDTO : " + reviewserchDTO.getReviewDetailKey());
-*/
-
 		mav.setViewName("review/reviewEdit");
 		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 		return mav;
@@ -351,34 +336,18 @@ public class ReviewController {
 	// 수정 후 페이지
 	@RequestMapping("revieweditsave.do")
 	public String editSave(@ModelAttribute ReviewDTO reviewDTO){
-//		ModelAndView mav = new ModelAndView();
-		/*System.out.println("testtesttesttesttest");*/
 		reviewservice.reviewUpdate(reviewDTO);
-//		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
-//		reviewserchDTO.setReviewDetailKey(reviewDTO.getRegNum());
-//		mav.setViewName("/review/reviewDetail");
-//		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-
 		return "redirect:/review/reviewlist.do?freeFlag="+reviewDTO.getFreeFlag();
 	}
 
 	// 삭제 후 페이지
 	@RequestMapping("reviewdelsave.do")
-	public ModelAndView reviewDelSave(@ModelAttribute reviewSerchDTO reviewserchDTO){
-		ModelAndView mav = new ModelAndView();
-/*
-		System.out.println("testtesttesttesttest");
-		System.out.println("testtesttesttesttest");
-		System.out.println("testtesttesttesttest");
-		System.out.println("reviewserchDTO.getReviewDetailKey() : "+ reviewserchDTO.getReviewDetailKey());
-*/
+	public String reviewDelSave(@ModelAttribute reviewSerchDTO reviewserchDTO){
 
 		reviewservice.reviewDel(reviewserchDTO);
-		reviewserchDTO = new reviewSerchDTO();
-		mav.setViewName("/review/gameReviewMain");
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 
-		return mav;
+		return "redirect:/review/reviewlist.do?freeFlag="+reviewserchDTO.getFreeFlag();
+
 	}
 
 

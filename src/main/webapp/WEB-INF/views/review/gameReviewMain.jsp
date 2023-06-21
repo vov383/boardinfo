@@ -7,11 +7,11 @@
 
     <%@ include file="../include/js/header.jsp" %>
 
-    <c:if test='${"\'자유게시판\'" eq boardDivision}'>
+    <c:if test='${"Y" eq freeFlag}'>
         <title>커뮤니티 - 자유게시판</title>
     </c:if>
 
-    <c:if test='${"\'자유게시판\'" ne boardDivision}'>
+    <c:if test='${"N" eq freeFlag}'>
         <title>커뮤니티 - 게임포럼</title>
     </c:if>
 
@@ -412,13 +412,13 @@
     </div>
 
 
-    <c:if test='${"\'자유게시판\'" eq boardDivision}'>
+    <c:if test='${"Y" eq freeFlag}'>
         <div id="contentsLocation">
             홈&gt 커뮤니티&gt 자유게시판
         </div>
     </c:if>
 
-    <c:if test='${"\'자유게시판\'" ne boardDivision}'>
+    <c:if test='${"N" eq freeFlag}'>
         <div id="contentsLocation">
             홈&gt 커뮤니티&gt 게임포럼
         </div>

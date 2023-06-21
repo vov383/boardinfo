@@ -4,8 +4,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>커뮤니티 - 게임리뷰</title>
     <%@ include file="../include/js/header.jsp" %>
+
+    <c:if test='${"Y" eq freeFlag}'>
+        <title>커뮤니티 - 자유게시판</title>
+    </c:if>
+
+    <c:if test='${"N" eq freeFlag}'>
+        <title>커뮤니티 - 게임포럼</title>
+    </c:if>
+
 
     <style>
 
@@ -203,14 +211,12 @@
 
         // 리뷰 리스트로 이동
         function btnList(){
-            location.href="${path}/review/reviewlist.do";
+            location.href="${path}/review/reviewlist.do?freeFlag=${freeFlag}";
         }
 
         // 수정 화면(편집화면)으로 이동
         function reviewEdit(regNum){
             $("#reviewDetailKey").val(regNum);
-            /*alert($("#reviewDetailKey").val());*/
-            /*alert("클릭 테스트");*/
             document.formReviewEdit.submit();
 
         }
@@ -218,8 +224,6 @@
         // 삭제
         function reviewDel(regNum){
             $("#reviewDelKey").val(regNum);
-            /*alert($("#reviewDetailKey").val());*/
-            /*alert("클릭 테스트");*/
             document.formreviewdel.submit();
         }
 
@@ -235,22 +239,6 @@
             $("#regNumEdit").val(regNum);
             $("#commentDetailEdit").val($("#"+replyRegNum+regNum).val());
             document.formreviewreplyedit.submit();
-
-/*
-            const commentText = document.getElementById("comment-text");
-            const editButton = document.getElementById("edit-button");
-            const saveButton = document.getElementById("save-button");
-            commentText.disabled = false;
-            commentText.focus();
-            editButton.style.display = "none";
-            saveButton.style.display = "block";
-*/
-
-
-            /*
-                        $("#reviewReplyKeyEdit").val();
-                        alert("$(\"#reviewReplyKeyEdit\").val(replyRegNum) : " + $("#reviewReplyKeyEdit").val())
-            */
         }
 
         // 댓글 수정 변환 → 버튼 보이기, 안보이기
@@ -276,7 +264,6 @@
         function btnTopReplySave(topReply){
             $("#topRegNum").val($('input[name=regNumHidden]').val());
             $("#topReplyRegNum").val(topReply);
-            // document.formreviewtopreply_topReply.submit();
             $("form[name=formreviewtopreply_"+topReply+"]").submit();
         }
 
@@ -290,7 +277,6 @@
                 $("td[name=topReplyInsetSave"+replyRegNum+regNum+topReplyRegNum+"]").attr("style","");
             }
         }
-
 
         //좋아요 → $("폼아이디).val()
         function good(regNum){
@@ -317,6 +303,7 @@
 <%--리뷰 삭제--%>
 <form name="formreviewdel" method="post" action="${path}/review/reviewdelsave.do">
     <input type="hidden" name="reviewDetailKey" id="reviewDelKey">
+    <input type="hidden" name="freeFlag" value="${freeFlag}">
 </form>
 
 <%--좋아요--%>
@@ -341,9 +328,19 @@
     <div id="contentsHeader">
         <h2>커뮤니티</h2>
     </div>
-    <div id="contentsLocation">
-        홈&gt 커뮤니티&gt 게임리뷰
-    </div>
+
+    <c:if test='${"Y" eq freeFlag}'>
+        <div id="contentsLocation">
+            홈&gt 커뮤니티&gt 자유게시판
+        </div>
+    </c:if>
+
+    <c:if test='${"N" eq freeFlag}'>
+        <div id="contentsLocation">
+            홈&gt 커뮤니티&gt 게임포럼
+        </div>
+    </c:if>
+
     <div id="contentsMain">
 
         <form name="reviewdetail" method="post" action="${path}/review/reviewdetail.do">

@@ -351,7 +351,7 @@
 
     // 리뷰 리스트로 이동
     function btnList(){
-      location.href="${path}/review/reviewlist.do";
+      location.href="${path}/review/reviewlist.do?freeFlag=${freeFlag}";
     }
   </script>
 
