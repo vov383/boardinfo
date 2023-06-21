@@ -6,6 +6,7 @@ import com.example.boardinfo.model.review.dto.TestDTO;
 import com.example.boardinfo.model.review.dto.reviewSerchDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ReviewDAO {
 
@@ -56,6 +57,8 @@ public interface ReviewDAO {
 
 
     List<ReviewDTO> getHotList(Integer size);
+    int getHotListCnt(reviewSerchDTO dto);
+    List<ReviewDTO> getHotAll(reviewSerchDTO dto);
 
 
 	/*// 리뷰 입력 테스트

@@ -37,4 +37,6 @@ public interface GameService {
   void autoUpdate_delete(String value, int gnum, String filter);
 
   Map<String, Object> gameListMain();
+
+  Map<String, Object> totalSearch(String gameKeyword);
 }

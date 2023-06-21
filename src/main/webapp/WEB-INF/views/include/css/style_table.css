@@ -1,0 +1,299 @@
+#conts:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+    font-size: 0;
+    line-height: 0
+}
+
+* html #conts {
+    height: 1%
+}
+
+#conts h1,#conts h2,#conts h3,#conts h4,#conts h5,#conts h6,#conts p,#conts td,#conts a {
+    letter-spacing: -1px
+}
+
+.ellipsis {
+    display: inline-block;
+    padding-right: 1px;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-wrap: normal;
+    overflow: hidden
+}
+
+.ellipsis {
+    *position: relative;
+    *display: inline
+}
+
+.service_list_song th,.service_list_song td {
+    text-align: left;
+    vertical-align: middle
+}
+
+.service_list_song th {
+    height: 48px;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    color: #606060;
+    font-size: 13px;
+    font-family: "돋움",Dotum,Arial,sans-serif
+}
+
+.service_list_song td {
+    height: 84px;
+    border-bottom: 1px solid #f2f2f2
+}
+
+.service_list_song th .wrap {
+    padding-top: 2px
+}
+
+.service_list_song .input_check {
+    margin: 0
+}
+
+.service_list_song .t_center {
+    text-align: center
+}
+
+.service_list_song .t_right {
+    text-align: right
+}
+
+.service_list_song .pd_l_12 {
+    padding-left: 12px
+}
+
+.service_list_song .pd_l_18 {
+    padding-left: 18px
+}
+
+.service_list_song .ma_l_18 {
+    margin-left: 18px !important
+}
+
+.service_list_song .pd_l_30 {
+    padding-left: 30px
+}
+
+.service_list_song .rank {
+    display: inline-block;
+    width: 32px;
+    padding: 0 18px 0 12px
+}
+
+.service_list_song .ellipsis {
+    max-width: 95%
+}
+
+.service_list_song .ellipsis.rank01 {
+    max-width: 240px
+}
+
+.service_list_song .ellipsis.rank01 a {
+    color: #333;
+    font-size: 14px
+}
+
+.service_list_song .ellipsis.rank01 .disabled {
+    color: #b4b4b4;
+    font-size: 14px
+}
+
+.service_list_song .ellipsis.rank02 {
+    max-width: 220px
+}
+
+.service_list_song .ellipsis.rank02 a {
+    color: #969696;
+    font-size: 12px
+}
+
+.service_list_song .ellipsis.rank02 .disabled {
+    color: #b4b4b4;
+    font-size: 12px
+}
+
+.service_list_song .ellipsis.rank03 a {
+    color: #969696;
+    font-size: 14px
+}
+
+.service_list_song .ellipsis.rank03 .disabled {
+    color: #b4b4b4;
+    font-size: 14px
+}
+
+.service_list_song .ellipsis.rank03 {
+    max-width: 170px
+}
+
+.service_list_song td .rank {
+    display: inline-block;
+    padding-top: 5px;
+    color: #333;
+    font-size: 18px;
+    font-family: 'Nunito',sans-serif
+}
+
+.service_list_song td .rank.disabled {
+    color: #b4b4b4
+}
+
+.service_list_song .song_info {
+    margin-left: 12px
+}
+
+.service_list_song .wrap_song_info {
+    display: inline-block;
+    width: 100%;
+    margin-left: 12px;
+    vertical-align: middle
+}
+
+.service_list_song .wrap_song_info .bullet_icons {
+    position: relative;
+    top: -1px
+}
+
+
+.service_list_song .rank_wrap span {
+    font-family: 'Nunito',sans-serif
+}
+
+.service_list_song .rank_wrap .up {
+    color: #f0780a;
+    font-size: 15px;
+    vertical-align: middle
+}
+
+.service_list_song .rank_wrap .down {
+    color: #8cbefa;
+    font-size: 15px;
+    vertical-align: middle
+}
+
+.service_list_song.type02 .ellipsis.rank01 {
+    max-width: 200px
+}
+
+.service_list_song.type02 .ellipsis.rank02 {
+    max-width: 180px
+}
+
+.service_list_song .wrap_atist {
+    z-index: auto
+}
+
+.service_list_song.type02.no_rank .ellipsis.rank01 {
+    max-width: 200px
+}
+
+.service_list_song.type02.no_rank .ellipsis.rank02 {
+    max-width: 180px
+}
+
+div,span,img,table,tbody,tfoot,thead,tr,th,td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    table-layout: fixed;
+}
+
+table,th,td {
+    vertical-align: top;
+}
+
+.none {
+    position: absolute;
+    top: -5000em;
+    left: 0;
+    width: 0;
+    height: 0;
+    font-size: 0;
+    line-height: 0;
+    overflow: hidden
+}
+
+a {
+    color: #1a1a1a;
+    text-decoration: none
+}
+
+a:link {
+    color: #1a1a1a;
+    text-decoration: none
+}
+
+a:hover {
+    color: #1a1a1a;
+    text-decoration: underline
+}
+
+a:visited {
+    color: #1a1a1a;
+    text-decoration: none
+}
+
+#conts {
+    border-right: 1px solid #e6e6e6;
+    position: relative;
+    z-index: 10;
+    display: inline-block;
+    display: block;
+    width: 1008px;
+    min-height: 800px;
+    padding: 52px 0 88px;
+    zoom:1
+}
+
+
+
+
+/*게임랭킹창의 랭킹 기준 표시 부분*/
+.game_rank_div {
+    width: 100%;
+}
+
+.game_rank_div ul {
+    width: 40%;
+    padding-inline-start: inherit;
+}
+
+.game_rank_div ul li {
+    list-style: none;
+    float: left;
+    width: 20%;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.game_rank_div ul li a {
+    display: block;
+    color: rgba(0,0,0,0.6);
+}
+
+.game_rank_div ul li a:hover {
+    font-size: 1.3em;
+    color: black;
+}
+
+.game_rank_div ul li a.selected {
+    font-size: 1.3em;
+    color: black;
+}

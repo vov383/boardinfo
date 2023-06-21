@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -606,6 +607,14 @@ public class GameServiceImpl implements GameService {
     map.put("newbieList", newbieList);
 
 
+    return map;
+  }
+
+  @Override
+  public Map<String, Object> totalSearch(String gameKeyword) {
+    Map<String, Object> map = new HashMap<>();
+    List<GameDTO> glist = gameDao.totalSearch(gameKeyword);
+    map.put("list", glist);
     return map;
   }
 }

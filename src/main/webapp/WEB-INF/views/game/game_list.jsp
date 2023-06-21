@@ -14,6 +14,7 @@
 
 <header>
 	<%@include file="../include/top.jsp" %>
+	<link rel="stylesheet" href="${path}/include/css/style_table.css">
 </header>
 
 <main>
