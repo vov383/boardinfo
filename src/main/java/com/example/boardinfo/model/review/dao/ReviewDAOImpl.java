@@ -113,6 +113,12 @@ public class ReviewDAOImpl implements ReviewDAO {
 
         sqlSession.insert("review.reviewBlob", testdto);
     }
+    /*리뷰 list를 userid로 가져오는 방식*/
+    @Override
+    public List<ReviewDTO> getRvListByUserid(String userid) {
+        return sqlSession.selectList("review.rvListByUserid", userid);
+    }
+    
 
 /*
 
@@ -128,6 +134,6 @@ public class ReviewDAOImpl implements ReviewDAO {
 		return sqlSession.selectList("review.reviewList");
 	}
 */
-
+    
 
 }

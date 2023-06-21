@@ -1,13 +1,16 @@
 package com.example.boardinfo.controller.member;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Random;
-
+import com.example.boardinfo.model.member.dto.MemberDTO;
+import com.example.boardinfo.service.member.MemberService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -15,27 +18,18 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.example.boardinfo.model.member.dto.MemberDTO;
-import com.example.boardinfo.service.member.MemberService;
+import java.io.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 @Controller
 @RequestMapping("member/*")
 public class MemberController {
+	//로깅
+	private static final Logger logger
+			= LoggerFactory.getLogger(MemberController.class);
 
 	@Inject
 	MemberService memberService;
@@ -112,7 +106,7 @@ public class MemberController {
                  "안녕하세요 회원님 저희 홈페이지를 찾아주셔서 감사합니다"
                  
                  +System.getProperty("line.separator")+
-                 
+
                  System.getProperty("line.separator")+
          
                  "비밀번호 찾기 인증번호는 " +dice+ " 입니다. "
@@ -120,7 +114,7 @@ public class MemberController {
                  +System.getProperty("line.separator")+
                  
                  System.getProperty("line.separator")+
-                 
+
                  "받으신 인증번호를 홈페이지에 입력해 주시면 다음으로 넘어갑니다."; // 내용
          
          try {
@@ -135,7 +129,7 @@ public class MemberController {
              messageHelper.setText(content); // 메일 내용
              
             mailSender.send(message);
-     
+
          } catch (Exception e) {
              System.out.println(e);
          }
@@ -157,20 +151,20 @@ public class MemberController {
          return mv;
          
      }
-	@RequestMapping("pass_num.do${dice},${email}")
+	@RequestMapping("pass_num/${dice}/${email}")
     public ModelAndView pass_num(String pass_num, @PathVariable String dice, @PathVariable String email, 
             HttpServletResponse response_equals) throws IOException{
     
     System.out.println("마지막 : pass_num : "+pass_num);
     
     System.out.println("마지막 : dice : "+dice);
-    
+
     ModelAndView mv = new ModelAndView();
-    
+
     mv.setViewName("/member/pass_change");
-    
+
     mv.addObject("email",email);
-    
+
     if (pass_num.equals(dice)) {
         
         //인증번호가 일치할 경우 인증번호가 맞다는 창을 출력하고 비밀번호 변경창으로 이동시킨다
@@ -361,11 +355,31 @@ public class MemberController {
 	@RequestMapping("delete.do")
 	public String delete(@RequestParam("userid") String userid,HttpSession session ) {
 		memberService.deleteMember(userid, session);
-
+		
 		return "home";
 	}
+	/*마이페이지로 이동*/
+	@GetMapping("mypage/{userid}")
+	public ModelAndView moveToMyPage(@PathVariable(value="userid") String userid, ModelAndView mav) throws Exception{
+		try {
+			logger.info("@@@userid =>>"+userid+"@@@@@@@@@");
+			MemberDTO dto = memberService.viewMember(userid);
+			Map<String, Object> map = new HashMap<>();
+			map.put("dto", dto);
 
+			mav.setViewName("member/mypage");
+//			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
 
+			mav.addObject("map", map);
+//			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
+			return mav;
+		}catch (Exception e){
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			return new ModelAndView("home");
 
+		}
+
+	}
 
 }

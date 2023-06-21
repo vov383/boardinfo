@@ -1,23 +1,21 @@
 package com.example.boardinfo.service.tboard;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpSession;
-
+import com.example.boardinfo.model.tboard.dao.TBoardDAO;
 import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
+import com.example.boardinfo.model.tboard.dto.TBoardDTO;
 import com.example.boardinfo.util.Pager;
 import com.example.boardinfo.util.UploadFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import com.example.boardinfo.model.tboard.dao.TBoardDAO;
-import com.example.boardinfo.model.tboard.dto.TBoardDTO;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class TBoardServiceImpl implements TBoardService {
@@ -90,10 +88,8 @@ public class TBoardServiceImpl implements TBoardService {
 
 	@Override
 	public Map<String, Object> viewPost(int tb_num) {
-		List<String> fList = tboardDao.getAttach(tb_num);
 		TBoardDTO dto = tboardDao.viewPost(tb_num);
 		Map<String, Object> map = new HashMap<>();
-		map.put("fList", fList);
 		map.put("dto", dto);
 		return map;
 	}

@@ -25,7 +25,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where gathering_id = #{gathering_id}
 	</update>
 
-
 	<select id="countList" resultType="int">
 		select count(*)
 		from gathering
@@ -135,7 +134,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<if test="from!=null">
 	and trunc(gathering_date, 'DD') <![CDATA[>]]>= #{from}
 	</if>
-	
+
 	<if test="to!=null">
 	and trunc(gathering_date, 'DD') <![CDATA[<]]>= #{to}
 	</if>
@@ -337,6 +336,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select gathering_id
 		from gathering
 		where gathering_date + 3 <![CDATA[<]]>= sysdate and finishchat = 'n'
+	</select>
+
+	<select id="gaListByUserid" resultType="gatheringDTO">
+		select gathering_id,
+			   writer_id,
+			   post_date,
+			   title,
+			   gathering_date,
+			   address1,
+			   address2,
+			   place_name,
+			   maxpeople,
+			   view_count,
+			   nickname,
+			   (select count(*)
+				from attendee
+				where gathering_id = g.gathering_id
+				  and type = 'a') as attendee_count
+		from gathering g
+				 join member m on g.writer_id = m.userid
+		where show = 'y' and userid = #{userid}
+		order by gathering_id
+				desc
 	</select>
 
 </mapper>

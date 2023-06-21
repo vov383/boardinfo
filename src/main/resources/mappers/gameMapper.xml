@@ -222,7 +222,6 @@ WHERE rn BETWEEN #{start} AND #{end}
 
 
 
-
 	<select id="filteredList" resultType="gameDto">
 	<bind name="filterColumn" value="filter+'.'+filter"/>
 	<bind name="mappingTable" value="'game_'+filter"/>

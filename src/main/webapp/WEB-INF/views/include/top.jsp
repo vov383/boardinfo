@@ -47,7 +47,7 @@
                             <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.nickname} 님<img
                                     src="${path}/images/dropdown.png" width="16px"></a></div>
                             <div class="dropdown-content">
-                                <a href="#">내활동</a>
+                                <a href="${path}/member/mypage/seong">마이페이지</a>
                                 <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
                             </div>
                         </div>
@@ -202,7 +202,6 @@
             }
         }
     });
-
 
 </script>
 <style>

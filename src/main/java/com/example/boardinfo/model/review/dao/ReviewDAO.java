@@ -50,6 +50,8 @@ public interface ReviewDAO {
     // 리뷰 Blob 입력 테스트
     void create(TestDTO testdto);
 
+    List<ReviewDTO> getRvListByUserid(String userid);
+
 	/*// 리뷰 입력 테스트
 	public void create(TestDTO testdto);*/
 

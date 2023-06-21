@@ -139,6 +139,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where gnum = #{gnum} and writer_id = #{writer_id} and user_id = #{user_id}
 	</delete>
 
+	<select id="rateListbyUserid" resultType="gameRatingDTO">
+		select *
+		from (select userid,
+					 count(l.user_id)                   likeCount,
+					 r.gnum,
+					 rating,
+					 weight,
+					 participant1,
+					 participant2,
+					 participant3,
+					 participant4,
+					 participant5,
+					 rating_comment,
+					 to_char(create_date, 'YYYY-MM-dd') create_date
+			  from game_rating r
+					   left join game_rating_like l on r.userid = l.writer_id
+			  where r.userid = #{userid}
+			  group by writer_id, userid, r.gnum, rating, weight,
+					   participant1, participant2, participant3, participant4, participant5, rating_comment, create_date
+			  order by likeCount desc, create_date desc
+			 )
+	</select>
 
 </mapper>
 

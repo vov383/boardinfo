@@ -1,6 +1,7 @@
 package com.example.boardinfo.model.admin.dao;
 
 import com.example.boardinfo.model.admin.dto.AdminDTO;
+import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +91,11 @@ public class AdminDAOImpl implements AdminDAO{
     @Override
     public void memberBlock(String userid) {
 
+    }
+
+    @Override
+    public List<GameRatingDTO> gameRatinglist(String userid) {
+        return sqlSession.selectList("admin.gameRatinglist", userid);
     }
 
 }
