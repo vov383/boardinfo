@@ -301,7 +301,8 @@
 
 <br>
 <h1><a href="${path}/member/member_list.do" style="color: black;">인터셉터 확인</a></h1>
-<h1><a href="${path}/review/reviewlist.do" style="color: black;">Review List</a></h1>
+<h1><a href="${path}/review/reviewlist.do" style="color: black;">커뮤니티 : 포럼게시판</a></h1>
+<h1><a href="${path}/review/freeBoardList.do" style="color: black;">커뮤니티 : 자유게시판</a></h1>
 
 
 <%@include file="include/footer.jsp" %>

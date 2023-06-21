@@ -1,9 +1,6 @@
 package com.example.boardinfo.model.review.dao;
 
-import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
-import com.example.boardinfo.model.review.dto.TestDTO;
-import com.example.boardinfo.model.review.dto.reviewSerchDTO;
+import com.example.boardinfo.model.review.dto.*;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -40,9 +37,18 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     /*리뷰 입력*/
     @Override
-    public void reviewCreate(ReviewDTO reviewDTO) {
+    public void reviewCreate(ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO) {
 
-        sqlSession.insert("review.reviewInsertPage", reviewDTO);
+        int key = sqlSession.insert("review.reviewInsertPage", reviewDTO);
+/*
+        choiceGameDTO.setReviewRegNum(String.valueOf(key+""));
+
+        System.out.println(key);
+        System.out.println(key);
+        System.out.println(key);
+
+        sqlSession.insert("review.reviewGameInsert", reviewDTO);
+*/
 
     }
 

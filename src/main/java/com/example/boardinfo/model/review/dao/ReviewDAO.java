@@ -1,9 +1,6 @@
 package com.example.boardinfo.model.review.dao;
 
-import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
-import com.example.boardinfo.model.review.dto.TestDTO;
-import com.example.boardinfo.model.review.dto.reviewSerchDTO;
+import com.example.boardinfo.model.review.dto.*;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +16,7 @@ public interface ReviewDAO {
     void reviewViews(reviewSerchDTO reviewserchDTO);
 
 	/*리뷰 입력*/
-    void reviewCreate(ReviewDTO reviewDTO);
+    void reviewCreate(ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO);
 
     /*리뷰 수정*/
     void reviewUpdate(ReviewDTO reviewDTO);

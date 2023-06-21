@@ -4,7 +4,8 @@ public class ChoiceGameDTO {
 
 	private String choiceRegNum;	// 선택된 게임 테이블 PK
 	private String gnum;			// 게임 테이블 PK
-	private String choiceGame;		// 선택된 게임
+	private String reviewRegNum;	// 리뷰 테이블 PK
+	private String gametitle;		// 선택된 게임
 	private String del;				// 삭제 여부 (기본값 : N)
 	private String createUser;		// 등록자
 	private String createDate;		// 등록 일자
@@ -27,12 +28,20 @@ public class ChoiceGameDTO {
 		this.gnum = gnum;
 	}
 
-	public String getChoiceGame() {
-		return choiceGame;
+	public String getReviewRegNum() {
+		return reviewRegNum;
 	}
 
-	public void setChoiceGame(String choiceGame) {
-		this.choiceGame = choiceGame;
+	public void setReviewRegNum(String reviewRegNum) {
+		this.reviewRegNum = reviewRegNum;
+	}
+
+	public String getGametitle() {
+		return gametitle;
+	}
+
+	public void setGametitle(String gametitle) {
+		this.gametitle = gametitle;
 	}
 
 	public String getDel() {

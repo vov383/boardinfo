@@ -77,7 +77,8 @@ CREATE TABLE CHOICE_GAME                                        -- 선택된 게
         CONSTRAINT CHOICE_REG_NUM_PK
             PRIMARY KEY,                                        -- 선택된 게임 테이블 PK
     GNUM              NUMBER NOT NULL,                          -- 게임 테이블 PK
-    CHOICE_GAME       VARCHAR2(2000) NOT NULL,                  -- 선택된 게임
+    REVIEWREGNUM      NUMBER NOT NULL,                          -- 게임 테이블 PK
+    CHOICE_GAME       VARCHAR2(2000),                           -- 선택된 게임
     DEL               VARCHAR2(10) DEFAULT 'N',                 -- 삭제 여부 (기본값 : N)
     CREATE_USER       VARCHAR2(100)                NOT NULL,    -- 작성자
     CREATE_DATE       DATE         DEFAULT SYSDATE NOT NULL,    -- 작성 일자
@@ -88,6 +89,7 @@ CREATE TABLE CHOICE_GAME                                        -- 선택된 게
 COMMENT ON TABLE CHOICE_GAME IS '선택된 게임 테이블';
 COMMENT ON COLUMN CHOICE_GAME.CHOICE_REG_NUM IS '선택된 게임 테이블의 PK';
 COMMENT ON COLUMN CHOICE_GAME.GNUM           IS '게임 테이블 PK';
+COMMENT ON COLUMN CHOICE_GAME.REVIEWREGNUM   IS '리뷰 테이블 PK';
 COMMENT ON COLUMN CHOICE_GAME.CHOICE_GAME    IS '선택된 게임';
 COMMENT ON COLUMN CHOICE_GAME.DEL            IS '삭제 여부';
 COMMENT ON COLUMN CHOICE_GAME.CREATE_USER    IS '작성자';
@@ -115,28 +117,20 @@ create table REVIEWGOOD
 
 comment on table REVIEWGOOD is '리뷰 좋아요 테이블'
 ;
-
 comment on column REVIEWGOOD.GOODKEY is '좋아요 테이블의 PK'
 ;
-
 comment on column REVIEWGOOD.REVIEWPK is '리뷰 테이블의 PK'
 ;
-
 comment on column REVIEWGOOD.GOOD is '디폴트 값 : N, 클릭 한 번씩 Y, N 변경'
 ;
-
 comment on column REVIEWGOOD.DEL is '삭제여부'
 ;
-
 comment on column REVIEWGOOD.CREATE_USER is '작성자, 회원테이블의 PK'
 ;
-
 comment on column REVIEWGOOD.CREATE_DATE is '작성일자'
 ;
-
 comment on column REVIEWGOOD.UPDATE_USER is '수정자'
 ;
-
 comment on column REVIEWGOOD.UPDATE_DATE is '수정일자'
 ;
 
