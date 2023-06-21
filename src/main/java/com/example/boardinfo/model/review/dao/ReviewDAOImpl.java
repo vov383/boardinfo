@@ -125,6 +125,10 @@ public class ReviewDAOImpl implements ReviewDAO {
         return sqlSession.selectList("review.getHomeList", size);
     }
 
+    @Override
+    public List<ReviewDTO> getHotList(Integer size) {
+        return sqlSession.selectList("review.getHotList", size);
+    }
 
     /*
 

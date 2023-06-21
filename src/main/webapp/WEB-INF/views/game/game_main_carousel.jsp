@@ -46,8 +46,12 @@
         }
 
         .carousel .item h4 {
-            font-size: 18px;
+            font-size: 16px;
             margin: 0;
+        }
+
+        .carousel .item p {
+            font-size: 14px;
         }
 
         .carousel .item .btn {
@@ -142,6 +146,7 @@
         }
 
         .subtitle {
+            font-size: 22px;
             display: inline-block;
         }
 
@@ -302,5 +307,14 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="wrapper">
+                    <div class="divider div-transparent"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
