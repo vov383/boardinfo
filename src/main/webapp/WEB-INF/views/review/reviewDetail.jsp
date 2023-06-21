@@ -434,7 +434,7 @@
                 <tr>
                     <td><b>${vo.nickname}</b></td>
                     <td>${vo.createDate}</td>
-                    <td <%--style="display: none"--%>>${vo.replyRegNum}</td>
+                    <td style="display: none">${vo.replyRegNum}</td>
 
                         <%--로그인 id와 작성자가 같으면 수정, 삭제 버튼 보이기--%>
                     <c:if test="${userid eq vo.createUser}">
@@ -447,13 +447,6 @@
                             <button type="button" onclick="btnReplyEdit('${vo.replyRegNum}','${vo.regNum}')">저장</button>
                         </td>
                     </c:if>
-                        <%--대댓글 버튼--%>
-                        <%--
-                                        <td><button type="button" onclick="btnTopReply('${vo.replyRegNum}','${vo.regNum}','${topReplyRegNum}')">
-                                            대댓글
-                                            </button>
-                                        </td>
-                        --%>
 
 
                 </tr>

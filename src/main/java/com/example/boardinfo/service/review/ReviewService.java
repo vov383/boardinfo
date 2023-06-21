@@ -1,9 +1,6 @@
 package com.example.boardinfo.service.review;
 
-import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
-import com.example.boardinfo.model.review.dto.TestDTO;
-import com.example.boardinfo.model.review.dto.reviewSerchDTO;
+import com.example.boardinfo.model.review.dto.*;
 import org.springframework.http.HttpRequest;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +19,7 @@ public interface ReviewService {
 
 
 	/*리뷰 입력*/
-    void reviewCreate(ReviewDTO reviewDTO, HttpSession session);
+    void reviewCreate(ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO, HttpSession session);
 
     /*리뷰 수정*/
     void reviewUpdate(ReviewDTO reviewDTO);

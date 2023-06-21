@@ -167,6 +167,7 @@
         
         <br>
         <h1><a href="${path}/review/reviewlist.do" style="color: black;">Review List</a></h1>
+        <h1><a href="${path}/review/freeBoardList.do" style="color: black;">Free Board List</a></h1>
 <%--
         <h1><a href="${path}/review/reviewInsert.do" style="color: black;">Review Insert</a></h1>
         <h1><a href="${path}/review/reviewBlobInsert.do" style="color: black;">Review Blob Test</a></h1>

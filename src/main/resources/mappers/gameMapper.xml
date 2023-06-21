@@ -38,8 +38,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT gnum, SUM(VIEWCOUNT) AS vcnt
 		FROM VIEWCOUNT_DATE
 		WHERE<![CDATA[
-            LOG_DATE >= NEXT_DAY(sysdate - 15, '일')
-            AND LOG_DATE < NEXT_DAY(sysdate - 8, '일')
+            LOG_DATE >= NEXT_DAY(sysdate - 15, 'sun')
+            AND LOG_DATE < NEXT_DAY(sysdate - 8, 'sun')
         ]]>
 		GROUP BY gnum, LOG_DATE
 		HAVING SUM(VIEWCOUNT) IS NOT NULL

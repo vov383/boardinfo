@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>커뮤니티 - 게임포럼</title>
+  <title>커뮤니티 - 자유게시판</title>
 <%@ include file="../include/js/header.jsp" %>
 
   <style>
@@ -352,7 +352,7 @@
       $("#searchTitleHidden").val($("#searchTitle").val());
       $("#nowPage").val(nowPage);
       //alert($("#searchTitleHidden").val());
-      document.reviewSearch.submit();
+      document.freeBoardSearch.submit();
     }
 
     /*리뷰 글쓰기 진입*/
@@ -362,7 +362,7 @@
     }
 
     /*리뷰 디테일 진입, 조회수 증가*/
-    function reviewDetail(regNum) {
+    function freeBoardDetail(regNum) {
       $("#reviewDetailKey").val(regNum);
       /*alert($("#reviewDetailKey").val());*/
       document.reviewDetail.submit();
@@ -377,16 +377,15 @@
 <%@include file="../include/top.jsp" %>
 
 <%--검색 폼--%>
-<form name="reviewSearch" method="post" action="${path}/review/reviewlist.do">
+<form name="freeBoardSearch" method="post" action="${path}/review/freeBoardList.do">
   <input type="hidden" name="searchTitle" id="searchTitleHidden">
-    <%--페이징--%>
   <input type="hidden" name="nowPage" id="nowPage" value="1">
   <input type="hidden" name="cntPage" id="cntPage" value="10">
   <input type="hidden" name="cntPerPage" id="cntPerPage" value="10">
 </form>
 
 <%--디테일 진입 폼--%>
-<form name="reviewDetail" method="post" action="${path}/review/reviewdetail.do">
+<form name="freeBoardDetail" method="post" action="${path}/review/freeBoardDetail.do">
   <input type="hidden" name="reviewDetailKey" id="reviewDetailKey">
 </form>
 
@@ -396,7 +395,7 @@
     <h2>커뮤니티</h2>
   </div>
   <div id="contentsLocation">
-    홈&gt 커뮤니티&gt 게임포럼
+    홈&gt 커뮤니티&gt 자유게시판
   </div>
   <div id="contentsMain">
 
@@ -409,7 +408,7 @@
 
 
     <%--본문--%>
-    <form name="reviewlist" method="post" action="${path}/review/reviewlist.do">
+    <form name="reviewlist" method="post" action="${path}/review/freeBoardList.do">
       <table style="table-layout:fixed;">
         <tr>
           <th style="width: 200px;">No.</th>
@@ -431,7 +430,7 @@
             <td style="width: 200px; text-align: center;">${vo.rnum}</td>
             <td style="width: 200px; text-align: center;">${vo.category}</td>
             <td style="width: 200px; text-align: center;">${vo.good}</td>
-            <td style="width: 200px; text-align: center;"><a href="javascript:reviewDetail('${vo.regNum}')">${vo.title}</a></td>
+            <td style="width: 200px; text-align: center;"><a href="javascript:freeBoardDetail('${vo.regNum}')">${vo.title}</a></td>
             <td style="width: 200px; text-align: center;">${vo.nickName}</td>
             <td style="width: 200px; text-align: center;">${vo.createDate}</td>
             <td style="width: 200px; text-align: center;">${vo.views}</td>

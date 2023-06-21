@@ -1,10 +1,7 @@
 package com.example.boardinfo.service.review;
 
 import com.example.boardinfo.model.review.dao.ReviewDAO;
-import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
-import com.example.boardinfo.model.review.dto.TestDTO;
-import com.example.boardinfo.model.review.dto.reviewSerchDTO;
+import com.example.boardinfo.model.review.dto.*;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
 	/*리뷰 입력*/
 	@Transactional
 	@Override
-	public void reviewCreate(ReviewDTO reviewDTO, HttpSession session){
+	public void reviewCreate(ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO, HttpSession session){
 
 		String userid = (String) session.getAttribute("userid");
 		reviewDTO.setCreateUser(userid);
@@ -69,7 +66,7 @@ public class ReviewServiceImpl implements ReviewService {
 */
 
 		if (null == reviewDTO.getRegNum()){
-			reviewDAO.reviewCreate(reviewDTO);
+			reviewDAO.reviewCreate(reviewDTO, choiceGameDTO);
 		} else {
 			reviewDAO.reviewUpdate(reviewDTO);
 		}

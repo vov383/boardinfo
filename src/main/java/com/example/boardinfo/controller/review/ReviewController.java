@@ -69,6 +69,50 @@ public class ReviewController {
 		return mav;
 	}
 
+
+	// 자유게시판 리스트 페이지
+	@RequestMapping("freeBoardList.do")
+	public ModelAndView freeBoardList(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session, PageDTO page) {
+
+		String userid = (String) session.getAttribute("userid");
+		ModelAndView mav = new ModelAndView();
+
+		/*조회 쿼리 이전에 페이징 처리 먼저 작업 → 조회 쿼리 이전에 불러와야 하기 때문임*/
+/*
+		System.out.println("pagepagepagepagepagepagepagepagepagepage : " + new Gson().toJson(page));
+		→ 0값으로 조회됨
+*/
+
+		page = paging.Paging(page);
+		System.out.println("한글테스트 : " + new Gson().toJson(page));
+
+		/*userid가 null이면 로그인 페이지로 이동*/
+//		if (null == userid){
+//			mav.setViewName("member/login");
+
+		/*userid가 null이 아니면 리뷰 목록 조회로 이동*/
+//		} else {
+			mav.setViewName("review/freeBoard");
+
+			/*내가 보는 리스트의 총개수*/
+			int cnt = reviewservice.reviewListCnt(reviewserchDTO);
+			page = paging.PagingMath(page, cnt);
+
+			reviewserchDTO.setStart(page.getStart());
+			reviewserchDTO.setEnd(page.getEnd());
+
+			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+			mav.addObject("page", page);
+
+
+//		}
+
+
+
+
+		return mav;
+	}
+
 	// 리뷰 상세 페이지
 	@RequestMapping("reviewdetail.do")
 	public ModelAndView revewDetail(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session) {
@@ -183,6 +227,8 @@ System.out.println("1");
 		return mav;
 	}
 
+
+
 	// 댓글 수정할 페이지
 	@RequestMapping("reviewreplyedit.do")
 	public ModelAndView reviewreplyedit(@ModelAttribute ReplyCommentsDTO replycommentsDTO, HttpSession session){
@@ -285,8 +331,8 @@ System.out.println("1");
 
 	// 리뷰 저장 후 페이지
 	@RequestMapping("reviewinsertsave.do")
-	public ModelAndView insertPage(@ModelAttribute ReviewDTO reviewDTO, HttpSession session){
-		reviewservice.reviewCreate(reviewDTO, session);
+	public ModelAndView insertPage(@ModelAttribute ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO, HttpSession session){
+		reviewservice.reviewCreate(reviewDTO, choiceGameDTO, session);
 
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("review/gameReviewMain");

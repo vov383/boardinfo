@@ -1,10 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="path" value="${pageContext.request.contextPath}" />
+<%@ page session="true"%>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>커뮤니티 - 리뷰작성</title>
+  <title>커뮤니티 - 글쓰기</title>
 <%@ include file="../include/js/header.jsp" %>
 
   <style>
@@ -349,24 +355,86 @@
     }
   </script>
 
-<%--
-  &lt;%&ndash;게임 검색 스크립트&ndash;%&gt;
-  <script>
-    function searchAll() {
-      const keyword = $("#gameKeyword").val();
-      if(keyword !== ""){
-        document.gameSearch.submit();
-      }
-    }
 
-    /*검색 스크립트*/
-    function gameTitleSearch() {
-      $("#searchTitleHidden").val($("#searchTitle").val());
-      /*alert($("#searchTitleHidden").val());*/
-      document.gameTitleSearch.submit();
+  <script>
+    $(function(){
+    //	gametitle 검색 자동완성 쿼리
+    $('#inputGame').keyup(function() {
+      var input = $(this).val();
+      $.ajax({
+        type: "POST",
+        url: "${path}/game/autoGame.do/"+input,
+        success: function(result) {
+          var suggestionsDiv = $('#gametitleSuggestions');
+          suggestionsDiv.empty(); // 기존 내용 비우기
+          if (result.length > 0) {
+            suggestionsDiv.css('max-height', '150px').show(); // 값이 있을 경우 높이 설정하고 보이기
+            $(result).each(function(index, item) {
+              var gametitle = item.gametitle;
+              var gamephoto_url = item.gamephoto_url;
+              var bgg_thumbnail = item.bgg_thumbnail;
+              var bggnum = item.bggnum;
+              //var str => #gameSearchDiv 안에 들어갈 태그 입력
+              var str = "<div class='searched_top'><div class='imageDiv'>";
+
+              if(gamephoto_url != null) { //db에 입력된 사진 주소값이 없으면
+                str += '<img src="${path}/resources/uploaded_game' + gamephoto_url + '"';
+                str += 'onerror="this.src=\'${path}/images/game/no-image-icon.png\'">';
+              } else {
+                if(bggnum != null){ //보드게임긱 아이디가 존재하면
+                  str += '<img class="img_photo" src="' + bgg_thumbnail + '"';
+                  str += 'onerror="this.src=\'${path}/images/game/no-image-icon.png\'">';
+                }else {
+                  str += '<img src="${path}/images/game/no-image-icon.png">';
+                }
+              }
+              str += "</div><div class='searched cursor_pointer'>" + gametitle + "</div></div>";
+
+              suggestionsDiv.append(str);
+            });
+          } else {
+            suggestionsDiv.hide(); // 값이 없을 경우 숨기기
+          }
+        },
+        error: function() {
+          console.log("에러..");
+        }
+      });
+      if(input=="")	$('#gametitleSuggestions').empty();
+    });
+
+    var selectedGames = [];
+    function updateGameInput() {
+      var gameInput = $("#gametitle"); /*var selectedGames = []; 해당 배열의 값이 #gametitle 여기로 넘어감, ',' 기준으로 스트링으로 넘어감*/
+      gameInput.val(selectedGames.join(","));
     }
+    //게임 검색값 클릭시 배열에 추가
+    $('#gametitleSuggestions').on('click', '.searched', function() {
+      var selectedGame = $(this).text();
+      selectedGames.push(selectedGame);
+
+      $("#selectedGame").append("<div class='selected-value cursor_pointer'>" + selectedGame + "</div>");
+      console.log("배열"+selectedGames);
+      $("#inputGame").val("");
+      $("#gametitleSuggestions").empty().hide();
+      updategameInput();
+      console.log("인풋"+$("#gametitle").val());
+    });
+    // 선택된 값 클릭 이벤트 처리
+    $("#selectedGame").on("click", ".selected-value", function() {
+      var value = $(this).text();
+      // 선택된 값 배열에서 해당 값을 제거
+      selectedGames = selectedGames.filter(function(selected) {
+        return selected !== value;
+      });
+      // 선택된 값 표시가 삭제되도록 처리
+      $(this).remove();
+      updategameInput();
+      console.log("인풋"+$("#gametitle").val());
+    });
+ });
   </script>
---%>
+
 
 
 <%-- 체크 에디터 라이브러리 --%>
@@ -384,10 +452,10 @@
 
 <div id="contents">
   <div id="contentsHeader">
-    <h2>리뷰 작성</h2>
+    <h2>글쓰기</h2>
   </div>
   <div id="contentsLocation">
-    홈 &gt 커뮤니티 &gt 리뷰 작성
+    홈 &gt 커뮤니티 &gt 글쓰기
   </div>
 
   <div id="contentsMain">
@@ -407,12 +475,13 @@
             <option value="${vo.category}">${vo.category}</option>
             <option value="게임후기">게임후기</option>
             <option value="노하우">노하우</option>
-            <option value="포럼/문의">포럼/문의</option>
+            <option value="질문 ">질문</option>
             <option value="자유게시판">자유게시판</option>
           </select>
         </p>
       <p>제목 : <input type="text" name="title" value="${vo.title}"></p>
       <p>게임ID(임시) : <input type="text" name="gnum" value="${vo.gnum}"></p>
+
       <%--<p>모임ID(임시) : <input type="text" name="gatheringId" value="${vo.gatheringId}"></p>--%>
       <p>작성자 : <input type="text" name="createUser" value="${vo.nickName}"  readonly/></p>
       <%-- 체크 에디터 적용 테스트 --%>
@@ -435,14 +504,26 @@
           <option value="">선택하세요.</option>
           <option value="게임후기">게임후기</option>
           <option value="노하우">노하우</option>
-          <option value="포럼/문의">포럼/문의</option>
+          <option value="질문">질문</option>
           <option value="자유게시판">자유게시판</option>
         </select>
         </p>
         <p>제목 : <input type="text" name="title"></p>
 
           <%--게임 검색 기능 추가--%>
-        <p>게임ID(임시) : <input type="text" name="gnum"></p>
+        <%--<p>게임ID(임시) : <input type="text" name="gnum"></p>--%>
+
+        <%--게임 검색--%>
+        <div align="left" style="border: 1px solid goldenrod;">
+          <h4>게임검색</h4>
+          <div id="selectedGame"></div>
+          <input type="hidden" name="gametitle" id="gametitle">
+          <input id="inputGame" class="input_game" autocomplete="off">
+          <div>
+            <label for="inputGame">게임명을 입력하세요</label>
+          </div>
+          <div id="gametitleSuggestions" style="width: 300px;	background-color: white; overflow-y: auto;"></div>
+        </div>
 
 <%--
         <p>
