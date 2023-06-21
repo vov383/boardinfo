@@ -9,6 +9,7 @@ import org.springframework.http.HttpRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 public interface ReviewService {
 
@@ -58,8 +59,8 @@ public interface ReviewService {
     void create(TestDTO testdto);
 
     public List<ReviewDTO> getHomeList(Integer size);
-
     List<ReviewDTO> getHotList(Integer size);
+    Map<String, Object> getHotList(int curPage);
 
 
 

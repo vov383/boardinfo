@@ -119,13 +119,15 @@
 
     //검색기능
     $(document).ready(function () {
+        setTimeout(function () {  //딜레이
         //검색창 키입력후
-        $("#gameKeyword").keyup(function () {
-            if (Event.keyCode === '13') { //엔터입력시
+        $("#gameKeyword").keyup(function(event) {
+            if (event.which === 13) { // 엔터 입력시
+                event.preventDefault();
                 searchAll();  //검색하러감
             } else {
                 //자동완성
-                setTimeout(function () {  //딜레이
+
 
                     var input = $("#gameKeyword").val();
                     $.ajax({
@@ -175,8 +177,8 @@
                     });
                     if (input == "") $('#gameSearchDiv').empty();
 
-                }, 500) //settimeout 콜백함수로 0.5초 딜레이 후 검색창 작동
-            }
+                    }
+            }, 500) //settimeout 콜백함수로 0.5초 딜레이 후 검색창 작동
         });
 
         /*관리자 로그아웃 버튼*/
