@@ -263,5 +263,4 @@ public class GameDAOImpl implements GameDAO {
 		return sqlSession.selectList("game.newbieList", map);
 	}
 
-
 }

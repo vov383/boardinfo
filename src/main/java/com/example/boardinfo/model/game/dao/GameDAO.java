@@ -38,5 +38,4 @@ public interface GameDAO {
 	List<GameDTO> newbieList(Map<String, Object> map);
 
 
-
 }

@@ -190,4 +190,10 @@ public class ReviewServiceImpl implements ReviewService {
 	public List<ReviewDTO> getHomeList(Integer size) {
 		return reviewDAO.getHomeList(size);
 	}
+
+	@Override
+	public List<ReviewDTO> getHotList(Integer size) {
+		return reviewDAO.getHotList(size);
+	}
 }
+

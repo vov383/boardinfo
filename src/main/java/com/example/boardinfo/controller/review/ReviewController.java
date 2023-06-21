@@ -406,4 +406,18 @@ System.out.println("1");
 		return map;
 	}
 
+
+	@ResponseBody
+	@GetMapping("/hotList")
+	public Map<String, List<ReviewDTO>> getHotList(
+			@RequestParam(value="size", required=false) Integer size){
+
+		if(size == null) size = 8;
+		List<ReviewDTO> list = reviewservice.getHotList(size);
+
+		Map<String, List<ReviewDTO>> map = new HashMap<>();
+		map.put("list", list);
+
+		return map;
+	}
 }
