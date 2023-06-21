@@ -34,5 +34,9 @@ public interface GameService {
   Map<String, Object> parseInsert(int bggnum);
   Map<String, Object> getExRe(String origin, String filter, int num);
 
-  void autoUpdate_delete(String value, int gnum);
+  void autoUpdate_delete(String value, int gnum, String filter);
+
+  Map<String, Object> gameListMain();
+
+  Map<String, Object> totalSearch(String gameKeyword);
 }

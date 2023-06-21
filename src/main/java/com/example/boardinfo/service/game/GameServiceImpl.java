@@ -1,25 +1,5 @@
 package com.example.boardinfo.service.game;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.example.boardinfo.model.game.dto.designer.DesignerDTO;
-import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
-import com.example.boardinfo.util.GameUtils;
-import com.example.boardinfo.util.Pager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.example.boardinfo.model.game.dao.GameDAO;
 import com.example.boardinfo.model.game.dao.artist.ArtistDAO;
 import com.example.boardinfo.model.game.dao.category.CategoryDAO;
@@ -30,7 +10,24 @@ import com.example.boardinfo.model.game.dao.publisher.PublisherDAO;
 import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.artist.ArtistDTO;
 import com.example.boardinfo.model.game.dto.category.CategoryDTO;
+import com.example.boardinfo.model.game.dto.designer.DesignerDTO;
 import com.example.boardinfo.model.game.dto.mechanic.MechanicDTO;
+import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
+import com.example.boardinfo.util.GameUtils;
+import com.example.boardinfo.util.Pager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.inject.Inject;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class GameServiceImpl implements GameService {
@@ -65,13 +62,6 @@ public class GameServiceImpl implements GameService {
     map.put("sort", sort);
 
     List<GameDTO> list = gameDao.gamelist(map);
-
-    for(GameDTO dto : list){
-      //bggnum을 통한 image파싱
-      int bggnum = dto.getBggnum();
-      dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
-
-    }
 
     map.put("list",list);
     map.put("pager",pager);
@@ -225,35 +215,20 @@ public class GameServiceImpl implements GameService {
     //game테이블 데이터
     GameDTO dto = gameDao.view(gnum);
 
-    //사진
-    String str = dto.getGamephoto_url();
-    if(str != null) {
-      String front = str.substring(0, 12);
-      String end = str.substring(14);
-      dto.setGamephoto_url(front+end);
-    }
-
-
-
     List<ArtistDTO> alist = artistDao.view(gnum);
     List<CategoryDTO> clist = categoryDao.view(gnum);
     List<DesignerDTO> dlist = designerDao.view(gnum);
     List<MechanicDTO> mlist = mechanicDao.view(gnum);
     List<PublisherDTO> plist = publisherDao.view(gnum);
     
-
-    int bggnum = dto.getBggnum();
-
     Map<String, Object> map = new HashMap<>();
+
     map.put("dto",dto);
     map.put("alist", alist);
     map.put("clist", clist);
     map.put("dlist", dlist);
     map.put("mlist", mlist);
     map.put("plist", plist);
-
-    map.put("bgg_thumbnail", GameUtils.setStr(bggnum,"thumbnail"));
-
 
     return map;
   }
@@ -279,25 +254,46 @@ public class GameServiceImpl implements GameService {
     return publisherDao.getAutoPublisher(input);
   }
 
-  //top의 검색창 게임 검색목록
+  //top의 검색창 게임 검색목록, 리뷰에서도 사용.
   public List<GameDTO> getAutoGame(String input){
-    List<GameDTO> list = gameDao.getAutoGame(input);
-
-    for(GameDTO dto : list){
-      if(dto.getGamephoto_url() == null){
-        int bggnum = dto.getBggnum();
-        dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
-      }
-    }
-    return list;
+    return gameDao.getAutoGame(input);
   }
 
   @Override
-  public void autoUpdate_delete(String value, int gnum) {
-    int checkCategory = categoryDao.check_category(value, gnum);
-    if(checkCategory > 0){
-      categoryDao.deleteGame_Category(value, gnum);
+  public void autoUpdate_delete(String value, int gnum, String filter) {
+    switch (filter){
+      case "category":
+        int checknum = categoryDao.check_category(value, gnum);
+        if(checknum > 0){
+          categoryDao.deleteGame_Category(value, gnum);
+          break;
+        }
+      case "artist":
+        checknum = artistDao.check_artist(value, gnum);
+        if(checknum > 0){
+          artistDao.deleteGame_Artist(value, gnum);
+          break;
+        }
+      case "designer":
+        checknum = designerDao.check_designer(value, gnum);
+        if(checknum > 0){
+          designerDao.deleteGame_Designer(value, gnum);
+          break;
+        }
+      case "mechanic":
+        checknum = mechanicDao.check_mechanic(value, gnum);
+        if(checknum > 0){
+          mechanicDao.deleteGame_Mechanic(value, gnum);
+          break;
+        }
+      case "publisher":
+        checknum = publisherDao.check_publisher(value, gnum);
+        if(checknum > 0){
+          publisherDao.deleteGame_Publisher(value, gnum);
+          break;
+        }
     }
+
 
   }
 
@@ -326,12 +322,6 @@ public class GameServiceImpl implements GameService {
     map.put("sort", sort);
 
     List<GameDTO> list = gameDao.filteredGamelist(map);
-
-    for(GameDTO dto : list){
-      int bggnum = dto.getBggnum();
-      dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
-
-    }
 
     map.put("count", count);
     map.put("list", list);
@@ -589,6 +579,7 @@ public class GameServiceImpl implements GameService {
   }
 
 
+  //게임정보창의 확장재구현게임 목록 표시
   public Map<String,Object> getExRe(String origin, String filter, int num){
     Map<String, Object> map = new HashMap<>();
     map.put("origin", origin);  //child or parent
@@ -596,27 +587,34 @@ public class GameServiceImpl implements GameService {
     map.put("num", num);
 
     List<GameDTO> list = gameDao.ExReList(map);
-    for(GameDTO dto : list){
-      //bggnum을 통한 image파싱
-      int bggnum = dto.getBggnum();
-      dto.setBgg_thumbnail(GameUtils.setStr(bggnum,"thumbnail"));
-
-      //gnum을 통해 rating과 weight를 넣자
-      int gnum = dto.getGnum();
-      Map<String, Object> rmap = gameRatingDao.getRateWeight(gnum);
-      if(rmap != null && rmap.get("AVGRATING") != null){
-        Double rate = Double.parseDouble(String.format("%.2f",rmap.get("AVGRATING")));
-        dto.setRate(rate);
-      }
-      if(rmap != null && rmap.get("AVGWEIGHT") != null){
-        Double weight = Double.parseDouble(String.format("%.2f",rmap.get("AVGWEIGHT")));
-        dto.setWeight(weight);
-      }
-    }
 
     map.clear();
 
     map.put("list",list);
+    return map;
+  }
+
+  @Override
+  public Map<String, Object> gameListMain() {
+    Map<String, Object> map = new HashMap<>();
+    map.put("str","carousel");
+    List<GameDTO> weeklyList = gameDao.weeklyList(map);
+    List<GameDTO> newbieList = gameDao.newbieList(map);
+
+
+    map.clear();
+    map.put("weeklyList", weeklyList);
+    map.put("newbieList", newbieList);
+
+
+    return map;
+  }
+
+  @Override
+  public Map<String, Object> totalSearch(String gameKeyword) {
+    Map<String, Object> map = new HashMap<>();
+    List<GameDTO> glist = gameDao.totalSearch(gameKeyword);
+    map.put("list", glist);
     return map;
   }
 }

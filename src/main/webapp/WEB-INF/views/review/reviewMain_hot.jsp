@@ -4,17 +4,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
+    <title>커뮤니티 - 게임리뷰</title>
     <%@ include file="../include/js/header.jsp" %>
-
-    <c:if test='${"Y" eq freeFlag}'>
-        <title>커뮤니티 - 자유게시판</title>
-    </c:if>
-
-    <c:if test='${"N" eq freeFlag}'>
-        <title>커뮤니티 - 게임포럼</title>
-    </c:if>
-
 
     <style>
 
@@ -356,18 +347,18 @@
     </style>
 
     <script>
-
-        /*타이틀 및 내용 검색 스크립트, 카테고리 분류(게임포럼 및 자게)*/
+        /*검색 스크립트*/
         function searchFu(nowPage) {
             $("#searchTitleHidden").val($("#searchTitle").val());
             $("#nowPage").val(nowPage);
+            //alert($("#searchTitleHidden").val());
             document.reviewSearch.submit();
         }
 
         /*리뷰 글쓰기 진입*/
-        function btnReviewInsert() {
+        function reviewInsert(regNum) {
             /*alert("버튼 잘 눌리는지 테스트")*/
-            document.reviewInsert.submit();
+            location.href="${path}/review/reviewInsert.do";
         }
 
         /*리뷰 디테일 진입, 조회수 증가*/
@@ -379,6 +370,8 @@
 
     </script>
 
+
+
 </head>
 
 
@@ -388,8 +381,6 @@
 <%--검색 폼--%>
 <form name="reviewSearch" method="post" action="${path}/review/reviewlist.do">
     <input type="hidden" name="searchTitle" id="searchTitleHidden">
-    <input type="hidden" name="freeFlag" id="boardListHidden" value="${freeFlag}">
-    <%--페이징--%>
     <input type="hidden" name="nowPage" id="nowPage" value="1">
     <input type="hidden" name="cntPage" id="cntPage" value="10">
     <input type="hidden" name="cntPerPage" id="cntPerPage" value="10">
@@ -398,40 +389,25 @@
 <%--디테일 진입 폼--%>
 <form name="reviewDetail" method="post" action="${path}/review/reviewdetail.do">
     <input type="hidden" name="reviewDetailKey" id="reviewDetailKey">
-    <input type="hidden" name="freeFlag" value="${freeFlag}">
-</form>
-
-<form name="reviewInsert" method="post" action="${path}/review/reviewInsert.do">
-    <input type="hidden" name="freeFlag" value="${freeFlag}">
 </form>
 
 
 <div id="contents">
     <div id="contentsHeader">
-        <h2>커뮤니티</h2>
+        <h2>HOT게시글</h2>
     </div>
-
-
-    <c:if test='${"Y" eq freeFlag}'>
-        <div id="contentsLocation">
-            홈&gt 커뮤니티&gt 자유게시판
-        </div>
-    </c:if>
-
-    <c:if test='${"N" eq freeFlag}'>
-        <div id="contentsLocation">
-            홈&gt 커뮤니티&gt 게임포럼
-        </div>
-    </c:if>
-
+    <div id="contentsLocation">
+        홈&gt 커뮤니티&gt HOT게시글
+    </div>
     <div id="contentsMain">
 
         <%--검색 및 글쓰기 버튼--%>
         <div class="searchBox">
             <input type="text" id="searchTitle" placeholder="제목 및 내용을 검색하세요.">
             <button type="button" id="search" onclick="searchFu('1')">검색</button>
-            <button type="button" onclick="btnReviewInsert()">글쓰기</button>
+            <button type="button" onclick="reviewInsert()">글쓰기</button>
         </div>
+
 
         <%--본문--%>
         <form name="reviewlist" method="post" action="${path}/review/reviewlist.do">
@@ -451,7 +427,7 @@
                 <%--<script>
                   console.log(<c:out value="${list}"></c:out>)
                 </script>--%>
-                <c:forEach items="${list}" var="vo">
+                <c:forEach items="${map.list}" var="vo">
                     <tr>
                         <td style="width: 200px; text-align: center;">${vo.rnum}</td>
                         <td style="width: 200px; text-align: center;">${vo.category}</td>
@@ -478,41 +454,44 @@
         <%--      private int start;                   // 쿼리 리스트 변수--%>
         <%--      private int end;                     // 쿼리 리스트 변수--%>
 
-        nowPage;   <c:out value="${page.nowPage   }"></c:out>
-        cntPage;   <c:out value="${page.cntPage   }"></c:out>
-        lastPage;  <c:out value="${page.lastPage  }"></c:out>
-        startPage; <c:out value="${page.startPage }"></c:out>
-        endPage;   <c:out value="${page.endPage   }"></c:out>
+        <%--
+               nowPage;   <c:out value="${page.nowPage   }"></c:out>
+               cntPage;   <c:out value="${page.cntPage   }"></c:out>
+               lastPage;  <c:out value="${page.lastPage  }"></c:out>
+               startPage; <c:out value="${page.startPage }"></c:out>
+               endPage;   <c:out value="${page.endPage   }"></c:out>
+        --%>
 
         <div class="paging-btn">
 
             <%--페이징--%>
-            <c:if test="${1 ne page.nowPage}">
+            <c:if test="${1 ne map.page.nowPage}">
                 <a href="javascript:searchFu('1')">처음</a>
             </c:if>
 
-            <c:if test="${1 < page.nowPage}">
-                <a href="javascript:searchFu('${page.nowPage-1}')">이전</a>
+            <c:if test="${1 < map.page.nowPage}">
+                <a href="javascript:searchFu('${map.page.nowPage-1}')">이전</a>
             </c:if>
 
             <%--현재 페이지--%>
-            <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
-                <c:if test="${i eq page.nowPage}">
+            <c:forEach var="i" begin="${map.page.startPage}" end="${map.page.endPage}">
+                <c:if test="${i eq map.page.nowPage}">
                     ${i}
                 </c:if>
-                <c:if test="${i ne page.nowPage}">
+                <c:if test="${i ne map.page.nowPage}">
                     <a href="javascript:searchFu('${i}')">${i}</a>
                 </c:if>
 
             </c:forEach>
 
-            <c:if test="${page.lastPage > page.nowPage}">
-                <a href="javascript:searchFu('${page.nowPage+1}')">다음</a>
+            <c:if test="${map.page.lastPage > map.page.nowPage}">
+                <a href="javascript:searchFu('${map.page.nowPage+1}')">다음</a>
             </c:if>
 
-            <c:if test="${page.lastPage ne page.nowPage}">
-                <a href="javascript:searchFu('${page.lastPage}')">마지막</a>
+            <c:if test="${map.page.lastPage ne map.page.nowPage}">
+                <a href="javascript:searchFu('${map.page.endPage}')">마지막</a>
             </c:if>
+
 
         </div>
 

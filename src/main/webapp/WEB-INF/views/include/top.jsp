@@ -47,7 +47,7 @@
                             <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.nickname} 님<img
                                     src="${path}/images/dropdown.png" width="16px"></a></div>
                             <div class="dropdown-content">
-                                <a href="#">내활동</a>
+                                <a href="${path}/member/mypage/seong">마이페이지</a>
                                 <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
                             </div>
                         </div>
@@ -119,13 +119,15 @@
 
     //검색기능
     $(document).ready(function () {
+        setTimeout(function () {  //딜레이
         //검색창 키입력후
-        $("#gameKeyword").keyup(function () {
-            if (Event.keyCode === '13') { //엔터입력시
+        $("#gameKeyword").keyup(function(event) {
+            if (event.which === 13) { // 엔터 입력시
+                event.preventDefault();
                 searchAll();  //검색하러감
             } else {
                 //자동완성
-                setTimeout(function () {  //딜레이
+
 
                     var input = $("#gameKeyword").val();
                     $.ajax({
@@ -175,8 +177,8 @@
                     });
                     if (input == "") $('#gameSearchDiv').empty();
 
-                }, 500) //settimeout 콜백함수로 0.5초 딜레이 후 검색창 작동
-            }
+                    }
+            }, 500) //settimeout 콜백함수로 0.5초 딜레이 후 검색창 작동
         });
 
         /*관리자 로그아웃 버튼*/
@@ -202,7 +204,6 @@
             }
         }
     });
-
 
 </script>
 <style>

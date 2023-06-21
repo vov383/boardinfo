@@ -24,8 +24,12 @@ public class GameDAOImpl implements GameDAO {
 	@Inject
 	SqlSession sqlSession;
 
-	public int countList() { return sqlSession.selectOne("game.gameListCount");}
-	
+	//페이징에 필요한 전체 리스트갯수 구하기
+	public int countList() {
+		return sqlSession.selectOne("game.gameListCount");
+	}
+
+	//전체게임의 목록, 기준에 따라 순서가 다르다
 	@Override
 	public List<GameDTO> gamelist(Map<String, Object> map){
 		List<GameDTO> list = new ArrayList<>();
@@ -37,14 +41,11 @@ public class GameDAOImpl implements GameDAO {
 			case "week":
 				list = sqlSession.selectList("game.gameList", map);
 				break;
-			case "day":
-				list = sqlSession.selectList("game.gameList_day", map);
-				break;
 			case "rate":
 				list = sqlSession.selectList("game.gameList_rate", map);
 				break;
-			case "comment":
-				list = sqlSession.selectList("game.gameList_comment", map);
+			case "newbie":
+				list = sqlSession.selectList("game.gameList_newbie", map);
 				break;
 			case "vcnt":
 				list = sqlSession.selectList("game.gameList_vcnt", map);
@@ -53,48 +54,49 @@ public class GameDAOImpl implements GameDAO {
 				list = null;
 		}
 		return list;
-
-
-
-
 	}
-	
+
+	//새로운 게임을 등록한다.
 	@Override
 	public void gameinsert(GameDTO dto) {
 		sqlSession.insert("game.gameInsert",dto);
 	}
-	
+
+	//조회수를 증가시킨다.
 	public void increaseViewcnt(int gnum) throws Exception {
 		sqlSession.update("game.increaseViewcnt", gnum);
 	}
-	
+
+	//상세정보화면
 	public GameDTO view(int gnum) {
 		return sqlSession.selectOne("game.view", gnum);
 	}
 
+	//검색창 자동완성기능
 	public List<GameDTO> getAutoGame(String input){
 		return sqlSession.selectList("game.getAuto", input);
 	}
 
-
-
-
+	//이미지파일 경로명을 삽입한다.
 	public void addAttach(String fullName, String userid){
 		Map<String, Object> map = new HashMap<>();
 		map.put("fullName",fullName);
 		map.put("userid",userid);
 		sqlSession.insert("game.addAttach", map);
 	}
+
+	//이미지파일 경로명을 삭제한다.
 	public void delteFile(String fileName){
 		sqlSession.delete("game.deleteFile", fileName);
 	}
 
+	//세부 카테고리별 목록의 갯수를 구한다. 페이징에 필요.
 	public int countList(Map<String, Object> map){
 		return sqlSession.selectOne("game.filteredListCount", map);
 	}
 
+	//세부 카테고리별 목록을 출력.
 	public List<GameDTO> filteredGamelist(Map<String, Object> map) {
-
 		List<GameDTO> list = new ArrayList<>();
 		String sort = (String)map.get("sort");
 		switch (sort){
@@ -104,14 +106,11 @@ public class GameDAOImpl implements GameDAO {
 			case "week":
 				list = sqlSession.selectList("game.filteredList", map);
 				break;
-			case "day":
-				list = sqlSession.selectList("game.filteredList_day", map);
-				break;
 			case "rate":
 				list = sqlSession.selectList("game.filteredList_rate", map);
 				break;
-			case "comment":
-				list = sqlSession.selectList("game.filteredList_comment", map);
+			case "newbie":
+				list = sqlSession.selectList("game.filteredList_newbie", map);
 				break;
 			case "vcnt":
 				list = sqlSession.selectList("game.filteredList_vcnt", map);
@@ -122,10 +121,12 @@ public class GameDAOImpl implements GameDAO {
 		return list;
 	}
 
+	//게임정보수정
 	public void gameupdate(GameDTO dto){
 		sqlSession.update("game.gameupdate", dto);
 	}
 
+	//확장게임의 정보를 삽입한다.(새 게임 등록시)
 	public void insert_expansion(String expansion, String userid){
 		Map<String, Object> map = new HashMap<>();
 		map.put("expansion",expansion);
@@ -133,6 +134,7 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.insert("game.expansion_insert", map);
 	}
 
+	//재구현게임의 정보를 삽입한다.(새 게임 등록시)
 	public void insert_reimplement(String reimplement, String userid){
 		Map<String, Object> map = new HashMap<>();
 		map.put("reimplement",reimplement);
@@ -140,6 +142,7 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.insert("game.reimplement_insert", map);
 	}
 
+	//확장게임의 정보를 삽입한다. (기존게임에 추가시)
 	public void insert_expansion(int gnum, String expansion, String userid){
 		Map<String, Object> map = new HashMap<>();
 		map.put("gnum", gnum);
@@ -148,6 +151,7 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.insert("game.expansion_update", map);
 	}
 
+	//재구현게임의 정보를 삽입한다. (기존게임에 추가시)
 	public void insert_reimplement(int gnum, String reimplement, String userid){
 		Map<String, Object> map = new HashMap<>();
 		map.put("gnum", gnum);
@@ -156,6 +160,7 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.insert("game.reimplement_update", map);
 	}
 
+	//게임정보에서 확장게임을 출력할때
 	public Map<String, Object> getExpansion(int gnum){
 		Map<String, Object> map = new HashMap<>();
 		map.put("gnum",gnum);
@@ -178,6 +183,7 @@ public class GameDAOImpl implements GameDAO {
 		return map;
 	}
 
+	//게임정보에서 재구현게임을 출력할때
 	public Map<String, Object> getReimplement(int gnum){
 		Map<String, Object> map = new HashMap<>();
 		map.put("gnum",gnum);
@@ -187,7 +193,7 @@ public class GameDAOImpl implements GameDAO {
 		map.put("strWhere","gnum");
 		List<GameDTO> origin =sqlSession.selectList("game.getReimplement", map);
 
-		//해당게임의 원본 게임을 구하는 경우 (해당게임이 확장판)
+		//해당게임의 원본 게임을 구하는 경우 (해당게임이 재구현판)
 		map.replace("strOn","gnum");
 		map.replace("strWhere","renum");
 		List<GameDTO> expansion = sqlSession.selectList("game.getReimplement", map);
@@ -200,6 +206,7 @@ public class GameDAOImpl implements GameDAO {
 		return map;
 	}
 
+	//게임을 삭제한다
 	public void deleteGame(int gnum, String userid){
 		Map<String, Object> map = new HashMap<>();
 		map.put("gnum",gnum);
@@ -208,9 +215,9 @@ public class GameDAOImpl implements GameDAO {
 		sqlSession.update("game.delete", map);
 	}
 
+	//
 	@Override
 	public int countExRe(Map<String, Object> map) {
-
 		return sqlSession.selectOne("game.countExRe", map);
 	}
 
@@ -224,6 +231,7 @@ public class GameDAOImpl implements GameDAO {
 		return list;
 	}
 
+	//게임정보창의 확장재구현게임목록
 	@Override
 	public List<GameDTO> ExReList(Map<String, Object> map) {
 		return sqlSession.selectList("game.getExReList", map);
@@ -241,5 +249,22 @@ public class GameDAOImpl implements GameDAO {
 		map.put("gnum",gnum);
 		map.put("reimplement",reimplement);
 		return sqlSession.selectOne("game.getRenum", map);
+	}
+
+	//메인페이지의 캐러셀에 들어가는 주간 랭킹
+	@Override
+	public List<GameDTO> weeklyList(Map<String, Object> map) {
+		return sqlSession.selectList("game.weeklyList", map);
+	}
+
+	//메인페이지의 캐러셀에 들어가는 신규 게임
+	@Override
+	public List<GameDTO> newbieList(Map<String, Object> map) {
+		return sqlSession.selectList("game.newbieList", map);
+	}
+
+	@Override
+	public List<GameDTO> totalSearch(String gameKeyword) {
+		return sqlSession.selectList("game.totalSearch", gameKeyword);
 	}
 }

@@ -1,14 +1,12 @@
 package com.example.boardinfo.model.review.dao;
 
-import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
-import com.example.boardinfo.model.review.dto.TestDTO;
-import com.example.boardinfo.model.review.dto.reviewSerchDTO;
+import com.example.boardinfo.model.review.dto.*;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ReviewDAOImpl implements ReviewDAO {
@@ -39,9 +37,18 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     /*리뷰 입력*/
     @Override
-    public void reviewCreate(ReviewDTO reviewDTO) {
+    public void reviewCreate(ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO) {
 
-        sqlSession.insert("review.reviewInsertPage", reviewDTO);
+        int key = sqlSession.insert("review.reviewInsertPage", reviewDTO);
+/*
+        choiceGameDTO.setReviewRegNum(String.valueOf(key+""));
+
+        System.out.println(key);
+        System.out.println(key);
+        System.out.println(key);
+
+        sqlSession.insert("review.reviewGameInsert", reviewDTO);
+*/
 
     }
 
@@ -113,8 +120,34 @@ public class ReviewDAOImpl implements ReviewDAO {
 
         sqlSession.insert("review.reviewBlob", testdto);
     }
+    /*리뷰 list를 userid로 가져오는 방식*/
+    @Override
+    public List<ReviewDTO> getRvListByUserid(String userid) {
+        return sqlSession.selectList("review.rvListByUserid", userid);
+    }
+    
 
-/*
+    @Override
+    public List<ReviewDTO> getHomeList(Integer size) {
+        return sqlSession.selectList("review.getHomeList", size);
+    }
+
+    @Override
+    public List<ReviewDTO> getHotList(Integer size) {
+        return sqlSession.selectList("review.getHotList", size);
+    }
+
+    @Override
+    public int getHotListCnt(reviewSerchDTO dto) {
+        return sqlSession.selectOne("review.getHotListCnt",dto);
+    }
+
+    @Override
+    public List<ReviewDTO> getHotAll(reviewSerchDTO dto) {
+        return sqlSession.selectList("review.getHotAll", dto);
+    }
+
+    /*
 
 	//댓글 및 답글 테이블
 	@Override
@@ -128,6 +161,6 @@ public class ReviewDAOImpl implements ReviewDAO {
 		return sqlSession.selectList("review.reviewList");
 	}
 */
-
+    
 
 }

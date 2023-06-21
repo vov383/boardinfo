@@ -26,6 +26,8 @@ public class ReviewDTO extends PageDTO {
 	private String good;			// 좋아요 (기본값 : N)
 	private String rnum;			// 게시글 순번
 	private String recnt;			// 댓글 개수
+	private String choiceRegNum;	// 선택된 게임 테이블 PK
+	private String freeFlag;	// 선택된 게임 테이블 PK
 
 
 	public String getRegNum() {
@@ -210,5 +212,21 @@ public class ReviewDTO extends PageDTO {
 
 	public void setRecnt(String recnt) {
 		this.recnt = recnt;
+	}
+
+	public String getChoiceRegNum() {
+		return choiceRegNum;
+	}
+
+	public void setChoiceRegNum(String choiceRegNum) {
+		this.choiceRegNum = choiceRegNum;
+	}
+
+	public String getFreeFlag() {
+		return freeFlag;
+	}
+
+	public void setFreeFlag(String freeFlag) {
+		this.freeFlag = freeFlag;
 	}
 }

@@ -1,14 +1,12 @@
 package com.example.boardinfo.service.review;
 
-import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
-import com.example.boardinfo.model.review.dto.TestDTO;
-import com.example.boardinfo.model.review.dto.reviewSerchDTO;
+import com.example.boardinfo.model.review.dto.*;
 import org.springframework.http.HttpRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 public interface ReviewService {
 
@@ -22,7 +20,7 @@ public interface ReviewService {
 
 
 	/*리뷰 입력*/
-    void reviewCreate(ReviewDTO reviewDTO, HttpSession session);
+    void reviewCreate(ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO, HttpSession session);
 
     /*리뷰 수정*/
     void reviewUpdate(ReviewDTO reviewDTO);
@@ -57,9 +55,13 @@ public interface ReviewService {
 	// 리뷰 입력 테스트
     void create(TestDTO testdto);
 
+    public List<ReviewDTO> getHomeList(Integer size);
+    List<ReviewDTO> getHotList(Integer size);
+    Map<String, Object> getHotList(int curPage);
 
 
-	/*public List<ReviewDTO> reviewDetail();*/
+
+    /*public List<ReviewDTO> reviewDetail();*/
 
 
 

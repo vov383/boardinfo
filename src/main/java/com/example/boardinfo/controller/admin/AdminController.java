@@ -1,16 +1,18 @@
 package com.example.boardinfo.controller.admin;
 
 import com.example.boardinfo.model.admin.dto.AdminDTO;
+import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
+import com.example.boardinfo.model.member.dto.MemberDTO;
 import com.example.boardinfo.service.admin.AdminService;
+import com.example.boardinfo.service.gathering.GatheringService;
 import com.example.boardinfo.service.member.MemberService;
+import com.example.boardinfo.service.review.ReviewService;
+import com.example.boardinfo.service.tboard.TBoardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,7 +20,9 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("admin/*")
@@ -29,6 +33,12 @@ public class AdminController {
 
     @Inject
     MemberService memberService;
+    @Inject
+    ReviewService reviewService;
+    @Inject
+    GatheringService gatheringService;
+    @Inject
+    TBoardService tBoardService;
     //로깅
     private static final Logger logger
             = LoggerFactory.getLogger(AdminController.class);
@@ -40,7 +50,7 @@ public class AdminController {
         model.addAttribute("list", list);
         return "admin/admin_list";
     }
-    
+
     /*관리자 계정 등록창 이동*/
     @RequestMapping("admin_join.do")
     public String join() {
@@ -52,7 +62,7 @@ public class AdminController {
     public String login() {
         return "admin/login";
     }
-    
+
     /*관리자 로그인*/
     @RequestMapping("login_check.do")
     public ModelAndView admin_login_check(AdminDTO aDto, HttpSession session) {
@@ -165,4 +175,37 @@ public class AdminController {
 
         return "home";
     }
+    @RequestMapping("admin_dashboard")
+    public String moveToDashboard(HttpSession session){
+        String admin_id = (String)session.getAttribute("admin_id");
+        if(admin_id == null || admin_id.equals("")){
+            return "member/login?message=비정상적인 접근";
+        }
+        return "admin/dashboard";
+
+    }
+    @RequestMapping("member_list")
+    public String memberList(Model model) {
+        List<MemberDTO> list=memberService.list();
+        model.addAttribute("list", list);
+        return "admin/member_list";
+    }
+    @RequestMapping("userPostList")
+    public ModelAndView UserPostList(@RequestParam(value="userid", required = false) String userid){
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("admin/userPostList");
+        mav.addObject("userid", userid);
+        return mav;
+    }
+    @ResponseBody
+    @PostMapping("gameRatingList")
+    public Map<String, Object> gameRatingList(
+        @RequestParam(value="userid", required = false) String userid){
+            List<GameRatingDTO> gameRatinglist = adminService.gameRatinglist(userid);
+            Map<String, Object> map = new HashMap<>();
+            map.put("gameRatinglist", gameRatinglist);
+            return map;
+    }
+
+
 }

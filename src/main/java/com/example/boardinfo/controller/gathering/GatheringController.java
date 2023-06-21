@@ -23,8 +23,6 @@ import com.example.boardinfo.util.Pager;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -128,7 +126,6 @@ public class GatheringController {
 			address1List = all;
 		}
 
-		logger.info("address1List : " + address1List.toString());
 		int count = gatheringService.countList(showAvailable, address1List, from, to, option, keyword);
 		Pager pager = new Pager(count, curPage, 15);
 		int start = pager.getPageBegin();
@@ -373,6 +370,61 @@ public class GatheringController {
 		map.put("nickname", nickname);
 		return map;
 	}
+
+
+	@ResponseBody
+	@GetMapping("/homeList")
+	public Map<String, List<GatheringDTO>> getHomeList(
+			@RequestParam(value="size", required=false) Integer size){
+
+		if(size == null) size = 8;
+		List<GatheringDTO> list = gatheringService.getHomeList(size);
+		Map<String, List<GatheringDTO>> map = new HashMap<>();
+		map.put("list", list);
+
+		return map;
+	}
+
+
+	@ResponseBody
+	@GetMapping("/editReply.do")
+	public Map<String, Integer> editReply(@ModelAttribute GatheringReplyDTO dto, HttpSession session){
+		//본인이 쓴 댓글이 맞다면 수정할 수 있게 함
+		String writer = gatheringService.getReplyWriter(dto.getReply_id());
+		String user_id = (String)session.getAttribute("userid");
+
+		int num = 0;
+		if(writer.equals(user_id)){
+			dto.setUpdater_id(user_id);
+			num = gatheringService.updateReply(dto);
+		}
+
+		Map<String, Integer> map = new HashMap<>();
+		map.put("num", num);
+		return map;
+	}
+
+
+	@ResponseBody
+	@GetMapping("/deleteReply.do")
+	public Map<String, Integer> deleteReply(@RequestParam int reply_id, HttpSession session){
+		//본인이 쓴 댓글이 맞다면 삭제할 수 있게 함
+		String writer = gatheringService.getReplyWriter(reply_id);
+		String user_id = (String)session.getAttribute("userid");
+
+		int num = 0;
+		if(writer.equals(user_id)){
+			GatheringReplyDTO dto = new GatheringReplyDTO();
+			dto.setReply_id(reply_id);
+			dto.setUpdater_id(user_id);
+			num = gatheringService.deleteReply(dto);
+		}
+
+		Map<String, Integer> map = new HashMap<>();
+		map.put("num", num);
+		return map;
+	}
+
 
 
 

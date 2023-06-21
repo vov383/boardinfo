@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="login_check" resultType="String" parameterType="com.example.boardinfo.model.member.dto.MemberDTO">
 		select name
 		from member
-		where userid=#{userid} and passwd=#{passwd} and del= 'n'
+		where userid=#{userid} and passwd=#{passwd}
 	</select>
 	
 	<select id="viewMember" resultType="com.example.boardinfo.model.member.dto.MemberDTO" >
@@ -90,11 +90,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from member
 		where userid = #{user_id}
 	</select>
-	
-	<!-- 아이디 찾기 -->
+
 	<select id="searchId" resultType="String">
-		select nvl(userid, 0) from member 
-        where name = #{name} and hp = #{hp}
+		select nvl(userid, 0) from member
+		where name = #{name} and hp = #{hp}
 	</select>
 	
 	<!-- 아이디 이메일 체크 (비밀번호 찾기)-->
@@ -102,12 +101,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select count(*) from member 
         where userid = #{userid} and email = #{email}
 	</select>
+
 	<update id="pass_change" parameterType="hashMap">
 		update member 
 		set passwd = #{passwd}
 		where userid = #{userid}
 	</update>
-	
+
 </mapper>
 
 
