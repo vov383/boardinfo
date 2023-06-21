@@ -323,15 +323,6 @@ public class ReviewController {
 		return "redirect:/review/reviewlist.do?freeFlag="+reviewDTO.getFreeFlag();
 	}
 
-	// 수정 할 페이지
-	@RequestMapping("reviewedit.do")
-	public ModelAndView edit(@ModelAttribute reviewSerchDTO reviewserchDTO){
-		ModelAndView mav = new ModelAndView();
-
-		mav.setViewName("review/reviewEdit");
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-		return mav;
-	}
 
 	// 수정 후 페이지
 	@RequestMapping("revieweditsave.do")
