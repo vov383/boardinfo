@@ -1,13 +1,13 @@
 package com.example.boardinfo.model.gathering.dao;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-
 import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 public interface GatheringDAO {
 
@@ -38,8 +38,10 @@ public interface GatheringDAO {
 	public List<Map<String, String>> getIdAndNicknames(int gathering_id);
 	public void finishChat();
     public List<Integer> finishList();
+    List<GatheringDTO> getGaListByUserid(String userid);
     public List<GatheringDTO> getHomeList(Integer size);
     public String getReplyWriter(int replyId);
 	public int updateReply(GatheringReplyDTO dto);
 	public int deleteReply(GatheringReplyDTO dto);
+
 }

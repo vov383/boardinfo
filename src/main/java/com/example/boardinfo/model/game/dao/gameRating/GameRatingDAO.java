@@ -1,11 +1,11 @@
 package com.example.boardinfo.model.game.dao.gameRating;
 
+import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
+import com.example.boardinfo.model.game.dto.gameRating.RatingStatisticDTO;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
-import com.example.boardinfo.model.game.dto.gameRating.RatingStatisticDTO;
 
 public interface GameRatingDAO {
     public int addGameRating(HashMap<String,Object> dto);
@@ -22,4 +22,6 @@ public interface GameRatingDAO {
 
     //gnum에 해당하는 평점난이도 가져오기
     Map<String, Object> getRateWeight(int gnum);
+
+    List<GameRatingDTO> getRateListbyUserid(String userid);
 }

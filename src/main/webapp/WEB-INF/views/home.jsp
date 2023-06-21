@@ -5,6 +5,7 @@
 
 <!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>BOARDINFO</title>
@@ -157,8 +158,6 @@
                                 "<a href='${path}/review/reviewdetail.do?reviewDetailKey=" + list[i].regNum + "'>"+list[i].title
                                 +"</a><span class='reply'>"+reply+"</span></div>";
                         }
-
-
                         communityList.append(str);
 
                     }
@@ -256,6 +255,7 @@
                 <div class="boxForList">
                     <div><span>HOT! 보드인이 주목중인 게시글</span>
                         <span><a class="more" href="${path}/review/reviewlist.do">&gt</a></span></div>
+
                     <div class="list" id="hotList">
                     </div>
                 </div>
@@ -263,6 +263,7 @@
                 <div class="boxForList">
                     <div><span>커뮤니티</span>
                         <span><a class="more" href="${path}/review/reviewlist.do">&gt</a></span></div>
+
                     <div class="list" id="communityList">
                     </div>
                 </div>
@@ -303,4 +304,5 @@
 
 <%@include file="include/footer.jsp" %>
 </body>
+
 </html>

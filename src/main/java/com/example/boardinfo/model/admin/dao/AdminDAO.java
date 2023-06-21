@@ -1,6 +1,7 @@
 package com.example.boardinfo.model.admin.dao;
 
 import com.example.boardinfo.model.admin.dto.AdminDTO;
+import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 
 import java.util.List;
 
@@ -23,6 +24,8 @@ public interface AdminDAO {
     void memberWarn(String userid);
 
     void memberBlock(String userid);
+
+    List<GameRatingDTO> gameRatinglist(String userid);
 
     /*게임 정보 통계*/
 

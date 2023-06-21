@@ -5,12 +5,11 @@ import com.example.boardinfo.model.game.dto.gameRating.RatingStatisticDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 @Repository
 public class GameRatingDAOImpl implements GameRatingDAO  {
@@ -153,5 +152,10 @@ public class GameRatingDAOImpl implements GameRatingDAO  {
 		Map<String, Object> statisticMap = session.selectOne("gameRating.avgRatingAndWeight", gnum);
 
 		return statisticMap;
+	}
+	/*user가 평가한 게임 목록 가져오기*/
+	@Override
+	public List<GameRatingDTO> getRateListbyUserid(String userid) {
+		return session.selectList("rateListbyUserid", userid);
 	}
 }

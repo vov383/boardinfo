@@ -1,15 +1,13 @@
 package com.example.boardinfo.model.tboard.dao;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
 import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
+import com.example.boardinfo.model.tboard.dto.TBoardDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.example.boardinfo.model.tboard.dto.TBoardDTO;
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class TBoardDAOImpl implements TBoardDAO {
@@ -76,9 +74,16 @@ public class TBoardDAOImpl implements TBoardDAO {
 		return sqlSession.insert("tboard.insertFile", fDto);
 	}
 
+	/*중고거래 list by userid*/
+	@Override
+	public List<TBoardDTO> getTbListByUserid(String userid) {
+		return sqlSession.selectList("tboard.getTbList",userid);
+	}
+
 
 	@Override
 	public List<TBoardDTO> getHomeList(Integer size) {
 		return sqlSession.selectList("tboard.getHomeList", size);
 	}
+
 }
