@@ -464,21 +464,32 @@
 
     <%--리뷰 수정 페이지--%>
     <form name="reviewInsertSave" method="get" action="${path}/review/reviewinsertsave.do">
-
+      <input type="hidden" name="freeFlag" value="${freeFlag}">
       <button type="button" onclick="btnList()">목록</button>
       <button type="button" id="btnsave" onclick="btnSaveClick()">저장</button>
 
       <c:forEach items="${list}" var="vo">
         <input type="hidden" name="regNum" value="${vo.regNum}">
-      <p>카테고리 : <%--<input type="text" name="category" value="${vo.category}">--%>
-          <select id="category" name="category" size="1">
-            <option value="${vo.category}">${vo.category}</option>
-            <option value="게임후기">게임후기</option>
-            <option value="노하우">노하우</option>
-            <option value="질문 ">질문</option>
-            <option value="자유게시판">자유게시판</option>
-          </select>
-        </p>
+
+
+          <p>카테고리 : <%--<input type="text" name="category" value="${vo.category}">--%>
+            <select id="category" name="category" size="1">
+              <c:if test='${"Y" eq freeFlag}'>
+              <option value="자유게시판" <c:if test='${"자유게시판" eq vo.category}'>selected</c:if>>자유게시판</option>
+              </c:if>
+              <c:if test='${"N" eq freeFlag}'>
+                <option value="게임후기" <c:if test='${"게임후기" eq vo.category}'>selected</c:if>>게임후기</option>
+                <option value="노하우" <c:if test='${"노하우" eq vo.category}'>selected</c:if>>노하우</option>
+                <option value="질문" <c:if test='${"질문" eq vo.category}'>selected</c:if>>질문</option>
+              </c:if>
+            </select>
+          </p>
+
+
+
+
+
+
       <p>제목 : <input type="text" name="title" value="${vo.title}"></p>
       <p>게임ID(임시) : <input type="text" name="gnum" value="${vo.gnum}"></p>
 
@@ -502,10 +513,14 @@
         <p>카테고리 : <%--<input type="text" name="category">--%>
         <select id="category" name="category" size="1">
           <option value="">선택하세요.</option>
-          <option value="게임후기">게임후기</option>
-          <option value="노하우">노하우</option>
-          <option value="질문">질문</option>
-          <option value="자유게시판">자유게시판</option>
+          <c:if test='${"Y" eq freeFlag}'>
+            <option value="자유게시판">자유게시판</option>
+          </c:if>
+          <c:if test='${"N" eq freeFlag}'>
+            <option value="게임후기">게임후기</option>
+            <option value="노하우">노하우</option>
+            <option value="질문">질문</option>
+          </c:if>
         </select>
         </p>
         <p>제목 : <input type="text" name="title"></p>

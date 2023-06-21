@@ -357,27 +357,17 @@
 
     <script>
 
-
-
-
-        /*타이틀 및 내용 검색 스크립트*/
+        /*타이틀 및 내용 검색 스크립트, 카테고리 분류(게임포럼 및 자게)*/
         function searchFu(nowPage) {
             $("#searchTitleHidden").val($("#searchTitle").val());
             $("#nowPage").val(nowPage);
-            //alert($("#searchTitleHidden").val());
-            //   name="forumBoardListHidden"
-            if ($("#boardListHidden").val() == "'자유게시판'") {
-                document.reviewSearch.action = "${path}/review/freeBoardList.do";
-            }else{
-                document.reviewSearch.action = "${path}/review/reviewlist.do";
-            }
             document.reviewSearch.submit();
         }
 
         /*리뷰 글쓰기 진입*/
-        function reviewInsert(regNum) {
+        function btnReviewInsert() {
             /*alert("버튼 잘 눌리는지 테스트")*/
-            location.href="${path}/review/reviewInsert.do";
+            document.reviewInsert.submit();
         }
 
         /*리뷰 디테일 진입, 조회수 증가*/
@@ -398,7 +388,7 @@
 <%--검색 폼--%>
 <form name="reviewSearch" method="post" action="${path}/review/reviewlist.do">
     <input type="hidden" name="searchTitle" id="searchTitleHidden">
-    <input type="hidden" name="forumBoardListHidden" id="boardListHidden" value="${boardDivision}">
+    <input type="hidden" name="freeFlag" id="boardListHidden" value="${freeFlag}">
     <%--페이징--%>
     <input type="hidden" name="nowPage" id="nowPage" value="1">
     <input type="hidden" name="cntPage" id="cntPage" value="10">
@@ -408,8 +398,12 @@
 <%--디테일 진입 폼--%>
 <form name="reviewDetail" method="post" action="${path}/review/reviewdetail.do">
     <input type="hidden" name="reviewDetailKey" id="reviewDetailKey">
+    <input type="hidden" name="freeFlag" value="${freeFlag}">
 </form>
 
+<form name="reviewInsert" method="post" action="${path}/review/reviewInsert.do">
+    <input type="hidden" name="freeFlag" value="${freeFlag}">
+</form>
 
 
 <div id="contents">
@@ -436,12 +430,7 @@
         <div class="searchBox">
             <input type="text" id="searchTitle" placeholder="제목 및 내용을 검색하세요.">
             <button type="button" id="search" onclick="searchFu('1')">검색</button>
-            <button type="button" onclick="reviewInsert()">글쓰기</button>
-        </div>
-
-        <%--포럼게시판리스트--%>
-        <div class="boardDivision">
-            <button type="button" id="boardDivision" onclick="btnBoardDivision()">포럼게시판리스트</button>
+            <button type="button" onclick="btnReviewInsert()">글쓰기</button>
         </div>
 
         <%--본문--%>

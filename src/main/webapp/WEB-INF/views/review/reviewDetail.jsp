@@ -212,6 +212,7 @@
             /*alert($("#reviewDetailKey").val());*/
             /*alert("클릭 테스트");*/
             document.formReviewEdit.submit();
+
         }
 
         // 삭제
@@ -310,6 +311,7 @@
 <%--리뷰 수정--%>
 <form name="formReviewEdit" method="post" action="${path}/review/reviewInsert.do">
     <input type="hidden" name="reviewDetailKey" id="reviewDetailKey">
+    <input type="hidden" name="freeFlag" value="${freeFlag}">
 </form>
 
 <%--리뷰 삭제--%>
