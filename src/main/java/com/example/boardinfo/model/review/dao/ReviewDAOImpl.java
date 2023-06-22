@@ -25,7 +25,7 @@ public class ReviewDAOImpl implements ReviewDAO {
     @Override
     public List<ReviewDTO> gameGnum(reviewSerchDTO reviewserchDTO) {
 
-//        return sqlSession.selectList("review.reviewList", reviewserchDTO);
+        return sqlSession.selectList("review.reviewChoiceGameList", reviewserchDTO);
     }
 
     /*리뷰 글 카운트*/

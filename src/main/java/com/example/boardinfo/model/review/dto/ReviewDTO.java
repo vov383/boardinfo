@@ -9,7 +9,7 @@ public class ReviewDTO extends PageDTO {
 	private String userid;			// 회원 id
 	private String views;			// 조회수
 	private String gnum;			// 게임 테이블 PK
-	private String gameGnum;			// 게임 테이블 PK
+	private String gameGnum;		// 게임 테이블 PK
 	private String gametitle;		// 게임 타이틀
 	private String gatheringId;		// 모임 테이블 PK
 	private String title;			// 리뷰 제목
