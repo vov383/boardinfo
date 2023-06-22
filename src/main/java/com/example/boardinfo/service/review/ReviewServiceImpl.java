@@ -49,7 +49,7 @@ public class ReviewServiceImpl implements ReviewService {
 	/*리뷰 입력*/
 	@Transactional
 	@Override
-	public void reviewCreate(ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO, HttpSession session){
+	public void reviewCreate(ReviewDTO reviewDTO, HttpSession session){
 
 		String userid = (String) session.getAttribute("userid");
 		reviewDTO.setCreateUser(userid);
@@ -78,7 +78,7 @@ public class ReviewServiceImpl implements ReviewService {
 */
 
 		if (null == reviewDTO.getRegNum()){
-			reviewDAO.reviewCreate(reviewDTO, choiceGameDTO);
+			reviewDAO.reviewCreate(reviewDTO);
 		} else {
 			reviewDAO.reviewUpdate(reviewDTO);
 		}

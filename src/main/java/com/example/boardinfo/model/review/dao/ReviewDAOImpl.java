@@ -43,7 +43,7 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     /*리뷰 입력*/
     @Override
-    public void reviewCreate(ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO) {
+    public void reviewCreate(ReviewDTO reviewDTO) {
 
         sqlSession.insert("review.reviewInsertPage", reviewDTO);
 
@@ -61,6 +61,21 @@ public class ReviewDAOImpl implements ReviewDAO {
     public void reviewUpdate(ReviewDTO reviewDTO) {
 
         sqlSession.update("review.reviewedit", reviewDTO);
+
+        sqlSession.update("review.reviewGameDel", reviewDTO);
+
+
+
+        String[] gameGnum = reviewDTO.getGameGnum().split(",");
+
+
+
+
+        List<ReviewDTO> gameReview = null;
+        for (int i = 0; i < gameGnum.length; i++) {
+            reviewDTO.setGameGnum(gameGnum[i]);
+            sqlSession.insert("review.reviewGameInsert", reviewDTO);
+        }
 
     }
 

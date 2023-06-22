@@ -25,59 +25,58 @@
 	<!-- 리뷰 목록 조회 -->
 	<select id="reviewList" parameterType="hashMap" resultType="com.example.boardinfo.model.review.dto.ReviewDTO">
 
+		/* review.reviewList */
 		<include refid = "pagingStart"/>
-		SELECT A.*, ROWNUM AS RNUM
-		FROM (
-		SELECT
-		R.REG_NUM AS REGNUM
-		, M.USERID
-		, M.NICKNAME
-		, R.CATEGORY
-		, R.VIEWS
-		, R.TITLE
-		, R.REVIEW_DETAIL AS REVIEWDETAIL
-		, (SELECT MAX(B.GAMETITLE) || CASE (COUNT(1)-1) WHEN 0 THEN '' ELSE ' 외 ' || (COUNT(1)-1)END FROM CHOICE_GAME A, GAME B WHERE A.DEL = 'N' AND B.DEL = 'n' AND A.GNUM = B.GNUM AND A.REVIEWREGNUM = R.REG_NUM GROUP BY A.REVIEWREGNUM) AS GAMETITLE /*게임 타이틀 보여주기*/
-		, (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') AS GOOD /*좋아요 개수*/
-		, (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) AS RECNT /*댓글 개수*/
-		, R.DEL
-		, R.CREATE_USER AS CREATEUSER
-		, TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS CREATEDATE
-		, R.UPDATE_USER AS UPDATEUSER
-		, TO_CHAR(R.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE
-		FROM REVIEW R
-		, MEMBER M
-		WHERE R.CREATE_USER = M.USERID(+)
-		AND R.DEL = 'N'
-		/*검색*/
-		<if test="searchTitle != '' and searchTitle != null">
-			AND (R.TITLE LIKE '%'||#{searchTitle}||'%'
-			OR R.REVIEW_DETAIL LIKE '%'||#{searchTitle}||'%')
-		</if>
-		/*디테일 진입*/
-		<if test="reviewDetailKey != '' and reviewDetailKey != null">
-			AND R.REG_NUM = #{reviewDetailKey}
-		</if>
-		/*카테고리 정렬*/
-		<if test="boardDivision != '' and boardDivision != null">
-			AND R.CATEGORY in (${boardDivision})
-		</if>
+			SELECT A.*, ROWNUM AS RNUM
+			  FROM (
+					SELECT R.REG_NUM AS REGNUM
+						 , M.USERID
+						 , M.NICKNAME
+						 , R.CATEGORY
+						 , R.VIEWS
+						 , R.TITLE
+						 , R.REVIEW_DETAIL AS REVIEWDETAIL
+						 , (SELECT MAX(B.GAMETITLE) || CASE (COUNT(1)-1) WHEN 0 THEN '' ELSE ' 외 ' || (COUNT(1)-1)END FROM CHOICE_GAME A, GAME B WHERE A.DEL = 'N' AND B.DEL = 'n' AND A.GNUM = B.GNUM AND A.REVIEWREGNUM = R.REG_NUM GROUP BY A.REVIEWREGNUM) AS GAMETITLE /*게임 타이틀 보여주기*/
+						 , (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') AS GOOD /*좋아요 개수*/
+						 , (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) AS RECNT /*댓글 개수*/
+						 , R.DEL
+						 , R.CREATE_USER AS CREATEUSER
+						 , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS CREATEDATE
+						 , R.UPDATE_USER AS UPDATEUSER
+						 , TO_CHAR(R.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE
+					  FROM REVIEW R
+                         , MEMBER M
+					 WHERE R.CREATE_USER = M.USERID(+)
+					   AND R.DEL = 'N'
+					<!--검색-->
+					<if test="searchTitle != '' and searchTitle != null">
+					   AND (R.TITLE LIKE '%'||#{searchTitle}||'%'
+					    OR R.REVIEW_DETAIL LIKE '%'||#{searchTitle}||'%')
+					</if>
+					<!--디테일 진입-->
+    				<if test="reviewDetailKey != '' and reviewDetailKey != null">
+        			   AND R.REG_NUM = #{reviewDetailKey}
+					</if>
+					<!--카테고리 정렬-->
+    				<if test="boardDivision != '' and boardDivision != null">
+        			   AND R.CATEGORY in (${boardDivision})
+    				</if>
+				     ORDER BY CREATEDATE DESC
+			      ) A
+    	<include refid = "pagingEnd"/>
+    	<if test="reviewDetailKey == '' or reviewDetailKey == null">
+        	<include refid = "paging"/>
+    	</if>
 
-		ORDER BY CREATEDATE DESC) A
+</select>
 
-		<include refid = "pagingEnd"/>
-		<if test="reviewDetailKey == '' or reviewDetailKey == null">
-			<include refid = "paging"/>
-		</if>
-
-	</select>
-
-	<!-- 리뷰 목록 조회 카운트 -->
+<!-- 리뷰 목록 조회 카운트 -->
 	<select id="reviewListCnt" parameterType="hashMap" resultType="int">
 		SELECT count(1)
 		FROM REVIEW R
-		, MEMBER M
+		   , MEMBER M
 		WHERE R.CREATE_USER = M.USERID(+)
-		AND R.DEL = 'N'
+		  AND R.DEL = 'N'
 		/*검색*/
 		<if test="searchTitle != '' and searchTitle != null">
 			AND (R.TITLE LIKE '%'||#{searchTitle}||'%'
@@ -112,11 +111,10 @@
 		FROM REVIEW R
 		   , CHOICE_GAME CG
 		   , GAME G
-		WHERE 1 = 1
+		WHERE CG.DEL = 'N'
 		  AND R.REG_NUM = CG.REVIEWREGNUM
 		  AND CG.GNUM = G.GNUM(+)
-		  and cg.REVIEWREGNUM = #{reviewDetailKey}
-
+		  AND cg.REVIEWREGNUM = #{reviewDetailKey}
 	</select>
 
 
@@ -125,8 +123,6 @@
 		<selectKey keyProperty="regNum" resultType="String" order="BEFORE">
 			select  to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(REG_NUM, 7)) + 1 from review where REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'),5, 0) from dual
 		</selectKey>
-
-
 		INSERT INTO REVIEW (
 		REG_NUM
 		, CATEGORY
@@ -171,15 +167,27 @@
 		SET CATEGORY = #{category}
 		  , TITLE = #{title}
 		  , REVIEW_DETAIL = #{reviewDetail}
+		  , UPDATE_USER = #{createUser}
 		  , UPDATE_DATE = sysdate
 		WHERE 1 = 1
 		  AND REG_NUM = #{regNum}
+	</update>
+
+	<!-- 게임 목록 전체 삭제 -->
+	<update id="reviewGameDel" parameterType="hashMap">
+		UPDATE CHOICE_GAME
+		SET DEL='Y'
+			, UPDATE_USER = #{createUser}
+			, UPDATE_DATE = sysdate
+		WHERE REVIEWREGNUM = #{regNum}
 	</update>
 
 	<!-- 리뷰 삭제 -->
 	<update id="revieweDel" parameterType="hashMap">
 		UPDATE REVIEW
 		SET DEL = 'Y'
+		  , UPDATE_USER = #{createUser}
+		  , UPDATE_DATE = sysdate
 		WHERE 1 = 1
 		  AND REG_NUM = #{reviewDetailKey}
 	</update>
