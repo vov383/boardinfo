@@ -87,8 +87,8 @@
                 <div class="dropdown">
                     <a href="#" class="toMenu" title="오프모임">오프모임<img src="${path}/images/dropdown.png" width="34px"></a>
                     <div class="dropdown-content">
-                        <a href="#">모임모집</a>
-                        <a href="#">모임후기</a>
+                        <a href="${path}/gathering/list.do">모임 목록</a>
+                        <a href="${path}/gathering/add.do">모임 모집 글 작성</a>
                     </div>
                 </div>
             </li>
@@ -189,7 +189,7 @@
         });
     });
 
-    // JavaScript to toggle dropdown
+    // javascript로 만든 dropdown
     document.addEventListener('click', function (event) {
         var dropdown = event.target.closest('.dropdown');
         if (dropdown) {
