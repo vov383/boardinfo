@@ -345,7 +345,19 @@
   <script type="text/javascript">
     /*리뷰 첫 입력 및 수정*/
   function btnSaveClick() {
-  /*alert("버튼 잘 눌리는지 테스트"); // 테스트*/
+
+    var gnum = "";
+
+    $("div[name='selectedGame']").each(function (index, item) {
+      if (index == 0) {
+        gnum = $(item).attr("item");
+      } else {
+        gnum += "," + $(item).attr("item");
+      }
+    });
+
+    $("#gameGnum").val(gnum);
+
   document.reviewInsertSave.submit();
   }
 
@@ -374,6 +386,7 @@
               var gamephoto_url = item.gamephoto_url;
               var bgg_thumbnail = item.bgg_thumbnail;
               var bggnum = item.bggnum;
+              // console.log("item",item.gnum);
               //var str => #gameSearchDiv 안에 들어갈 태그 입력
               var str = "<div class='searched_top'><div class='imageDiv'>";
 
@@ -388,7 +401,7 @@
                   str += '<img src="${path}/images/game/no-image-icon.png">';
                 }
               }
-              str += "</div><div class='searched cursor_pointer'>" + gametitle + "</div></div>";
+              str += "</div><div class='searched cursor_pointer' item='"+item.gnum+"'>" + gametitle + "</div></div>";
 
               suggestionsDiv.append(str);
             });
@@ -413,7 +426,7 @@
       var selectedGame = $(this).text();
       selectedGames.push(selectedGame);
 
-      $("#selectedGame").append("<div class='selected-value cursor_pointer'>" + selectedGame + "</div>");
+      $("#selectedGame").append("<div class='selected-value cursor_pointer' name='selectedGame' item='"+$(this).attr("item")+"'>" + selectedGame + "</div>");
       console.log("배열"+selectedGames);
       $("#inputGame").val("");
       $("#gametitleSuggestions").empty().hide();
@@ -465,11 +478,13 @@
     <%--리뷰 수정 페이지--%>
     <form name="reviewInsertSave" method="get" action="${path}/review/reviewinsertsave.do">
       <input type="hidden" name="freeFlag" value="${freeFlag}">
+      <input type="hidden" name="gameGnum" id="gameGnum">
       <button type="button" onclick="btnList()">목록</button>
       <button type="button" id="btnsave" onclick="btnSaveClick()">저장</button>
 
       <c:forEach items="${list}" var="vo">
         <input type="hidden" name="regNum" value="${vo.regNum}">
+
 
 
           <p>카테고리 : <%--<input type="text" name="category" value="${vo.category}">--%>
@@ -487,14 +502,13 @@
 
 
 
-
-
-
       <p>제목 : <input type="text" name="title" value="${vo.title}"></p>
-      <p>게임ID(임시) : <input type="text" name="gnum" value="${vo.gnum}"></p>
 
+<%--      <p>게임ID(임시) : <input type="text" name="gnum" value="${vo.gnum}"></p>--%>
       <%--<p>모임ID(임시) : <input type="text" name="gatheringId" value="${vo.gatheringId}"></p>--%>
+
       <p>작성자 : <input type="text" name="createUser" value="${vo.nickName}"  readonly/></p>
+
       <%-- 체크 에디터 적용 테스트 --%>
       <p>리뷰작성<textarea name = "reviewDetail" id="reviewDetailID" rows = "5" cols = "80">${vo.reviewDetail}</textarea></p>
         <script>
@@ -539,21 +553,6 @@
           </div>
           <div id="gametitleSuggestions" style="width: 300px;	background-color: white; overflow-y: auto;"></div>
         </div>
-
-<%--
-        <p>
-          게임명 검색 <input type="text" name="gametitle">
-          <button type="button" id="search" onclick="searchFu()">검색</button>
-          <table>
-            선택된 게임
-            <c:forEach items="${list}" var="vo">
-              <tr>
-                <td style="width: 200px; text-align: center;">${vo.gametitle}</td>
-              </tr>
-            </c:forEach>
-          </table>
-        </p>
---%>
 
         <%--<p>모임ID(임시) : <input type="text" name="gatheringId"></p>--%>
 

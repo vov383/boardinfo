@@ -31,7 +31,19 @@ public class ReviewServiceImpl implements ReviewService {
 		return list;
 	}
 
-	/*리뷰 목록 조회*/
+	/*게임 목록 출력*/
+	@Override // 덮어쓰기 의미
+	public List<ChoiceGameDTO> gameListOut(reviewSerchDTO reviewserchDTO){
+
+
+		List<ChoiceGameDTO> gameList = reviewDAO.gameListOut(reviewserchDTO);
+		/*System.out.println("vo : " + new Gson().toJson(list));*/
+
+		return gameList;
+	}
+
+
+	/*리뷰 목록 카운트*/
 	@Override // 덮어쓰기 의미
 	public int reviewListCnt(reviewSerchDTO reviewserchDTO){
 		return reviewDAO.reviewListCnt(reviewserchDTO);

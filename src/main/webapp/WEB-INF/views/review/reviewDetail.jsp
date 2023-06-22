@@ -229,8 +229,12 @@
 
         // 댓글
         function btnReply(){
+            if(confirm('저장하시겠습니까?')){
             $("#reviewReplyKey").val($('input[name=regNumHidden]').val());
             document.formreviewreply.submit();
+            }else{
+                return;
+            }
         }
 
         // 댓글 수정
@@ -387,10 +391,17 @@
                     <td>${vo.good}</td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                 </tr>
+
                 <tr>
                     <td>게임</td>
-                    <td>${vo.gametitle}</td>
+                    <td colspan="11">
+                        <c:forEach items="${gameList}" var="gl" varStatus="status">
+                            <c:if test="${status.index > 0}">, </c:if>${gl.gametitle}
+                        </c:forEach>
+                    </td>
+
                 </tr>
+
             </table>
             <table>
                 <tr>
@@ -408,6 +419,7 @@
         <%--댓글 입력--%>
         <form name="formreviewreply" method="post" action="${path}/review/reviewreplysave.do">
             <input type="hidden" name="regNum" id="reviewReplyKey">
+            <input type="hidden" name="freeFlag" value="${freeFlag}">
 
             <p>Comment 작성</p>
             <hr/> <%--구분선--%>
@@ -497,6 +509,7 @@
                 <form name="formreviewtopreply_${vo.replyRegNum}" method="post" action="${path}/review/topreplyinsetsave.do">
                     <input type="hidden" name="topReplyRegNum" id="topReplyRegNum" value="${vo.replyRegNum}">
                     <input type="hidden" name="regNum" id="topRegNum" value="${vo.regNum}">
+                    <input type="hidden" name="freeFlag" value="${freeFlag}">
                     <tr>
                        <td colspan="4">
                            <textarea name = "commentDetail" id="topreplyinset" rows = "2" cols = "80"></textarea>

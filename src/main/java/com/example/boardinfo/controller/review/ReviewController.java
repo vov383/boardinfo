@@ -84,6 +84,8 @@ public class ReviewController {
 		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
 		mav.addObject("freeFlag", reviewserchDTO.getFreeFlag());
 
+		/*게임 목록 출력*/
+		mav.addObject("gameList", reviewservice.gameListOut(reviewserchDTO));
 
 		return mav;
 	}
@@ -129,19 +131,30 @@ public class ReviewController {
 
 			/*userid가 null이 아니면 댓글 입력 페이지 이동*/
 		} else {
+
 			/*댓글 입력*/
 			reviewservice.reviewReply(replyCommentsDTO, session);
 
 			/*댓글의 상단 리뷰 내용 출력*/
-			mav.setViewName("review/reviewDetail");
-			reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
-			reviewserchDTO.setReviewDetailKey(replyCommentsDTO.getRegNum());
-			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+			reviewSerchDTO review = new reviewSerchDTO();
+			review.setReviewDetailKey(replyCommentsDTO.getRegNum());
+			review.setFreeFlag(replyCommentsDTO.getFreeFlag());
+			mav = revewDetail(review, session);
 
-			/*댓글 출력*/
-			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
 
-			mav.addObject("userid", userid);
+
+
+//
+//			/*댓글의 상단 리뷰 내용 출력*/
+//			mav.setViewName("review/reviewDetail");
+//			reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
+//			reviewserchDTO.setReviewDetailKey(replyCommentsDTO.getRegNum());
+//			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+//
+//			/*댓글 출력*/
+//			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+//
+//			mav.addObject("userid", userid);
 		}
 
 		return mav;
@@ -163,18 +176,24 @@ public class ReviewController {
 		} else {
 			/*답글 입력*/
 			reviewservice.topreplyinsetsave(replyCommentsDTO, session);
-			System.out.println("2");
+//			System.out.println("2");
 
-			/*댓글의 상단 리뷰 내용 출력*/
-			mav.setViewName("review/reviewDetail");
-			reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
-			reviewserchDTO.setReviewDetailKey(replyCommentsDTO.getRegNum());
-			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-
-			/*댓글 출력*/
-			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
-
-			mav.addObject("userid", userid);
+			reviewSerchDTO review = new reviewSerchDTO();
+			review.setReviewDetailKey(replyCommentsDTO.getRegNum());
+			review.setFreeFlag(replyCommentsDTO.getFreeFlag());
+			mav = revewDetail(review, session);
+//
+//			/*댓글의 상단 리뷰 내용 출력*/
+//			mav.setViewName("review/reviewDetail");
+//			reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
+//			reviewserchDTO.setReviewDetailKey(replyCommentsDTO.getRegNum());
+//			reviewserchDTO.setFreeFlag(replyCommentsDTO.getFreeFlag());
+//			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+//
+//			/*댓글 출력*/
+//			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+//
+//			mav.addObject("userid", userid);
 		}
 		return mav;
 	}
@@ -311,6 +330,7 @@ public class ReviewController {
 	// 리뷰 저장 후 페이지
 	@RequestMapping("reviewinsertsave.do")
 	public String insertPage(@ModelAttribute ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO, HttpSession session){
+
 		reviewservice.reviewCreate(reviewDTO, choiceGameDTO, session);
 
 //		ModelAndView mav = new ModelAndView();
@@ -323,15 +343,6 @@ public class ReviewController {
 		return "redirect:/review/reviewlist.do?freeFlag="+reviewDTO.getFreeFlag();
 	}
 
-	// 수정 할 페이지
-	@RequestMapping("reviewedit.do")
-	public ModelAndView edit(@ModelAttribute reviewSerchDTO reviewserchDTO){
-		ModelAndView mav = new ModelAndView();
-
-		mav.setViewName("review/reviewEdit");
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-		return mav;
-	}
 
 	// 수정 후 페이지
 	@RequestMapping("revieweditsave.do")

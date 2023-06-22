@@ -12,8 +12,8 @@ CREATE TABLE REVIEW                                         -- 게임 및 모임
     FUN_SCORE     NUMBER(3, 1) DEFAULT 0,                   -- 재미 점수
     REVIEW_SCORE  NUMBER(3, 1) DEFAULT 0,                   -- 리뷰 점수
     GAME_SCORE    NUMBER(3, 1) DEFAULT 0,                   -- 게임 난이도
-    REVIEW_DETAIL BLOB,                                     -- 리뷰 내용 (사진 포함)
-    GOOD          NUMBER DEFAULT 0,                 -- 좋아요 여부 (기본값 : N)
+    REVIEW_DETAIL VARCHAR2(4000),                           -- 리뷰 내용 (사진 포함)
+    GOOD          NUMBER DEFAULT 0,                         -- 좋아요 여부 (기본값 : N)
     DEL           VARCHAR2(10) DEFAULT 'N'     NOT NULL,    -- 삭제 여부 (기본값 : N)
     CREATE_USER   VARCHAR2(100)                NOT NULL,    -- 작성자 → 회원 테이블의 PK와 조인 예정
     CREATE_DATE   DATE         DEFAULT SYSDATE NOT NULL,    -- 작성 일자
@@ -21,9 +21,9 @@ CREATE TABLE REVIEW                                         -- 게임 및 모임
     UPDATE_DATE   DATE                                      -- 수정 일자
 );
 
-COMMENT ON TABLE REVIEW IS '게임 및 모임 후기';
-COMMENT ON COLUMN REVIEW.REG_NUM IS '리뷰 테이블 PK';
-COMMENT ON COLUMN REVIEW.CATEGORY       IS 'GAME OR 모임';
+COMMENT ON TABLE REVIEW                 IS '커뮤니티';
+COMMENT ON COLUMN REVIEW.REG_NUM        IS '커뮤니티 테이블 PK';
+COMMENT ON COLUMN REVIEW.CATEGORY       IS '게임포럼 (게임후기, 노하우, 질문), 자유게시판';
 COMMENT ON COLUMN REVIEW.VIEWS          IS '조회수';
 COMMENT ON COLUMN REVIEW.GNUM           IS '게임 테이블의 PK';
 COMMENT ON COLUMN REVIEW.GATHERING_ID   IS '모임 테이블의 PK';
