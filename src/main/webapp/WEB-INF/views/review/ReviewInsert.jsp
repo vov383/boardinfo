@@ -543,14 +543,15 @@
         <%--<p>게임ID(임시) : <input type="text" name="gnum"></p>--%>
 
         <%--게임 검색--%>
-        <div align="left" style="border: 1px solid goldenrod;">
-          <h4>게임검색</h4>
+        <div align="left" <%--style="border: 1px solid goldenrod;"--%>>
           <div id="selectedGame"></div>
           <input type="hidden" name="gametitle" id="gametitle">
-          <input id="inputGame" class="input_game" autocomplete="off">
+          <p>게임 : <input id="inputGame" class="input_game" autocomplete="off" placeholder="게임명을 검색 하세요."></p>
+<%--
           <div>
-            <label for="inputGame">게임명을 입력하세요</label>
+            <label for="inputGame"></label>
           </div>
+--%>
           <div id="gametitleSuggestions" style="width: 300px;	background-color: white; overflow-y: auto;"></div>
         </div>
 
