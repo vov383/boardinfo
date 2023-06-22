@@ -23,7 +23,7 @@ public interface ReviewService {
 
 
 	/*리뷰 입력*/
-    void reviewCreate(ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO, HttpSession session);
+    void reviewCreate(ReviewDTO reviewDTO, HttpSession session);
 
     /*리뷰 수정*/
     void reviewUpdate(ReviewDTO reviewDTO);

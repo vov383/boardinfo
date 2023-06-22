@@ -221,6 +221,8 @@ public class ReviewController {
 			/*수정 페이지*/
 			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 			mav.addObject("freeFlag", reviewserchDTO.getFreeFlag());
+			mav.addObject("gameList", reviewservice.gameListOut(reviewserchDTO));
+
 		}
 
 		return mav;
@@ -329,9 +331,9 @@ public class ReviewController {
 
 	// 리뷰 저장 후 페이지
 	@RequestMapping("reviewinsertsave.do")
-	public String insertPage(@ModelAttribute ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO, HttpSession session){
+	public String insertPage(@ModelAttribute ReviewDTO reviewDTO, HttpSession session){
 
-		reviewservice.reviewCreate(reviewDTO, choiceGameDTO, session);
+		reviewservice.reviewCreate(reviewDTO, session);
 
 //		ModelAndView mav = new ModelAndView();
 //		mav.setViewName("review/gameReviewMain");
@@ -343,6 +345,7 @@ public class ReviewController {
 		return "redirect:/review/reviewlist.do?freeFlag="+reviewDTO.getFreeFlag();
 	}
 
+/*
 
 	// 수정 후 페이지
 	@RequestMapping("revieweditsave.do")
@@ -350,6 +353,7 @@ public class ReviewController {
 		reviewservice.reviewUpdate(reviewDTO);
 		return "redirect:/review/reviewlist.do?freeFlag="+reviewDTO.getFreeFlag();
 	}
+*/
 
 	// 삭제 후 페이지
 	@RequestMapping("reviewdelsave.do")
