@@ -28,16 +28,16 @@ public class ReviewServiceImpl implements ReviewService {
 		return list;
 	}
 
-	/*게임 선택 목록*/
+	/*게임 목록 출력*/
 	@Override // 덮어쓰기 의미
-	public List<ReviewDTO> gameGnum(reviewSerchDTO reviewserchDTO){
+	public List<ChoiceGameDTO> gameListOut(reviewSerchDTO reviewserchDTO){
 
-		List<ReviewDTO> list = reviewDAO.gameGnum(reviewserchDTO);
+
+		List<ChoiceGameDTO> gameList = reviewDAO.gameListOut(reviewserchDTO);
 		/*System.out.println("vo : " + new Gson().toJson(list));*/
 
-		return list;
+		return gameList;
 	}
-
 
 
 	/*리뷰 목록 카운트*/

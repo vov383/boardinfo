@@ -21,10 +21,9 @@ public class ReviewDAOImpl implements ReviewDAO {
         return sqlSession.selectList("review.reviewList", reviewserchDTO);
     }
 
-    /*게임 선택 목록*/
+    /*게임 목록 출력*/
     @Override
-    public List<ReviewDTO> gameGnum(reviewSerchDTO reviewserchDTO) {
-
+    public List<ChoiceGameDTO> gameListOut(reviewSerchDTO reviewserchDTO) {
         return sqlSession.selectList("review.reviewChoiceGameList", reviewserchDTO);
     }
 
@@ -107,11 +106,15 @@ public class ReviewDAOImpl implements ReviewDAO {
         return sqlSession.selectList("review.reviewReplyOut", reviewserchDTO);
     }
 
+
     /*리뷰 답글 입력*/
     @Override
     public void topreplyinsetsave(ReplyCommentsDTO replyCommentsDTO) {
         sqlSession.insert("review.topreplyinsetsave", replyCommentsDTO);
     }
+
+
+
 
 
 

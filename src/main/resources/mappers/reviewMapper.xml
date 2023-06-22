@@ -39,7 +39,8 @@
 		, R.REVIEW_SCORE AS REVIEWSCORE
 		, R.GAME_SCORE AS GAMESCORE
 		, R.REVIEW_DETAIL AS REVIEWDETAIL
-		, (SELECT MAX(B.GAMETITLE) || CASE (COUNT(1)-1) WHEN 0 THEN '' ELSE ' 외 ' || (COUNT(1)-1) END FROM CHOICE_GAME A, GAME B WHERE A.DEL = 'N' AND B.DEL = 'n' AND A.GNUM = B.GNUM AND A.REVIEWREGNUM = R.REG_NUM GROUP BY A.REVIEWREGNUM) AS GAMETITLE		, (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') AS GOOD /*좋아요 개수*/
+		, (SELECT MAX(B.GAMETITLE) || CASE (COUNT(1)-1) WHEN 0 THEN '' ELSE ' 외 ' || (COUNT(1)-1)END FROM CHOICE_GAME A, GAME B WHERE A.DEL = 'N' AND B.DEL = 'n' AND A.GNUM = B.GNUM AND A.REVIEWREGNUM = R.REG_NUM GROUP BY A.REVIEWREGNUM) AS GAMETITLE /*게임 타이틀 보여주기*/
+		, (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') AS GOOD /*좋아요 개수*/
 		, (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) AS RECNT /*댓글 개수*/
 		, R.DEL
 		, R.CREATE_USER AS CREATEUSER
@@ -95,6 +96,32 @@
 		</if>
 
 	</select>
+
+
+	<!--선택된 게임 목록 조회-->
+	<select id="reviewChoiceGameList" parameterType="hashMap" resultType="com.example.boardinfo.model.review.dto.ChoiceGameDTO">
+		SELECT R.REG_NUM
+			 , CG.REVIEWREGNUM
+			 , R.CATEGORY
+			 , CG.CHOICE_REG_NUM
+			 , CG.GNUM
+			 , G.GAMETITLE
+			 , G.GAMETITLE_ENG
+			 , G.PLAYERS
+			 , G.PLAYTIME
+			 , G.AGES
+			 , G.LANGUAGE
+			 , RELEASE_YEAR
+		FROM REVIEW R
+		   , CHOICE_GAME CG
+		   , GAME G
+		WHERE 1 = 1
+		  AND R.REG_NUM = CG.REVIEWREGNUM
+		  AND CG.GNUM = G.GNUM(+)
+		  and cg.REVIEWREGNUM = #{reviewDetailKey}
+
+	</select>
+
 
 	<!-- 리뷰 입력 -->
 	<insert id="reviewInsertPage" parameterType="com.example.boardinfo.model.review.dto.ReviewDTO" >

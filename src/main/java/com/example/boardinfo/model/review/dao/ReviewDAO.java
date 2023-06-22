@@ -9,8 +9,8 @@ public interface ReviewDAO {
 	/*리뷰 목록 조회*/
     List<ReviewDTO> reviewlist(reviewSerchDTO reviewserchDTO);
 
-    /*게임 선택 목록*/
-    List<ReviewDTO> gameGnum(reviewSerchDTO reviewserchDTO);
+    /*게임 목록 출력*/
+    List<ChoiceGameDTO> gameListOut(reviewSerchDTO reviewserchDTO);
 
     /*리뷰 글 카운트*/
     int reviewListCnt(reviewSerchDTO reviewserchDTO);
