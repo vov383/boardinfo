@@ -74,4 +74,9 @@ public class DesignerDAOImpl implements DesignerDAO {
 		map.put("gnum",gnum);
 		sqlSession.delete("designer.deleteGame_Designer", map);
 	}
+
+	@Override
+	public List<DesignerDTO> totalSearch(String gameKeyword) {
+		return sqlSession.selectList("designer.totalSearch", gameKeyword);
+	}
 }

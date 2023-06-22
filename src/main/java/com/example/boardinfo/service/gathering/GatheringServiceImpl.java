@@ -306,4 +306,19 @@ public class GatheringServiceImpl implements GatheringService {
 	public int deleteReply(GatheringReplyDTO dto) {
 		return gatheringDao.deleteReply(dto);
 	}
+
+	@Override
+	public List<GatheringDTO> totalSearch(String gameKeyword) {
+		List<GatheringDTO> list = gatheringDao.totalSearch(gameKeyword);
+
+		for(GatheringDTO dto : list) {
+			//status 세팅
+			LocalDateTime now = LocalDateTime.now();
+			LocalDateTime gathering_date = dto.getGathering_date();
+			if (now.isAfter(gathering_date)) {
+				dto.setStatus("모임종료");
+			} else dto.setStatus("모집중");
+		}
+		return list;
+	}
 }

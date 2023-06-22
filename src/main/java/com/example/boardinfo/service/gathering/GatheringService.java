@@ -29,4 +29,6 @@ public interface GatheringService {
     public String getReplyWriter(int reply_id);
 	public int updateReply(GatheringReplyDTO dto);
 	public int deleteReply(GatheringReplyDTO dto);
+
+	List<GatheringDTO> totalSearch(String gameKeyword);
 }

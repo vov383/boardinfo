@@ -108,10 +108,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="gameInsert">
 		insert into game
 			(gnum, bggnum, gametitle, gametitle_eng, players, playtime,
-			 ages, language, release_year, create_user)
+			 ages, language, release_year, create_user, theme)
 		values
 			(seq_game.nextval, #{bggnum}, #{gametitle}, #{gametitle_eng}, #{players},
-			 #{playtime}, #{ages}, #{language}, #{release_year}, #{create_user})
+			 #{playtime}, #{ages}, #{language}, #{release_year}, #{create_user}, #{theme})
 	</insert>
 	
 	<update id="increaseViewcnt">
@@ -407,7 +407,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				language=#{language},
 				release_year=#{release_year},
 				update_user=#{update_user},
-				update_date=sysdate
+				update_date=sysdate,
+				theme=#{theme}
 		where gnum=#{gnum}
 	</update>
 
@@ -594,35 +595,53 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="totalSearch" resultType="gameDto">
-		SELECT 	gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, game_rank,
-				rate, weight, bgg_thumbnail, tot
-		FROM 	(
-				SELECT 	a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.bgg_thumbnail,
-						a.game_rank, a.gamephoto_url, a.rate, a.weight,a.tot
-				FROM 	(
-						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
-								g.bgg_thumbnail, g.game_rank, ga.fullname AS gamephoto_url, gr.rate, gr.weight, gr.tot
-						FROM 	game g
-						LEFT JOIN 	(
-									SELECT 	gnum, fullname
-									FROM 	(
-											SELECT 	ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
-													gnum, fullname
-											FROM 	game_attach
-											)
-									WHERE 	rnum = 1
-									) ga
-						ON 		g.gnum = ga.gnum
-						LEFT JOIN 	(
-									SELECT 	gnum, avg(rating) as rate, avg(weight) as weight, count(*) tot
-									FROM 	game_rating
-									GROUP BY 	gnum
-									) gr
-						ON 		g.gnum = gr.gnum
-						where 	gametitle like '%'||#{gameKeyword}||'%' and g.del = 'n'
-						order by 	case when gametitle like #{gameKeyword}||'%' then 1 else 2 end, game_rank
-						) a
-				)
+		SELECT  gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, game_rank,
+        		rate, weight, bgg_thumbnail, tot
+		FROM    (
+            	SELECT  a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.bgg_thumbnail,
+                    	a.game_rank, a.gamephoto_url, a.rate, a.weight, a.tot
+            	FROM    (
+                        SELECT  g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
+                                g.bgg_thumbnail, g.game_rank, ga.fullname AS gamephoto_url, gr.rate, gr.weight, gr.tot
+                        FROM    (
+                                    SELECT  gnum, bggnum, gametitle, gametitle_eng, totalviewcount, release_year, bgg_thumbnail,
+                                            game_rank
+                                    FROM    game
+                                    WHERE   upper(gametitle) LIKE '%' || upper(#{gameKeyword}) || '%' AND del = 'n'
+                                    UNION
+                                    SELECT  gnum, bggnum, gametitle, gametitle_eng, totalviewcount, release_year, bgg_thumbnail,
+                                            game_rank
+                                    FROM    game
+                                    WHERE   upper(gametitle_eng) LIKE '%' || upper(#{gameKeyword}) || '%' AND del = 'n'
+                                ) g
+                        LEFT JOIN   (
+                                    SELECT  gnum, fullname
+                                    FROM    (
+                                                SELECT  ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
+                                                        gnum, fullname
+                                                FROM    game_attach
+                                            )
+                                    WHERE   rnum = 1
+                                ) ga
+                                ON      g.gnum = ga.gnum
+                        LEFT JOIN   (
+                                    SELECT  gnum, avg(rating) AS rate, avg(weight) AS weight, count(*) AS tot
+                                    FROM    game_rating
+                                    GROUP BY gnum
+                                ) gr
+                                ON      g.gnum = gr.gnum
+                        ORDER BY
+                                CASE WHEN UPPER(gametitle) LIKE UPPER(#{gameKeyword}) || '%'
+                                     THEN 1
+                                     WHEN UPPER(gametitle_eng) LIKE UPPER(#{gameKeyword}) || '%'
+                                     THEN 2
+                                     ELSE 3
+                                END,
+                                GAME_RANK
+                    ) a
+        )
+WHERE rownum BETWEEN 1 AND 4
+ --통합검색결과시..
 	</select>
 
 </mapper>

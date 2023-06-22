@@ -18,4 +18,6 @@ public interface DesignerDAO {
     List<String> viewDesigner(int gnum);
 
     void deleteGame_Designer(String value, int gnum);
+
+    List<DesignerDTO> totalSearch(String gameKeyword);
 }

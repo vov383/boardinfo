@@ -72,6 +72,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				 from	publisher
 				 where	publisher=#{publisher})
 	</delete>
+
+	<select id="totalSearch" resultType="publisherDto">
+		select 	pnum, publisher
+		from	(
+				select 	pnum, publisher
+				from	publisher
+				where	UPPER(publisher) like '%' || UPPER(#{gameKeyword}) || '%'
+				order by
+						CASE WHEN UPPER(publisher) like UPPER(#{gameKeyword}) || '%'
+						THEN 1
+        		        ELSE 2
+        		        END
+        		)
+        where	rownum between 1 and 12
+	</select>
 	
 </mapper>
 
