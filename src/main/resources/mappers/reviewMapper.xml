@@ -370,7 +370,7 @@
 		select 	*
 		from    (
 
-		            select  reg_num as regNum, category, title, create_user, create_date, views, gnum,
+		            select  reg_num as regNum, category, title, create_user, views,
 		                    (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') AS GOOD,
 		                    (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) AS RECNT,
 		                    row_number() over (order by create_date desc) rnum

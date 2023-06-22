@@ -261,7 +261,9 @@ a:visited {
     zoom:1
 }
 
-
+.service_list_song td.filterTd {
+    height: 50px;
+}
 
 
 /*게임랭킹창의 랭킹 기준 표시 부분*/

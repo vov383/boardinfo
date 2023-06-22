@@ -14,7 +14,7 @@
                 <a href="${path}/" title="보드인포"><img src="${path}/images/boardinfo_logo.png" width="170px"></a>
             </div>
             <div id="header-right">
-                <form name="gameSearch" id="gameSearch" method="get" action="${path}/game/searchAll.do">
+                <form name="gameSearch" id="gameSearch" method="get" action="${path}/search/searchAll.do">
                     <div>
                         <input name="gameKeyword" id="gameKeyword" placeholder="보드게임 찾기" autocomplete="off">
                         <input type="hidden">

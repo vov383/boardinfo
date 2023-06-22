@@ -216,4 +216,23 @@
         where rn between 1 and #{size}
     </select>
 
+    <select id="totalSearch" resultType="tboardDto">
+        select  tb_num, create_date, title, category, address1, address2, view_count, price,re_count
+        from    (
+                select  tb_num, create_date, title, category, address1, address2, view_count, price,
+                        (select count(*)
+                        from    tb_comments c
+                        where   c.tb_num = t.tb_num and del='N'
+                        ) as re_count
+                from t_board t
+                where upper(title) LIKE '%' || upper(#{gameKeyword}) || '%' AND t.del = 'N'
+                order by
+		            CASE WHEN UPPER(title) LIKE UPPER(#{gameKeyword}) || '%'
+		            THEN 1
+                    ELSE 2
+                    END
+                )
+        where rownum between 1 and 6
+    </select>
+
 </mapper>

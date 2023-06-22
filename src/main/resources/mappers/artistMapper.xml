@@ -73,6 +73,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				 where	artist=#{artist})
 	</delete>
 
+	<select id="totalSearch" resultType="artistDto">
+		SELECT 	anum, artist
+		from	(
+				select 	anum, artist
+				from	artist
+				where	UPPER(artist) like '%' || UPPER(#{gameKeyword}) || '%'
+				order by
+					CASE WHEN UPPER(artist) like UPPER(#{gameKeyword}) || '%'
+					THEN 1
+        	        ELSE 2
+        	        END
+        	    )
+        where rownum between 1 and 12
+	</select>
+
+
 </mapper>
 
 
