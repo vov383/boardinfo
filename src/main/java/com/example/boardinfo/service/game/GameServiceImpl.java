@@ -610,6 +610,7 @@ public class GameServiceImpl implements GameService {
   @Override
   public Map<String, Object> totalSearch(String gameKeyword) {
     Map<String, Object> map = new HashMap<>();
+    logger.info("넘어오나요? " + gameKeyword);
     List<GameDTO> glist = gameDao.totalSearch(gameKeyword);
     List<ArtistDTO> alist = artistDao.totalSearch(gameKeyword);
     List<DesignerDTO> dlist = designerDao.totalSearch(gameKeyword);
@@ -622,4 +623,29 @@ public class GameServiceImpl implements GameService {
 
     return map;
   }
+
+  @Override
+  public Map<String, Object> totalSearchMore(Map<String, Object> map) {
+    String gameKeyword = (String)map.get("gameKeyword");
+    String filter = (String)map.get("filter");
+
+    if(filter.indexOf("게임") != -1){
+      List<GameDTO> list = gameDao.totalSearch(gameKeyword);
+      map.put("list",list);
+    }else if(filter.indexOf("아티스트") != -1){
+      List<ArtistDTO> list = artistDao.totalSearch(gameKeyword);
+      map.put("list",list);
+    }else if(filter.indexOf("디자이너") != -1){
+      List<DesignerDTO> list = designerDao.totalSearch(gameKeyword);
+      map.put("list",list);
+    }else if(filter.indexOf("퍼블리셔") != -1){
+      List<PublisherDTO> list = publisherDao.totalSearch(gameKeyword);
+      map.put("list",list);
+    }
+    return map;
+  }
+
+
+
+
 }

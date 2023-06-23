@@ -265,6 +265,7 @@ public class GameDAOImpl implements GameDAO {
 
 	@Override
 	public List<GameDTO> totalSearch(String gameKeyword) {
+		logger.info("dao로도 넘어오나요 ? " + gameKeyword);
 		return sqlSession.selectList("game.totalSearch", gameKeyword);
 	}
 }

@@ -225,9 +225,9 @@
                         where   c.tb_num = t.tb_num and del='N'
                         ) as re_count
                 from t_board t
-                where upper(title) LIKE '%' || upper(#{gameKeyword}) || '%' AND t.del = 'N'
+                where regexp_like(title, #{gameKeyword},'i') AND t.del = 'N'
                 order by
-		            CASE WHEN UPPER(title) LIKE UPPER(#{gameKeyword}) || '%'
+		            CASE WHEN regexp_like(title, '^'||#{gameKeyword},'i')
 		            THEN 1
                     ELSE 2
                     END

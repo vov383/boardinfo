@@ -13,9 +13,9 @@
 
         <colgroup>
             <col style="width: 62px"><!-- 카테고리 -->
-            <col style="width: 160px"><!-- 지역 -->
+            <col style="width: 160px"><!-- 좋아요 -->
             <col><!-- 제목 -->
-            <col style="width: 100px"><!-- 가격 -->
+            <col style="width: 100px"><!-- 게임 -->
             <col style="width: 140px"><!-- 조회수 -->
             <col style="width: 160px"><!-- 날짜 -->
         </colgroup>
@@ -28,13 +28,13 @@
                 <div class="wrap t_center">카테고리</div>
             </th>
             <th scope="col">
-                <div class="wrap t_center">지역</div>
+                <div class="wrap t_center">좋아요</div>
             </th>
             <th scope="col">
                 <div class="wrap pd_l_12">제목</div>
             </th>
             <th scope="col">
-                <div class="wrap t_center">가격</div>
+                <div class="wrap t_center">게임</div>
             </th>
             <th scope="col">
                 <div class="wrap t_center">조회수</div>
@@ -49,7 +49,7 @@
         <tbody>
 
 
-        <c:forEach var="row" items="${t_boardList}">
+        <c:forEach var="row" items="${reviewList}">
 
             <tr>
 
@@ -58,33 +58,33 @@
 
                 <td><div class="wrap t_center">
                     <div class="ellipsis rank03">
-                            ${row.address1} / ${row.address2}
+                            ${row.good}
                     </div>
                 </div></td>
 
                 <td><div class="wrap">
                     <div class="wrap_song_info">
                         <div class="ellipsis rank01"><span>
-					<a href="${path}/tboard/view/${row.tb_num}">${row.title}(${row.re_count})</a>
+					<a href="javascript:reviewDetail('${row.regNum}')"">${row.title}(${row.recnt}</a>
 											</span></div>
                     </div>
                 </div></td>
 
                 <td><div class="wrap t_center">
                     <div class="ellipsis rank03">
-                            ${row.price}
+                            ${row.gametitle}
                     </div>
                 </div></td>
 
                 <td><div class="wrap t_center">
                     <div class="ellipsis rank03">
-                            ${row.view_count}
+                            ${row.views}
                     </div>
                 </div></td>
 
                 <td><div class="wrap t_center">
                     <div class="ellipsis rank03">
-                            ${row.create_date}
+                            ${row.createDate}
                     </div>
                 </div></td>
 
@@ -96,3 +96,17 @@
 
     <a href="#" style="display: inline-block; float: right;">더보기</a>
 </div>
+
+<%--디테일 진입 폼--%>
+<form name="reviewDetail" method="post" action="${path}/review/reviewdetail.do">
+    <input type="hidden" name="reviewDetailKey" id="reviewDetailKey">
+</form>
+
+
+<script>
+    /*리뷰 디테일 진입, 조회수 증가*/
+    function reviewDetail(regNum) {
+        $("#reviewDetailKey").val(regNum);
+        document.reviewDetail.submit();
+    }
+</script>

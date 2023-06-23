@@ -434,6 +434,34 @@
 
 	</select>
 
+	<select id="totalSearch" resultType="reviewDto">
+		select	*
+		from	(
+				select 	reg_num as regNum,
+						category,
+						title,
+						views,
+						create_date as createDate,
+						(	SELECT 	COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N')
+						AS GOOD,
+				        (	SELECT 	COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM )
+				        AS RECNT,
+				        (	SELECT 	MAX(B.GAMETITLE) || CASE (COUNT(1)-1) WHEN 0 THEN '' ELSE ' 외 ' || (COUNT(1)-1)END
+				        	FROM 	CHOICE_GAME A, GAME B
+				        	WHERE 	A.DEL = 'N' AND B.DEL = 'n' AND A.GNUM = B.GNUM AND A.REVIEWREGNUM = R.REG_NUM
+				        	GROUP BY A.REVIEWREGNUM )
+				        AS GAMETITLE
+				from 	review r
+				WHERE   regexp_like(title, #{gameKeyword},'i') and del='N'
+				order by
+					    CASE WHEN regexp_like(title, '^'||#{gameKeyword},'i')
+					    THEN 1
+        			    ELSE 2
+        			    END
+        		)
+        where rownum between 1 and 6
+	</select>
+
 
 </mapper>
 

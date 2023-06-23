@@ -33,4 +33,6 @@ public interface TBoardService {
     public List<TBoardDTO> getHomeList(Integer size);
 
     List<TBoardDTO> totalSearch(String gameKeyword);
+
+    Map<String, Object> totalSearchMore(Map<String, Object> map);
 }

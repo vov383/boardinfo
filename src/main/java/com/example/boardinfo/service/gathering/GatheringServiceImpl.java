@@ -325,4 +325,9 @@ public class GatheringServiceImpl implements GatheringService {
 		}
 		return list;
 	}
+
+	@Override
+	public Map<String, Object> totalSearchMore(Map<String, Object> map) {
+		return null;
+	}
 }

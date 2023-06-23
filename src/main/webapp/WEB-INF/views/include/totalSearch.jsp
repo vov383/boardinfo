@@ -15,6 +15,7 @@
             max-height: 400px;
             clear: both;
             margin-bottom: 30px;
+            overflow-y: hidden;
         }
         .totalSearchUl {
             margin-bottom: 10px;
@@ -87,6 +88,7 @@
                     </div>
                 </c:if>
 
+
                 <c:if test="${not empty gameMap.alist}">
                     <div class="totalSearchDiv">
                         <c:import url="../game/game_list_moduleFilter.jsp" charEncoding="UTF-8" >
@@ -95,6 +97,7 @@
                     </div>
                 </c:if>
 
+
                 <c:if test="${not empty gameMap.dlist}">
                     <div class="totalSearchDiv">
                         <c:import url="../game/game_list_moduleFilter.jsp" charEncoding="UTF-8" >
@@ -102,6 +105,7 @@
                         </c:import>
                     </div>
                 </c:if>
+
 
                 <c:if test="${not empty gameMap.plist}">
                     <div class="totalSearchDiv">
@@ -112,11 +116,13 @@
                 </c:if>
 
 
+                <c:if test="${not empty reviewList}">
                 <div class="totalSearchDiv">
                     <c:import url="../review/review_list_moduleNP.jsp" charEncoding="UTF-8" >
                         <c:param name="filter" value="리뷰게시판"></c:param>
                     </c:import>
                 </div>
+                </c:if>
 
 
                 <c:if test="${not empty gatheringList}">
