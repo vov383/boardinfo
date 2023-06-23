@@ -304,28 +304,29 @@
         <form name="reviewlist" method="post" action="${path}/review/reviewlist.do">
             <table style="table-layout:fixed;">
                 <tr>
-                    <th style="width: 200px;">No.</th>
-                    <th style="width: 200px;">카테고리</th>
-                    <th style="width: 200px;">&#x1f495</th> <%--좋아요--%>
-                    <th style="width: 200px;">제목</th>
-                    <th style="width: 200px;">닉네임</th>
-                    <th style="width: 200px;">등록일자</th>
-                    <th style="width: 200px;">&#128366;</th> <%--조회수--%>
-                    <th style="width: 200px;">댓글</th>
+                    <th style="width: 50px;">No.</th>
+                    <th style="width: 100px;">카테고리</th>
+                    <th style="width: 300px;">제목</th>
+                    <th style="width: 150px;">닉네임</th>
                     <th style="width: 200px;">게임</th>
+                    <th style="width: 50px;">&#128366;</th> <%--조회수--%>
+                    <th style="width: 50px;">&#x1f495</th> <%--좋아요--%>
+                    <th style="width: 50px;">댓글</th>
+                    <th style="width: 200px;">등록일자</th>
                 </tr>
 
                 <c:forEach items="${list}" var="vo">
                     <tr>
-                        <td style="width: 200px; text-align: center;">${vo.rnum}</td>
-                        <td style="width: 200px; text-align: center;">${vo.category}</td>
-                        <td style="width: 200px; text-align: center;">${vo.good}</td>
-                        <td style="width: 200px; text-align: center;"><a href="javascript:reviewDetail('${vo.regNum}')">${vo.title}</a></td>
-                        <td style="width: 200px; text-align: center;">${vo.nickName}</td>
-                        <td style="width: 200px; text-align: center;">${vo.createDate}</td>
-                        <td style="width: 200px; text-align: center;">${vo.views}</td>
-                        <td style="width: 200px; text-align: center;">${vo.recnt}</td>
-                        <td style="width: 200px; text-align: center;">${vo.gametitle}</td>
+                        <td style="text-align: center;">${vo.rnum}</td>
+                        <td style="text-align: center;">${vo.category}</td>
+                        <td style="text-align: center;"><a href="javascript:reviewDetail('${vo.regNum}')">${vo.title}</a></td>
+                        <td style="text-align: center;">${vo.nickName}</td>
+                        <td style="text-align: center;">${vo.gametitle}</td>
+                        <td style="text-align: center;">${vo.views}</td>
+                        <td style="text-align: center;">${vo.good}</td>
+                        <td style="text-align: center;">${vo.recnt}</td>
+                        <td style="text-align: center;">${vo.createDate}</td>
+
 
                     </tr>
                 </c:forEach>
@@ -395,6 +396,12 @@
             </c:if>
                 </h1>
             </ul>
+
+                <ul class="pagingCenter">
+            <h1>☆☆☆☆☆  광고주를 모십니다!  ☆☆☆☆☆</h1>
+            <h1>★★★★★  광고주를 모십니다!  ★★★★★</h1>
+            <h1>☆☆☆☆☆  광고주를 모십니다!  ☆☆☆☆☆</h1>
+                </ul>
 
         </div>
 
