@@ -128,7 +128,7 @@
                             alert("댓글 달기 실패");
                         }
                     },
-                    error: function () {
+                    error: function (request, status, error) {
                         alert("댓글 달기 실패");
                     }
                 });
@@ -300,11 +300,11 @@
                             //attribute는 속성, property는 상태라서 그런듯?
                             let childInsertLink = $('<a>').addClass('insertChildReply').attr("href", "javascript:showChildCommentForm(" + re_list[i].reply_reg_num + ")");
 
-                            let childReplyImg = $("<img>").attr({
-                                src: "${path}/images/reply_arrow.png",
-                                width: "15px"
-                            });
-                            childInsertLink.append(childReplyImg);
+                            <%--let childReplyImg = $("<img>").attr({--%>
+                            <%--    src: "${path}/images/reply_arrow.png",--%>
+                            <%--    width: "15px"--%>
+                            <%--});--%>
+                            childInsertLink.html('<i class="fa-solid fa-reply"></i>대댓글');
                             leftButtonDiv.append(childInsertLink);
                             leftDiv.append(leftButtonDiv);
 
@@ -313,11 +313,11 @@
 
                             let replyChangeLink = $('<a>').addClass('changeReply').prop("href", "javascript:changeReply(" + re_list[i].reply_reg_num + ")");
 
-                            let replyChangeImg = $("<img>").attr({
+                            /*let replyChangeBtn = $("<a>").attr({
                                 src: "${path}/images/trade/changeBtn.png",
                                 width: "30px"
-                            });
-                            replyChangeLink.append(replyChangeImg);
+                            });*/
+                            replyChangeLink.html('<i class="fa-regular fa-comment-dots"></i>수정|삭제');
                             rightButtonDiv.append(replyChangeLink);
                             rightDiv.append(rightButtonDiv);
 
@@ -641,6 +641,7 @@
                                 <div class="addressContainer">
                                     <ul>
                                         <li>장소:&nbsp&nbsp${map.dto.address1} ${map.dto.address2} ${map.dto.address3}</li>
+                                        <li>value="${map.dto.place_name}"</li>
                                     </ul>
                                 </div>
                             </div>

@@ -44,10 +44,11 @@
                     <c:otherwise>
                         <!-- userid로 로그인한 상태 -->
                         <div class="dropdown">
-                            <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.nickname} 님<img
-                                    src="${path}/images/dropdown.png" width="16px"></a></div>
+                            <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.nickname} 님<img src="${path}/images/dropdown.png" width="16px"></a>
+
+                            </div>
                             <div class="dropdown-content">
-                                <a href="${path}/member/mypage/seong">마이페이지</a>
+                                <a href="${path}/mypage/goMypage/${sessionScope.userid}">마이페이지</a>
                                 <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
                             </div>
                         </div>
@@ -63,8 +64,10 @@
 
             <li>
                 <div class="dropdown">
-                    <a href="${path}/game/gamerank/index" class="toMenu" title="게임정보">게임정보<img
-                            src="${path}/images/dropdown.png" width="34px"></a>
+                    <a href="${path}/game/gamerank/index" class="toMenu" title="게임정보">
+                        게임정보<img src="${path}/images/dropdown.png" width="16px">
+                    </a>
+
                     <div class="dropdown-content">
                         <a href="${path}/game/gamerank/week">게임순위</a>
                         <a href="#">카테고리</a>
@@ -75,16 +78,22 @@
             </li>
             <li>
                 <div class="dropdown">
-                    <a href="#" class="toMenu" title="커뮤니티">커뮤니티<img src="${path}/images/dropdown.png" width="34px"></a>
+                    <a href="#" class="toMenu" title="게임포럼">게임포럼<img src="${path}/images/dropdown.png" width="16px"></a>
                     <div class="dropdown-content">
                         <a href="${path}/review/reviewlist.do?freeFlag=N">게임포럼</a>
                         <a href="${path}/review/reviewlist.do?freeFlag=Y">자유게시판</a>
+
                     </div>
                 </div>
             </li>
             <li>
                 <div class="dropdown">
-                    <a href="#" class="toMenu" title="오프모임">오프모임<img src="${path}/images/dropdown.png" width="34px"></a>
+                    <a href="${paht}/review/reviewlist.do" class="toMenu" title="자유게시판">자유게시판</a>
+                </div>
+            </li>
+            <li>
+                <div class="dropdown">
+                    <a href="#" class="toMenu" title="오프모임">오프모임<img src="${path}/images/dropdown.png" width="16px"></a>
                     <div class="dropdown-content">
                         <a href="${path}/gathering/list.do">모임 목록</a>
                         <a href="${path}/gathering/add.do">모임 모집 글 작성</a>
@@ -94,7 +103,7 @@
             <li>
                 <div class="dropdown">
                     <a href="${path}/tboard/list.do" class="toMenu" title="중고장터">중고장터
-                        <img src="${path}/images/dropdown.png" width="34px"></a>
+                        <img src="${path}/images/dropdown.png" width="16px"></a>
                     <div class="dropdown-content">
                         <a href="${paht}/tboard/list.do">전체</a>
                         <a href="${paht}/tboard/list.do?select_category=s">판매</a>
@@ -188,20 +197,24 @@
         });
     });
 
-    // javascript로 만든 dropdown
+    // javascript로 만든 드롭다운
     document.addEventListener('click', function (event) {
+        /*가장 가까운 dropdown클래스를 변수에 이벤트 할당*/
         var dropdown = event.target.closest('.dropdown');
         if (dropdown) {
+            /*dropdown이 true면 classList.toggle() show클래스가 없으면 추가 & 있으면 제거*/
             dropdown.querySelector('.dropdown-content').classList.toggle('show');
         } else {
+            /*dropdown이 false면*/
             var dropdowns = document.getElementsByClassName('dropdown-content');
             for (var i = 0; i < dropdowns.length; i++) {
                 var dropdownContent = dropdowns[i];
+                /*show클래스를 갖고 있으면 제거*/
                 if (dropdownContent.classList.contains('show')) {
                     dropdownContent.classList.remove('show');
                 }
-            }
-        }
+            }//for문 end
+        } //if else문 end
     });
 
 </script>

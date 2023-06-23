@@ -1,23 +1,11 @@
 package com.example.boardinfo.controller.gathering;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.inject.Inject;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
+import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 import com.example.boardinfo.service.chat.ChatService;
+import com.example.boardinfo.service.gathering.GatheringService;
 import com.example.boardinfo.service.member.MemberService;
 import com.example.boardinfo.util.Pager;
 import com.google.gson.Gson;
@@ -28,10 +16,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.example.boardinfo.model.gathering.dto.GatheringDTO;
-import com.example.boardinfo.service.gathering.GatheringService;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.inject.Inject;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("gathering/*")
