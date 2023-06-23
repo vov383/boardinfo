@@ -113,16 +113,20 @@
 
 
                 <div class="totalSearchDiv">
-                    <c:import url="../game/game_list_moduleNP.jsp" charEncoding="UTF-8" >
+                    <c:import url="../review/review_list_moduleNP.jsp" charEncoding="UTF-8" >
                         <c:param name="filter" value="리뷰게시판"></c:param>
                     </c:import>
                 </div>
 
+
+                <c:if test="${not empty gatheringList}">
                 <div class="totalSearchDiv">
                     <c:import url="../gathering/gathering_list_moduleNP.jsp" charEncoding="UTF-8" >
                         <c:param name="filter" value="모임게시판"></c:param>
                     </c:import>
                 </div>
+                </c:if>
+
 
                 <c:if test="${not empty t_boardList}">
                     <div class="totalSearchDiv">
