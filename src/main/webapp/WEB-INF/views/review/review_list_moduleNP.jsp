@@ -15,9 +15,9 @@
             <col style="width: 62px"><!-- 카테고리 -->
             <col style="width: 160px"><!-- 지역 -->
             <col><!-- 제목 -->
-            <col style="width: 160px"><!-- 시행날짜 -->
+            <col style="width: 100px"><!-- 가격 -->
             <col style="width: 140px"><!-- 조회수 -->
-            <col style="width: 160px"><!-- 작성날짜 -->
+            <col style="width: 160px"><!-- 날짜 -->
         </colgroup>
 
 
@@ -31,16 +31,16 @@
                 <div class="wrap t_center">지역</div>
             </th>
             <th scope="col">
-                <div class="wrap pd_l_12">모임명</div>
+                <div class="wrap pd_l_12">제목</div>
             </th>
             <th scope="col">
-                <div class="wrap t_center">약속일</div>
+                <div class="wrap t_center">가격</div>
             </th>
             <th scope="col">
                 <div class="wrap t_center">조회수</div>
             </th>
             <th scope="col">
-                <div class="wrap t_center">작성일</div>
+                <div class="wrap t_center">날짜</div>
             </th>
         </tr>
 
@@ -49,11 +49,11 @@
         <tbody>
 
 
-        <c:forEach var="row" items="${gatheringList}">
+        <c:forEach var="row" items="${t_boardList}">
 
             <tr>
 
-                <td><div class="wrap t_center"><span class="rank">${row.status}</span></div></td>
+                <td><div class="wrap t_center"><span class="rank">${row.category}</span></div></td>
 
 
                 <td><div class="wrap t_center">
@@ -65,17 +65,14 @@
                 <td><div class="wrap">
                     <div class="wrap_song_info">
                         <div class="ellipsis rank01"><span>
-					<a href="javascript:view(${row.gathering_id})">${row.title}</a>
+					<a href="${path}/tboard/view/${row.tb_num}">${row.title}(${row.re_count})</a>
 											</span></div>
-                    </div>
-                    <div class="ellipsis rank03">
-                        (${row.attendee_count} / ${row.maxPeople})
                     </div>
                 </div></td>
 
                 <td><div class="wrap t_center">
                     <div class="ellipsis rank03">
-                            ${row.gathering_date}
+                            ${row.price}
                     </div>
                 </div></td>
 
@@ -87,7 +84,7 @@
 
                 <td><div class="wrap t_center">
                     <div class="ellipsis rank03">
-                            ${row.post_date}
+                            ${row.create_date}
                     </div>
                 </div></td>
 
@@ -99,13 +96,3 @@
 
     <a href="#" style="display: inline-block; float: right;">더보기</a>
 </div>
-
-<script>
-    function view(gathering_id){
-        $("input[name='newFrom']").attr("disabled", true);
-        $("input[name='newTo']").attr("disabled", true);
-
-        let queryString = $("form[name='formGatheringSearch']").serialize() + '&curPage=' + "${page.curPage}";
-        location.href="${path}/gathering/view/" + gathering_id + "?" + queryString;
-    }
-</script>
