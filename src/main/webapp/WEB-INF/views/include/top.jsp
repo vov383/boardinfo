@@ -80,9 +80,9 @@
                 <div class="dropdown">
                     <a href="#" class="toMenu" title="게임포럼">게임포럼<img src="${path}/images/dropdown.png" width="16px"></a>
                     <div class="dropdown-content">
-                        <a href="#">게임 후기</a>
-                        <a href="#">노하우</a>
-                        <a href="#">질문</a>
+                        <a href="${path}/review/reviewlist.do?freeFlag=N">게임포럼</a>
+                        <a href="${path}/review/reviewlist.do?freeFlag=Y">자유게시판</a>
+
                     </div>
                 </div>
             </li>

@@ -80,7 +80,7 @@
 		/*검색*/
 		<if test="searchTitle != '' and searchTitle != null">
 			AND (R.TITLE LIKE '%'||#{searchTitle}||'%'
-			OR R.REVIEW_DETAIL LIKE '%'||#{searchTitle}||'%')
+			 OR R.REVIEW_DETAIL LIKE '%'||#{searchTitle}||'%')
 		</if>
 		/*디테일 진입*/
 		<if test="reviewDetailKey != '' and reviewDetailKey != null">
@@ -124,18 +124,18 @@
 			select  to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(REG_NUM, 7)) + 1 from review where REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'),5, 0) from dual
 		</selectKey>
 		INSERT INTO REVIEW (
-		REG_NUM
-		, CATEGORY
-		, TITLE
-		, REVIEW_DETAIL
-		, CREATE_USER
+				REG_NUM
+				, CATEGORY
+				, TITLE
+				, REVIEW_DETAIL
+				, CREATE_USER
 		)
 		VALUES(
-		#{regNum}
-		,#{category}
-		,#{title}
-		,#{reviewDetail}
-		,#{createUser}
+				#{regNum}
+				,#{category}
+				,#{title}
+				,#{reviewDetail}
+				,#{createUser}
 		)
 	</insert>
 
@@ -164,11 +164,11 @@
 	<!-- 리뷰 수정 -->
 	<update id="reviewedit" parameterType="hashMap">
 		UPDATE REVIEW
-		SET CATEGORY = #{category}
-		  , TITLE = #{title}
-		  , REVIEW_DETAIL = #{reviewDetail}
-		  , UPDATE_USER = #{createUser}
-		  , UPDATE_DATE = sysdate
+			SET   CATEGORY = #{category}
+			  	, TITLE = #{title}
+			  	, REVIEW_DETAIL = #{reviewDetail}
+			  	, UPDATE_USER = #{createUser}
+			  	, UPDATE_DATE = sysdate
 		WHERE 1 = 1
 		  AND REG_NUM = #{regNum}
 	</update>
@@ -176,18 +176,18 @@
 	<!-- 게임 목록 전체 삭제 -->
 	<update id="reviewGameDel" parameterType="hashMap">
 		UPDATE CHOICE_GAME
-		SET DEL='Y'
-			, UPDATE_USER = #{createUser}
-			, UPDATE_DATE = sysdate
+			SET   DEL='Y'
+				, UPDATE_USER = #{createUser}
+				, UPDATE_DATE = sysdate
 		WHERE REVIEWREGNUM = #{regNum}
 	</update>
 
 	<!-- 리뷰 삭제 -->
 	<update id="revieweDel" parameterType="hashMap">
 		UPDATE REVIEW
-		SET DEL = 'Y'
-		  , UPDATE_USER = #{createUser}
-		  , UPDATE_DATE = sysdate
+			SET   DEL = 'Y'
+		  		, UPDATE_USER = #{createUser}
+		  		, UPDATE_DATE = sysdate
 		WHERE 1 = 1
 		  AND REG_NUM = #{reviewDetailKey}
 	</update>
@@ -195,14 +195,14 @@
 	<!-- 좋아요 입력 -->
 	<insert id="reviewGood" parameterType="hashMap">
 		MERGE INTO REVIEWGOOD
-		USING dual
-		ON (GOODKEY = #{reviewDetailKey}||#{createUser})
+			  USING dual
+			  ON (GOODKEY = #{reviewDetailKey}||#{createUser})
 		WHEN MATCHED THEN
-			UPDATE
-			SET REVIEWPK = #{reviewDetailKey}
-			  ,GOOD = DECODE(GOOD,'Y','N','Y')
-			  ,UPDATE_USER = #{createUser} /*지금 로그인 한 사람 정보가 필요*/
-			  ,CREATE_DATE = sysdate
+			 UPDATE
+			 	SET REVIEWPK = #{reviewDetailKey}
+			 	 	,GOOD = DECODE(GOOD,'Y','N','Y')
+			 	 	,UPDATE_USER = #{createUser} /*지금 로그인 한 사람 정보가 필요*/
+			 	 	,CREATE_DATE = sysdate
 		WHEN NOT MATCHED THEN
 			INSERT (GOODKEY, REVIEWPK, GOOD, CREATE_USER, CREATE_DATE)
 			VALUES (#{reviewDetailKey}||#{createUser} , #{reviewDetailKey} ,'Y', #{createUser} , sysdate)
@@ -211,7 +211,7 @@
 	<!-- 리뷰 조회수 증가 -->
 	<update id="reviewViews" parameterType="hashMap">
 		UPDATE REVIEW
-		SET VIEWS = VIEWS+1
+			SET VIEWS = VIEWS+1
 		WHERE 1 = 1
 		  AND REG_NUM = #{reviewDetailKey,jdbcType=VARCHAR} /*null 값 허용 : jdbcType=VARCHAR*/
 	</update>
@@ -219,7 +219,8 @@
 
 	<!--리뷰 댓글 입력-->
 	<insert id="reviewReply" parameterType="hashMap">
-		INSERT INTO REPLY_COMMENTS ( REPLY_REG_NUM
+		INSERT INTO REPLY_COMMENTS (
+		                            REPLY_REG_NUM
 								   , REG_NUM
 								   , TOP_REPLY_REG_NUM
 								   , COMMENT_DETAIL
@@ -228,7 +229,8 @@
 								   , CREATE_DATE
 								   , UPDATE_USER
 								   , UPDATE_DATE)
-		VALUES (to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(REPLY_REG_NUM, 7)) + 1 from REPLY_COMMENTS where REPLY_REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'), 5, 0)
+		VALUES (
+		         to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(REPLY_REG_NUM, 7)) + 1 from REPLY_COMMENTS where REPLY_REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'), 5, 0)
 			   , #{regNum}
 			   , #{topReplyRegNum, jdbcType=VARCHAR}
 			   , #{commentDetail}
@@ -241,7 +243,8 @@
 
 	<!--리뷰 답글 입력-->
 	<insert id="topreplyinsetsave" parameterType="hashMap">
-		INSERT INTO REPLY_COMMENTS ( REPLY_REG_NUM
+		INSERT INTO REPLY_COMMENTS (
+		                            REPLY_REG_NUM
 								   , REG_NUM
 								   , TOP_REPLY_REG_NUM
 								   , COMMENT_DETAIL
@@ -251,7 +254,7 @@
 								   , UPDATE_USER
 								   , UPDATE_DATE)
 		VALUES 	 (
-					   #{replyRegNum}
+					 #{replyRegNum}
 				   , #{regNum}
 				   , to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(TOP_REPLY_REG_NUM, 7)) + 1 from REPLY_COMMENTS where TOP_REPLY_REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'), 5, 0)
 				   , #{commentDetail}
@@ -266,9 +269,9 @@
 	<update id="reviewReplyUpdate" parameterType="hashMap">
 
 		UPDATE REPLY_COMMENTS
-		SET COMMENT_DETAIL = #{commentDetail}
-		  , UPDATE_USER = #{createUser}
-		  , UPDATE_DATE = sysdate
+			SET   COMMENT_DETAIL = #{commentDetail}
+		  		, UPDATE_USER = #{createUser}
+		  		, UPDATE_DATE = sysdate
 		WHERE 1 = 1
 		  AND REPLY_REG_NUM = #{replyRegNum}
 
@@ -278,9 +281,9 @@
 	<!-- 리뷰 댓글 삭제 -->
 	<update id="reviewReplyDel" parameterType="hashMap">
 		UPDATE REPLY_COMMENTS
-		SET DEL = 'Y'
-		  , UPDATE_USER = #{createUser}
-		  , UPDATE_DATE = sysdate
+			SET DEL = 'Y'
+			  , UPDATE_USER = #{createUser}
+			  , UPDATE_DATE = sysdate
 		WHERE 1 = 1
 		  AND REPLY_REG_NUM = #{replyRegNum}
 	</update>
@@ -288,21 +291,21 @@
 	<!--리뷰 댓글 조회-->
 	<select id="reviewReplyOut" parameterType="hashMap" resultType="com.example.boardinfo.model.review.dto.ReplyCommentsDTO">
 		SELECT RC.REPLY_REG_NUM 		AS REPLYREGNUM
-		, RC.REG_NUM 					AS REGNUM
-		, RC.TOP_REPLY_REG_NUM 			AS TOPREPLYREGNUM
-		, RC.COMMENT_DETAIL 			AS COMMENTDETAIL
-		, M.NICKNAME					AS NICKNAME
-		, RC.DEL 						AS DEL
-		, RC.CREATE_USER				AS CREATEUSER
-		, RC.CREATE_DATE				AS CREATEDATE
-		, RC.UPDATE_USER				AS UPDATEUSER
-		, RC.UPDATE_DATE				AS UPDATEDATE
+			 , RC.REG_NUM 					AS REGNUM
+			 , RC.TOP_REPLY_REG_NUM 			AS TOPREPLYREGNUM
+			 , RC.COMMENT_DETAIL 			AS COMMENTDETAIL
+			 , M.NICKNAME					AS NICKNAME
+			 , RC.DEL 						AS DEL
+			 , RC.CREATE_USER				AS CREATEUSER
+			 , RC.CREATE_DATE				AS CREATEDATE
+			 , RC.UPDATE_USER				AS UPDATEUSER
+			 , RC.UPDATE_DATE				AS UPDATEDATE
 		FROM REPLY_COMMENTS RC
-		, MEMBER M
+		   , MEMBER M
 		WHERE 1 = 1
-		AND RC.REG_NUM = #{reviewDetailKey}
-		AND RC.DEL = 'N'
-		AND RC.CREATE_USER = M.USERID(+)
+			AND RC.REG_NUM = #{reviewDetailKey}
+			AND RC.DEL = 'N'
+			AND RC.CREATE_USER = M.USERID(+)
 		/*답글 진입*/
 		<if test="topReplyRegNum != '' and topReplyRegNum != null">
 			AND ((RC.TOP_REPLY_REG_NUM = #{topReplyRegNum})
