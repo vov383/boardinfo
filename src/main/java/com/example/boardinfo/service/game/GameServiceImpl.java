@@ -24,10 +24,7 @@ import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class GameServiceImpl implements GameService {
@@ -541,7 +538,7 @@ public class GameServiceImpl implements GameService {
     //사용연령
     String ages = GameUtils.setStr(bggnum,"minage") + "세 이상";
     //발매년도
-    int release_year = Integer.parseInt(GameUtils.setStr(bggnum,"yearpublished"));
+    int release_year = Integer.parseInt(Objects.requireNonNull(GameUtils.setStr(bggnum, "yearpublished")));
 
     //아트웍
     List<String> alist = GameUtils.setList(bggnum,"boardgameartist");
@@ -614,7 +611,15 @@ public class GameServiceImpl implements GameService {
   public Map<String, Object> totalSearch(String gameKeyword) {
     Map<String, Object> map = new HashMap<>();
     List<GameDTO> glist = gameDao.totalSearch(gameKeyword);
-    map.put("list", glist);
+    List<ArtistDTO> alist = artistDao.totalSearch(gameKeyword);
+    List<DesignerDTO> dlist = designerDao.totalSearch(gameKeyword);
+    List<PublisherDTO> plist = publisherDao.totalSearch(gameKeyword);
+
+    map.put("glist", glist);
+    map.put("alist", alist);
+    map.put("dlist", dlist);
+    map.put("plist", plist);
+
     return map;
   }
 }

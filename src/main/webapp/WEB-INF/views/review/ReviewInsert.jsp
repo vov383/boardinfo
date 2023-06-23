@@ -371,7 +371,7 @@
   <script>
     $(function(){
     //	gametitle 검색 자동완성 쿼리
-    $('#inputGame').keyup(function() {
+    $('input[name="inputGame"]').keyup(function() {
       var input = $(this).val();
       $.ajax({
         type: "POST",
@@ -428,7 +428,7 @@
 
       $("#selectedGame").append("<div class='selected-value cursor_pointer' name='selectedGame' item='"+$(this).attr("item")+"'>" + selectedGame + "</div>");
       console.log("배열"+selectedGames);
-      $("#inputGame").val("");
+      $('input[name="inputGame"]').val("");
       $("#gametitleSuggestions").empty().hide();
       updategameInput();
       console.log("인풋"+$("#gametitle").val());
@@ -485,8 +485,6 @@
       <c:forEach items="${list}" var="vo">
         <input type="hidden" name="regNum" value="${vo.regNum}">
 
-
-
           <p>카테고리 : <%--<input type="text" name="category" value="${vo.category}">--%>
             <select id="category" name="category" size="1">
               <c:if test='${"Y" eq freeFlag}'>
@@ -503,6 +501,20 @@
 
 
       <p>제목 : <input type="text" name="title" value="${vo.title}"></p>
+
+        <%--게임 검색--%>
+        <div align="left" <%--style="border: 1px solid goldenrod;"--%>>
+          <div id="selectedGame">
+            <c:forEach items="${gameList}" var="gl" varStatus="status">
+              <div class="selected-value cursor_pointer" name="selectedGame" item="${gl.gnum}">${gl.gametitle}</div>
+            </c:forEach>
+          </div>
+          <input type="hidden" name="gametitle" id="gametitle">
+          <p>게임 : <input name="inputGame" class="input_game" autocomplete="off" placeholder="게임명을 검색 하세요."></p>
+          <div id="gametitleSuggestions" style="width: 300px;	background-color: white; overflow-y: auto;"></div>
+        </div>
+
+
 
 <%--      <p>게임ID(임시) : <input type="text" name="gnum" value="${vo.gnum}"></p>--%>
       <%--<p>모임ID(임시) : <input type="text" name="gatheringId" value="${vo.gatheringId}"></p>--%>
@@ -539,18 +551,16 @@
         </p>
         <p>제목 : <input type="text" name="title"></p>
 
-          <%--게임 검색 기능 추가--%>
-        <%--<p>게임ID(임시) : <input type="text" name="gnum"></p>--%>
-
         <%--게임 검색--%>
-        <div align="left" style="border: 1px solid goldenrod;">
-          <h4>게임검색</h4>
+        <div align="left" <%--style="border: 1px solid goldenrod;"--%>>
           <div id="selectedGame"></div>
           <input type="hidden" name="gametitle" id="gametitle">
-          <input id="inputGame" class="input_game" autocomplete="off">
+          <p>게임 : <input name="inputGame" class="input_game" autocomplete="off" placeholder="게임명을 검색 하세요."></p>
+<%--
           <div>
-            <label for="inputGame">게임명을 입력하세요</label>
+            <label for="inputGame"></label>
           </div>
+--%>
           <div id="gametitleSuggestions" style="width: 300px;	background-color: white; overflow-y: auto;"></div>
         </div>
 

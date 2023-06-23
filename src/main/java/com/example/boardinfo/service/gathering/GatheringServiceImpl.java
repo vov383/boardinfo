@@ -11,6 +11,9 @@ import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
+import com.example.boardinfo.service.game.GameServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -22,7 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GatheringServiceImpl implements GatheringService {
-
+	private static final Logger logger=
+			LoggerFactory.getLogger(GameServiceImpl.class);
 	@Inject
 	GatheringDAO gatheringDao;
 
@@ -305,5 +309,20 @@ public class GatheringServiceImpl implements GatheringService {
 	@Override
 	public int deleteReply(GatheringReplyDTO dto) {
 		return gatheringDao.deleteReply(dto);
+	}
+
+	@Override
+	public List<GatheringDTO> totalSearch(String gameKeyword) {
+		List<GatheringDTO> list = gatheringDao.totalSearch(gameKeyword);
+
+		for(GatheringDTO dto : list) {
+			//status 세팅
+			LocalDateTime now = LocalDateTime.now();
+			LocalDateTime gathering_date = dto.getGathering_date();
+			if (now.isAfter(gathering_date)) {
+				dto.setStatus("모임종료");
+			} else dto.setStatus("모집중");
+		}
+		return list;
 	}
 }

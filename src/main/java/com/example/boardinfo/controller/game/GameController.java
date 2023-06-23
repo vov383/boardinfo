@@ -8,6 +8,7 @@ import com.example.boardinfo.model.game.dto.mechanic.MechanicDTO;
 import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
 import com.example.boardinfo.service.game.GameRatingService;
 import com.example.boardinfo.service.game.GameService;
+import com.example.boardinfo.service.tboard.TBoardService;
 import com.example.boardinfo.util.UploadFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -204,12 +205,4 @@ public class GameController {
 		return mav;
 	}
 
-	@GetMapping("searchAll.do")
-	public ModelAndView totalSearch(ModelAndView mav,@RequestParam("gameKeyword")String gameKeyword){
-		mav.setViewName("include/totalSearch");
-		mav.addObject("gameKeyword", gameKeyword);
-		mav.addObject("gameMap", gameService.totalSearch(gameKeyword));
-
-		return mav;
-	}
 }

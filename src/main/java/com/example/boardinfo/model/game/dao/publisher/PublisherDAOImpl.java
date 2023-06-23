@@ -72,4 +72,9 @@ public class PublisherDAOImpl implements PublisherDAO {
 		map.put("gnum",gnum);
 		sqlSession.delete("publisher.deleteGame_Publisher", map);
 	}
+
+	@Override
+	public List<PublisherDTO> totalSearch(String gameKeyword) {
+		return sqlSession.selectList("publisher.totalSearch", gameKeyword);
+	}
 }

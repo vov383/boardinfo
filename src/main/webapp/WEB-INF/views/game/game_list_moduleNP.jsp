@@ -7,8 +7,8 @@
 <!-- 세션사용여부 -->
 <link rel="stylesheet" href="${path}/include/css/style_table.css">
 
-<div class="service_list_song type02 d_song_list">
-
+<div class="service_list_song">
+    <h3>${param.filter}</h3>
     <table border="1" style="width:100%">
 
         <colgroup>
@@ -53,17 +53,18 @@
 
         <tbody>
 
-        <c:forEach var="row" items="${gameMap.list}">
 
-            <tr class="lst50" id="lst50" data-song-no="36430773">
+        <c:forEach var="row" items="${gameMap.glist}">
 
-                <td><div class="wrap t_center"><span class="rank ">${row.game_rank}</span><span class="none">위</span></div></td>
+            <tr>
+
+                <td><div class="wrap t_center"><span class="rank">${row.game_rank}</span><span class="none">위</span></div></td>
 
                 <!-- 차트순위 추가 -->
                 <td><div class="wrap">
 
-			<span title="순위 동일" class="rank_wrap">
-				<span class="bullet_icons rank_static"><span class="none">순위 동일</span></span>
+			<span class="rank_wrap">
+				<span class="none">순위 기능 구현가능할지..</span>
 				<span class="none">0</span>
 			</span>
 
@@ -141,4 +142,6 @@
         </c:forEach>
         </tbody>
     </table>
+
+    <a href="#" style="display: inline-block; float: right;">더보기</a>
 </div>

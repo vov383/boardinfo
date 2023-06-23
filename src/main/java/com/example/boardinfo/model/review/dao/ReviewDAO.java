@@ -20,7 +20,7 @@ public interface ReviewDAO {
     void reviewViews(reviewSerchDTO reviewserchDTO);
 
 	/*리뷰 입력*/
-    void reviewCreate(ReviewDTO reviewDTO, ChoiceGameDTO choiceGameDTO);
+    void reviewCreate(ReviewDTO reviewDTO);
 
     /*리뷰 수정*/
     void reviewUpdate(ReviewDTO reviewDTO);

@@ -44,4 +44,5 @@ public interface GatheringDAO {
 	public int updateReply(GatheringReplyDTO dto);
 	public int deleteReply(GatheringReplyDTO dto);
 
+    List<GatheringDTO> totalSearch(String gameKeyword);
 }

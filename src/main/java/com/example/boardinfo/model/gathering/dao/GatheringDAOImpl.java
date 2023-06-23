@@ -205,5 +205,10 @@ public class GatheringDAOImpl implements GatheringDAO {
 		return sqlSession.update("gathering.deleteReply", dto);
 
 	}
+
+	@Override
+	public List<GatheringDTO> totalSearch(String gameKeyword) {
+		return sqlSession.selectList("gathering.totalSearch", gameKeyword);
+	}
 }
 
