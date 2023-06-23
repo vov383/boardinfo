@@ -66,10 +66,7 @@
                     <div class="wrap_song_info">
                         <div class="ellipsis rank01"><span>
 					<a href="javascript:view(${row.gathering_id})">${row.title}</a>
-											</span></div>
-                    </div>
-                    <div class="ellipsis rank03">
-                        (${row.attendee_count} / ${row.maxPeople})
+											</span>(${row.attendee_count} / ${row.maxPeople})</div>
                     </div>
                 </div></td>
 

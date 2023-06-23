@@ -78,9 +78,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from	(
 				select 	anum, artist
 				from	artist
-				where	UPPER(artist) like '%' || UPPER(#{gameKeyword}) || '%'
+				where	regexp_like(artist, #{gameKeyword},'i')
 				order by
-					CASE WHEN UPPER(artist) like UPPER(#{gameKeyword}) || '%'
+					CASE WHEN regexp_like(artist, '^'||#{gameKeyword},'i')
 					THEN 1
         	        ELSE 2
         	        END

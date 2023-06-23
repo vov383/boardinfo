@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				SELECT 	a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.bgg_thumbnail,
 						a.game_rank, a.gamephoto_url, a.rate, a.weight,a.tot, a.theme
 				FROM 	(
-						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,g.theme
+						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,g.theme,
 								g.bgg_thumbnail, g.game_rank, ga.fullname AS gamephoto_url, gr.rate, gr.weight, gr.tot
 						FROM 	game g
 						LEFT JOIN 	(
@@ -608,12 +608,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                                     SELECT  gnum, bggnum, gametitle, gametitle_eng, totalviewcount, release_year, bgg_thumbnail,
                                             game_rank,theme
                                     FROM    game
-                                    WHERE   upper(gametitle) LIKE '%' || upper(#{gameKeyword}) || '%' AND del = 'n' and confirmed = 'allow'
+                                    WHERE   regexp_like(GAMETITLE, #{gameKeyword},'i') AND del = 'n' and confirmed = 'allow'
                                     UNION
                                     SELECT  gnum, bggnum, gametitle, gametitle_eng, totalviewcount, release_year, bgg_thumbnail,
                                             game_rank,theme
                                     FROM    game
-                                    WHERE   upper(gametitle_eng) LIKE '%' || upper(#{gameKeyword}) || '%' AND del = 'n' and confirmed = 'allow'
+                                    WHERE   regexp_like(GAMETITLE_ENG, #{gameKeyword},'i') AND del = 'n' and confirmed = 'allow'
                                 ) g
                         LEFT JOIN   (
                                     SELECT  gnum, fullname
@@ -632,9 +632,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                                 ) gr
                                 ON      g.gnum = gr.gnum
                         ORDER BY
-                                CASE WHEN UPPER(gametitle) LIKE UPPER(#{gameKeyword}) || '%'
+                                CASE WHEN regexp_like(GAMETITLE,'^'||#{gametitle} ,'i')
                                      THEN 1
-                                     WHEN UPPER(gametitle_eng) LIKE UPPER(#{gameKeyword}) || '%'
+                                     WHEN regexp_like(GAMETITLE_ENG,'^'||#{gametitle},'i')
                                      THEN 2
                                      ELSE 3
                                 END,

@@ -228,5 +228,16 @@ public class ReviewServiceImpl implements ReviewService {
 
 		return map;
 	}
+
+	@Override
+	public List<ReviewDTO> totalSearch(String gameKeyword) {
+		return reviewDAO.totalSearch(gameKeyword);
+
+	}
+
+	@Override
+	public Map<String, Object> totalSearchMore(Map<String, Object> map) {
+		return null;
+	}
 }
 

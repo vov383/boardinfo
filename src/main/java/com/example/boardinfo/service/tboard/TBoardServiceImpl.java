@@ -159,4 +159,9 @@ public class TBoardServiceImpl implements TBoardService {
 	public List<TBoardDTO> totalSearch(String gameKeyword) {
 		return tboardDao.totalSearch(gameKeyword);
 	}
+
+	@Override
+	public Map<String, Object> totalSearchMore(Map<String, Object> map) {
+		return null;
+	}
 }

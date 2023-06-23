@@ -414,9 +414,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 						where 	gathering_id = g.gathering_id and type = 'a'
 						) as attendee_count
 				from	gathering g
-				where 	upper(title) LIKE '%' || upper(#{gameKeyword}) || '%' AND g.show = 'y'
+				where 	regexp_like(title, #{gameKeyword},'i') AND g.show = 'y'
 				order by
-			            CASE WHEN UPPER(title) LIKE UPPER(#{gameKeyword}) || '%'
+			            CASE WHEN regexp_like(title, '^'||#{gameKeyword},'i')
 			            THEN 1
         	            ELSE 2
         	            END

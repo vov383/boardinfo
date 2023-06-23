@@ -171,6 +171,11 @@ public class ReviewDAOImpl implements ReviewDAO {
         return sqlSession.selectList("review.getHotAll", dto);
     }
 
+    @Override
+    public List<ReviewDTO> totalSearch(String gameKeyword) {
+        return sqlSession.selectList("review.totalSearch", gameKeyword);
+    }
+
     /*
 
 	//댓글 및 답글 테이블
