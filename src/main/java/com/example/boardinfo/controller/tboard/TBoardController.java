@@ -1,18 +1,8 @@
 package com.example.boardinfo.controller.tboard;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import com.example.boardinfo.model.gathering.dto.GatheringDTO;
-import com.example.boardinfo.model.review.dto.reviewSerchDTO;
-import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
-import com.example.boardinfo.util.UploadFileUtils;
+import com.example.boardinfo.model.tboard.dto.TBoardDTO;
+import com.example.boardinfo.service.tboard.TBCommentService;
+import com.example.boardinfo.service.tboard.TBoardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,9 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.boardinfo.model.tboard.dto.TBoardDTO;
-import com.example.boardinfo.service.tboard.TBCommentService;
-import com.example.boardinfo.service.tboard.TBoardService;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("tboard/*")

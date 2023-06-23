@@ -42,8 +42,13 @@ public class TBCommentController {
 	public boolean replyInsert(
 			@ModelAttribute TBCommentDTO re_dto,
 			HttpSession session) {
+		
 		//세션에 저장된 아이디객체 가져와
 		String create_user = (String)session.getAttribute("userid");
+		/*비로그인이면 로그인 페이지로*/
+		if(create_user == null || create_user.equals("")){
+			return false;
+		}
 		re_dto.setCreate_user(create_user);
 
 		boolean result = tbcommentService.insertReply(re_dto);

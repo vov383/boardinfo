@@ -170,6 +170,7 @@
                 });
             });
 
+            /*카테고리 나눔 누르면 가격 사라지는 버튼*/
             let priceVisible = true;
             $('input[name=category]').change(function () {
                 if ($("input[name=category]:checked").val() == "n") {
@@ -202,26 +203,6 @@
             if (CKEDITOR.instances.description.getData().length < 1) {
                 alert("상품 설명을 입력해 주세요.");
                 return;
-            } else {
-                var editor = CKEDITOR.instances.description; // Assuming 'gathering_content' is the CKEditor instance name
-                var content = editor.getData(); // Retrieve the CKEditor content
-
-                var parser = new DOMParser();
-                var doc = parser.parseFromString(content, 'text/html');
-
-                // Get all <img> tags
-                var imgTags = doc.getElementsByTagName('img');
-                debugger
-
-                const input = document.getElementById("input");
-                // Extract the information from the <img> tags
-                for (var i = 0; i < imgTags.length; i++) {
-                    var imgSrc = imgTags[i].getAttribute('src'); // Get the 'src' attribute of the <img> tag
-                    // Do whatever you need with the 'imgSrc' value
-                    debugger
-
-                }
-
             }
 
             document.insertForm.action = "${path}/tboard/insert.do";
@@ -294,11 +275,6 @@
                 <p class="preview-title">미리보기</p>
                 <div class="preview" id="preview"></div>
             </section>
-
-            <div> 첨부파일을 등록하세요
-                <div class="fileDrop"></div>
-                <div id="uploadedList"></div>
-            </div>
 
             <div id="postMain">
                 <textarea id="description" name="description" placeholder="상품설명을 자유롭게 적어보세요"></textarea>

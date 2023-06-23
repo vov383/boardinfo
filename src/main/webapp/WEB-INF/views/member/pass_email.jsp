@@ -80,7 +80,7 @@ body {
 			<a href="${path}/"><img alt="로고" src="../resources/uploaded_image/boardinfo_logo.png"></a>
 		</h2>
 		<div class="input_section">
-			<form method="post" action="pass_num/${dice}/${userid}">
+			<form method="post" action="pass_num/${dice}/${email}">
 				<fieldset>
 					<legend>인증번호 체크</legend>
 					<table>
