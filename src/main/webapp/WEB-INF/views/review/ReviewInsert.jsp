@@ -556,15 +556,9 @@
           <div id="selectedGame"></div>
           <input type="hidden" name="gametitle" id="gametitle">
           <p>게임 : <input name="inputGame" class="input_game" autocomplete="off" placeholder="게임명을 검색 하세요."></p>
-<%--
-          <div>
-            <label for="inputGame"></label>
-          </div>
---%>
           <div id="gametitleSuggestions" style="width: 300px;	background-color: white; overflow-y: auto;"></div>
         </div>
 
-        <%--<p>모임ID(임시) : <input type="text" name="gatheringId"></p>--%>
 
        <%--로그인 아이디 불러오기--%>
         <c:forEach items="${list}" var="vo">
