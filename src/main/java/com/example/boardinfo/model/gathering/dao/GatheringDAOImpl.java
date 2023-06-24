@@ -227,8 +227,8 @@ public class GatheringDAOImpl implements GatheringDAO {
 	}
 
 	@Override
-	public List<GatheringDTO> totalSearch(String gameKeyword) {
-		return sqlSession.selectList("gathering.totalSearch", gameKeyword);
+	public List<GatheringDTO> totalSearch(Map<String, Object> map) {
+		return sqlSession.selectList("gathering.totalSearch", map);
 	}
 }
 

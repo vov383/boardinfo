@@ -76,7 +76,12 @@ public class DesignerDAOImpl implements DesignerDAO {
 	}
 
 	@Override
-	public List<DesignerDTO> totalSearch(String gameKeyword) {
-		return sqlSession.selectList("designer.totalSearch", gameKeyword);
+	public List<DesignerDTO> totalSearch(Map<String, Object> map) {
+		return sqlSession.selectList("designer.totalSearch", map);
+	}
+
+	@Override
+	public int totalSearchCount(Map<String, Object> map) {
+		return sqlSession.selectOne("designer.totalSearchCount", map);
 	}
 }

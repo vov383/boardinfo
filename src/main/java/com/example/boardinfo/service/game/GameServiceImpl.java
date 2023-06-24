@@ -60,6 +60,7 @@ public class GameServiceImpl implements GameService {
 
     List<GameDTO> list = gameDao.gamelist(map);
 
+    map.put("count",count);
     map.put("list",list);
     map.put("pager",pager);
 
@@ -610,11 +611,24 @@ public class GameServiceImpl implements GameService {
   @Override
   public Map<String, Object> totalSearch(String gameKeyword) {
     Map<String, Object> map = new HashMap<>();
-    logger.info("넘어오나요? " + gameKeyword);
-    List<GameDTO> glist = gameDao.totalSearch(gameKeyword);
-    List<ArtistDTO> alist = artistDao.totalSearch(gameKeyword);
-    List<DesignerDTO> dlist = designerDao.totalSearch(gameKeyword);
-    List<PublisherDTO> plist = publisherDao.totalSearch(gameKeyword);
+    map.put("gameKeyword", gameKeyword);
+
+    int gcount = gameDao.totalSearchCount(map);
+    int acount = artistDao.totalSearchCount(map);
+    int dcount = designerDao.totalSearchCount(map);
+    int pcount = publisherDao.totalSearchCount(map);
+
+    map.put("gcount", gcount);
+    map.put("acount", acount);
+    map.put("dcount", dcount);
+    map.put("pcount", pcount);
+
+    map.put("filter", "none");
+
+    List<GameDTO> glist = gameDao.totalSearch(map);
+    List<ArtistDTO> alist = artistDao.totalSearch(map);
+    List<DesignerDTO> dlist = designerDao.totalSearch(map);
+    List<PublisherDTO> plist = publisherDao.totalSearch(map);
 
     map.put("glist", glist);
     map.put("alist", alist);
@@ -626,21 +640,72 @@ public class GameServiceImpl implements GameService {
 
   @Override
   public Map<String, Object> totalSearchMore(Map<String, Object> map) {
-    String gameKeyword = (String)map.get("gameKeyword");
     String filter = (String)map.get("filter");
+    int curPage = Integer.parseInt(String.valueOf(map.get("curPage")));
 
     if(filter.indexOf("게임") != -1){
-      List<GameDTO> list = gameDao.totalSearch(gameKeyword);
+      int count = gameDao.totalSearchCount(map);
+
+      Pager pager = new Pager(count, curPage, 10);
+      int start = pager.getPageBegin();
+      int end = pager.getPageEnd();
+
+      map.put("start",start);
+      map.put("end",end);
+
+      List<GameDTO> list = gameDao.totalSearch(map);
+
+      map.put("count",count);
       map.put("list",list);
+      map.put("pager",pager);
+
     }else if(filter.indexOf("아티스트") != -1){
-      List<ArtistDTO> list = artistDao.totalSearch(gameKeyword);
-      map.put("list",list);
+      int count = artistDao.totalSearchCount(map);
+
+      Pager pager = new Pager(count, curPage, 60);
+      int start = pager.getPageBegin();
+      int end = pager.getPageEnd();
+
+      map.put("start",start);
+      map.put("end",end);
+
+      List<ArtistDTO> list = artistDao.totalSearch(map);
+
+      map.put("count", count);
+      map.put("alist",list);
+      map.put("pager",pager);
+
     }else if(filter.indexOf("디자이너") != -1){
-      List<DesignerDTO> list = designerDao.totalSearch(gameKeyword);
-      map.put("list",list);
+      int count = designerDao.totalSearchCount(map);
+
+      Pager pager = new Pager(count, curPage, 60);
+      int start = pager.getPageBegin();
+      int end = pager.getPageEnd();
+
+      map.put("start",start);
+      map.put("end",end);
+
+      List<DesignerDTO> list = designerDao.totalSearch(map);
+
+      map.put("count", count);
+      map.put("dlist",list);
+      map.put("pager",pager);
+
     }else if(filter.indexOf("퍼블리셔") != -1){
-      List<PublisherDTO> list = publisherDao.totalSearch(gameKeyword);
-      map.put("list",list);
+      int count = publisherDao.totalSearchCount(map);
+
+      Pager pager = new Pager(count, curPage, 60);
+      int start = pager.getPageBegin();
+      int end = pager.getPageEnd();
+
+      map.put("start",start);
+      map.put("end",end);
+
+      List<PublisherDTO> list = publisherDao.totalSearch(map);
+
+      map.put("count", count);
+      map.put("pager",pager);
+      map.put("plist",list);
     }
     return map;
   }

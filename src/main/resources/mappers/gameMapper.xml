@@ -596,52 +596,72 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="totalSearch" resultType="gameDto">
-		SELECT  gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, game_rank,
-        		rate, weight, bgg_thumbnail, tot, theme
+		SELECT  gnum, bggnum, gametitle, gametitle_eng, totalviewcount, release_year, bgg_thumbnail,
+				game_rank, gamephoto_url, rate, weight, tot, theme, rn
 		FROM    (
-            	SELECT  a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.bgg_thumbnail,
-                    	a.game_rank, a.gamephoto_url, a.rate, a.weight, a.tot, a.theme
-            	FROM    (
-                        SELECT  g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,g.theme,
-                                g.bgg_thumbnail, g.game_rank, ga.fullname AS gamephoto_url, gr.rate, gr.weight, gr.tot
-                        FROM    (
-                                    SELECT  gnum, bggnum, gametitle, gametitle_eng, totalviewcount, release_year, bgg_thumbnail,
-                                            game_rank,theme
-                                    FROM    game
-                                    WHERE   regexp_like(GAMETITLE, #{gameKeyword},'i') AND del = 'n' and confirmed = 'allow'
-                                    UNION
-                                    SELECT  gnum, bggnum, gametitle, gametitle_eng, totalviewcount, release_year, bgg_thumbnail,
-                                            game_rank,theme
-                                    FROM    game
-                                    WHERE   regexp_like(GAMETITLE_ENG, #{gameKeyword},'i') AND del = 'n' and confirmed = 'allow'
-                                ) g
-                        LEFT JOIN   (
-                                    SELECT  gnum, fullname
-                                    FROM    (
-                                                SELECT  ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
-                                                        gnum, fullname
-                                                FROM    game_attach
-                                            )
-                                    WHERE   rnum = 1
-                                ) ga
-                                ON      g.gnum = ga.gnum
-                        LEFT JOIN   (
-                                    SELECT  gnum, avg(rating) AS rate, avg(weight) AS weight, count(*) AS tot
-                                    FROM    game_rating
-                                    GROUP BY gnum
-                                ) gr
-                                ON      g.gnum = gr.gnum
-                        ORDER BY
-                                CASE WHEN regexp_like(GAMETITLE,'^'||#{gametitle} ,'i')
-                                     THEN 1
-                                     WHEN regexp_like(GAMETITLE_ENG,'^'||#{gametitle},'i')
-                                     THEN 2
-                                     ELSE 3
-                                END,
-                                GAME_RANK
-                    	) a
-        		)
-		WHERE rownum BETWEEN 1 AND 4
+				SELECT  gnum, bggnum, gametitle, gametitle_eng, totalviewcount, release_year, bgg_thumbnail,
+        		    	game_rank, gamephoto_url, rate, weight, tot, theme, rownum rn
+        		FROM    (
+        		        SELECT  g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,g.theme,
+        		                g.bgg_thumbnail, g.game_rank, ga.fullname AS gamephoto_url, gr.rate, gr.weight, gr.tot
+        		        FROM    (
+        		                    SELECT  gnum, bggnum, gametitle, gametitle_eng, totalviewcount, release_year, bgg_thumbnail,
+        		                            game_rank,theme
+        		                    FROM    game
+        		                    WHERE   regexp_like(GAMETITLE, #{gameKeyword},'i') AND del = 'n' and confirmed = 'allow'
+        		                    UNION
+        		                    SELECT  gnum, bggnum, gametitle, gametitle_eng, totalviewcount, release_year, bgg_thumbnail,
+        		                            game_rank,theme
+        		                    FROM    game
+        		                    WHERE   regexp_like(GAMETITLE_ENG, #{gameKeyword},'i') AND del = 'n' and confirmed = 'allow'
+        		                ) g
+        		        LEFT JOIN   (
+        		                    SELECT  gnum, fullname
+        		                    FROM    (
+        		                                SELECT  ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
+        		                                        gnum, fullname
+        		                                FROM    game_attach
+        		                            )
+        		                    WHERE   rnum = 1
+        		                ) ga
+        		                ON      g.gnum = ga.gnum
+        		        LEFT JOIN   (
+        		                    SELECT  gnum, avg(rating) AS rate, avg(weight) AS weight, count(*) AS tot
+        		                    FROM    game_rating
+        		                    GROUP BY gnum
+        		                ) gr
+        		                ON      g.gnum = gr.gnum
+        		        ORDER BY
+        		                CASE WHEN regexp_like(GAMETITLE,'^'||#{gameKeyword} ,'i')
+        		                     THEN 1
+        		                     WHEN regexp_like(GAMETITLE_ENG,'^'||#{gameKeyword},'i')
+        		                     THEN 2
+        		                     ELSE 3
+        		                END,
+        		                GAME_RANK
+        		    	)
+				)
+        <choose>
+			<when test="filter != null and 'none'.equalsIgnoreCase(filter)">
+				WHERE rn BETWEEN 1 AND 4
+			</when>
+			<otherwise>
+				WHERE rn between #{start} and #{end}
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="totalSearchCount" resultType="int">
+		SELECT  count(*)
+		FROM    (
+				SELECT  gnum, gametitle
+				FROM    game
+				WHERE   regexp_like(GAMETITLE, #{gameKeyword},'i') AND del = 'n' and confirmed = 'allow'
+				UNION
+				SELECT  gnum, gametitle
+				FROM    game
+				WHERE   regexp_like(GAMETITLE_ENG, #{gameKeyword},'i') AND del = 'n' and confirmed = 'allow'
+				)
 	</select>
 
 </mapper>

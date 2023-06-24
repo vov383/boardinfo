@@ -9,42 +9,7 @@
     <meta charset="utf-8">
     <title>BOARDINFO</title>
     <%@ include file="js/header.jsp" %>
-    <style>
-        .totalSearchDiv {
-            padding: 20px 0;
-            max-height: 400px;
-            clear: both;
-            margin-bottom: 30px;
-            overflow-y: hidden;
-        }
-        .totalSearchUl {
-            margin-bottom: 10px;
-            width: 100%;
-        }
-
-        .totalSearchUl ul {
-            width: 100%;
-            padding-inline-start: inherit;
-        }
-
-        .totalSearchUl ul li {
-            list-style: none;
-            float: left;
-            width: calc((100%/8) - 2px);
-            height: 36px;
-            line-height: 36px;
-            text-align: center;
-            cursor: pointer;
-            background-color: #F9841A;
-            border-left: 1px solid gainsboro;
-            border-right: 1px solid gainsboro;
-        }
-        .totalSearchUl ul li span {
-            font-size: 13px;
-        }
-
-
-    </style>
+    <link rel="stylesheet" href="${path}/include/css/style_search.css">
 </head>
 
 <body>
@@ -60,7 +25,7 @@
         </div>
 
         <div id="contentsLocation">
-            ${gameKeyword}에 대한 검색결과
+            <strong>${gameKeyword}</strong>에 대한 검색결과
         </div>
 
         <div id="contentsMain">
@@ -69,14 +34,15 @@
 
                 <div class="totalSearchUl">
                     <ul>
-                        <li><span>통합검색</span></li>
-                        <li><span>게임명</span></li>
-                        <li><span>아티스트</span></li>
-                        <li><span>디자이너</span></li>
-                        <li><span>퍼블리셔</span></li>
-                        <li><span>리뷰게시판</span></li>
-                        <li><span>모임게시판</span></li>
-                        <li><span>거래게시판</span></li>
+                        <li><a href="${path}/search/searchAll.do?gameKeyword=${gameKeyword}">통합검색</a></li>
+                        <li><a href="${path}/search/totalSearchMore/게임/${gameKeyword}">게임명</a></li>
+                        <li><a href="${path}/search/totalSearchMore/아티스트/${gameKeyword}">아티스트</a></li>
+                        <li><a href="${path}/search/totalSearchMore/디자이너/${gameKeyword}">디자이너</a></li>
+                        <li><a href="${path}/search/totalSearchMore/퍼블리셔/${gameKeyword}">퍼블리셔</a></li>
+                        <li><a href="${path}/search/totalSearchMore/자유게시판/${gameKeyword}">자유게시판</a></li>
+                        <li><a href="${path}/search/totalSearchMore/게임포럼/${gameKeyword}">게임포럼</a></li>
+                        <li><a href="${path}/search/totalSearchMore/모임게시판/${gameKeyword}">모임게시판</a></li>
+                        <li><a href="${path}/search/totalSearchMore/거래게시판/${gameKeyword}">거래게시판</a></li>
                     </ul>
                 </div>
 
@@ -91,7 +57,7 @@
 
                 <c:if test="${not empty gameMap.alist}">
                     <div class="totalSearchDiv">
-                        <c:import url="../game/game_list_moduleFilter.jsp" charEncoding="UTF-8" >
+                        <c:import url="../game/game_list_moduleFilterNP.jsp" charEncoding="UTF-8" >
                             <c:param name="filter" value="아티스트"></c:param>
                         </c:import>
                     </div>
@@ -100,7 +66,7 @@
 
                 <c:if test="${not empty gameMap.dlist}">
                     <div class="totalSearchDiv">
-                        <c:import url="../game/game_list_moduleFilter.jsp" charEncoding="UTF-8" >
+                        <c:import url="../game/game_list_moduleFilterNP.jsp" charEncoding="UTF-8" >
                             <c:param name="filter" value="디자이너"></c:param>
                         </c:import>
                     </div>
@@ -109,19 +75,27 @@
 
                 <c:if test="${not empty gameMap.plist}">
                     <div class="totalSearchDiv">
-                        <c:import url="../game/game_list_moduleFilter.jsp" charEncoding="UTF-8" >
+                        <c:import url="../game/game_list_moduleFilterNP.jsp" charEncoding="UTF-8" >
                             <c:param name="filter" value="퍼블리셔"></c:param>
                         </c:import>
                     </div>
                 </c:if>
 
 
-                <c:if test="${not empty reviewList}">
+                <c:if test="${not empty reviewMap.list1}">
                 <div class="totalSearchDiv">
                     <c:import url="../review/review_list_moduleNP.jsp" charEncoding="UTF-8" >
-                        <c:param name="filter" value="리뷰게시판"></c:param>
+                        <c:param name="filter" value="자유게시판"></c:param>
                     </c:import>
                 </div>
+                </c:if>
+
+                <c:if test="${not empty reviewMap.list2}">
+                    <div class="totalSearchDiv">
+                        <c:import url="../review/review_list_moduleNP.jsp" charEncoding="UTF-8" >
+                            <c:param name="filter" value="게임포럼"></c:param>
+                        </c:import>
+                    </div>
                 </c:if>
 
 

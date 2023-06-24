@@ -3,7 +3,11 @@ package com.example.boardinfo.service.gathering;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.*;
+
 
 import javax.inject.Inject;
 
@@ -12,6 +16,7 @@ import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
+import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.member.dao.MemberDAO;
 import com.example.boardinfo.service.game.GameServiceImpl;
 import org.slf4j.Logger;
@@ -363,7 +368,10 @@ public class GatheringServiceImpl implements GatheringService {
 
 	@Override
 	public List<GatheringDTO> totalSearch(String gameKeyword) {
-		List<GatheringDTO> list = gatheringDao.totalSearch(gameKeyword);
+		Map<String, Object> map = new HashMap<>();
+		map.put("gameKeyword", gameKeyword);
+		map.put("filter", "none");
+		List<GatheringDTO> list = gatheringDao.totalSearch(map);
 
 		for(GatheringDTO dto : list) {
 			//status 세팅
@@ -378,6 +386,16 @@ public class GatheringServiceImpl implements GatheringService {
 
 	@Override
 	public Map<String, Object> totalSearchMore(Map<String, Object> map) {
-		return null;
+		List<GatheringDTO> list = gatheringDao.totalSearch(map);
+		for(GatheringDTO dto : list) {
+			//status 세팅
+			LocalDateTime now = LocalDateTime.now();
+			LocalDateTime gathering_date = dto.getGathering_date();
+			if (now.isAfter(gathering_date)) {
+				dto.setStatus("모임종료");
+			} else dto.setStatus("모집중");
+		}
+		map.put("list",list);
+		return map;
 	}
 }

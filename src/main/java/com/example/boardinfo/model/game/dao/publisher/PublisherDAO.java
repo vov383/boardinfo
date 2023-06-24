@@ -16,8 +16,7 @@ public interface PublisherDAO {
     List<PublisherDTO> view(int gnum);
 	void insert_publisher_mapping(int gnum, int pnum);
     List<String> viewPublisher(int gnum);
-
     void deleteGame_Publisher(String value, int gnum);
-
-    List<PublisherDTO> totalSearch(String gameKeyword);
+    List<PublisherDTO> totalSearch(Map<String, Object> map);
+    int totalSearchCount(Map<String, Object> map);
 }

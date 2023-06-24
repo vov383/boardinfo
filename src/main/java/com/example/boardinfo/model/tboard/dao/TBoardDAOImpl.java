@@ -86,7 +86,7 @@ public class TBoardDAOImpl implements TBoardDAO {
 	}
 
 	@Override
-	public List<TBoardDTO> totalSearch(String gameKeyword) {
-		return sqlSession.selectList("tboard.totalSearch", gameKeyword);
+	public List<TBoardDTO> totalSearch(Map<String, Object> map) {
+		return sqlSession.selectList("tboard.totalSearch", map);
 	}
 }
