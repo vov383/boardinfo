@@ -46,4 +46,6 @@ public interface GatheringDAO {
 	public List<GatheringDTO> getAttendingGatheringList(String user_id);
 	public List<Integer> getMyActiveChats(String user_id);
 	public void updateLastVisit(int gatheringId, String userId, LocalDate date);
+    List<GatheringDTO> totalSearch(String gameKeyword);
+
 }

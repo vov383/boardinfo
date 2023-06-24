@@ -139,27 +139,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where gnum = #{gnum} and writer_id = #{writer_id} and user_id = #{user_id}
 	</delete>
 
+	<!-- game_rating 테이블과 game 테이블을 join 해서 r.gnum 으로 g.gametitle과 g.bgg_thumbnail 컬럼값 가져옴
+	그리고 game_rating_like 테이블의 count를 r.userid 로 가져옴 -->
 	<select id="rateListbyUserid" resultType="gameRatingDTO">
-		select *
-		from (select userid,
-					 count(l.user_id)                   likeCount,
-					 r.gnum,
-					 rating,
-					 weight,
-					 participant1,
-					 participant2,
-					 participant3,
-					 participant4,
-					 participant5,
-					 rating_comment,
-					 to_char(create_date, 'YYYY-MM-dd') create_date
-			  from game_rating r
-					   left join game_rating_like l on r.userid = l.writer_id
-			  where r.userid = #{userid}
-			  group by writer_id, userid, r.gnum, rating, weight,
-					   participant1, participant2, participant3, participant4, participant5, rating_comment, create_date
-			  order by likeCount desc, create_date desc
-			 )
+		select r.userid
+			 , count(l.user_id)                   as likeCount
+			 , r.gnum
+			 , g.GAMETITLE
+			 , g.BGG_THUMBNAIL
+			 , r.rating
+			 , r.weight
+			 , r.participant1
+			 , r.participant2
+			 , r.participant3
+			 , r.participant4
+			 , r.participant5
+			 , r.rating_comment
+			 , to_char(r.create_date, 'YYYY-MM-dd') as create_date
+		from game_rating r
+				 join game g on r.GNUM = g.GNUM
+				 left join game_rating_like l on r.userid = l.writer_id
+		where r.userid = 'seong'
+		group by r.userid, r.gnum, r.rating, r.weight, r.participant1, r.participant2, r.participant3, r.participant4, r.participant5, r.rating_comment, r.create_date, g.GAMETITLE, g.BGG_THUMBNAIL
+		order by likeCount desc, create_date desc
 	</select>
 
 </mapper>

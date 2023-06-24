@@ -101,7 +101,7 @@ public class MemberDAOImpl implements MemberDAO {
 	@Override
 	public void pass_change(Map<String, Object> map, MemberDTO dto) {
 		map.get("passwd");
-		map.get("email");
+		map.get("userid");
 		sqlSession.update("member.pass_change",map);
 		
 	}

@@ -340,8 +340,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="gaListByUserid" resultType="gatheringDTO">
 		select gathering_id,
-			   writer_id,
-			   post_date,
+			   m.userid,
+			   post_date as create_date,
 			   title,
 			   gathering_date,
 			   address1,
@@ -353,10 +353,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			   (select count(*)
 				from attendee
 				where gathering_id = g.gathering_id
-				  and type = 'a') as attendee_count
+				  and type = 'a') as attendee_count,
+			   (select count(*)from GATHERING_REPLY where GATHERING_ID =g.GATHERING_ID) re_count
+
 		from gathering g
 				 join member m on g.writer_id = m.userid
-		where show = 'y' and userid = #{userid}
+		where show = 'y'
+		  and userid = #{userid}
 		order by gathering_id
 				desc
 	</select>
@@ -401,6 +404,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where reply_id = #{reply_id}
 	</update>
 
+
 	<select id="getAttendingGatheringList" resultType="gatheringDTO">
 		select a.gathering_id, g.title,
 			   (select count(*)
@@ -424,6 +428,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		set last_visit = #{date}
 		where gathering_id = #{gathering_id} and user_id = #{user_id}
 	</update>
+
+
+	<select id="totalSearch" resultType="gatheringDto">
+		select 	gathering_id, post_date, title, gathering_date, address1, address2, view_count, maxpeople, attendee_count
+		from	(
+				select	gathering_id, post_date, title, gathering_date, address1, address2, view_count,maxpeople,
+						(
+						select 	count(*)
+						from 	attendee
+						where 	gathering_id = g.gathering_id and type = 'a'
+						) as attendee_count
+				from	gathering g
+				where 	regexp_like(title, #{gameKeyword},'i') AND g.show = 'y'
+				order by
+			            CASE WHEN regexp_like(title, '^'||#{gameKeyword},'i')
+			            THEN 1
+        	            ELSE 2
+        	            END
+        	    )
+		where rownum between 1 and 6
+	</select>
+
 
 
 </mapper>

@@ -1,3 +1,4 @@
+
 package com.example.boardinfo.controller.member;
 
 import java.io.File;
@@ -23,7 +24,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -299,7 +304,7 @@ public class MemberController {
          ModelAndView mv = new ModelAndView();    //ModelAndView로 보낼 페이지를 지정하고, 보낼 값을 지정한다.
          mv.setViewName("/member/pass_email");     //뷰의이름
          mv.addObject("dice", dice);
-         mv.addObject("email", email);
+         mv.addObject("userid", userid);
          
          System.out.println("mv : "+mv);
 
@@ -313,18 +318,18 @@ public class MemberController {
          
      }
 	//인증번호 페이지넘김
-	@RequestMapping("pass_num/{dice}/{email:.+}")
-    public ModelAndView pass_num(String pass_num, @PathVariable("dice") String dice, @PathVariable("email") String email, HttpServletResponse response_equals) throws IOException{
+	@RequestMapping("pass_num/{dice}/{userid}")
+    public ModelAndView pass_num(String pass_num, @PathVariable("dice") String dice, @PathVariable("userid") String userid, HttpServletResponse response_equals) throws IOException{
     
     System.out.println("마지막 : pass_num : "+pass_num);
-    System.out.println("마지막 : email : "+email);
+    System.out.println("마지막 : userid : "+userid);
     System.out.println("마지막 : dice : "+dice);
     
     ModelAndView mv = new ModelAndView();
     
     mv.setViewName("/member/pass_change");
     
-    mv.addObject("email",email);
+    mv.addObject("userid",userid);
     
     if (pass_num.equals(dice)) {
         
@@ -332,7 +337,7 @@ public class MemberController {
     
         mv.setViewName("/member/pass_change");
         
-        mv.addObject("email",email);
+        mv.addObject("userid",userid);
         
         //만약 인증번호가 같다면 이메일을 비밀번호 변경 페이지로 넘기고, 활용할 수 있도록 한다.
         
@@ -363,19 +368,19 @@ public class MemberController {
     
 }
 	//변경할 비밀번호를 입력한 후에 확인 버튼을 누르면 넘어오는 컨트롤러
-    @RequestMapping("pass_change/{email:.+}")
-    public ModelAndView pass_change(@PathVariable String email, HttpServletRequest request, MemberDTO dto, HttpServletResponse pass) throws Exception{
+    @RequestMapping("pass_change/{userid}")
+    public ModelAndView pass_change(@PathVariable String userid, HttpServletRequest request, MemberDTO dto, HttpServletResponse pass) throws Exception{
     	
     	 String passwd = request.getParameter("new_pw");
-         String email2 = email;
+         String userid2 = userid;
     	 
-    	    dto.setEmail(email2);
+    	    dto.setUserid(userid2);
     	    dto.setPasswd(passwd);
     	  //값을 여러개 담아야 하므로 해쉬맵을 사용해서 값을 저장함
             
             Map<String, Object> map = new HashMap<>();
             
-            map.put("email", dto.getEmail());
+            map.put("userid", dto.getUserid());
             map.put("passwd", dto.getPasswd());
             
             memberService.pass_change(map,dto);
@@ -384,31 +389,8 @@ public class MemberController {
     	    mv.setViewName("home");
     	    return mv;
     }
-	/*마이페이지로 이동*/
-	@GetMapping("mypage/{userid}")
-	public ModelAndView moveToMyPage(@PathVariable(value="userid") String userid, ModelAndView mav) throws Exception{
-		try {
-			MemberDTO dto = memberService.viewMember(userid);
-			Map<String, Object> map = new HashMap<>();
-			map.put("dto", dto);
 
-			mav.setViewName("member/mypage");
-//			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
 
-			mav.addObject("map", map);
-//			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
-			return mav;
-		}catch (Exception e){
-			e.printStackTrace();
-			return new ModelAndView("home");
 
-		}
-
-	}
 
 }
-
-
-
-
-

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 다른 mapper와 중복되지 않도록 네임 스페이스 기재 -->
 
@@ -25,110 +25,169 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 리뷰 목록 조회 -->
 	<select id="reviewList" parameterType="hashMap" resultType="com.example.boardinfo.model.review.dto.ReviewDTO">
 
+		/* review.reviewList */
 		<include refid = "pagingStart"/>
-		SELECT A.*, ROWNUM AS RNUM
-		FROM (
-		    SELECT
-			   R.REG_NUM AS REGNUM
-		     , M.USERID
-			 , M.NICKNAME
-			 , R.CATEGORY
-			 , R.VIEWS
-			 , G.GNUM
-			 , G.GAMETITLE
-			 , R.GATHERING_ID AS GATHERINGID
-			 , R.TITLE
-			 , R.FUN_SCORE AS FUNSCORE
-			 , R.REVIEW_SCORE AS REVIEWSCORE
-			 , R.GAME_SCORE AS GAMESCORE
-			 , R.REVIEW_DETAIL AS REVIEWDETAIL
-			 , (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') AS GOOD
-		     , (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) AS RECNT
-			 , R.DEL
-			 , R.CREATE_USER AS CREATEUSER
-			 , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS CREATEDATE
-			 , R.UPDATE_USER AS UPDATEUSER
-			 , TO_CHAR(R.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE
-		FROM REVIEW R
-		   , MEMBER M
-		   , GAME G
-		WHERE R.CREATE_USER = M.USERID(+)
-		  AND R.GNUM = G.GNUM(+)
-		  AND R.DEL = 'N'
-		  /*검색*/
-		<if test="searchTitle != '' and searchTitle != null">
-			AND (R.TITLE LIKE '%'||#{searchTitle}||'%'
-			OR R.REVIEW_DETAIL LIKE '%'||#{searchTitle}||'%')
-		</if>
-		  /*디테일 진입*/
-		<if test="reviewDetailKey != '' and reviewDetailKey != null">
-			AND R.REG_NUM = #{reviewDetailKey}
-		</if>
-		ORDER BY CREATEDATE DESC) A
+			SELECT A.*, ROWNUM AS RNUM
+			  FROM (
+					SELECT R.REG_NUM AS REGNUM
+						 , M.USERID
+						 , M.NICKNAME
+						 , R.CATEGORY
+						 , R.VIEWS
+						 , R.TITLE
+						 , R.REVIEW_DETAIL AS REVIEWDETAIL
+						 , (SELECT MAX(B.GAMETITLE) || CASE (COUNT(1)-1) WHEN 0 THEN '' ELSE ' 외 ' || (COUNT(1)-1)END FROM CHOICE_GAME A, GAME B WHERE A.DEL = 'N' AND B.DEL = 'n' AND A.GNUM = B.GNUM AND A.REVIEWREGNUM = R.REG_NUM GROUP BY A.REVIEWREGNUM) AS GAMETITLE /*게임 타이틀 보여주기*/
+						 , (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') AS GOOD /*좋아요 개수*/
+						 , (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) AS RECNT /*댓글 개수*/
+						 , R.DEL
+						 , R.CREATE_USER AS CREATEUSER
+						 , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS CREATEDATE
+						 , R.UPDATE_USER AS UPDATEUSER
+						 , TO_CHAR(R.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE
+					  FROM REVIEW R
+                         , MEMBER M
+					 WHERE R.CREATE_USER = M.USERID(+)
+					   AND R.DEL = 'N'
+					<!--검색-->
+					<if test="searchTitle != '' and searchTitle != null">
+					   AND (R.TITLE LIKE '%'||#{searchTitle}||'%'
+					    OR R.REVIEW_DETAIL LIKE '%'||#{searchTitle}||'%')
+					</if>
+					<!--디테일 진입-->
+    				<if test="reviewDetailKey != '' and reviewDetailKey != null">
+        			   AND R.REG_NUM = #{reviewDetailKey}
+					</if>
+					<!--카테고리 정렬-->
+    				<if test="boardDivision != '' and boardDivision != null">
+        			   AND R.CATEGORY in (${boardDivision})
+    				</if>
+				     ORDER BY CREATEDATE DESC
+			      ) A
+    	<include refid = "pagingEnd"/>
+    	<if test="reviewDetailKey == '' or reviewDetailKey == null">
+        	<include refid = "paging"/>
+    	</if>
 
-		<include refid = "pagingEnd"/>
-		<if test="reviewDetailKey == '' or reviewDetailKey == null">
-		<include refid = "paging"/>
-		</if>
+</select>
 
-	</select>
-
-	<!-- 리뷰 목록 조회 카운트 -->
+<!-- 리뷰 목록 조회 카운트 -->
 	<select id="reviewListCnt" parameterType="hashMap" resultType="int">
 		SELECT count(1)
 		FROM REVIEW R
 		   , MEMBER M
-		   , GAME G
 		WHERE R.CREATE_USER = M.USERID(+)
-		  AND R.GNUM = G.GNUM(+)
 		  AND R.DEL = 'N'
-		  /*검색*/
+		/*검색*/
 		<if test="searchTitle != '' and searchTitle != null">
 			AND (R.TITLE LIKE '%'||#{searchTitle}||'%'
-			OR R.REVIEW_DETAIL LIKE '%'||#{searchTitle}||'%')
+			 OR R.REVIEW_DETAIL LIKE '%'||#{searchTitle}||'%')
 		</if>
-		  /*디테일 진입*/
+		/*디테일 진입*/
 		<if test="reviewDetailKey != '' and reviewDetailKey != null">
 			AND R.REG_NUM = #{reviewDetailKey}
+		</if>
+		/*카테고리 정렬*/
+		<if test="boardDivision != '' and boardDivision != null">
+			AND R.CATEGORY in (${boardDivision})
 		</if>
 
 	</select>
 
+
+	<!--선택된 게임 목록 조회-->
+	<select id="reviewChoiceGameList" parameterType="hashMap" resultType="com.example.boardinfo.model.review.dto.ChoiceGameDTO">
+		SELECT R.REG_NUM
+			 , CG.REVIEWREGNUM
+			 , R.CATEGORY
+			 , CG.CHOICE_REG_NUM
+			 , CG.GNUM
+			 , G.GAMETITLE
+			 , G.GAMETITLE_ENG
+			 , G.PLAYERS
+			 , G.PLAYTIME
+			 , G.AGES
+			 , G.LANGUAGE
+			 , RELEASE_YEAR
+		FROM REVIEW R
+		   , CHOICE_GAME CG
+		   , GAME G
+		WHERE CG.DEL = 'N'
+		  AND R.REG_NUM = CG.REVIEWREGNUM
+		  AND CG.GNUM = G.GNUM(+)
+		  AND cg.REVIEWREGNUM = #{reviewDetailKey}
+	</select>
+
+
 	<!-- 리뷰 입력 -->
-	<insert id="reviewInsertPage" parameterType="hashMap">
+	<insert id="reviewInsertPage" parameterType="com.example.boardinfo.model.review.dto.ReviewDTO" >
+		<selectKey keyProperty="regNum" resultType="String" order="BEFORE">
+			select  to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(REG_NUM, 7)) + 1 from review where REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'),5, 0) from dual
+		</selectKey>
 		INSERT INTO REVIEW (
-		                    REG_NUM
-		                    , CATEGORY, GNUM
-		                    , GATHERING_ID, TITLE
-							, REVIEW_DETAIL
-							, CREATE_USER
-							)
+				REG_NUM
+				, CATEGORY
+				, TITLE
+				, REVIEW_DETAIL
+				, CREATE_USER
+		)
 		VALUES(
-		       to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(REG_NUM, 7)) + 1 from review where REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'),5, 0)
-		   	  ,#{category}
-			  ,#{gnum}
-			  ,#{gatheringId, jdbcType=VARCHAR}
-			  ,#{title}
-			  ,#{reviewDetail}
-			  ,#{createUser}
-			  )
+				#{regNum}
+				,#{category}
+				,#{title}
+				,#{reviewDetail}
+				,#{createUser}
+		)
 	</insert>
+
+
+	<!-- 선택된 게임 입력 -->
+	<insert id="reviewGameInsert" parameterType="hashMap">
+
+		INSERT INTO CHOICE_GAME (
+								  CHOICE_REG_NUM
+								, GNUM
+								, REVIEWREGNUM
+								, DEL
+								, CREATE_USER
+		)
+		VALUES (
+				 to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(CHOICE_REG_NUM, 7)) + 1 from CHOICE_GAME where CHOICE_REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'),5, 0)
+			   , #{gameGnum}
+			   , #{regNum}
+			   , 'N'
+			   , #{createUser}
+			   )
+
+	</insert>
+
 
 	<!-- 리뷰 수정 -->
 	<update id="reviewedit" parameterType="hashMap">
 		UPDATE REVIEW
-		SET CATEGORY = #{category}
-		    , TITLE = #{title}
-		    , REVIEW_DETAIL = #{reviewDetail}
-			, UPDATE_DATE = sysdate
+			SET   CATEGORY = #{category}
+			  	, TITLE = #{title}
+			  	, REVIEW_DETAIL = #{reviewDetail}
+			  	, UPDATE_USER = #{createUser}
+			  	, UPDATE_DATE = sysdate
 		WHERE 1 = 1
-			AND REG_NUM = #{regNum}
+		  AND REG_NUM = #{regNum}
+	</update>
+
+	<!-- 게임 목록 전체 삭제 -->
+	<update id="reviewGameDel" parameterType="hashMap">
+		UPDATE CHOICE_GAME
+			SET   DEL='Y'
+				, UPDATE_USER = #{createUser}
+				, UPDATE_DATE = sysdate
+		WHERE REVIEWREGNUM = #{regNum}
 	</update>
 
 	<!-- 리뷰 삭제 -->
 	<update id="revieweDel" parameterType="hashMap">
 		UPDATE REVIEW
-		SET DEL = 'Y'
+			SET   DEL = 'Y'
+		  		, UPDATE_USER = #{createUser}
+		  		, UPDATE_DATE = sysdate
 		WHERE 1 = 1
 		  AND REG_NUM = #{reviewDetailKey}
 	</update>
@@ -136,14 +195,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 좋아요 입력 -->
 	<insert id="reviewGood" parameterType="hashMap">
 		MERGE INTO REVIEWGOOD
-		USING dual
-		ON (GOODKEY = #{reviewDetailKey}||#{createUser})
+			  USING dual
+			  ON (GOODKEY = #{reviewDetailKey}||#{createUser})
 		WHEN MATCHED THEN
-			UPDATE
-			SET REVIEWPK = #{reviewDetailKey}
-			   ,GOOD = DECODE(GOOD,'Y','N','Y')
-			   ,UPDATE_USER = #{createUser} /*지금 로그인 한 사람 정보가 필요*/
-			   ,CREATE_DATE = sysdate
+			 UPDATE
+			 	SET REVIEWPK = #{reviewDetailKey}
+			 	 	,GOOD = DECODE(GOOD,'Y','N','Y')
+			 	 	,UPDATE_USER = #{createUser} /*지금 로그인 한 사람 정보가 필요*/
+			 	 	,CREATE_DATE = sysdate
 		WHEN NOT MATCHED THEN
 			INSERT (GOODKEY, REVIEWPK, GOOD, CREATE_USER, CREATE_DATE)
 			VALUES (#{reviewDetailKey}||#{createUser} , #{reviewDetailKey} ,'Y', #{createUser} , sysdate)
@@ -152,15 +211,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 리뷰 조회수 증가 -->
 	<update id="reviewViews" parameterType="hashMap">
 		UPDATE REVIEW
-		SET VIEWS = VIEWS+1
+			SET VIEWS = VIEWS+1
 		WHERE 1 = 1
-			AND REG_NUM = #{reviewDetailKey,jdbcType=VARCHAR} /*null 값 허용 : jdbcType=VARCHAR*/
+		  AND REG_NUM = #{reviewDetailKey,jdbcType=VARCHAR} /*null 값 허용 : jdbcType=VARCHAR*/
 	</update>
 
 
 	<!--리뷰 댓글 입력-->
 	<insert id="reviewReply" parameterType="hashMap">
-		INSERT INTO REPLY_COMMENTS ( REPLY_REG_NUM
+		INSERT INTO REPLY_COMMENTS (
+		                            REPLY_REG_NUM
 								   , REG_NUM
 								   , TOP_REPLY_REG_NUM
 								   , COMMENT_DETAIL
@@ -169,7 +229,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 								   , CREATE_DATE
 								   , UPDATE_USER
 								   , UPDATE_DATE)
-		VALUES (to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(REPLY_REG_NUM, 7)) + 1 from REPLY_COMMENTS where REPLY_REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'), 5, 0)
+		VALUES (
+		         to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(REPLY_REG_NUM, 7)) + 1 from REPLY_COMMENTS where REPLY_REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'), 5, 0)
 			   , #{regNum}
 			   , #{topReplyRegNum, jdbcType=VARCHAR}
 			   , #{commentDetail}
@@ -182,7 +243,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!--리뷰 답글 입력-->
 	<insert id="topreplyinsetsave" parameterType="hashMap">
-		INSERT INTO REPLY_COMMENTS ( REPLY_REG_NUM
+		INSERT INTO REPLY_COMMENTS (
+		                            REPLY_REG_NUM
 								   , REG_NUM
 								   , TOP_REPLY_REG_NUM
 								   , COMMENT_DETAIL
@@ -192,24 +254,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 								   , UPDATE_USER
 								   , UPDATE_DATE)
 		VALUES 	 (
-				 #{replyRegNum}
-			   , #{regNum}
-			   , to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(TOP_REPLY_REG_NUM, 7)) + 1 from REPLY_COMMENTS where TOP_REPLY_REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'), 5, 0)
-			   , #{commentDetail}
-			   , 'N'
-			   , #{createUser}
-			   , sysdate
-			   , #{createUser}
-			   , sysdate)
+					 #{replyRegNum}
+				   , #{regNum}
+				   , to_char(sysdate, 'yymmdd') || LPAD(NVL((select MAX(SUBSTR(TOP_REPLY_REG_NUM, 7)) + 1 from REPLY_COMMENTS where TOP_REPLY_REG_NUM LIKE to_char(sysdate, 'yymmdd') || '%'), '1'), 5, 0)
+				   , #{commentDetail}
+				   , 'N'
+				   , #{createUser}
+				   , sysdate
+				   , #{createUser}
+				   , sysdate)
 	</insert>
 
 	<!--리뷰 댓글 수정-->
 	<update id="reviewReplyUpdate" parameterType="hashMap">
 
 		UPDATE REPLY_COMMENTS
-		SET COMMENT_DETAIL = #{commentDetail}
-		  , UPDATE_USER = #{createUser}
-		  , UPDATE_DATE = sysdate
+			SET   COMMENT_DETAIL = #{commentDetail}
+		  		, UPDATE_USER = #{createUser}
+		  		, UPDATE_DATE = sysdate
 		WHERE 1 = 1
 		  AND REPLY_REG_NUM = #{replyRegNum}
 
@@ -219,31 +281,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 리뷰 댓글 삭제 -->
 	<update id="reviewReplyDel" parameterType="hashMap">
 		UPDATE REPLY_COMMENTS
-		SET DEL = 'Y'
-		  , UPDATE_USER = #{createUser}
-		  , UPDATE_DATE = sysdate
+			SET DEL = 'Y'
+			  , UPDATE_USER = #{createUser}
+			  , UPDATE_DATE = sysdate
 		WHERE 1 = 1
 		  AND REPLY_REG_NUM = #{replyRegNum}
 	</update>
 
 	<!--리뷰 댓글 조회-->
 	<select id="reviewReplyOut" parameterType="hashMap" resultType="com.example.boardinfo.model.review.dto.ReplyCommentsDTO">
-		SELECT RC.REPLY_REG_NUM 			AS REPLYREGNUM
+		SELECT RC.REPLY_REG_NUM 		AS REPLYREGNUM
 			 , RC.REG_NUM 					AS REGNUM
-			 , RC.TOP_REPLY_REG_NUM 		AS TOPREPLYREGNUM
+			 , RC.TOP_REPLY_REG_NUM 			AS TOPREPLYREGNUM
 			 , RC.COMMENT_DETAIL 			AS COMMENTDETAIL
-		     , M.NICKNAME					AS NICKNAME
+			 , M.NICKNAME					AS NICKNAME
 			 , RC.DEL 						AS DEL
 			 , RC.CREATE_USER				AS CREATEUSER
 			 , RC.CREATE_DATE				AS CREATEDATE
 			 , RC.UPDATE_USER				AS UPDATEUSER
 			 , RC.UPDATE_DATE				AS UPDATEDATE
 		FROM REPLY_COMMENTS RC
-			, MEMBER M
+		   , MEMBER M
 		WHERE 1 = 1
-		  AND RC.REG_NUM = #{reviewDetailKey}
-		  AND RC.DEL = 'N'
-		  AND RC.CREATE_USER = M.USERID(+)
+			AND RC.REG_NUM = #{reviewDetailKey}
+			AND RC.DEL = 'N'
+			AND RC.CREATE_USER = M.USERID(+)
 		/*답글 진입*/
 		<if test="topReplyRegNum != '' and topReplyRegNum != null">
 			AND ((RC.TOP_REPLY_REG_NUM = #{topReplyRegNum})
@@ -258,11 +320,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 
+
 	<insert id="reviewBlob" parameterType="hashMap">
 		INSERT INTO REVIEW_IN_TEST (TEST1, BLOB)
-		    VALUES(#{test1}
-		    		,#{blob})
+		VALUES(#{test1}
+			  ,#{blob})
 	</insert>
+
+
+
 
 	<!--id로 review list 가져오기-->
 	<select id="rvListByUserid" resultType="reviewDto">
@@ -271,38 +337,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			 , M.NICKNAME
 			 , R.CATEGORY
 			 , R.VIEWS
-			 , G.GNUM
-			 , G.GAMETITLE
-			 , R.GATHERING_ID    AS GATHERINGID
+			 , C.GNUM,
+				(SELECT GAMETITLE
+				 FROM GAME
+				 WHERE GNUM = C.GNUM) AS GAMETITLE
 			 , R.TITLE
-			 , R.FUN_SCORE
-								 AS FUNSCORE
-			 , R.REVIEW_SCORE    AS REVIEWSCORE
-			 , R.GAME_SCORE      AS GAMESCORE
 			 , R.REVIEW_DETAIL   AS
-									REVIEWDETAIL
+			REVIEWDETAIL
 			 , (SELECT COUNT(1)
 				FROM REVIEWGOOD
 				WHERE REVIEWPK = R.REG_NUM
 				  AND GOOD = 'Y'
 				  AND DEL = 'N') AS GOOD
 			 , (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM)
-								 AS RECNT
+			AS RECNT
 			 , R.DEL
 			 , R.CREATE_USER     AS CREATEUSER
 			 , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS')
-								 AS CREATEDATE
+			AS CREATEDATE
 			 , R.UPDATE_USER     AS UPDATEUSER
 			 , TO_CHAR(R.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS')
-								 AS UPDATEDATE
+			AS UPDATEDATE
 		FROM REVIEW R,
 			 MEMBER M,
-			 GAME G
+			 CHOICE_GAME C
 		WHERE R.CREATE_USER = M.USERID(+)
-		  AND R.GNUM
-			= G.GNUM(+)
+		  AND R.REG_NUM
+			= C.REVIEWREGNUM(+)
 		  AND R.DEL = 'N'
-		  and r.CREATE_USER = #{userid} /*검색*/ /*디테일 진입*/
+		  and R.CREATE_USER = #{userid} /*검색*/ /*디테일 진입*/
 		ORDER BY CREATEDATE DESC
 	</select>
 
@@ -330,17 +393,72 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getHotList" resultType="reviewDto">
 		select 	*
 		from    (
-		            select  reg_num as regNum, category, title, create_user, create_date, views, gnum,
+
+		            select  reg_num as regNum, category, title, create_user, views,
 		                    (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') AS GOOD,
 		                    (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) AS RECNT,
-		                    row_number() over (order by create_date desc) rn
+		                    row_number() over (order by create_date desc) rnum
 		            from    review r
 		            where   del='N' and
 		                    views > 2 and
 		                    (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE REG_NUM = R.REG_NUM) > 1 and
 		                    (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') > 1
 		        )
-		where   rn between 1 and #{size}
+				where rnum between 1 and #{size}
+	</select>
+
+	<select id="getHotAll" resultType="reviewDto">
+		--현재 편의상 조회수 2개이상, 댓글 1개이상, 좋아요 1개이상으로 구성
+		select 	*
+		from    (
+		            select  reg_num as regNum, category, title, create_date as createDate, views, create_user as nickName,
+		                    (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') AS GOOD,
+		                    (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) AS RECNT,
+		                    row_number() over (order by create_date desc) rnum
+		            from    review r
+		            where   del='N' and
+		                    views > 2 and
+		                    (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) > 1 and
+		                    (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') > 1
+		        )
+				where rnum between #{start} and #{end}
+	</select>
+	<select id="getHotListCnt" resultType="int">
+		select  count(*)
+		from    review r
+		where   del='N' and
+		        views > 2 and
+		        (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) > 1 and
+		        (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') > 1
+
+	</select>
+
+	<select id="totalSearch" resultType="reviewDto">
+		select	*
+		from	(
+				select 	reg_num as regNum,
+						category,
+						title,
+						views,
+						create_date as createDate,
+						(	SELECT 	COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N')
+						AS GOOD,
+				        (	SELECT 	COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM )
+				        AS RECNT,
+				        (	SELECT 	MAX(B.GAMETITLE) || CASE (COUNT(1)-1) WHEN 0 THEN '' ELSE ' 외 ' || (COUNT(1)-1)END
+				        	FROM 	CHOICE_GAME A, GAME B
+				        	WHERE 	A.DEL = 'N' AND B.DEL = 'n' AND A.GNUM = B.GNUM AND A.REVIEWREGNUM = R.REG_NUM
+				        	GROUP BY A.REVIEWREGNUM )
+				        AS GAMETITLE
+				from 	review r
+				WHERE   regexp_like(title, #{gameKeyword},'i') and del='N'
+				order by
+					    CASE WHEN regexp_like(title, '^'||#{gameKeyword},'i')
+					    THEN 1
+        			    ELSE 2
+        			    END
+        		)
+        where rownum between 1 and 6
 	</select>
 
 

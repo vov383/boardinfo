@@ -18,4 +18,6 @@ public interface PublisherDAO {
     List<String> viewPublisher(int gnum);
 
     void deleteGame_Publisher(String value, int gnum);
+
+    List<PublisherDTO> totalSearch(String gameKeyword);
 }

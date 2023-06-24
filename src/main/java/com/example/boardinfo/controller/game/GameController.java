@@ -8,6 +8,7 @@ import com.example.boardinfo.model.game.dto.mechanic.MechanicDTO;
 import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
 import com.example.boardinfo.service.game.GameRatingService;
 import com.example.boardinfo.service.game.GameService;
+import com.example.boardinfo.service.tboard.TBoardService;
 import com.example.boardinfo.util.UploadFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -203,4 +204,5 @@ public class GameController {
 		mav.addObject("map", map);
 		return mav;
 	}
+
 }

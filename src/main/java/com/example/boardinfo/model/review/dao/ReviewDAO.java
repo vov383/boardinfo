@@ -1,17 +1,19 @@
 package com.example.boardinfo.model.review.dao;
 
-import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
-import com.example.boardinfo.model.review.dto.TestDTO;
-import com.example.boardinfo.model.review.dto.reviewSerchDTO;
+import com.example.boardinfo.model.review.dto.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ReviewDAO {
 
 	/*리뷰 목록 조회*/
     List<ReviewDTO> reviewlist(reviewSerchDTO reviewserchDTO);
 
+    /*게임 목록 출력*/
+    List<ChoiceGameDTO> gameListOut(reviewSerchDTO reviewserchDTO);
+
+    /*리뷰 글 카운트*/
     int reviewListCnt(reviewSerchDTO reviewserchDTO);
 
     /*조회수 증가*/
@@ -56,6 +58,9 @@ public interface ReviewDAO {
 
 
     List<ReviewDTO> getHotList(Integer size);
+    int getHotListCnt(reviewSerchDTO dto);
+    List<ReviewDTO> getHotAll(reviewSerchDTO dto);
+    List<ReviewDTO> totalSearch(String gameKeyword);
 
 
 	/*// 리뷰 입력 테스트

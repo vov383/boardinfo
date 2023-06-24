@@ -1,14 +1,13 @@
 package com.example.boardinfo.model.review.dao;
 
-import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
-import com.example.boardinfo.model.review.dto.TestDTO;
-import com.example.boardinfo.model.review.dto.reviewSerchDTO;
+import com.example.boardinfo.model.review.dto.*;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ReviewDAOImpl implements ReviewDAO {
@@ -23,7 +22,13 @@ public class ReviewDAOImpl implements ReviewDAO {
         return sqlSession.selectList("review.reviewList", reviewserchDTO);
     }
 
-    /*리뷰 목록 조회*/
+    /*게임 목록 출력*/
+    @Override
+    public List<ChoiceGameDTO> gameListOut(reviewSerchDTO reviewserchDTO) {
+        return sqlSession.selectList("review.reviewChoiceGameList", reviewserchDTO);
+    }
+
+    /*리뷰 글 카운트*/
     @Override
     public int reviewListCnt(reviewSerchDTO reviewserchDTO) {
         return sqlSession.selectOne("review.reviewListCnt", reviewserchDTO);
@@ -43,6 +48,13 @@ public class ReviewDAOImpl implements ReviewDAO {
 
         sqlSession.insert("review.reviewInsertPage", reviewDTO);
 
+        String[] gameGnum = reviewDTO.getGameGnum().split(",");
+
+        List<ReviewDTO> gameReview = null;
+        for (int i = 0; i < gameGnum.length; i++) {
+            reviewDTO.setGameGnum(gameGnum[i]);
+            sqlSession.insert("review.reviewGameInsert", reviewDTO);
+        }
     }
 
     /*리뷰 수정*/
@@ -50,6 +62,21 @@ public class ReviewDAOImpl implements ReviewDAO {
     public void reviewUpdate(ReviewDTO reviewDTO) {
 
         sqlSession.update("review.reviewedit", reviewDTO);
+
+        sqlSession.update("review.reviewGameDel", reviewDTO);
+
+
+
+        String[] gameGnum = reviewDTO.getGameGnum().split(",");
+
+
+
+
+        List<ReviewDTO> gameReview = null;
+        for (int i = 0; i < gameGnum.length; i++) {
+            reviewDTO.setGameGnum(gameGnum[i]);
+            sqlSession.insert("review.reviewGameInsert", reviewDTO);
+        }
 
     }
 
@@ -95,11 +122,15 @@ public class ReviewDAOImpl implements ReviewDAO {
         return sqlSession.selectList("review.reviewReplyOut", reviewserchDTO);
     }
 
+
     /*리뷰 답글 입력*/
     @Override
     public void topreplyinsetsave(ReplyCommentsDTO replyCommentsDTO) {
         sqlSession.insert("review.topreplyinsetsave", replyCommentsDTO);
     }
+
+
+
 
 
 
@@ -128,6 +159,21 @@ public class ReviewDAOImpl implements ReviewDAO {
     @Override
     public List<ReviewDTO> getHotList(Integer size) {
         return sqlSession.selectList("review.getHotList", size);
+    }
+
+    @Override
+    public int getHotListCnt(reviewSerchDTO dto) {
+        return sqlSession.selectOne("review.getHotListCnt",dto);
+    }
+
+    @Override
+    public List<ReviewDTO> getHotAll(reviewSerchDTO dto) {
+        return sqlSession.selectList("review.getHotAll", dto);
+    }
+
+    @Override
+    public List<ReviewDTO> totalSearch(String gameKeyword) {
+        return sqlSession.selectList("review.totalSearch", gameKeyword);
     }
 
     /*

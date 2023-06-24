@@ -263,4 +263,9 @@ public class GameDAOImpl implements GameDAO {
 		return sqlSession.selectList("game.newbieList", map);
 	}
 
+	@Override
+	public List<GameDTO> totalSearch(String gameKeyword) {
+		logger.info("dao로도 넘어오나요 ? " + gameKeyword);
+		return sqlSession.selectList("game.totalSearch", gameKeyword);
+	}
 }

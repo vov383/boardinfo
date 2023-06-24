@@ -225,5 +225,10 @@ public class GatheringDAOImpl implements GatheringDAO {
 		map.put("date", date);
 		sqlSession.update("gathering.updateLastVisit", map);
 	}
+
+	@Override
+	public List<GatheringDTO> totalSearch(String gameKeyword) {
+		return sqlSession.selectList("gathering.totalSearch", gameKeyword);
+	}
 }
 

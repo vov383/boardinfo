@@ -1,10 +1,8 @@
 package com.example.boardinfo.service.review;
 
 import com.example.boardinfo.model.review.dao.ReviewDAO;
-import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
-import com.example.boardinfo.model.review.dto.TestDTO;
-import com.example.boardinfo.model.review.dto.reviewSerchDTO;
+import com.example.boardinfo.model.review.dto.*;
+
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +11,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -31,7 +31,19 @@ public class ReviewServiceImpl implements ReviewService {
 		return list;
 	}
 
-	/*리뷰 목록 조회*/
+	/*게임 목록 출력*/
+	@Override // 덮어쓰기 의미
+	public List<ChoiceGameDTO> gameListOut(reviewSerchDTO reviewserchDTO){
+
+
+		List<ChoiceGameDTO> gameList = reviewDAO.gameListOut(reviewserchDTO);
+		/*System.out.println("vo : " + new Gson().toJson(list));*/
+
+		return gameList;
+	}
+
+
+	/*리뷰 목록 카운트*/
 	@Override // 덮어쓰기 의미
 	public int reviewListCnt(reviewSerchDTO reviewserchDTO){
 		return reviewDAO.reviewListCnt(reviewserchDTO);
@@ -194,6 +206,38 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public List<ReviewDTO> getHotList(Integer size) {
 		return reviewDAO.getHotList(size);
+	}
+
+	@Override
+	public Map<String, Object> getHotList(int curPage) {
+		Map<String, Object> map = new HashMap<>();
+
+		reviewSerchDTO dto = new reviewSerchDTO();
+		int cnt = reviewDAO.getHotListCnt(dto);
+		PageDTO page = new PageDTO();
+		page = paging.Paging(page);
+		page = paging.PagingMath(page, cnt);
+
+		dto.setStart(page.getStart());
+		dto.setEnd(page.getEnd());
+
+		List<ReviewDTO> list = reviewDAO.getHotAll(dto);
+
+		map.put("list", list);
+		map.put("page", page);
+
+		return map;
+	}
+
+	@Override
+	public List<ReviewDTO> totalSearch(String gameKeyword) {
+		return reviewDAO.totalSearch(gameKeyword);
+
+	}
+
+	@Override
+	public Map<String, Object> totalSearchMore(Map<String, Object> map) {
+		return null;
 	}
 }
 

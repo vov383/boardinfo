@@ -617,7 +617,7 @@
                     <div id="titleArea"><h2>${map.dto.gametitle}</h2><span>(${map.dto.gametitle_eng})</span>
                         <span>
                             <c:if test="${map.dto.release_year > 0}">
-                            {map.dto.release_year}
+                            ${map.dto.release_year}
                             </c:if>
                         </span></div>
                     <div>

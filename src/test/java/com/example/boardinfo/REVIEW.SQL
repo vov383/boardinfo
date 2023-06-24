@@ -6,14 +6,8 @@ CREATE TABLE REVIEW                                         -- 게임 및 모임
             PRIMARY KEY,                                    -- 리뷰 테이블 PK
     CATEGORY      VARCHAR2(100)                NOT NULL,    -- GAME 리뷰 OR 모임 리뷰
     VIEWS         NUMBER       DEFAULT 0       NOT NULL,    -- 조회수
-    GNUM          NUMBER,                                   -- 게임 테이블의 PK와 조인 예정
-    GATHERING_ID  NUMBER,                                   -- 모임 테이블의 PK와 조인 예정
     TITLE         VARCHAR2(100)                NOT NULL,    -- 리뷰 제목
-    FUN_SCORE     NUMBER(3, 1) DEFAULT 0,                   -- 재미 점수
-    REVIEW_SCORE  NUMBER(3, 1) DEFAULT 0,                   -- 리뷰 점수
-    GAME_SCORE    NUMBER(3, 1) DEFAULT 0,                   -- 게임 난이도
-    REVIEW_DETAIL BLOB,                                     -- 리뷰 내용 (사진 포함)
-    GOOD          NUMBER DEFAULT 0,                 -- 좋아요 여부 (기본값 : N)
+    REVIEW_DETAIL VARCHAR2(4000),                           -- 리뷰 내용 (사진 포함)
     DEL           VARCHAR2(10) DEFAULT 'N'     NOT NULL,    -- 삭제 여부 (기본값 : N)
     CREATE_USER   VARCHAR2(100)                NOT NULL,    -- 작성자 → 회원 테이블의 PK와 조인 예정
     CREATE_DATE   DATE         DEFAULT SYSDATE NOT NULL,    -- 작성 일자
@@ -21,18 +15,12 @@ CREATE TABLE REVIEW                                         -- 게임 및 모임
     UPDATE_DATE   DATE                                      -- 수정 일자
 );
 
-COMMENT ON TABLE REVIEW IS '게임 및 모임 후기';
-COMMENT ON COLUMN REVIEW.REG_NUM IS '리뷰 테이블 PK';
-COMMENT ON COLUMN REVIEW.CATEGORY       IS 'GAME OR 모임';
+COMMENT ON TABLE REVIEW                 IS '커뮤니티';
+COMMENT ON COLUMN REVIEW.REG_NUM        IS '커뮤니티 테이블 PK';
+COMMENT ON COLUMN REVIEW.CATEGORY       IS '게임포럼 (게임후기, 노하우, 질문), 자유게시판';
 COMMENT ON COLUMN REVIEW.VIEWS          IS '조회수';
-COMMENT ON COLUMN REVIEW.GNUM           IS '게임 테이블의 PK';
-COMMENT ON COLUMN REVIEW.GATHERING_ID   IS '모임 테이블의 PK';
 COMMENT ON COLUMN REVIEW.TITLE          IS '리뷰 제목';
-COMMENT ON COLUMN REVIEW.FUN_SCORE      IS '재미 점수';
-COMMENT ON COLUMN REVIEW.REVIEW_SCORE   IS '리뷰 점수';
-COMMENT ON COLUMN REVIEW.GAME_SCORE     IS '게임 난이도';
 COMMENT ON COLUMN REVIEW.REVIEW_DETAIL  IS '리뷰 내용 (사진 포함)';
-COMMENT ON COLUMN REVIEW.GOOD           IS '좋아요 여부';
 COMMENT ON COLUMN REVIEW.DEL            IS '삭제 여부';
 COMMENT ON COLUMN REVIEW.CREATE_USER    IS '작성자';
 COMMENT ON COLUMN REVIEW.CREATE_DATE    IS '작성 일자';
@@ -77,7 +65,7 @@ CREATE TABLE CHOICE_GAME                                        -- 선택된 게
         CONSTRAINT CHOICE_REG_NUM_PK
             PRIMARY KEY,                                        -- 선택된 게임 테이블 PK
     GNUM              NUMBER NOT NULL,                          -- 게임 테이블 PK
-    CHOICE_GAME       VARCHAR2(2000) NOT NULL,                  -- 선택된 게임
+    REVIEWREGNUM      NUMBER NOT NULL,                          -- 게임 테이블 PK
     DEL               VARCHAR2(10) DEFAULT 'N',                 -- 삭제 여부 (기본값 : N)
     CREATE_USER       VARCHAR2(100)                NOT NULL,    -- 작성자
     CREATE_DATE       DATE         DEFAULT SYSDATE NOT NULL,    -- 작성 일자
@@ -88,7 +76,7 @@ CREATE TABLE CHOICE_GAME                                        -- 선택된 게
 COMMENT ON TABLE CHOICE_GAME IS '선택된 게임 테이블';
 COMMENT ON COLUMN CHOICE_GAME.CHOICE_REG_NUM IS '선택된 게임 테이블의 PK';
 COMMENT ON COLUMN CHOICE_GAME.GNUM           IS '게임 테이블 PK';
-COMMENT ON COLUMN CHOICE_GAME.CHOICE_GAME    IS '선택된 게임';
+COMMENT ON COLUMN CHOICE_GAME.REVIEWREGNUM   IS '리뷰 테이블 PK';
 COMMENT ON COLUMN CHOICE_GAME.DEL            IS '삭제 여부';
 COMMENT ON COLUMN CHOICE_GAME.CREATE_USER    IS '작성자';
 COMMENT ON COLUMN CHOICE_GAME.CREATE_DATE    IS '작성 일자';
@@ -113,32 +101,15 @@ create table REVIEWGOOD
 )
 ;
 
-comment on table REVIEWGOOD is '리뷰 좋아요 테이블'
-;
-
-comment on column REVIEWGOOD.GOODKEY is '좋아요 테이블의 PK'
-;
-
-comment on column REVIEWGOOD.REVIEWPK is '리뷰 테이블의 PK'
-;
-
-comment on column REVIEWGOOD.GOOD is '디폴트 값 : N, 클릭 한 번씩 Y, N 변경'
-;
-
-comment on column REVIEWGOOD.DEL is '삭제여부'
-;
-
-comment on column REVIEWGOOD.CREATE_USER is '작성자, 회원테이블의 PK'
-;
-
-comment on column REVIEWGOOD.CREATE_DATE is '작성일자'
-;
-
-comment on column REVIEWGOOD.UPDATE_USER is '수정자'
-;
-
-comment on column REVIEWGOOD.UPDATE_DATE is '수정일자'
-;
+comment on table REVIEWGOOD is '리뷰 좋아요 테이블';
+comment on column REVIEWGOOD.GOODKEY is '좋아요 테이블의 PK';
+comment on column REVIEWGOOD.REVIEWPK is '리뷰 테이블의 PK';
+comment on column REVIEWGOOD.GOOD is '디폴트 값 : N, 클릭 한 번씩 Y, N 변경';
+comment on column REVIEWGOOD.DEL is '삭제여부';
+comment on column REVIEWGOOD.CREATE_USER is '작성자, 회원테이블의 PK';
+comment on column REVIEWGOOD.CREATE_DATE is '작성일자';
+comment on column REVIEWGOOD.UPDATE_USER is '수정자';
+comment on column REVIEWGOOD.UPDATE_DATE is '수정일자';
 
 
 

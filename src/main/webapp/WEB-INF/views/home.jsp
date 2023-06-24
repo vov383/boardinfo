@@ -99,11 +99,13 @@
         }
 
         .cbadge{
-            width: 85px;
+            width: 100px;
             border-radius: 5px;
             padding: 0 10px;
-            margin-right: 6px;
+            margin-right: 10px;
             background-color: #d9d9d9;
+            display: inline-block;
+            text-align: center;
         }
 
         .reply{
@@ -274,7 +276,7 @@
             <div>
                 <div class="boxForList">
                     <div><span>HOT! 보드인이 주목중인 게시글</span>
-                        <span><a class="more" href="${path}/review/reviewlist.do">&gt</a></span></div>
+                        <span><a class="more" href="${path}/review/hotAll.do">&gt</a></span></div>
 
                     <div class="list" id="hotList">
                     </div>

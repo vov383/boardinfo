@@ -24,9 +24,7 @@ import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class GameServiceImpl implements GameService {
@@ -540,7 +538,7 @@ public class GameServiceImpl implements GameService {
     //사용연령
     String ages = GameUtils.setStr(bggnum,"minage") + "세 이상";
     //발매년도
-    int release_year = Integer.parseInt(GameUtils.setStr(bggnum,"yearpublished"));
+    int release_year = Integer.parseInt(Objects.requireNonNull(GameUtils.setStr(bggnum, "yearpublished")));
 
     //아트웍
     List<String> alist = GameUtils.setList(bggnum,"boardgameartist");
@@ -608,4 +606,46 @@ public class GameServiceImpl implements GameService {
 
     return map;
   }
+
+  @Override
+  public Map<String, Object> totalSearch(String gameKeyword) {
+    Map<String, Object> map = new HashMap<>();
+    logger.info("넘어오나요? " + gameKeyword);
+    List<GameDTO> glist = gameDao.totalSearch(gameKeyword);
+    List<ArtistDTO> alist = artistDao.totalSearch(gameKeyword);
+    List<DesignerDTO> dlist = designerDao.totalSearch(gameKeyword);
+    List<PublisherDTO> plist = publisherDao.totalSearch(gameKeyword);
+
+    map.put("glist", glist);
+    map.put("alist", alist);
+    map.put("dlist", dlist);
+    map.put("plist", plist);
+
+    return map;
+  }
+
+  @Override
+  public Map<String, Object> totalSearchMore(Map<String, Object> map) {
+    String gameKeyword = (String)map.get("gameKeyword");
+    String filter = (String)map.get("filter");
+
+    if(filter.indexOf("게임") != -1){
+      List<GameDTO> list = gameDao.totalSearch(gameKeyword);
+      map.put("list",list);
+    }else if(filter.indexOf("아티스트") != -1){
+      List<ArtistDTO> list = artistDao.totalSearch(gameKeyword);
+      map.put("list",list);
+    }else if(filter.indexOf("디자이너") != -1){
+      List<DesignerDTO> list = designerDao.totalSearch(gameKeyword);
+      map.put("list",list);
+    }else if(filter.indexOf("퍼블리셔") != -1){
+      List<PublisherDTO> list = publisherDao.totalSearch(gameKeyword);
+      map.put("list",list);
+    }
+    return map;
+  }
+
+
+
+
 }

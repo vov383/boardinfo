@@ -72,6 +72,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				 from	designer
 				 where	designer=#{designer})
 	</delete>
+
+	<select id="totalSearch" resultType="designerDto">
+		select 	dnum, designer
+		from	(
+				select 	dnum, designer
+				from	designer
+				where	regexp_like(designer, #{gameKeyword},'i')
+				order by
+					CASE WHEN regexp_like(designer, '^'||#{gameKeyword},'i')
+					THEN 1
+        	        ELSE 2
+        	        END
+        	    )
+        where rownum between 1 and 12
+	</select>
 	
 </mapper>
 
