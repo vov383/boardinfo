@@ -317,7 +317,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 							   (
 								   select count(*)
 								   from reply_comments c
-								   where c.reg_num = r.reg_num and c.del = 'N'
+								   where c.reg_num = r.reg_num
 							   ) as recnt
 						from review r
 						where del = 'N'
@@ -328,7 +328,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="getHotList" resultType="reviewDto">
-		--현재 편의상 조회수 2개이상, 댓글 1개이상, 좋아요 1개이상으로 구성
 		select 	*
 		from    (
 		            select  reg_num as regNum, category, title, create_user, create_date, views, gnum,
@@ -338,7 +337,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		            from    review r
 		            where   del='N' and
 		                    views > 2 and
-		                    (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) > 1 and
+		                    (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE REG_NUM = R.REG_NUM) > 1 and
 		                    (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') > 1
 		        )
 		where   rn between 1 and #{size}

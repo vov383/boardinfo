@@ -1,16 +1,18 @@
 package com.example.boardinfo.service.gathering;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.inject.Inject;
 
+import com.example.boardinfo.model.chat.dao.ChatMessageDAO;
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
+import com.example.boardinfo.model.member.dao.MemberDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -26,8 +28,14 @@ public class GatheringServiceImpl implements GatheringService {
 	@Inject
 	GatheringDAO gatheringDao;
 
+	@Inject
+	ChatMessageDAO chatMessageDAO;
+
 	@Autowired
 	ApplicationEventPublisher eventPublisher;
+
+	@Inject
+	MemberDAO memberDAO;
 
 
 	@Transactional
@@ -175,25 +183,23 @@ public class GatheringServiceImpl implements GatheringService {
 
 		//몇가지 조건 확인해야 함
 		//(1) 이미 모임에 참가해 있지는 않는가?
-		//(2) 모임 인원이 꽉 차지는 않았는가?
+		//(2) 모임 인원이 꽉 차거나 이미 종료되지는 않았는가?
 		//(3) 모임이 허가제인가?
 		//(4) 삭제된 모임은 아닌가?
 
 
 		//먼저 모임 정보를 출력해오자(가입인원, max인원, 허가제여부, 모임중인지, 삭제 여부)
-		//모임날짜도 출력해와서 비교해야 함!!!! 수정하기
 		GatheringDTO gatheringDTO = gatheringDao.getAttendInfo(gathering_id);
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime gathering_date = gatheringDTO.getGathering_date();
 
 		if (gatheringDTO.getMaxPeople() <= gatheringDTO.getAttendee_count()) {
 			message = "모집 인원이 꽉 찼습니다.";
-		} else {
-
-			//삭제여부
-			if(gatheringDTO.getShow().equals("n")){
+		} else if(gatheringDTO.getShow().equals("n")){
 				message = "이 모임은 삭제되었습니다.";
-			}
-
-			else {
+		} else if(now.isAfter(gathering_date)){
+			message = "이 모임은 종료되었습니다.";
+		} else {
 
 				//내 마지막 가입 여부를 출력해오자
 				//가입중이거나 가입신청중이라면 no
@@ -207,13 +213,14 @@ public class GatheringServiceImpl implements GatheringService {
 				} else if (type == AttendeeType.WAIT) {
 					message = "모임장의 승인을 기다리는 중입니다.";
 					System.out.println(message);
-				} else {
-					if (gatheringDTO.getAttendSystem().equals("p")) {
+				} else if (gatheringDTO.getAttendSystem().equals("p")) {
 						AttendeeDTO dto = new AttendeeDTO(user_id, gathering_id, AttendeeType.WAIT);
 						dto.setAnswer(answer);
 						int num = gatheringDao.addAttendee(dto);
 						if (num >= 1) message = "모임에 가입 신청하였습니다.";
-					} else {
+				}
+
+				else {
 						AttendeeDTO dto = new AttendeeDTO(user_id, gathering_id, AttendeeType.ATTENDING);
 						int num = gatheringDao.addAttendee(dto);
 						if (num >= 1) message = "모임에 성공적으로 가입되었습니다.";
@@ -225,9 +232,6 @@ public class GatheringServiceImpl implements GatheringService {
 						eventPublisher.publishEvent(notice);
 					}
 				}
-			}
-
-		}
 
 		return message;
 	}
@@ -305,5 +309,53 @@ public class GatheringServiceImpl implements GatheringService {
 	@Override
 	public int deleteReply(GatheringReplyDTO dto) {
 		return gatheringDao.deleteReply(dto);
+	}
+
+
+	@Override
+	public List<GatheringDTO> getAttendingChatroomList(String user_id, Integer gathering_id) {
+		List<GatheringDTO> gatheringList = gatheringDao.getAttendingGatheringList(user_id);
+
+		List<Integer> idList = new ArrayList<>();
+		List<GatheringDTO> resultList = new ArrayList<>();
+
+		for(GatheringDTO item : gatheringList) {
+			idList.add(item.getGathering_id());
+		}
+
+		List<ChatMessageDTO> lastMessages = chatMessageDAO.getLastChatMessages(idList);
+
+		for(ChatMessageDTO item : lastMessages){
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
+			item.setFormattedDate(dateFormat.format(item.getInsertDate()));
+
+			if(item.getUserId().equals("SYSTEM")){
+				String message = item.getMessage();
+				int index = message.indexOf("]");
+				if(index!=-1){
+					String user = message.substring(1, index);
+					item.setMessage(memberDAO.getNickname(user) + message.substring(index+1));
+				}
+			}
+
+			Optional<GatheringDTO> dto = gatheringList.stream()
+					.filter(g -> g.getGathering_id() == item.getGathering_id())
+					.findFirst();
+
+			if(dto.isPresent()){
+				GatheringDTO g = dto.get();
+				g.setLastChat(item);
+
+				resultList.add(g);
+			}
+
+		}
+		return resultList;
+	}
+
+	@Override
+	public List<Integer> getMyActiveChats(String user_id) {
+		return gatheringDao.getMyActiveChats(user_id);
 	}
 }

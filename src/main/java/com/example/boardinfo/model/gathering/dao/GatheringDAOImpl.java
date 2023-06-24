@@ -203,7 +203,27 @@ public class GatheringDAOImpl implements GatheringDAO {
 	@Override
 	public int deleteReply(GatheringReplyDTO dto) {
 		return sqlSession.update("gathering.deleteReply", dto);
+	}
 
+	@Override
+	public List<GatheringDTO> getAttendingGatheringList(String user_id) {
+		return sqlSession.selectList("gathering.getAttendingGatheringList", user_id);
+	}
+
+
+	@Override
+	public List<Integer> getMyActiveChats(String user_id) {
+		return sqlSession.selectList("gathering.getMyActiveChats", user_id);
+	}
+
+
+	@Override
+	public void updateLastVisit(int gathering_id, String user_id, LocalDate date) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("gathering_id", gathering_id);
+		map.put("user_id", user_id);
+		map.put("date", date);
+		sqlSession.update("gathering.updateLastVisit", map);
 	}
 }
 

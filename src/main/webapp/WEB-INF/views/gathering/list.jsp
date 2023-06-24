@@ -27,6 +27,20 @@
       border-bottom: 1px solid #D9D9D9;
     }
 
+    #viewMore{
+      margin-top: 8px;
+      font-size: 14px;
+      color: #5F5F5F;
+    }
+
+    #viewMore:hover{
+      cursor: pointer;
+    }
+
+    #hiddenList{
+      display: none;
+    }
+
     #filter input[type="checkbox"]{
       margin-right: 10px;
     }
@@ -271,6 +285,12 @@
 
     $(function(){
 
+
+      $("#viewMore").click(function(){
+        $(this).css("display", "none");
+        $("#hiddenList").css("display", "block");
+      });
+
       $("#showAvailable").change(function(){
         document.formGatheringSearch.submit();
       });
@@ -279,6 +299,8 @@
         if($(this).val()!='전체'){
           $("input[name='address1']:input[value='전체']").prop("checked", false);
         }
+        $("input[name='newFrom']").attr("disabled", true);
+        $("input[name='newTo']").attr("disabled", true);
         document.formGatheringSearch.submit();
       });
 
@@ -413,12 +435,30 @@
               </li>
             </c:forEach>
 
-            <c:forEach var="address1" items="${koreanAddress1List}" varStatus="status">
-              <li>
-                <input type="checkbox" name="address1" id="${status.index+fn:length(address1List)}" value="${address1}">
-                <label for="${status.index+fn:length(address1List)}">${address1}</label>
-              </li>
-            </c:forEach>
+
+            <c:choose>
+              <c:when test="${fold==true}">
+                <div id="viewMore">
+                더보기 v
+                </div>
+                <div id="hiddenList">
+                  <c:forEach var="address1" items="${koreanAddress1List}" varStatus="status">
+                    <li>
+                      <input type="checkbox" name="address1" id="${status.index+fn:length(address1List)}" value="${address1}">
+                      <label for="${status.index+fn:length(address1List)}">${address1}</label>
+                    </li>
+                  </c:forEach>
+                </div>
+              </c:when>
+              <c:otherwise>
+                <c:forEach var="address1" items="${koreanAddress1List}" varStatus="status">
+                  <li>
+                    <input type="checkbox" name="address1" id="${status.index+fn:length(address1List)}" value="${address1}">
+                    <label for="${status.index+fn:length(address1List)}">${address1}</label>
+                  </li>
+                </c:forEach>
+              </c:otherwise>
+            </c:choose>
           </ul>
         </div>
         <div>

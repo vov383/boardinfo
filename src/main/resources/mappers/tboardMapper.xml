@@ -208,7 +208,7 @@
                         select tb_num, create_date, title, category,
                                (select count(*)
                                 from tb_comments c
-                                where c.tb_num = t.tb_num and del='N') as re_count
+                                where c.tb_num = t.tb_num) as re_count
                         from t_board t
                         where t.del = 'N'
                     )a

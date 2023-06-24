@@ -29,6 +29,9 @@
                         <a href="${path}/member/member_join.do" title="회원가입" class="sign" id="signUp">회원가입</a>
                     </c:when>
                     <c:when test="${sessionScope.admin_id != null && !sessionScope.admin_id.equals('')}">
+                        <a title="채팅" href="${path}/gathering/chatRoom.do"">
+                            <img src="${path}/images/chat.png" id="chatImg" alt="채팅">
+                        </a>
                         <!-- admin login 상태 -->
                         <div class="dropdown">
                             <div class="dropbtn"><a title="회원" class="sign" id="signIn">관리자 ${sessionScope.nickname}
@@ -42,6 +45,9 @@
                         <a id="adminLogoutBtn" class="sign">관리자 로그아웃</a>
                     </c:when>
                     <c:otherwise>
+                        <a title="채팅" href="${path}/gathering/chatRoom.do">
+                            <img src="${path}/images/chat.png" id="chatImg" alt="채팅">
+                        </a>
                         <!-- userid로 로그인한 상태 -->
                         <div class="dropdown">
                             <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.nickname} 님<img
@@ -110,6 +116,8 @@
 </div>
 
 <script>
+
+
     function searchAll() {
         const keyword = $("#gameKeyword").val();
         if (keyword !== "") {
@@ -203,6 +211,7 @@
         }
     });
 
+
 </script>
 <style>
 
@@ -239,5 +248,7 @@
     .dropdown:hover button {
         background-color: #eaeaea;
     }
+
+
 
 </style>

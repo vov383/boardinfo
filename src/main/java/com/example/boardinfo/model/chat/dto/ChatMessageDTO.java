@@ -6,10 +6,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 public class ChatMessageDTO {
-	//채팅 메시지를 주고받기 위한 DTO
-	
+
 	public enum MessageType{
-		OPEN, SEND, CLOSE, ATTEND, LEAVE
+		FOCUS, BLUR, SEND, CLOSE, ATTEND, LEAVE
 	}
 	
 	private String userId; //메시지 보낸 사람

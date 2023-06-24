@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -46,5 +47,26 @@ public class ChatMessageDAOImpl implements ChatMessageDAO {
 		}
 
 		return list;
+	}
+
+	@Override
+	public List<ChatMessageDTO> getLastChatMessages(List<Integer> idList) {
+
+		MatchOperation match = Aggregation.match(Criteria.where("gathering_id").in(idList));
+		SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "insertDate");
+		GroupOperation group = Aggregation.group("gathering_id")
+				.first(Aggregation.ROOT).as("lastMessage");
+		ProjectionOperation project = Aggregation.project("lastMessage")
+				.andExpression("lastMessage.message").as("message")
+				.andExpression("lastMessage.gathering_id").as("gathering_id")
+				.andExpression("lastMessage.insertDate").as("insertDate")
+				.andExpression("lastMessage.userId").as("userId");
+
+		SortOperation finalSort = Aggregation.sort(Sort.Direction.DESC, "insertDate");
+
+		Aggregation aggregation = Aggregation.newAggregation(match, sort, group,project,finalSort);
+		AggregationResults<ChatMessageDTO> results = mongoTemplate.aggregate(aggregation, "chatMessage", ChatMessageDTO.class);
+		return results.getMappedResults();
+
 	}
 }
