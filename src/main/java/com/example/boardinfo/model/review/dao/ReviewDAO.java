@@ -60,7 +60,8 @@ public interface ReviewDAO {
     List<ReviewDTO> getHotList(Integer size);
     int getHotListCnt(reviewSerchDTO dto);
     List<ReviewDTO> getHotAll(reviewSerchDTO dto);
-    List<ReviewDTO> totalSearch(String gameKeyword);
+    List<ReviewDTO> totalSearch(Map<String, Object> map);
+    int totalSearchCount(Map<String, Object> map);
 
 
 	/*// 리뷰 입력 테스트

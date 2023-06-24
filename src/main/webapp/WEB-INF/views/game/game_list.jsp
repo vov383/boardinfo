@@ -39,8 +39,8 @@
 				<c:when test="${map.sort != null and 'vcnt'.equalsIgnoreCase(sort)}">
 					<span>조회수 랭킹</span>
 				</c:when>
-
 			</c:choose>
+			<span>(${map.count})개</span>
 
 			<a href="${path}/game/write.do" style="float: right">게임등록</a>
 
@@ -57,10 +57,7 @@
 		</div>
 
 
-	<c:import url="game_list_module.jsp" charEncoding="UTF-8">
-		<c:param name="map" value="${map}"/>
-		<c:param name="sort" value="${sort}"/>
-	</c:import>
+	<c:import url="game_list_module.jsp" charEncoding="UTF-8" />
 
 		</div>
 

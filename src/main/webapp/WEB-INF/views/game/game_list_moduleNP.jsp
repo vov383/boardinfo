@@ -143,5 +143,5 @@
         </tbody>
     </table>
 
-    <a href="${path}/search/totalSearchMore/${filter}/${gameKeyword}" style="display: inline-block; float: right;">더보기</a>
+    <a href="${path}/search/totalSearchMore/${param.filter}/${gameKeyword}" style="display: inline-block; float: right;">더보기</a>
 </div>

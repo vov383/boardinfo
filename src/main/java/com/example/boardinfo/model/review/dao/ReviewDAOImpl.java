@@ -172,8 +172,13 @@ public class ReviewDAOImpl implements ReviewDAO {
     }
 
     @Override
-    public List<ReviewDTO> totalSearch(String gameKeyword) {
-        return sqlSession.selectList("review.totalSearch", gameKeyword);
+    public List<ReviewDTO> totalSearch(Map<String, Object> map) {
+        return sqlSession.selectList("review.totalSearch", map);
+    }
+
+    @Override
+    public int totalSearchCount(Map<String, Object> map) {
+        return sqlSession.selectOne("review.totalSearchCount", map);
     }
 
     /*

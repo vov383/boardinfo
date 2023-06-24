@@ -119,7 +119,7 @@
 
 <script>
     function searchAll() {
-        const keyword = $("#gameKeyword").val();
+        var keyword = $("#gameKeyword").val();
         if (keyword !== "") {
             document.gameSearch.submit();
         }
@@ -127,17 +127,20 @@
 
     //검색기능
     $(document).ready(function () {
-        setTimeout(function () {  //딜레이
+
         //검색창 키입력후
         $("#gameKeyword").keyup(function(event) {
             if (event.which === 13) { // 엔터 입력시
                 event.preventDefault();
                 searchAll();  //검색하러감
             } else {
+                setTimeout(function () {  //딜레이
                 //자동완성
-
-
                     var input = $("#gameKeyword").val();
+
+                    if (input == "")
+                        $('#gameSearchDiv').empty()
+                    else {
                     $.ajax({
                         type: "get",
                         url: "${path}/game/autoGame.do/" + input,
@@ -153,8 +156,6 @@
                                     var gamephoto_url = item.gamephoto_url;
                                     var bgg_thumbnail = item.bgg_thumbnail;
                                     var bggnum = item.bggnum;
-                                    console.log(gnum);
-                                    console.log(gametitle);
 
                                     //var str => #gameSearchDiv 안에 들어갈 태그 입력
                                     var str = "<div class='searched_top'><div class='imageDiv'>";
@@ -174,7 +175,6 @@
 
                                     gameSearchDiv.append(str);
                                 });
-
                             } else {
                                 gameSearchDiv.hide(); // 값이 없을 경우 숨기기
                             }
@@ -183,10 +183,15 @@
                             console.log("에러..");
                         }
                     });
-                    if (input == "") $('#gameSearchDiv').empty();
-
                     }
-            }, 500) //settimeout 콜백함수로 0.5초 딜레이 후 검색창 작동
+                }, 1000) //settimeout 콜백함수로 1초 딜레이 후 검색창 작동
+
+               ;
+
+
+
+            }
+
         });
 
         /*관리자 로그아웃 버튼*/

@@ -405,8 +405,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
 
 	<select id="totalSearch" resultType="gatheringDto">
+		<if test="filter != null and 'none'.equalsIgnoreCase(filter)">
 		select 	gathering_id, post_date, title, gathering_date, address1, address2, view_count, maxpeople, attendee_count
 		from	(
+		</if>
 				select	gathering_id, post_date, title, gathering_date, address1, address2, view_count,maxpeople,
 						(
 						select 	count(*)
@@ -420,8 +422,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			            THEN 1
         	            ELSE 2
         	            END
+		<if test="filter != null and 'none'.equalsIgnoreCase(filter)">
         	    )
 		where rownum between 1 and 6
+		</if>
 	</select>
 
 

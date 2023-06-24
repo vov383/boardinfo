@@ -33,6 +33,6 @@ public interface TBoardDAO {
 
     public List<TBoardDTO> getHomeList(Integer size);
 
-    List<TBoardDTO> totalSearch(String gameKeyword);
+    List<TBoardDTO> totalSearch(Map<String, Object> map);
 }
 

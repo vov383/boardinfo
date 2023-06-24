@@ -18,12 +18,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("search/*") //공통 url mapping
 public class SearchController {
 	private static final Logger logger=
-			LoggerFactory.getLogger(GameController.class);
+			LoggerFactory.getLogger(SearchController.class);
 	@Inject
 	GameService gameService;
 
@@ -43,42 +44,53 @@ public class SearchController {
 		mav.addObject("gameMap", gameService.totalSearch(gameKeyword));
 		mav.addObject("t_boardList",tBoardService.totalSearch(gameKeyword));
 		mav.addObject("gatheringList",gatheringService.totalSearch(gameKeyword));
-		mav.addObject("reviewList",reviewService.totalSearch(gameKeyword));
+		mav.addObject("reviewMap",reviewService.totalSearch(gameKeyword));
 		return mav;
 	}
 
-	@GetMapping("totalSearchMore/{filter}/{gameKeyword}")
+	@GetMapping(value = {"totalSearchMore/{filter}/{gameKeyword}","totalSearchMore/{filter}"})
 	public ModelAndView totalSearchMore(ModelAndView mav,
+										@RequestParam(required = false, defaultValue = "1") int curPage,
 										@PathVariable("filter")String filter,
-										@PathVariable("gameKeyword")String gameKeyword,
+										@PathVariable("gameKeyword") Optional<String> gameKeyword,
 										Map<String, Object> map){
 
-		map.put("gameKeyword", gameKeyword);
+		if(gameKeyword.isPresent()) {
+			map.put("gameKeyword", gameKeyword.get());
+		}else {
+			map.put("gameKeyword", "none");
+		}
+
+		map.put("curPage", curPage);
 		map.put("filter",filter);
 		switch (filter){
-			case "게임" :
+			case "아티스트":
+			case "디자이너":
+			case "퍼블리셔":
+				if("none".equals(map.get("gameKeyword"))){
+					map = gameService.totalSearchMore(map);
+					mav.setViewName("game/game_creditList");
+					break;
+				}
+			case "게임":
+				map.put("sort","search");
 				map = gameService.totalSearchMore(map);
-				mav.setViewName("");
+				mav.setViewName("include/totalSearchMore");
 				break;
-			case "아티스트": case "디자이너": case "퍼블리셔":
-				map = gameService.totalSearchMore(map);
-				mav.setViewName(";");
-				break;
-			case "리뷰게시판"	:
+			case "자유게시판"	: case "게임포럼" :
 				map = reviewService.totalSearchMore(map);
-				mav.setViewName("");
+				mav.setViewName("include/totalSearchMore");
 				break;
 			case "모임게시판"	:
 				map = gatheringService.totalSearchMore(map);
-				mav.setViewName("");
+				mav.setViewName("include/totalSearchMore");
 				break;
 			case "거래게시판" :
 				map = tBoardService.totalSearchMore(map);
-				mav.setViewName("");
+				mav.setViewName("include/totalSearchMore");
 				break;
 		}
-
-		mav.addObject("gameKeyword", gameKeyword);
+		mav.addObject("sort", "search");
 		mav.addObject("map", map);
 		return mav;
 	}
