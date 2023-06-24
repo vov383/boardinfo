@@ -250,7 +250,7 @@
 
 </head>
 <body>
-<%@include file="../include/top.jsp" %>
+<%@include file="../include/topForChat.jsp" %>
 
 
 <div id="contents">
@@ -415,6 +415,7 @@
 
     var curPage = 1;
     var cur_session = '${user_id}'; //현재 로그인한 사람
+    var gathering_id = '${gathering_id}';
 
     let end = false;
     let loading = false;
@@ -433,7 +434,10 @@
     var stomp = Stomp.over(sock);
     let list;
     let chatList = {};
-    var gathering_id = "${gathering_id}";
+
+    var thisSession;
+    var curChat;
+    var curSession;
 
 
     $(function(){
@@ -458,37 +462,17 @@
 
         var connectHeaders = {};
 
-        stomp.connect({}, function () {
+        if(gathering_id!=""){
+            connectHeaders = {
+                "user_id" : cur_session,
+                "inChatRoom" : gathering_id
+            }
+        }
+
+
+        stomp.connect(connectHeaders, function () {
 
             stomp.subscribe("/sub/alarm/user/" + cur_session, function(msg){
-
-                var chatMessageDto = JSON.parse(msg.body);
-                var type = chatMessageDto.type; //데이터를 보낸 사람
-                var message = chatMessageDto.message; //메시지
-                var gathering_id = chatMessageDto.gathering_id;
-
-                if(type == 'FOCUS'){
-                    if (chatList.hasOwnProperty(gathering_id)) {
-                        chatList[gathering_id].push(message);
-                    } else {
-                        chatList[gathering_id] = [message];
-                    }
-                }
-
-                else if(type == 'BLUR'){
-                    if (chatList.hasOwnProperty(gathering_id)) {
-                        const index = chatList[gathering_id].indexOf(message);
-                        if (index !== -1) {
-                            chatList[gathering_id].splice(index, 1);
-                            if(chatList[gathering_id].length == 0){
-                                delete chatList[gathering_id];
-                            }
-                        }
-                    }
-                }
-
-                $("#alarmBox").text(JSON.stringify(chatList));
-
             });
 
             for (let i = 0; i < list.length; i++) {
@@ -632,17 +616,17 @@
 
                         });
 
-                    var openMessageDTO = {
+                    var focusMessageDTO = {
                         userId: cur_session,
                         type: "FOCUS",
-                        gathering_id: "${gathering_id}",
+                        gathering_id: gathering_id,
                     };
 
 
-                    var closeMessageDTO = {
+                    var blurMessageDTO = {
                         userId: cur_session,
                         type: "BLUR",
-                        gathering_id: "${gathering_id}",
+                        gathering_id: gathering_id,
                     };
 
                     if(document.hasFocus()){
@@ -651,11 +635,15 @@
                     }
 
                     window.addEventListener('focus', function() {
+                        //내 알림창 비활성화
+                        //그동안 나한테 온 알림 빼고 재계산해서 보내주기
                         stomp.send('/pub/chat/room', {}, JSON.stringify(openMessageDTO));
                         $(".selectedRoom").css("background-color", "blue");
                     });
 
                     window.addEventListener('blur', function() {
+                        //내 알림창 활성화
+                        //나한테 오는 알림들 계산하기 시작
                         stomp.send('/pub/chat/room', {}, JSON.stringify(closeMessageDTO));
                         $(".selectedRoom").css("background-color", "red");
                     });
@@ -734,12 +722,13 @@
                         loading = true;
                         curPage ++;
 
+
                         $.ajax({
                             type: "get",
-                            url : "${path}/gathering/viewMoreChat.do",
+                            url : "${path}/chat/viewMoreChat.do",
                             async: false,
                             data : {
-                                "gathering_id" : "${gathering_id}",
+                                "gathering_id" : gathering_id,
                                 "curPage" : curPage
                             },
                             success: function(result) {
@@ -852,7 +841,7 @@
             userId: "${user_id}",
             message: $("#msg").val(),
             type: type,
-            gathering_id: "${gathering_id}",
+            gathering_id: gathering_id,
         };
 
         stomp.send('/pub/chat/message', {}, JSON.stringify(messageDTO));
@@ -874,7 +863,7 @@
 
         if("${dto.writer_id}" == "${sessionScope.userid}") {
             if (confirm("채팅방을 나가려면 게시글을 삭제해야 합니다.\n게시글 상세페이지로 이동하시겠습니까?")){
-                location.href="${path}/gathering/view/${dto.gathering_id}";
+                location.href="${path}/gathering/view/" + gathering_id;
                 return;
             }
             else return;

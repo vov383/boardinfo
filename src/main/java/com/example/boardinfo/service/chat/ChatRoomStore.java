@@ -72,6 +72,7 @@ public class ChatRoomStore {
                         map.remove(gathering_id);
                     }
 
+                    result.setType(ChatMessageDTO.MessageType.BLUR);
                     result.setGathering_id(gathering_id);
                     result.setUserId(user_id);
                     return result;

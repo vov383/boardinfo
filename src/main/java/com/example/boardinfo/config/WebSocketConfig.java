@@ -12,11 +12,15 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.socket.config.annotation.*;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @Configuration
@@ -53,14 +57,23 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 StompHeaderAccessor accessor =
                         MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
-                if (StompCommand.DISCONNECT.equals(accessor.getCommand())) {
-                String session_id = (String) message.getHeaders().get("simpSessionId");
-               ChatMessageDTO chatMessage = chatRoomStore.leaveOrRemoveRoom(session_id);
-               chatMessage.setMessage(session_id);
-               if(chatMessage.getUserId()!=null){
-                   messagingTemplate.convertAndSend("/sub/alarm/user/" +
-                           chatMessage.getUserId(), chatMessage);
-               }
+                    if (StompCommand.DISCONNECT.equals(accessor.getCommand())) {
+
+                        String session_id = (String) message.getHeaders().get("simpSessionId");
+
+                        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+                        HttpServletRequest request = attributes.getRequest();
+                        HttpSession session = request.getSession();
+                        if(session.getAttribute("curSession").equals(session_id)){
+                            session.removeAttribute("curSession");
+                            session.removeAttribute("curChat");
+                        }
+
+                        ChatMessageDTO chatMessage = chatRoomStore.leaveOrRemoveRoom(session_id);
+                        if(chatMessage.getUserId()!=null){
+                            messagingTemplate.convertAndSend("/sub/alarm/user/" +
+                                   chatMessage.getUserId(), chatMessage);
+                            }
                 }
 
                 return message;

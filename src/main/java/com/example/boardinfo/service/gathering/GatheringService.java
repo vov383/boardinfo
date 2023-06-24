@@ -29,7 +29,5 @@ public interface GatheringService {
     public String getReplyWriter(int reply_id);
 	public int updateReply(GatheringReplyDTO dto);
 	public int deleteReply(GatheringReplyDTO dto);
-	public List<GatheringDTO> getAttendingChatroomList(String user_id, Integer gathering_id);
-	public List<Integer> getMyActiveChats(String user_id);
 
 }

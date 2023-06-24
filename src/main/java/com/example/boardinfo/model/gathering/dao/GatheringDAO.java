@@ -1,9 +1,6 @@
 package com.example.boardinfo.model.gathering.dao;
 
-import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
-import com.example.boardinfo.model.gathering.dto.AttendeeType;
-import com.example.boardinfo.model.gathering.dto.GatheringDTO;
-import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
+import com.example.boardinfo.model.gathering.dto.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,5 +42,6 @@ public interface GatheringDAO {
 	public int deleteReply(GatheringReplyDTO dto);
 	public List<GatheringDTO> getAttendingGatheringList(String user_id);
 	public List<Integer> getMyActiveChats(String user_id);
-	public void updateLastVisit(int gatheringId, String userId, LocalDate date);
+	public void updateLastVisit(int gatheringId, String user_id, LocalDate date);
+	List<ChatRoomDTO> getMyLastVisit(String user_id, Integer curChat);
 }

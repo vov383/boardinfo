@@ -2,6 +2,7 @@ package com.example.boardinfo.model.chat.dao;
 
 import javax.inject.Inject;
 
+import com.example.boardinfo.model.gathering.dto.ChatRoomDTO;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -12,8 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
 
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 @Repository
@@ -69,4 +69,21 @@ public class ChatMessageDAOImpl implements ChatMessageDAO {
 		return results.getMappedResults();
 
 	}
+
+
+	@Override
+	public long countMyUnreads(List<ChatRoomDTO> myRooms) {
+		long unread = 0L;
+
+		for (ChatRoomDTO room : myRooms) {
+			Query query = new Query()
+					.addCriteria(Criteria.where("gathering_id").is(room.getGathering_id())
+							.and("timestamp").gt(room.getLast_visit()));
+			long unreadCount = mongoTemplate.count(query, ChatMessageDTO.class);
+			unread += unreadCount;
+		}
+
+		return unread;
+	}
+
 }

@@ -8,7 +8,7 @@ import java.util.Date;
 public class ChatMessageDTO {
 
 	public enum MessageType{
-		FOCUS, BLUR, SEND, CLOSE, ATTEND, LEAVE
+		CONNECT, FOCUS, BLUR, SEND, CLOSE, ATTEND, LEAVE
 	}
 	
 	private String userId; //메시지 보낸 사람

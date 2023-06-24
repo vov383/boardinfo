@@ -14,18 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 import com.example.boardinfo.service.chat.ChatService;
 import com.example.boardinfo.service.member.MemberService;
 import com.example.boardinfo.util.Pager;
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -41,9 +38,6 @@ public class GatheringController {
 
 	@Inject
 	GatheringService gatheringService;
-
-	@Inject
-	ChatService chatService;
 
 	@Inject
 	MemberService memberService;
@@ -314,88 +308,10 @@ public class GatheringController {
 		Map<String, String> map = new HashMap<>();
 		map.put("message", message);
 		return map;
+
 	}
 
 
-
-	@GetMapping("/chatRoom.do")
-	public ModelAndView ChatRoomMain(@RequestParam (required = false) Integer gathering_id,
-									 HttpSession session, ModelAndView mav){
-
-		String user_id = (String) session.getAttribute("userid");
-
-		//채팅방 목록 불러오기
-		List<GatheringDTO> rlist = gatheringService.getAttendingChatroomList(user_id, gathering_id);
-		mav.addObject("rlist", rlist);
-		mav.addObject("user_id", user_id);
-		mav.setViewName("gathering/chatMain");
-
-		Map<String, String> nicknameMap = null;
-
-		if(gathering_id != null) {
-
-			if (gatheringService.checkIfAttendee(gathering_id, user_id) == AttendeeType.ATTENDING) {
-				GatheringDTO dto = gatheringService.view(gathering_id, false);
-				List<ChatMessageDTO> list = chatService.chatList(gathering_id, 1, false);
-				nicknameMap = chatService.getNicknameMap(gathering_id);
-
-				for (ChatMessageDTO item : list) {
-					if (item.getUserId().equals("SYSTEM")) {
-						String message = item.getMessage();
-						int index = message.indexOf("]");
-						if (index != -1) {
-							String user = message.substring(1, index);
-							item.setMessage(nicknameMap.get(user) + message.substring(index + 1));
-						}
-					}
-					item.setNickname(nicknameMap.get(item.getUserId()));
-				}
-
-				mav.addObject("gathering_id", gathering_id);
-				mav.addObject("dto", dto);
-				mav.addObject("list", list);
-			} else {
-				//멤버가 아니라면
-				mav.addObject("message", "모임의 멤버만 채팅 내용을 볼 수 있습니다.");
-			}
-		}
-
-		Gson gson = new Gson();
-		mav.addObject("nicknameMap", gson.toJson(nicknameMap));
-		return mav;
-	}
-
-
-	@ResponseBody
-	@GetMapping("/viewMoreChat.do")
-	public Map<String, Object> viewMoreChat(@RequestParam int gathering_id, @RequestParam int curPage) {
-
-		List<ChatMessageDTO> list = chatService.chatList(gathering_id, curPage, true);
-		System.out.println("curPage" + curPage);
-		Map<String, Object> map = new HashMap<>();
-		map.put("list", list);
-		return map;
-	}
-
-	@ResponseBody
-	@RequestMapping("/getMyActiveChats.do")
-	public Map<String, Object> getMyActiveChats(HttpSession session){
-		String user_id = (String)session.getAttribute("userid");
-		String message = "";
-		List<Integer> glist = null;
-		Map<String, Object> map = new HashMap<>();
-
-		if(user_id == null){
-			//오류 발생시키기
-		}
-
-		else{
-			glist = gatheringService.getMyActiveChats(user_id);
-		}
-
-		map.put("glist", glist);
-		return map;
-	}
 
 
 	@ResponseBody
@@ -461,6 +377,8 @@ public class GatheringController {
 		map.put("num", num);
 		return map;
 	}
+
+
 
 
 

@@ -3,57 +3,6 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-
-<style>
-
-
-    .dropdown {
-        position: relative;
-        display: inline-block;
-    }
-
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f9f9f9;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-        z-index: 1;
-    }
-
-    .dropdown-content a {
-        color: black;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-    }
-
-    .dropdown-content a:hover {
-        background-color: #eaeaea;
-    }
-
-    .dropdown:hover .dropdown-content {
-        display: block;
-    }
-
-    .dropdown:hover button {
-        background-color: #eaeaea;
-    }
-
-
-    #unreadChatCount{
-        width: 15px;
-        height: 15px;
-        background-color: red;
-        color: white;
-        font-size: 13px;
-    }
-
-
-
-</style>
-
-
 <div id="header">
 
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -80,8 +29,8 @@
                         <a href="${path}/member/member_join.do" title="회원가입" class="sign" id="signUp">회원가입</a>
                     </c:when>
                     <c:when test="${sessionScope.admin_id != null && !sessionScope.admin_id.equals('')}">
-                        <a title="채팅" href="${path}/chat/room.do">
-                            <span id="unreadChatCount"></span><img src="${path}/images/chat.png" id="chatImg" alt="채팅">
+                        <a title="채팅" href="${path}/gathering/chatRoom.do"">
+                            <img src="${path}/images/chat.png" id="chatImg" alt="채팅">
                         </a>
                         <!-- admin login 상태 -->
                         <div class="dropdown">
@@ -96,8 +45,8 @@
                         <a id="adminLogoutBtn" class="sign">관리자 로그아웃</a>
                     </c:when>
                     <c:otherwise>
-                        <a title="채팅" href="${path}/chat/room.do">
-                            <span id="unreadChatCount"></span><img src="${path}/images/chat.png" id="chatImg" alt="채팅">
+                        <a title="채팅" href="${path}/gathering/chatRoom.do">
+                            <img src="${path}/images/chat.png" id="chatImg" alt="채팅">
                         </a>
                         <!-- userid로 로그인한 상태 -->
                         <div class="dropdown">
@@ -178,92 +127,6 @@
 
     //검색기능
     $(document).ready(function () {
-
-        //로그인 풀리면 채팅도 연결 끊어야 함
-        let cur_session = sessionStorage.getItem("userid");
-
-        //관리자버전도 만들어야
-        if(cur_session && cur_session !=""){
-            var sock = new SockJS('http://localhost:8098/ws-stomp');
-            var stomp = Stomp.over(sock);
-            let chatList = JSON.parse(sessionStorage.getItem("activeChats"));
-            let unreadCount;
-
-            const unreadChatSpan = $("#unreadChatCount");
-
-            $.ajax({
-                type: "get",
-                url: "${path}/chat/unreadCount.do/",
-                success: function (result) {
-                   unreadCount = result.chatCount;
-                   let count = Number(unreadChatSpan.text()) + unreadCount;
-                   unreadChatSpan.text(count);
-                   if(count > 0) {
-                       unreadChatSpan.css("opacity", 100);
-                   }
-                   else {
-                       unreadChatCount.css("opacity", 0);
-                   }
-
-                }
-            });
-
-             stomp.connect({}, function () {
-
-                 //reconnect될 때 너 지금 어딨냐고 물어보는 작업 필요할듯
-                let chatList = {};
-
-                stomp.subscribe("/sub/alarm/user/" + cur_session, function(msg){
-
-                    var chatMessageDto = JSON.parse(msg.body);
-                    var type = chatMessageDto.type; //데이터를 보낸 사람
-                    var message = chatMessageDto.message; //메시지
-                    var gathering_id = chatMessageDto.gathering_id;
-
-                    if(type == 'FOCUS'){
-                        if (chatList.hasOwnProperty(gathering_id)) {
-                            chatList[gathering_id].push(message);
-                        } else {
-                            chatList[gathering_id] = [message];
-                        }
-                    }
-
-                    else if(type == 'BLUR'){
-                        if (chatList.hasOwnProperty(gathering_id)) {
-                            const index = chatList[gathering_id].indexOf(message);
-                            if (index !== -1) {
-                                chatList[gathering_id].splice(index, 1);
-                                if(chatList[gathering_id].length == 0){
-                                    delete chatList[gathering_id];
-                                }
-                            }
-                        }
-                    }
-
-
-                });
-
-
-                for (let i = 0; i < chatList.length; i++) {
-                    stomp.subscribe("/sub/chatting/room/" + list[i], function (msg) {
-
-                        var chatMessageDto = JSON.parse(msg.body);
-                        var sender = chatMessageDto.userId; //데이터를 보낸 사람
-                        var gathering_id = chatMessageDto.gathering_id; //채팅방
-
-                        if(sender != cur_session && !chatList[gathering_id]){
-                            unreadChatSpan.text(Number(unreadChatSpan.text() + 1));
-                            unreadChatSpan.css("opacity", 100);
-                        }
-
-                    });
-                }
-            });
-
-        }
-
-
-
         //검색창 키입력후
         $("#gameKeyword").keyup(function () {
             if (Event.keyCode === '13') { //엔터입력시
@@ -350,3 +213,42 @@
 
 
 </script>
+<style>
+
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #eaeaea;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown:hover button {
+        background-color: #eaeaea;
+    }
+
+
+
+</style>

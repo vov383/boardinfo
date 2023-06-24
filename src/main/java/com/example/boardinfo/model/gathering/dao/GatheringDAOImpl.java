@@ -1,9 +1,6 @@
 package com.example.boardinfo.model.gathering.dao;
 
-import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
-import com.example.boardinfo.model.gathering.dto.AttendeeType;
-import com.example.boardinfo.model.gathering.dto.GatheringDTO;
-import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
+import com.example.boardinfo.model.gathering.dto.*;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -225,5 +222,15 @@ public class GatheringDAOImpl implements GatheringDAO {
 		map.put("date", date);
 		sqlSession.update("gathering.updateLastVisit", map);
 	}
+
+
+	@Override
+	public List<ChatRoomDTO> getMyLastVisit(String user_id, Integer curChat) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("user_id", user_id);
+		map.put("curChat", curChat);
+		return sqlSession.selectList("gathering.getMyChatsLastVisit", map);
+	}
+
 }
 

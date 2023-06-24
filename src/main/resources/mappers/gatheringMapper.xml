@@ -426,6 +426,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
 
 
+	<select id="getMyChatsLastVisit" resultType="chatRoomDTO">
+		select a.gathering_id, a.last_visit
+		from attendee a
+				 join gathering g on a.gathering_id = g.gathering_id
+		where user_id = #{user_id} and type = 'a' and
+		      (g.finishChat = 'n' or
+		       g.finishChat = 'y' and trunc(g.gathering_date+3)+1 <![CDATA[>]]>= a.last_visit)
+	</select>
+
 </mapper>
 
 
