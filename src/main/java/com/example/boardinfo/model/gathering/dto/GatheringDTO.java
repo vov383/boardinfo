@@ -51,6 +51,7 @@ public class GatheringDTO {
 	private String show;
 	private String finishChat;
 
+	private ChatMessageDTO lastChat;
 	
 
 
@@ -276,5 +277,14 @@ public class GatheringDTO {
 
 	public void setFinishChat(String finishChat) {
 		this.finishChat = finishChat;
+	}
+
+
+	public ChatMessageDTO getLastChat() {
+		return lastChat;
+	}
+
+	public void setLastChat(ChatMessageDTO lastChat) {
+		this.lastChat = lastChat;
 	}
 }
