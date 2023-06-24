@@ -8,6 +8,5 @@ public interface ChatMessageDAO {
 
     public void insert(ChatMessageDTO message);
     public List<ChatMessageDTO> getList(int gathering_id, int curPage, boolean desc);
-
-
+    public List<ChatMessageDTO> getLastChatMessages(List<Integer> idList);
 }

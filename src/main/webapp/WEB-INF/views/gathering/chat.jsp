@@ -49,10 +49,16 @@
 		top: 7px;
 		right: 15px;
 	}
-	
+
 	.chatRoom{
-		border: 1px solid #D9D9D9;
+		border-top: 1px solid #D9D9D9;
+		border-left: 1px solid #D9D9D9;
+		border-right: 1px solid #D9D9D9;
 		padding: 12px 10px;
+	}
+
+	.chatRoom:last-of-type{
+		border-bottom: 1px solid #D9D9D9;
 	}
 	
 	.roomName{
@@ -682,7 +688,7 @@
 				},
 				success: function(result){
 					alert(result.message);
-					location.href="${path}/gathering/view/${dto.gathering_id}";
+					location.href="${path}/gathering/chatRoom.do";
 				},
 				error: function(e){
 					if(e.status==999){

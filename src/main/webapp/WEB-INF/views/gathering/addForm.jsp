@@ -216,7 +216,21 @@
   <script>
 
     $(function(){
-        $('input[name=attendSystem]').change(function(){
+
+      $("#title").on("keyup change", function(){
+        checkLength($(this), 200);
+      });
+
+      $("#question").on("keyup change", function(){
+        checkLength($(this), 800);
+      });
+
+      $("#note").on("keyup change", function(){
+        checkLength($(this), 800);
+      });
+
+
+      $('input[name=attendSystem]').change(function(){
 
         if($("input[name=attendSystem]:checked").val()=="p"){
           $("#hiddenQuestion").css("visibility", "visible");
@@ -365,6 +379,39 @@
 		
     	window.open("${path}/gathering/locationSearch.do", "날짜검색 - 모임모집", "left="+left+", top="+top+", width=820, height=580");
     }
+
+
+    function checkLength(obj, maxByte){
+      let totalByte = 0;
+      let text_val = obj.val(); //입력한 문자
+      let text_len = text_val.length;
+
+      let end = 0;
+
+      for(let i=0; i<text_len; i++) {
+        let each_char = text_val.charAt(i);
+        let uni_char = escape(each_char); //유니코드 형식으로 변환
+        if(uni_char.length > 4) {
+          //한글: 2바이트
+          totalByte += 3;
+        } else {
+          //영문, 숫자, 특수문자: 1바이트
+          totalByte += 1;
+        }
+
+        if(totalByte >= maxByte) {
+          end = i;
+          break;
+        }
+      }
+
+      if(end!=0){
+        obj.val(text_val.substr(0, end));
+      }
+
+    }
+
+
 
   </script>
   
@@ -517,7 +564,7 @@
           </div>
           <div class="labelAndItem">
             <span>유의사항</span>
-            <input class="flex" placeholder="예시) 각자 게임 하나씩 가져오기로 해요~" name="note"></div>
+            <input class="flex" placeholder="예시) 각자 게임 하나씩 가져오기로 해요~" name="note" id="note"></div>
           <div class="labelAndItem">
             <span>최대인원</span>
             <input type="number" min="2" max="30" value="2" name="maxPeople" id="maxPeople"><span>명</span>
