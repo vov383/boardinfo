@@ -70,15 +70,15 @@
 
             <li>
                 <div class="dropdown">
-                    <a href="${path}/game/gamerank/index" class="toMenu" title="게임정보">
+                    <a href="#" class="toMenu" title="게임정보">
                         게임정보<img src="${path}/images/dropdown.png" width="16px">
                     </a>
 
                     <div class="dropdown-content">
-                        <a href="${path}/game/gamerank/week">게임순위</a>
-                        <a href="#">카테고리</a>
-                        <a href="#">디자이너</a>
-                        <a href="#">출판사</a>
+                        <a href="${path}/game/gamerank/week">베스트게임</a>
+                        <a href="${path}/game/gamerank/newbie">최신게임</a>
+                        <a href="${path}/game/categoryList">카테고리</a>
+                        <a href="/game/themeList/-">테마</a>
                     </div>
                 </div>
             </li>

@@ -58,14 +58,10 @@
 
         <tbody>
 
-<c:choose>
-
-    <c:when test="${map.filter != null && '아티스트'.equalsIgnoreCase(map.filter)}">
-
                 <c:set var="i" value="0" />
                 <c:set var="j" value="4" />
 
-                <c:forEach var="row" items="${map.alist}">
+                <c:forEach var="row" items="${map.list}">
 
                     <c:if test="${i%j==0}">
                         <tr>
@@ -73,8 +69,16 @@
 
                     <td class="filterTd"><div class="wrap">
                         <div class="wrap t_center">
-                            <div class="ellipsis rank03">
-                                <a href="${path}/game/partrank/week?filter=artist&num=${row.anum}">${row.artist}</a>
+                            <div class="ellipsis rank01">
+                                <a href="${path}/game/partrank/week?filter=gamecategory&num=${row.cnum}">
+                                        ${row.gamecategory}(${row.count})
+                                </a>
+                            </div>
+                            <br>
+                            <div class="ellipsis rank02">
+                                <a href="${path}/game/partrank/week?filter=gamecategory&num=${row.cnum}">
+                                    한글컬럼 인풋후 사용
+                                </a>
                             </div>
                         </div>
                     </div></td>
@@ -88,75 +92,10 @@
                 </c:forEach>
 
 
-    </c:when>
-
-    <c:when test="${map.filter != null && '디자이너'.equalsIgnoreCase(map.filter)}">
-        <c:set var="i" value="0" />
-        <c:set var="j" value="4" />
-
-        <c:forEach var="row" items="${map.dlist}">
-
-            <c:if test="${i%j==0}">
-                <tr>
-            </c:if>
-
-                <td class="filterTd"><div class="wrap">
-                    <div class="wrap t_center">
-                        <div class="ellipsis rank03">
-                            <a href="${path}/game/partrank/week?filter=designer&num=${row.dnum}">${row.designer}</a>
-                        </div>
-                    </div>
-                </div></td>
-
-            <c:if test="${i%j==j-1}">
-                </tr>
-            </c:if>
-
-            <c:set var="i" value="${i+1}" />
-
-        </c:forEach>
-    </c:when>
-
-    <c:when test="${map.filter != null && '퍼블리셔'.equalsIgnoreCase(map.filter)}">
-        <c:set var="i" value="0" />
-        <c:set var="j" value="4" />
-
-        <c:forEach var="row" items="${map.plist}">
-
-            <c:if test="${i%j==0}">
-                <tr>
-            </c:if>
-
-                <td class="filterTd"><div class="wrap">
-                    <div class="wrap t_center">
-                        <div class="ellipsis rank03">
-                            <a href="${path}/game/partrank/week?filter=publisher&num=${row.pnum}">${row.publisher}</a>
-                        </div>
-                    </div>
-                </div></td>
-
-            <c:if test="${i%j==j-1}">
-                </tr>
-            </c:if>
-
-            <c:set var="i" value="${i+1}" />
-
-        </c:forEach>
-    </c:when>
-
-</c:choose>
-
         </tbody>
     </table>
 
 </div>
-
-<c:if test="${map.gameKeyword != null && map.gameKeyword != ''}">
-    <div>
-        <a href="${path}/game/totalSearchMore/${map.filter}" style="display: inline-block; float: right;">더보기</a>
-    </div>
-</c:if>
-
 
 
 <script>

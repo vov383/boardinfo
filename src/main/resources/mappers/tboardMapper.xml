@@ -219,26 +219,39 @@
     </select>
 
     <select id="totalSearch" resultType="tboardDto">
-        <if test="filter != null and 'none'.equalsIgnoreCase(filter)">
-        select  tb_num, create_date, title, category, address1, address2, view_count, price,re_count
+        select  tb_num, create_date, title, category, address1, address2, view_count, price,re_count, rn
         from    (
-        </if>
-                select  tb_num, create_date, title, category, address1, address2, view_count, price,
-                        (select count(*)
-                        from    tb_comments c
-                        where   c.tb_num = t.tb_num and del='N'
-                        ) as re_count
-                from t_board t
-                where regexp_like(title, #{gameKeyword},'i') AND t.del = 'N'
-                order by
-		            CASE WHEN regexp_like(title, '^'||#{gameKeyword},'i')
-		            THEN 1
-                    ELSE 2
-                    END
-        <if test="filter != null and 'none'.equalsIgnoreCase(filter)">
+                select  tb_num, create_date, title, category, address1, address2, view_count, price,re_count, rownum rn
+                from    (
+                        select  tb_num, create_date, title, category, address1, address2, view_count, price,
+                                (select count(*)
+                                from    tb_comments c
+                                where   c.tb_num = t.tb_num and del='N'
+                                ) as re_count
+                        from t_board t
+                        where regexp_like(title, #{gameKeyword},'i') AND t.del = 'N'
+                        order by
+		                    CASE WHEN regexp_like(title, '^'||#{gameKeyword},'i')
+		                    THEN 1
+                            ELSE 2
+                            END
+                            ,create_date desc
+                        )
                 )
-        where rownum between 1 and 6
-        </if>
+        <choose>
+            <when test="filter != null and 'none'.equalsIgnoreCase(filter)">
+                where rn between 1 and 6
+            </when>
+            <otherwise>
+                where rn between #{start} and #{end}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="totalSearchCount" resultType="int">
+        select  count(*)
+        from    t_board t
+        where   regexp_like(title, #{gameKeyword},'i') AND t.del = 'N'
     </select>
 
 </mapper>

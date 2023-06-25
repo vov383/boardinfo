@@ -108,6 +108,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where	regexp_like(designer, #{gameKeyword},'i')
 		</if>
 	</select>
+
+	<select id="confirmList" resultType="designerDto">
+		select 	d.dnum, d.designer
+		from	designer d
+		left join 	(
+					select 	dnum, count(*) count
+					from	game_designer
+					group by dnum
+					) gd
+		on		d.dnum = gd.dnum
+		where	gd.count = 0
+	</select>
+
+	<delete id="deleteitem">
+		delete from designer where dnum=#{num}
+	</delete>
 	
 </mapper>
 

@@ -34,7 +34,7 @@
 
                 <div class="totalSearchUl">
                     <ul>
-                        <li><a href="${path}/search/searchAll.do?gameKeyword=${gameKeyword}">통합검색</a></li>
+                        <li style="background-color: white;"><a href="${path}/search/searchAll.do?gameKeyword=${gameKeyword}">통합검색</a></li>
                         <li><a href="${path}/search/totalSearchMore/게임/${gameKeyword}">게임명</a></li>
                         <li><a href="${path}/search/totalSearchMore/아티스트/${gameKeyword}">아티스트</a></li>
                         <li><a href="${path}/search/totalSearchMore/디자이너/${gameKeyword}">디자이너</a></li>

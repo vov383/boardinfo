@@ -230,5 +230,10 @@ public class GatheringDAOImpl implements GatheringDAO {
 	public List<GatheringDTO> totalSearch(Map<String, Object> map) {
 		return sqlSession.selectList("gathering.totalSearch", map);
 	}
+
+	@Override
+	public int totalSearchCount(Map<String, Object> map) {
+		return sqlSession.selectOne("gathering.totalSearchCount", map);
+	}
 }
 

@@ -1,5 +1,6 @@
 package com.example.boardinfo.model.game.dao.publisher;
 
+import com.example.boardinfo.model.game.dto.artist.ArtistDTO;
 import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
 
 import java.util.List;
@@ -19,4 +20,8 @@ public interface PublisherDAO {
     void deleteGame_Publisher(String value, int gnum);
     List<PublisherDTO> totalSearch(Map<String, Object> map);
     int totalSearchCount(Map<String, Object> map);
+
+    List<PublisherDTO> confirmList(Map<String, Object> map);
+
+    void deleteitem(int num);
 }

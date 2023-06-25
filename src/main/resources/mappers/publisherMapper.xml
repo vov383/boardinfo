@@ -108,6 +108,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where	regexp_like(publisher, #{gameKeyword},'i')
 		</if>
 	</select>
+
+	<select id="confirmList" resultType="publisherDto">
+		select 	p.pnum, p.publisher
+		from	publisher p
+		left join 	(
+					select 	pnum, count(*) count
+					from	game_publisher
+					group by pnum
+					) gp
+		on		p.pnum = gp.pnum
+		where 	gp.count = 0
+	</select>
+
+	<delete id="deleteitem">
+		delete from publisher where pnum=#{num}
+	</delete>
 	
 </mapper>
 

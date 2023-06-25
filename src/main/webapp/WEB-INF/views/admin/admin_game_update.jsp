@@ -14,17 +14,6 @@
 	<script src="${path}/include/js/common.js"></script>
 </head>
 
-<style>
-	#fileDrop {
-		float: right;
-		width: 80px;
-		height: 80px;
-		border: 1px solid black;
-		margin-right: 50px;
-		text-align: center;
-	}
-</style>
-
 <body>
 
 	<header>
@@ -34,10 +23,10 @@
 	<main>
 		<div id="contents">
 			<div id="contentsHeader">
-				<h2>게임등록</h2>
+				<h2>관리자</h2>
 			</div>
 			<div id="contentsLocation">
-				홈&gt 게임정보&gt 게임등록
+				홈&gt 관리자&gt 게임등록
 			</div>
 			<div id="contentsMain">
 
@@ -45,8 +34,8 @@
 
 	<div align="center">
 	
-	<form name="gameform" id="gameform" method="post" action="${path}/game/insert.do">
-
+	<form name="gameform" id="gameform" method="post" action="${path}/admin/allowGame.do">
+		<input type="hidden" name="gnum" value="${dto.gnum}">
 		<table>
 
 		<colgroup>
@@ -66,25 +55,36 @@
 
 		<tbody>
 
-			<tr>
+		<tr>
 
-				<td>
-					<div style="float: left;">사진</div>
-					<%--파일을 업로드할 영역--%>
-					<div class="fileDrop" id="fileDrop"><p>Drop Images!!</p></div>
-				</td>
-				<td>
-					<%--파일을 출력할 영역--%>
-					<span id="uploadedList"></span>
-				</td>
+			<td>
+				<div style="float: left;">사진</div>
+				<%--파일을 업로드할 영역--%>
+				<div class="fileDrop" id="fileDrop"><p>Drop Images!!</p></div>
+			</td>
+			<td>
+				<%--파일을 출력할 영역--%>
+				<span id="uploadedList">
+					<c:forEach var="row" items="${attachlist}">
+						<div>
+						<br>
+						<img src='${path}/resources/uploaded_game${row.fullname}'>
+						<span data-src="+data+">[삭제]</span>
+						<input type='hidden' class='file' value='"+fileInfo.fullName+"'>
+					</div>
+					</c:forEach>
 
-			</tr>
+
+				</span>
+			</td>
+
+		</tr>
 
 			<tr>
 
 			  	<td>게임 이름</td>
 				<td>
-					<input name="gametitle" id="gametitle" class="input_game" maxlength="100">
+					<input name="gametitle" id="gametitle" class="input_game" value="${dto.gametitle}" maxlength="100">
 					<div>
 						<label for="gametitle">콤마(,)를 제외한 게임명을 입력해주세요</label>
 					</div>
@@ -96,9 +96,21 @@
 
 				<td>게임 이름(영문)</td>
 				<td>
-					<input name="gametitle_eng" id="gametitle_eng" class="input_game" maxlength="100">
+					<input name="gametitle_eng" id="gametitle_eng" class="input_game" value="${dto.gametitle_eng}" maxlength="100">
 					<div>
 						<label for="gametitle_eng">콤마(,)를 제외한 게임의 영문명을 입력해주세요</label>
+					</div>
+				</td>
+
+			</tr>
+
+			<tr>
+
+				<td>보드게임긱 아이디</td>
+				<td>
+					<input type="number" name="bggnum" id="bggnum" class="input_game" value="${dto.bggnum}" oninput='numberInput(this, 8)'>
+					<div>
+						<label for="bggnum">(선택)보드게임긱의 게임번호를 입력하세요</label>
 					</div>
 				</td>
 
@@ -113,7 +125,7 @@
 				<td>
 					<div id="selectedDesigner"></div>
 
-					<input type="hidden" name="designer" id="designer">
+					<input type="hidden" name="designer" id="designer" value="${dto.designer}">
 					<input id="inputDesigner" class="input_game" autocomplete="off">
 					<div>
 						<label for="inputDesigner">디자이너명을 입력하세요</label>
@@ -134,7 +146,7 @@
 				
 					<div id="selectedCategory"></div>
 
-					<input type="hidden" name="gamecategory" id="gamecategory">
+					<input type="hidden" name="gamecategory" id="gamecategory" value="${dto.gamecategory}">
 					<input type="checkbox" id="toggleCategory"> 
 					<label for="toggleCategory" class="toggleSwitch"> 
 						<span class="toggleButton"></span>
@@ -160,7 +172,7 @@
 				<c:set var="i" value="0" />
 				<c:set var="j" value="3" />
 				
-					<c:forEach var="item" items="${map.clist}" >
+					<c:forEach var="item" items="${clist}" >
 					
 						<c:if test="${i%j==0}">
       						<tr>
@@ -195,7 +207,7 @@
 				<td>
 					<div id="selectedArtist"></div>
 
-					<input type="hidden" name="artist" id="artist">
+					<input type="hidden" name="artist" id="artist" value="${dto.artist}">
 					<input id="inputArtist" class="input_game" autocomplete="off">
 					<div>
 						<label for="inputArtist">아티스트명을 입력하세요</label>
@@ -209,14 +221,13 @@
 			<tr>
 
 				<td>
-					<h4>메커니즘</h4>
+					<h4>메카닉</h4>
 					<input type="button" id="btnAddMechanic" value="추가">
 				</td>
 				<td>
 				
 					<div id="selectedMechanic"></div>
-
-					<input type="hidden" name="mechanic" id="mechanic">
+					<input type="hidden" name="mechanic" id="mechanic" value="${dto.mechanic}">
 					<input type="checkbox" id="toggleMechanic"> 
 					<label for="toggleMechanic" class="toggleSwitch"> 
 					 <span class="toggleButton"></span>
@@ -242,7 +253,7 @@
 				<c:set var="i" value="0" />
 				<c:set var="j" value="3" />
 				
-					<c:forEach var="item" items="${map.mlist}" >
+					<c:forEach var="item" items="${mlist}" >
 					
 						<c:if test="${i%j==0}">
       						<tr>
@@ -276,7 +287,7 @@
 				<td>
 					<div id="selectedPublisher"></div>
 
-					<input type="hidden" name="publisher" id="publisher">
+					<input type="hidden" name="publisher" id="publisher" value="${dto.publisher}">
 					<input id="inputPublisher" class="input_game" autocomplete="off">
 					<div>
 						<label for="inputPublisher">제작사명을 입력하세요</label>
@@ -291,7 +302,7 @@
 
 				<td>플레이 인원</td>
 				<td>
-					<input name="players" id="players" class="input_game" maxlength="20">
+					<input name="players" id="players" class="input_game" value="${dto.players}" maxlength="20">
 					<div>
 						<label for="players">게임의 권장 플레이 인원을 입력하세요</label>
 					</div>
@@ -303,7 +314,7 @@
 
 				<td>플레이 시간</td>
 				<td>
-					<input name="playtime" id="playtime" class="input_game" maxlength="20">
+					<input name="playtime" id="playtime" class="input_game" value="${dto.playtime}" maxlength="20">
 					<div>
 						<label for="playtime">게임의 플레이 시간을 입력하세요</label>
 					</div>
@@ -314,8 +325,7 @@
 			<tr>
 
 				<td>사용연령</td>
-				<td>
-					<input name="ages" id="ages" class="input_game" maxlength="20">
+				<td><input name="ages" id="ages" class="input_game" value="${dto.ages}" maxlength="20">
 					<div>
 						<label for="ages">게임의 사용 연령을 입력하세요</label>
 					</div>
@@ -326,8 +336,7 @@
 			<tr>
 
 				<td>발매년도</td>
-				<td>
-					<input type="number" name="release_year" id="release_year" class="input_game" oninput='numberInput(this, 4)'>
+				<td><input type="number" name="release_year" id="release_year" class="input_game" value="${dto.release_year}" oninput='numberInput(this, 4)'>
 					<div>
 						<label for="release_year">게임의 발매년도를 입력하세요</label>
 					</div>
@@ -339,7 +348,7 @@
 
 				<td>사용언어</td>
 				<td>
-					<input name="language" id="language" class="input_game" maxlength="20">
+					<input name="language" id="language" class="input_game" value="${dto.language}" maxlength="20">
 					<div>
 						<label for="language">게임의 사용 언어를 입력하세요</label>
 					</div>
@@ -353,7 +362,7 @@
 				<td>
 					<div id="selectedEx"></div>
 
-					<input type="hidden" name="expansion" id="expansion">
+					<input type="hidden" name="expansion" id="expansion" value="${dto.expansion}">
 					<input id="inputEx" class="input_game" autocomplete="off">
 					<div>
 						<label for="inputEx">게임의 원본 게임명을 입력하세요</label>
@@ -370,7 +379,7 @@
 				<td>
 					<div id="selectedRe"></div>
 
-					<input type="hidden" name="reimplement" id="reimplement">
+					<input type="hidden" name="reimplement" id="reimplement" value="${dto.reimplement}">
 					<input id="inputRe" class="input_game" autocomplete="off">
 					<div>
 						<label for="inputRe">게임의 원본 게임명을 입력하세요</label>
@@ -383,23 +392,10 @@
 
 			<tr>
 
-				<td>보드게임긱아이디</td>
-				<td>
-					<input type="number" id="bggnum" class="input_game" oninput='numberInput(this, 8)'>
-					<input type="button" id="btnParse" value="입력">
-					<div>
-						<label for="bggnum">(선택)보드게임긱의 게임번호를 입력하세요</label>
-					</div>
-				</td>
-
-			</tr>
-
-			<tr>
-
 				<td>테마</td>
 				<td>
-					<select name="theme">
-						<option value="-" selected>선택하세요(필수 아님)</option>
+					<select name="theme" id="theme">
+						<option value="-">선택하세요(필수 아님)</option>
 						<option value="가족게임">가족게임</option>
 						<option value="어린이게임">어린이게임</option>
 						<option value="전쟁게임">전쟁게임</option>
@@ -416,7 +412,8 @@
 			<tr>
 
 				<td colspan="2">
-					<button type="button" id="btnGameInsert">등록</button>
+					<button type="button" id="btnGameAllow">등록하기</button>
+					<button type="button" id="btnGameDeny">거부하기</button>
 				</td>
 
 			</tr>
@@ -434,6 +431,10 @@
 
 	</main>
 
+	<form name="denyform" method="post" action="${path}/admin/denyGame.do">
+		<input type="hidden" name="deny_gnum" value="${dto.gnum}">
+	</form>
+
 
 <script type="text/javascript">
 	//type=number 인 input 태그의 길이제한 메서드
@@ -444,12 +445,12 @@
 		}
 	}
 
+	$(document).ready(function () {
+		//게임테마 기존 값 유지
+		$("#theme").val("${dto.theme}").attr("selected","selected");
 
-
-
-	$(document).ready(function() {
-		//새 게임 등록 버튼클릭
-		$("#btnGameInsert").click(function() {
+		//게임 수정 버튼클릭
+		$("#btnGameUpdate").click(function() {
 			//null값확인, 자료형확인필요함 -> 정규식응용
 
 			//gametitle 체크
@@ -556,29 +557,22 @@
 				return;
 			}
 
-			//사진업로드
-			var str="";
-			//uploadedList영역에 클래스 이름이 file인 히든타입의 태그를 각각 반복
-			$("#uploadedList .file").each(function(i){
-				console.log(i);
-				//hidden태그 구성
-				str += "<input type='hidden' name='files["+i+"]' value='"
-						+ $(this).val()+"'>";
-			});
-			//폼에 hidden 태그를 붙임
-			$("#gameform").append(str);
-
 			document.gameform.submit();
 		});
 
+		//게임 등록거부 버튼 클릭
+		$("#btnGameDeny").click(function(){
+			document.denyform.submit();
+		});
 	});
+
+
 </script>
 
-
-<%--검색과 자동완성--%>
 <script type="text/javascript">
 
 	$(document).ready(function() {
+
 
 		//파일을 마우스로 드래그해서 업로드 영역에 올릴때 파일이 열리는 기본효과 막는 처리
 		$(".fileDrop").on("dragenter dragover", function(e) {
@@ -602,11 +596,11 @@
 				type: "post",
 				success: function(data){
 					//data: 업로드한 파일 정보와 Http 상태 코드
-					var fileInfo=getGameFileInfo(data);
+					var fileInfo=getFileInfo(data);
 					console.log(fileInfo);
 					var html="<div><a href='"+fileInfo.getLink+"'>"+fileInfo.fileName+"</a><br>";
 					html += "<img src='${path}/uploadgame/displayFile?fileName="+data+"'>";
-					html += "<span data-src="+data+">[삭제]</span></div>";
+					html += "<span data-src="+data+">[삭제]</span>";
 					html += "<input type='hidden' class='file' value='"+fileInfo.fullName+"'></div>";
 					$("#uploadedList").append(html);
 				}
@@ -630,12 +624,23 @@
 							}
 						}
 					});
-				});
-
+		});
 
 
 		//category항목 리스트에서 선택할수 있게하는 기능
 		var selectedCategories = [];
+
+		//이미 가지고있는 category 보여주는 함수
+		var gamecategoryValue = $("#gamecategory").val();
+		if (gamecategoryValue) {
+			selectedCategories = gamecategoryValue.split(",");
+			selectedCategories.forEach(function(category) {
+				$("#selectedCategory").append("<div class='selected-value'>" + category + "</div>");
+				$("#tableCategory td").filter(function() {
+					return $(this).text() === category;
+				}).addClass("selected");
+			});
+		}
 
 		//서버로 보낼 카테고리의 배열에 값을 넣는 함수
 		function updateGameCategoryInput() {
@@ -658,7 +663,6 @@
 					updateGameCategoryInput();
 				}
 			}
-
 		});
 
 		// 테이블 셀 클릭 이벤트 처리
@@ -689,21 +693,40 @@
 		$("#selectedCategory").on("click", ".selected-value", function() {
 			
 			var value = $(this).text();
+			var filter = "category"
 
-		    // 선택된 값 배열에서 해당 값을 제거
-		    selectedCategories = selectedCategories.filter(function(selected) {
-		      	return selected !== value;
-		    });
+		    // 선택된 값 db에 존재할 경우 삭제되도록 처리
+			$.ajax({
+				type: "POST",
+				url: "${path}/game/autoUpdate_delete.do/"+value+"/${dto.gnum}/"+filter,
+			});
+			
+			// 선택된 값 배열에서 해당 값을 제거
+			selectedCategories = selectedCategories.filter(function(selected) {
+				return selected !== value;
+			});
 
-		    // 선택된 값 표시가 삭제되도록 처리
-		    $(this).remove();
-		    
+			// 선택된 값 표시가 삭제되도록 처리
+			$(this).remove();
+
 		    updateGameCategoryInput();
 		  });
 		
 		
-	//mechanic항목 리스트에서 선택할수 있게하는 기능
+		//mechanic항목 리스트에서 선택할수 있게하는 기능
 		var selectedMechanics = [];
+
+		//이미 가지고있는 mechanic 보여주는 함수
+		var mechanicValue = $("#mechanic").val();
+		if (mechanicValue) {
+			selectedMechanics = mechanicValue.split(",");
+			selectedMechanics.forEach(function(mechanic) {
+				$("#selectedMechanic").append("<div class='selected-value'>" + mechanic + "</div>");
+				$("#tableMechanic td").filter(function() {
+					return $(this).text() === mechanic;
+				}).addClass("selected");
+			});
+		}
 	
 		function updateGameMechanicInput() {
 	 		var mechanicInput = $("#mechanic");
@@ -769,6 +792,9 @@
 		    
 		    updateGameMechanicInput()
 		  });
+
+
+
 		
 		
 		//	artist 검색 자동완성 쿼리 
@@ -796,9 +822,19 @@
 				}
 	        });
 	        if(input=="")	$('#artistSuggestions').empty();
-	    });
+	    });//검색창 검색
 
 		var selectedArtists = [];
+
+
+		//이미 가지고있는 artist 보여주는 함수
+		var artistValue = $("#artist").val();
+		if (artistValue) {
+			selectedArtists = artistValue.split(",");
+			selectedArtists.forEach(function(artist) {
+				$("#selectedArtist").append("<div class='selected cursor_pointer'>" + artist + "</div>");
+			});
+		}
 
 		function updateArtistInput() {
 			var artistInput = $("#artist");
@@ -827,7 +863,7 @@
 		$('#artistSuggestions').on('click', '.searched', function() {
 			var selectedArtist = $(this).text();
 			selectedArtists.push(selectedArtist);
-			$("#selectedArtist").append("<div class='selected-value cursor_pointer'>" + selectedArtist + "</div>");
+			$("#selectedArtist").append("<div class='selected cursor_pointer'>" + selectedArtist + "</div>");
 			console.log("배열"+selectedArtists);
 			$("#inputArtist").val("");
 			$("#artistSuggestions").empty().hide();
@@ -836,7 +872,7 @@
 		});
 
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedArtist").on("click", ".selected-value", function() {
+		$("#selectedArtist").on("click", ".selected", function() {
 
 			var value = $(this).text();
 
@@ -882,6 +918,15 @@
 
 		var selectedDesigners = [];
 
+		//이미 가지고있는 designer 보여주는 함수
+		var designerValue = $("#designer").val();
+		if (designerValue) {
+			selectedDesigners = designerValue.split(",");
+			selectedDesigners.forEach(function(designer) {
+				$("#selectedDesigner").append("<div class='selected cursor_pointer'>" + designer + "</div>");
+			});
+		}
+
 		function updateDesignerInput() {
 			var designerInput = $("#designer");
 			designerInput.val(selectedDesigners.join(","));
@@ -909,7 +954,7 @@
 		$('#designerSuggestions').on('click', '.searched', function() {
 			var selectedDesigner = $(this).text();
 			selectedDesigners.push(selectedDesigner);
-			$("#selectedDesigner").append("<div class='selected-value cursor_pointer'>" + selectedDesigner + "</div>");
+			$("#selectedDesigner").append("<div class='selected cursor_pointer'>" + selectedDesigner + "</div>");
 			console.log("배열"+selectedDesigners);
 			$("#inputDesigner").val("");
 			$("#designerSuggestions").empty().hide();
@@ -918,7 +963,7 @@
 		});
 
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedDesigner").on("click", ".selected-value", function() {
+		$("#selectedDesigner").on("click", ".selected", function() {
 
 			var value = $(this).text();
 
@@ -964,6 +1009,15 @@
 
 		var selectedPublishers = [];
 
+		//이미 가지고있는 publisher 보여주는 함수
+		var publisherValue = $("#publisher").val();
+		if (publisherValue) {
+			selectedPublishers = publisherValue.split(",");
+			selectedPublishers.forEach(function(publisher) {
+				$("#selectedPublisher").append("<div class='selected cursor_pointer'>" + publisher + "</div>");
+			});
+		}
+
 		function updatePublisherInput() {
 			var publisherInput = $("#publisher");
 			publisherInput.val(selectedPublishers.join(","));
@@ -991,7 +1045,7 @@
 		$('#publisherSuggestions').on('click', '.searched', function() {
 			var selectedPublisher = $(this).text();
 			selectedPublishers.push(selectedPublisher);
-			$("#selectedPublisher").append("<div class='selected-value cursor_pointer'>" + selectedPublisher + "</div>");
+			$("#selectedPublisher").append("<div class='selected cursor_pointer'>" + selectedPublisher + "</div>");
 			console.log("배열"+selectedPublishers);
 			$("#inputPublisher").val("");
 			$("#publisherSuggestions").empty().hide();
@@ -1000,7 +1054,7 @@
 		});
 
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedPublisher").on("click", ".selected-value", function() {
+		$("#selectedPublisher").on("click", ".selected", function() {
 
 			var value = $(this).text();
 
@@ -1015,6 +1069,13 @@
 			updatePublisherInput();
 			console.log("인풋"+$("#publisher").val());
 		});
+
+
+
+
+
+
+
 
 
 
@@ -1046,6 +1107,15 @@
 		});
 
 		var selectedExs = [];
+
+		//이미 가지고있는 확장게임 보여주는 함수
+		var expansionValue = $("#expansion").val();
+		if (expansionValue) {
+			selectedExs = expansionValue.split(",");
+			selectedExs.forEach(function(expansion) {
+				$("#selectedEx").append("<div class='selected cursor_pointer'>" + expansion + "</div>");
+			});
+		}
 
 		function updateExInput() {
 			var exInput = $("#expansion");
@@ -1114,6 +1184,15 @@
 
 		var selectedRes = [];
 
+		//이미 가지고있는 재구현게임 보여주는 함수
+		var reimplementValue = $("#reimplement").val();
+		if (reimplementValue) {
+			selectedRes = reimplementValue.split(",");
+			selectedRes.forEach(function(reimplement) {
+				$("#selectedRe").append("<div class='selected cursor_pointer'>" + reimplement + "</div>");
+			});
+		}
+
 		function updateReInput() {
 			var reInput = $("#reimplement");
 			reInput.val(selectedRes.join(","));
@@ -1150,95 +1229,8 @@
 			console.log("인풋"+$("#reimplement").val());
 		});
 
-		$("#btnParse").click(function(){
-			parse();
-		});
-
-
-		//bbgnum 입력후 버튼 누르면 파싱해온 값 들어가는 메서드
-		function parse(){
-			var param = {"bggnum" : $("#bggnum").val()};
-			$.ajax({
-				url: "${path}/game/parseAjax",
-				data: param,
-				type: "post",
-				success: function(data){
-					var gametitle_eng = data.gametitle_eng;
-					$('#gametitle_eng').val(gametitle_eng);
-					var players = data.players
-					$('#players').val(players);
-					var playtime = data.playtime
-					$('#playtime').val(playtime);
-					var ages = data.ages;
-					$('#ages').val(ages);
-					var release_year = data.release_year;
-					$('#release_year').val(release_year);
-
-					//artist
-					var artistValue = data.artist;
-					if (artistValue) {
-						$("#artist").val(artistValue);
-						selectedArtists = [];
-						$("#selectedArtist").empty();
-						selectedArtists = artistValue.split(",");
-						selectedArtists.forEach(function(artist) {
-							$("#selectedArtist").append("<div class='selected cursor_pointer'>" + artist + "</div>");
-						});
-					}
-					//designer
-					var designerValue = data.designer;
-					if (designerValue) {
-						$("#designer").val(designerValue);
-						selectedDesigners = [];
-						$("#selectedDesigner").empty();
-						selectedDesigners = designerValue.split(",");
-						selectedDesigners.forEach(function(designer) {
-							$("#selectedDesigner").append("<div class='selected cursor_pointer'>" + designer + "</div>");
-						});
-					}
-					//publisher
-					var publisherValue = data.publisher;
-					if (publisherValue) {
-						$("#publisher").val(publisherValue);
-						selectedPublishers = [];
-						$("#selectedPublisher").empty();
-						selectedPublishers = publisherValue.split(",");
-						selectedPublishers.forEach(function(publisher) {
-							$("#selectedPublisher").append("<div class='selected cursor_pointer'>" + publisher + "</div>");
-						});
-					}
-					//category
-					var categoryValue = data.gamecategory;
-					if (categoryValue) {
-						$("#gamecategory").val(categoryValue);
-						selectedCategories = [];
-						$("#selectedCategory").empty();
-						selectedCategories = categoryValue.split(",");
-						selectedCategories.forEach(function(category) {
-							$("#selectedCategory").append("<div class='selected-value'>" + category + "</div>");
-						});
-					}
-					//mechanic
-					var mechanicValue = data.mechanic;
-					if (mechanicValue) {
-						$("#mechanic").val(mechanicValue);
-						selectedMechanics = [];
-						$("#selectedMechanic").empty();
-						selectedMechanics = mechanicValue.split(",");
-						selectedMechanics.forEach(function(mechanic) {
-							$("#selectedMechanic").append("<div class='selected-value'>" + mechanic + "</div>");
-						});
-					}
-
-				},
-				error: function () {
-					console.log("에러..");
-					alert("해당 번호는 없는 번호입니다.");
-				}
-			});
-		}
-
 	});
+
 </script>
 
 	<footer>

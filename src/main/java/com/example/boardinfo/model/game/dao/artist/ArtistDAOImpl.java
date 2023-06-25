@@ -85,4 +85,14 @@ public class ArtistDAOImpl implements ArtistDAO {
 	public int totalSearchCount(Map<String, Object> map) {
 		return sqlSession.selectOne("artist.totalSearchCount", map);
 	}
+
+	@Override
+	public List<ArtistDTO> confirmList(Map<String, Object> map) {
+		return sqlSession.selectList("artist.confirmList", map);
+	}
+
+	@Override
+	public void deleteitem(int num) {
+		sqlSession.delete("artist.deleteitem", num);
+	}
 }

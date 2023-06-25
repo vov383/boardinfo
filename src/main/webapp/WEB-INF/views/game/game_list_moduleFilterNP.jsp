@@ -48,7 +48,7 @@
                             <td class="filterTd"><div class="wrap">
                                 <div class="wrap t_center">
                                     <div class="ellipsis rank03">
-                                        <a href="${path}/game/partrank/index?filter=artist&num=${row.anum}">${row.artist}</a>
+                                        <a href="${path}/game/partrank/week?filter=artist&num=${row.anum}">${row.artist}</a>
                                     </div>
                                 </div>
                             </div></td>
@@ -79,7 +79,7 @@
                     <td class="filterTd"><div class="wrap">
                         <div class="wrap t_center">
                             <div class="ellipsis rank03">
-                                <a href="${path}/game/partrank/index?filter=designer&num=${row.dnum}">${row.designer}</a>
+                                <a href="${path}/game/partrank/week?filter=designer&num=${row.dnum}">${row.designer}</a>
                             </div>
                         </div>
                     </div></td>
@@ -106,7 +106,7 @@
                     <td class="filterTd"><div class="wrap">
                         <div class="wrap t_center">
                             <div class="ellipsis rank03">
-                                <a href="${path}/game/partrank/index?filter=publisher&num=${row.pnum}">${row.publisher}</a>
+                                <a href="${path}/game/partrank/week?filter=publisher&num=${row.pnum}">${row.publisher}</a>
                             </div>
                         </div>
                     </div></td>
