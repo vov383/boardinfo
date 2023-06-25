@@ -29,6 +29,9 @@
                         <a href="${path}/member/member_join.do" title="회원가입" class="sign" id="signUp">회원가입</a>
                     </c:when>
                     <c:when test="${sessionScope.admin_id != null && !sessionScope.admin_id.equals('')}">
+                        <a title="채팅" href="${path}/gathering/chatRoom.do"">
+                            <img src="${path}/images/chat.png" id="chatImg" alt="채팅">
+                        </a>
                         <!-- admin login 상태 -->
                         <div class="dropdown">
                             <div class="dropbtn"><a title="회원" class="sign" id="signIn">관리자 ${sessionScope.nickname}
@@ -42,6 +45,9 @@
                         <a id="adminLogoutBtn" class="sign">관리자 로그아웃</a>
                     </c:when>
                     <c:otherwise>
+                        <a title="채팅" href="${path}/gathering/chatRoom.do">
+                            <img src="${path}/images/chat.png" id="chatImg" alt="채팅">
+                        </a>
                         <!-- userid로 로그인한 상태 -->
                         <div class="dropdown">
                             <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.nickname} 님<img src="${path}/images/dropdown.png" width="16px"></a>
@@ -80,9 +86,9 @@
                 <div class="dropdown">
                     <a href="#" class="toMenu" title="게임포럼">게임포럼<img src="${path}/images/dropdown.png" width="16px"></a>
                     <div class="dropdown-content">
-                        <a href="#">게임 후기</a>
-                        <a href="#">노하우</a>
-                        <a href="#">질문</a>
+                        <a href="${path}/review/reviewlist.do?freeFlag=N">게임포럼</a>
+                        <a href="${path}/review/reviewlist.do?freeFlag=Y">자유게시판</a>
+
                     </div>
                 </div>
             </li>
@@ -118,8 +124,10 @@
 </div>
 
 <script>
+
+
     function searchAll() {
-        const keyword = $("#gameKeyword").val();
+        var keyword = $("#gameKeyword").val();
         if (keyword !== "") {
             document.gameSearch.submit();
         }
@@ -127,17 +135,20 @@
 
     //검색기능
     $(document).ready(function () {
-        setTimeout(function () {  //딜레이
+
         //검색창 키입력후
         $("#gameKeyword").keyup(function(event) {
             if (event.which === 13) { // 엔터 입력시
                 event.preventDefault();
                 searchAll();  //검색하러감
             } else {
+                setTimeout(function () {  //딜레이
                 //자동완성
-
-
                     var input = $("#gameKeyword").val();
+
+                    if (input == "")
+                        $('#gameSearchDiv').empty()
+                    else {
                     $.ajax({
                         type: "get",
                         url: "${path}/game/autoGame.do/" + input,
@@ -153,8 +164,6 @@
                                     var gamephoto_url = item.gamephoto_url;
                                     var bgg_thumbnail = item.bgg_thumbnail;
                                     var bggnum = item.bggnum;
-                                    console.log(gnum);
-                                    console.log(gametitle);
 
                                     //var str => #gameSearchDiv 안에 들어갈 태그 입력
                                     var str = "<div class='searched_top'><div class='imageDiv'>";
@@ -174,7 +183,6 @@
 
                                     gameSearchDiv.append(str);
                                 });
-
                             } else {
                                 gameSearchDiv.hide(); // 값이 없을 경우 숨기기
                             }
@@ -183,10 +191,15 @@
                             console.log("에러..");
                         }
                     });
-                    if (input == "") $('#gameSearchDiv').empty();
-
                     }
-            }, 500) //settimeout 콜백함수로 0.5초 딜레이 후 검색창 작동
+                }, 1000) //settimeout 콜백함수로 1초 딜레이 후 검색창 작동
+
+               ;
+
+
+
+            }
+
         });
 
         /*관리자 로그아웃 버튼*/
@@ -216,6 +229,7 @@
             }//for문 end
         } //if else문 end
     });
+
 
 </script>
 <style>
@@ -253,5 +267,7 @@
     .dropdown:hover button {
         background-color: #eaeaea;
     }
+
+
 
 </style>

@@ -74,18 +74,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete>
 
 	<select id="totalSearch" resultType="artistDto">
-		SELECT 	anum, artist
+		SELECT 	anum, artist, rn
 		from	(
-				select 	anum, artist
-				from	artist
-				where	UPPER(artist) like '%' || UPPER(#{gameKeyword}) || '%'
-				order by
-					CASE WHEN UPPER(artist) like UPPER(#{gameKeyword}) || '%'
+				SELECT 	anum, artist, rownum rn
+				from	(
+						select 	anum, artist
+						from	artist
+				<if test="gameKeyword != null and !'none'.equalsIgnoreCase(gameKeyword)">
+					where	regexp_like(artist, #{gameKeyword},'i')
+					order by
+					CASE WHEN regexp_like(artist, '^'||#{gameKeyword},'i')
 					THEN 1
-        	        ELSE 2
-        	        END
-        	    )
-        where rownum between 1 and 12
+					ELSE 2
+					END
+				</if>
+				)
+	<choose>
+		<when test="filter != null and 'none'.equalsIgnoreCase(filter)">
+			)
+			where rn between 1 and 12
+		</when>
+		<otherwise>
+			)
+			where rn between #{start} and #{end}
+		</otherwise>
+	</choose>
+	</select>
+
+	<select id="totalSearchCount" resultType="int">
+		select 	count(*)
+		from	artist
+		<if test="gameKeyword != null and !'none'.equalsIgnoreCase(gameKeyword)">
+		where	regexp_like(artist, #{gameKeyword},'i')
+		</if>
 	</select>
 
 

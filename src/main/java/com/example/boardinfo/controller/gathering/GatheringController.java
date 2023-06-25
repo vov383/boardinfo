@@ -96,7 +96,9 @@ public class GatheringController {
 
 		boolean showAvailable = false;
 
-		if(request.getParameter("showAvailable")!=null) showAvailable = true;
+		if(request.getParameter("showAvailable")!=null && request.getParameter("showAvailable").equals("y"))
+			showAvailable = true;
+
 		if(option==null) option = "all";
 
 		if(from!=null && to!=null) {
@@ -109,7 +111,10 @@ public class GatheringController {
 		"경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주", "세종"
 		};
 
+
 		List<String> koreanAddress1List = Stream.of(koreanAddress1).collect(Collectors.toList());
+		int length = koreanAddress1List.size();
+
 		List<GatheringDTO> list = null;
 
 		//선택된 지역이 있다면 리스트에서 빼주기
@@ -119,6 +124,9 @@ public class GatheringController {
 			koreanAddress1List.remove(address1);
 			}
 		}
+
+		boolean fold = false;
+		if(koreanAddress1List.size() < length) fold = true;
 
 		//선택된 지역이 없다면 빼주지 x
 		else {
@@ -141,10 +149,12 @@ public class GatheringController {
 		mav.addObject("page", pager);
 		mav.addObject("option", option);
 		mav.addObject("keyword", keyword);
+		mav.addObject("fold", fold);
 		mav.setViewName("/gathering/list");
 		return mav;
 	}
-	
+
+
 	@RequestMapping("view/{gathering_id}")
 	public ModelAndView view(@PathVariable int gathering_id, ModelAndView mav,
 			@CookieValue(value="gatheringView", required=false) Cookie cookie,
@@ -308,44 +318,51 @@ public class GatheringController {
 
 
 
-
-	@GetMapping("/chatRoom/{gathering_id}")
-	public String ChatRoom(@PathVariable int gathering_id,
-							 Model model, HttpSession session) {
+	@GetMapping("/chatRoom.do")
+	public ModelAndView ChatRoomMain(@RequestParam (required = false) Integer gathering_id,
+									 HttpSession session, ModelAndView mav){
 
 		String user_id = (String) session.getAttribute("userid");
 
-		if (gatheringService.checkIfAttendee(gathering_id, user_id) == AttendeeType.ATTENDING) {
-			GatheringDTO dto = gatheringService.view(gathering_id, false);
-			List<ChatMessageDTO> list = chatService.chatList(gathering_id, 1, false);
-			Map<String, String> nicknameMap = chatService.getNicknameMap(gathering_id);
+		//채팅방 목록 불러오기
+		List<GatheringDTO> rlist = gatheringService.getAttendingChatroomList(user_id, gathering_id);
+		mav.addObject("rlist", rlist);
+		mav.addObject("user_id", user_id);
+		mav.setViewName("gathering/chatMain");
 
-			for(ChatMessageDTO item : list){
-				if(item.getUserId().equals("SYSTEM")){
-					String message = item.getMessage();
-					int index = message.indexOf("]");
-					if(index!=-1){
-						String user = message.substring(1, index);
-						item.setMessage(nicknameMap.get(user) + message.substring(index+1));
+		Map<String, String> nicknameMap = null;
+
+		if(gathering_id != null) {
+
+			if (gatheringService.checkIfAttendee(gathering_id, user_id) == AttendeeType.ATTENDING) {
+				GatheringDTO dto = gatheringService.view(gathering_id, false);
+				List<ChatMessageDTO> list = chatService.chatList(gathering_id, 1, false);
+				nicknameMap = chatService.getNicknameMap(gathering_id);
+
+				for (ChatMessageDTO item : list) {
+					if (item.getUserId().equals("SYSTEM")) {
+						String message = item.getMessage();
+						int index = message.indexOf("]");
+						if (index != -1) {
+							String user = message.substring(1, index);
+							item.setMessage(nicknameMap.get(user) + message.substring(index + 1));
+						}
 					}
+					item.setNickname(nicknameMap.get(item.getUserId()));
 				}
-				item.setNickname(nicknameMap.get(item.getUserId()));
+
+				mav.addObject("gathering_id", gathering_id);
+				mav.addObject("dto", dto);
+				mav.addObject("list", list);
+			} else {
+				//멤버가 아니라면
+				mav.addObject("message", "모임의 멤버만 채팅 내용을 볼 수 있습니다.");
 			}
-
-			Gson gson = new Gson();
-
-			//로그인 아이디를 model에 담아 뷰로 보냄
-			model.addAttribute("gathering_id", gathering_id);
-			model.addAttribute("user_id", user_id);
-			model.addAttribute("dto", dto);
-			model.addAttribute("list", list);
-			model.addAttribute("nicknameMap", gson.toJson(nicknameMap));
-			return "gathering/chat";
-		} else {
-
-			//멤버가 아니라면 다시 게시글로 보내주기
-			return "redirect:/gathering/view/" + gathering_id;
 		}
+
+		Gson gson = new Gson();
+		mav.addObject("nicknameMap", gson.toJson(nicknameMap));
+		return mav;
 	}
 
 
@@ -357,6 +374,26 @@ public class GatheringController {
 		System.out.println("curPage" + curPage);
 		Map<String, Object> map = new HashMap<>();
 		map.put("list", list);
+		return map;
+	}
+
+	@ResponseBody
+	@RequestMapping("/getMyActiveChats.do")
+	public Map<String, Object> getMyActiveChats(HttpSession session){
+		String user_id = (String)session.getAttribute("userid");
+		String message = "";
+		List<Integer> glist = null;
+		Map<String, Object> map = new HashMap<>();
+
+		if(user_id == null){
+			//오류 발생시키기
+		}
+
+		else{
+			glist = gatheringService.getMyActiveChats(user_id);
+		}
+
+		map.put("glist", glist);
 		return map;
 	}
 

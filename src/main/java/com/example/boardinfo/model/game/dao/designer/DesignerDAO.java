@@ -16,8 +16,7 @@ public interface DesignerDAO {
 	List<DesignerDTO> view(int gnum);
 	void insert_designer_mapping(int gnum, int dnum);
     List<String> viewDesigner(int gnum);
-
     void deleteGame_Designer(String value, int gnum);
-
-    List<DesignerDTO> totalSearch(String gameKeyword);
+    List<DesignerDTO> totalSearch(Map<String, Object> map);
+    int totalSearchCount(Map<String, Object> map);
 }

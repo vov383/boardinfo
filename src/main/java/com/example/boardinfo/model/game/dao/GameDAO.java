@@ -36,6 +36,6 @@ public interface GameDAO {
 	List<GameDTO> ExReList(Map<String, Object> map);
     List<GameDTO> weeklyList(Map<String, Object> map);
 	List<GameDTO> newbieList(Map<String, Object> map);
-
-    List<GameDTO> totalSearch(String gameKeyword);
+    List<GameDTO> totalSearch(Map<String, Object> map);
+    int totalSearchCount(Map<String, Object> map);
 }

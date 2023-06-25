@@ -401,14 +401,14 @@
                     </td>
 
                 </tr>
-
             </table>
-            <table>
+                <br>
+                <table <%--border="1"--%>>
                 <tr>
                     <td>리뷰</td>
                 </tr>
                 <tr>
-                    <td>${vo.reviewDetail}</td>
+                    <td><pre>${vo.reviewDetail}</pre></td>
                 </tr>
             </table>
 

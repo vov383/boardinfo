@@ -264,7 +264,12 @@ public class GameDAOImpl implements GameDAO {
 	}
 
 	@Override
-	public List<GameDTO> totalSearch(String gameKeyword) {
-		return sqlSession.selectList("game.totalSearch", gameKeyword);
+	public List<GameDTO> totalSearch(Map<String, Object> map) {
+		return sqlSession.selectList("game.totalSearch", map);
+	}
+
+	@Override
+	public int totalSearchCount(Map<String, Object> map) {
+		return sqlSession.selectOne("game.totalSearchCount", map);
 	}
 }

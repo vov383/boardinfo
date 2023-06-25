@@ -67,6 +67,11 @@
       font-size: 15px;
     }
 
+    #header-left a, #header-right a{
+        display: flex;
+        align-items: center;
+    }
+
     form[name="gameSearch"] > div:first-of-type{
       background-color: white;
       position: relative;
@@ -104,6 +109,16 @@
 
     #signIn{
       margin: 0 30px;
+    }
+
+
+    #chatImg{
+        margin-left: 35px;
+        width: 28px;
+    }
+
+    #chatImg:hover{
+        cursor: pointer;
     }
 
 

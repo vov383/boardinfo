@@ -45,25 +45,6 @@
             box-sizing: border-box;
         }
 
-        #header{
-            width: 100%;
-            margin: 0 auto;
-            position: fixed;
-            left: 0;
-            top: 0;
-            background-color: white;
-            z-index: 450;
-            border-bottom: 1px solid #D9D9D9;
-        }
-
-        #header-upper-box{
-            background-color: #FFC61A;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 77px;
-        }
-
         #header-upper-box > div{
             display: flex;
             justify-content: space-between;
@@ -71,18 +52,6 @@
             height: 77px;
             flex-basis: 1120px;
             max-width: 1120px;
-        }
-
-        #header-left{
-            display: flex;
-            align-items: center;
-        }
-
-        #header-right {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 15px;
         }
 
         form[name="gameSearch"] > div:first-of-type{
@@ -113,49 +82,12 @@
             background-color: rgba(255, 255, 255, 0.5);
         }
 
-        .sign{
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: bold;
-            color: black;
-        }
-
-        #signIn{
-            margin: 0 30px;
-        }
-
-        .nav{
-            margin: 0 auto;
-            max-width: 1120px;
-            display: flex;
-        }
-
-        .menu {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 45px;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
         .menu li {
             display: inline-block;
             flex: 0 0 25%;
             max-width: 25%;
             height: 100%;
             line-height: 45px;
-        }
-
-        .toMenu{
-            display: flex;
-            align-items: center;
-            font-size: 16px;
-            font-weight: bold;
-            text-decoration: none;
-            color: black;
-            margin-right: 20px;
         }
 
         .toMenu > img{
@@ -199,25 +131,8 @@
             min-height: 420px;
         }
 
-        #postUpper{
-            display: flex;
-        }
-
         #postUpper > div:first-of-type{
             padding: 30px 0;
-        }
-
-        #tmpDiv, #map{
-            width: 400px;
-            height: 280px;
-            border: 1px solid black;
-            text-align: center;
-            line-height: 280px;
-        }
-
-        #map{
-            overflow: hidden;
-            display: none;
         }
 
         #postUpper > div:nth-of-type(2){
@@ -228,11 +143,6 @@
             flex-direction: column;
         }
 
-        .labelAndItem{
-            display: flex;
-            flex-direction: row;
-        }
-
         .labelAndItem > span:first-of-type{
             width: 90px;
             text-align: right;
@@ -241,16 +151,6 @@
 
         .labelAndItem input{
             padding-left: 8px;
-        }
-
-        .flex{
-            flex-grow: 1;
-        }
-
-        #locationSearchBtn{
-            cursor: pointer;
-            width: 65px;
-            margin-left: 5px;
         }
 
         .labelAndItem input[type="date"]{
@@ -267,27 +167,8 @@
             width: 100%;
         }
 
-        #hiddenQuestion{
-            display: flex;
-            flex-direction: column;
-            visibility: hidden;
-        }
-
-        #postMain{
-            padding: 20px 0;
-            border-top: 2px dashed #D9D9D9;
-            display: flex;
-            flex-direction: column;
-        }
-
         #postMain > div:last-of-type{
             text-align: center;
-        }
-
-        #description{
-            padding: 20px;
-            height: 300px;
-            resize: none;
         }
 
         #postMain ul{
@@ -305,26 +186,6 @@
             border-radius: 0;
         }
 
-        #btn-attachGame{
-            margin-bottom: 10px;
-            background-color: #1432B1;
-            border: 0;
-            color: white;
-        }
-
-        #btn-submit{
-            background-color: #F9841A;
-            margin-right: 10px;
-            color: white;
-            border: 0;
-        }
-
-        #btn-reset{
-            border: 1px solid black;
-            background-color: white;
-        }
-
-
         footer{
             font-size: 15px;
             color: #DFDFDF;
@@ -338,12 +199,10 @@
             clear: both;
         }
 
-
         footer > div{
             width: 100%;
             max-width: 1120px;
         }
-
 
         table{border-collapse:collapse; background-color:#fff8e1}
         tr, td{border-color: #ffffff; border-style: solid;}
@@ -351,6 +210,14 @@
 
         /*    !*짝수줄만 배경색을 다르게*!
             tr:nth-child(2n+0){background-color: #ffffaf;}*/
+
+
+        ul.pagingCenter {
+            text-align: center;
+        }
+        h1 {
+            font-size: 16px;
+        }
 
 
     </style>
@@ -437,82 +304,104 @@
         <form name="reviewlist" method="post" action="${path}/review/reviewlist.do">
             <table style="table-layout:fixed;">
                 <tr>
-                    <th style="width: 200px;">No.</th>
-                    <th style="width: 200px;">카테고리</th>
-                    <th style="width: 200px;">&#x1f495</th> <%--좋아요--%>
-                    <th style="width: 200px;">제목</th>
-                    <th style="width: 200px;">닉네임</th>
-                    <th style="width: 200px;">등록일자</th>
-                    <th style="width: 200px;">&#128366;</th> <%--조회수--%>
-                    <th style="width: 200px;">댓글</th>
+                    <th style="width: 50px;">No.</th>
+                    <th style="width: 100px;">카테고리</th>
+                    <th style="width: 300px;">제목</th>
+                    <th style="width: 150px;">닉네임</th>
                     <th style="width: 200px;">게임</th>
+                    <th style="width: 50px;">&#128366;</th> <%--조회수--%>
+                    <th style="width: 50px;">&#x1f495</th> <%--좋아요--%>
+                    <th style="width: 50px;">댓글</th>
+                    <th style="width: 200px;">등록일자</th>
                 </tr>
 
-                <%--<script>
-                  console.log(<c:out value="${list}"></c:out>)
-                </script>--%>
                 <c:forEach items="${list}" var="vo">
                     <tr>
-                        <td style="width: 200px; text-align: center;">${vo.rnum}</td>
-                        <td style="width: 200px; text-align: center;">${vo.category}</td>
-                        <td style="width: 200px; text-align: center;">${vo.good}</td>
-                        <td style="width: 200px; text-align: center;"><a href="javascript:reviewDetail('${vo.regNum}')">${vo.title}</a></td>
-                        <td style="width: 200px; text-align: center;">${vo.nickName}</td>
-                        <td style="width: 200px; text-align: center;">${vo.createDate}</td>
-                        <td style="width: 200px; text-align: center;">${vo.views}</td>
-                        <td style="width: 200px; text-align: center;">${vo.recnt}</td>
-                        <td style="width: 200px; text-align: center;">${vo.gametitle}</td>
+                        <td style="text-align: center;">${vo.rnum}</td>
+                        <td style="text-align: center;">${vo.category}</td>
+                        <td style="text-align: center;"><a href="javascript:reviewDetail('${vo.regNum}')">${vo.title}</a></td>
+                        <td style="text-align: center;">${vo.nickName}</td>
+                        <td style="text-align: center;">${vo.gametitle}</td>
+                        <td style="text-align: center;">${vo.views}</td>
+                        <td style="text-align: center;">${vo.good}</td>
+                        <td style="text-align: center;">${vo.recnt}</td>
+                        <td style="text-align: center;">${vo.createDate}</td>
+
 
                     </tr>
                 </c:forEach>
             </table>
         </form>
 
-        <%--      private int nowPage;                 // 현재 페이지--%>
-        <%--      private int cntPage;                 // 화면 페이지 개수 (가로)--%>
-        <%--      private int cntPerPage;              // 쿼리 리스트 개수 (세로)--%>
-        <%--      private int total;                   // 쿼리 리스트 총 개수--%>
-        <%--      private int lastPage;                // 마지막 번호 (시작번호는 1로고정)--%>
-        <%--      private int startPage;               // 화면 페이지 가로 시작 번호--%>
-        <%--      private int endPage;                 // 화면 페이지 가로 마지막 번호--%>
-        <%--      private int start;                   // 쿼리 리스트 변수--%>
-        <%--      private int end;                     // 쿼리 리스트 변수--%>
+<%--
+              private int nowPage;                 // 현재 페이지
+              private int cntPage;                 // 화면 페이지 개수 (가로)
+              private int cntPerPage;              // 쿼리 리스트 개수 (세로)
+              private int total;                   // 쿼리 리스트 총 개수
+              private int lastPage;                // 마지막 번호 (시작번호는 1로고정)
+              private int startPage;               // 화면 페이지 가로 시작 번호
+              private int endPage;                 // 화면 페이지 가로 마지막 번호
+              private int start;                   // 쿼리 리스트 변수
+              private int end;                     // 쿼리 리스트 변수
 
         nowPage;   <c:out value="${page.nowPage   }"></c:out>
         cntPage;   <c:out value="${page.cntPage   }"></c:out>
         lastPage;  <c:out value="${page.lastPage  }"></c:out>
         startPage; <c:out value="${page.startPage }"></c:out>
         endPage;   <c:out value="${page.endPage   }"></c:out>
+--%>
 
         <div class="paging-btn">
 
             <%--페이징--%>
+            <ul class="pagingCenter">
+                <h1>
             <c:if test="${1 ne page.nowPage}">
-                <a href="javascript:searchFu('1')">처음</a>
+
+                <a href="javascript:searchFu('1')">
+                    처음
+                </a>&nbsp;
+
             </c:if>
 
             <c:if test="${1 < page.nowPage}">
-                <a href="javascript:searchFu('${page.nowPage-1}')">이전</a>
+                <a href="javascript:searchFu('${page.nowPage-1}')">
+                    이전
+                </a>&nbsp;
             </c:if>
 
             <%--현재 페이지--%>
             <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
                 <c:if test="${i eq page.nowPage}">
-                    ${i}
-                </c:if>
+                    &nbsp;&nbsp;${i}&nbsp;
+                </c:if>&nbsp;
                 <c:if test="${i ne page.nowPage}">
-                    <a href="javascript:searchFu('${i}')">${i}</a>
+                    <a href="javascript:searchFu('${i}')">
+                            ${i}
+                    </a>&nbsp;
                 </c:if>
 
             </c:forEach>
 
             <c:if test="${page.lastPage > page.nowPage}">
-                <a href="javascript:searchFu('${page.nowPage+1}')">다음</a>
+                <a href="javascript:searchFu('${page.nowPage+1}')">
+                    다음
+                </a>&nbsp;
             </c:if>
 
             <c:if test="${page.lastPage ne page.nowPage}">
-                <a href="javascript:searchFu('${page.lastPage}')">마지막</a>
+                <a href="javascript:searchFu('${page.lastPage}')">
+                    마지막
+                </a>&nbsp;
             </c:if>
+                </h1>
+            </ul>
+
+                <ul class="pagingCenter">
+            <h1>☆☆☆☆☆  광고주를 모십니다!  ☆☆☆☆☆</h1>
+            <h1>★★★★★  광고주를 모십니다!  ★★★★★</h1>
+            <h1>☆☆☆☆☆  광고주를 모십니다!  ☆☆☆☆☆</h1>
+                </ul>
 
         </div>
 

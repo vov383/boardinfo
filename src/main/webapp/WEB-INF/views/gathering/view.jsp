@@ -899,7 +899,7 @@
                             <c:when test="${type == 'ATTENDING'}">
                                 <div>
                                 <button type="button" id="bigBtn-chat"
-                                        onclick="location.href='${path}/gathering/chatRoom/${dto.gathering_id}'">
+                                        onclick="location.href='${path}/gathering/chatRoom.do?gathering_id=${dto.gathering_id}'">
                                     채팅하기</button>
                                     <c:if test="${dto.writer_id != sessionScope.userid}">
                                     <button type="button" class="bigBtn-cancel"
@@ -909,7 +909,9 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
+                                <c:if test="${dto.status == '모집중'}">
                                 <button type="button" id="bigBtn-apply">참가신청</button>
+                                </c:if>
                             </c:otherwise>
                         </c:choose>
                     </div>

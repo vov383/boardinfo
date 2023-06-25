@@ -210,7 +210,7 @@
                         select tb_num, create_date, title, category,
                                (select count(*)
                                 from tb_comments c
-                                where c.tb_num = t.tb_num and del='N') as re_count
+                                where c.tb_num = t.tb_num) as re_count
                         from t_board t
                         where t.del = 'N'
                     )a
@@ -219,22 +219,26 @@
     </select>
 
     <select id="totalSearch" resultType="tboardDto">
+        <if test="filter != null and 'none'.equalsIgnoreCase(filter)">
         select  tb_num, create_date, title, category, address1, address2, view_count, price,re_count
         from    (
+        </if>
                 select  tb_num, create_date, title, category, address1, address2, view_count, price,
                         (select count(*)
                         from    tb_comments c
                         where   c.tb_num = t.tb_num and del='N'
                         ) as re_count
                 from t_board t
-                where upper(title) LIKE '%' || upper(#{gameKeyword}) || '%' AND t.del = 'N'
+                where regexp_like(title, #{gameKeyword},'i') AND t.del = 'N'
                 order by
-		            CASE WHEN UPPER(title) LIKE UPPER(#{gameKeyword}) || '%'
+		            CASE WHEN regexp_like(title, '^'||#{gameKeyword},'i')
 		            THEN 1
                     ELSE 2
                     END
+        <if test="filter != null and 'none'.equalsIgnoreCase(filter)">
                 )
         where rownum between 1 and 6
+        </if>
     </select>
 
 </mapper>
