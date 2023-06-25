@@ -710,7 +710,53 @@ public class GameServiceImpl implements GameService {
     return map;
   }
 
+  @Override
+  public List<String> attachlist(int gnum) {
+    List<String> list = gameDao.attachlist(gnum);
+    return list;
+  }
 
+  @Override
+  public Map<String, Object> game_list_category(int curPage) {
+    Map<String, Object> map =new HashMap<>();
 
+    int count = categoryDao.game_list_categoryCount();
 
+    Pager pager = new Pager(count, curPage, 40);
+    int start = pager.getPageBegin();
+    int end = pager.getPageEnd();
+
+    map.put("start",start);
+    map.put("end",end);
+
+    List<CategoryDTO> list = categoryDao.game_list_category(map);
+
+    map.put("count", count);
+    map.put("pager",pager);
+    map.put("list",list);
+
+    return map;
+  }
+
+  @Override
+  public Map<String, Object> game_list_theme(int curPage, String sort) {
+    Map<String, Object> map =new HashMap<>();
+    map.put("sort",sort);
+
+    int count = gameDao.game_list_themeCount(map);
+
+    Pager pager = new Pager(count, curPage, 10);
+    int start = pager.getPageBegin();
+    int end = pager.getPageEnd();
+
+    map.put("start",start);
+    map.put("end",end);
+
+    List<GameDTO> list = gameDao.game_list_theme(map);
+    map.put("count", count);
+    map.put("pager",pager);
+    map.put("list",list);
+
+    return map;
+  }
 }

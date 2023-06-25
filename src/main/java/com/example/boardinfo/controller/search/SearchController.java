@@ -48,48 +48,35 @@ public class SearchController {
 		return mav;
 	}
 
-	@GetMapping(value = {"totalSearchMore/{filter}/{gameKeyword}","totalSearchMore/{filter}"})
+	@GetMapping(value = "totalSearchMore/{filter}/{gameKeyword}")
 	public ModelAndView totalSearchMore(ModelAndView mav,
 										@RequestParam(required = false, defaultValue = "1") int curPage,
 										@PathVariable("filter")String filter,
-										@PathVariable("gameKeyword") Optional<String> gameKeyword,
+										@PathVariable("gameKeyword") String gameKeyword,
 										Map<String, Object> map){
 
-		if(gameKeyword.isPresent()) {
-			map.put("gameKeyword", gameKeyword.get());
-		}else {
-			map.put("gameKeyword", "none");
-		}
-
+		map.put("gameKeyword", gameKeyword);
 		map.put("curPage", curPage);
 		map.put("filter",filter);
 		switch (filter){
 			case "아티스트":
 			case "디자이너":
 			case "퍼블리셔":
-				if("none".equals(map.get("gameKeyword"))){
-					map = gameService.totalSearchMore(map);
-					mav.setViewName("game/game_creditList");
-					break;
-				}
 			case "게임":
 				map.put("sort","search");
 				map = gameService.totalSearchMore(map);
-				mav.setViewName("include/totalSearchMore");
 				break;
 			case "자유게시판"	: case "게임포럼" :
 				map = reviewService.totalSearchMore(map);
-				mav.setViewName("include/totalSearchMore");
 				break;
 			case "모임게시판"	:
 				map = gatheringService.totalSearchMore(map);
-				mav.setViewName("include/totalSearchMore");
 				break;
 			case "거래게시판" :
 				map = tBoardService.totalSearchMore(map);
-				mav.setViewName("include/totalSearchMore");
 				break;
 		}
+		mav.setViewName("include/totalSearchMore");
 		mav.addObject("sort", "search");
 		mav.addObject("map", map);
 		return mav;

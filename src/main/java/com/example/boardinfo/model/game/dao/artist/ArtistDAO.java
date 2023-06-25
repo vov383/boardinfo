@@ -21,4 +21,8 @@ public interface ArtistDAO {
 
     List<ArtistDTO> totalSearch(Map<String, Object> map);
     int totalSearchCount(Map<String, Object> map);
+
+    List<ArtistDTO> confirmList(Map<String, Object> map);
+
+    void deleteitem(int num);
 }

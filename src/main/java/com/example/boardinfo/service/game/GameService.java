@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.artist.ArtistDTO;
@@ -37,4 +36,7 @@ public interface GameService {
   Map<String, Object> gameListMain();
   Map<String, Object> totalSearch(String gameKeyword);
   Map<String, Object> totalSearchMore(Map<String, Object> map);
+  List<String> attachlist(int gnum);
+  Map<String, Object> game_list_category(int curPage);
+  Map<String, Object> game_list_theme(int curPage, String sort);
 }

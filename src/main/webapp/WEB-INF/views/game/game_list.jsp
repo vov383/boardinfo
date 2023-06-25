@@ -10,11 +10,24 @@
 <meta charset="utf-8">
 <title>BOARDINFO</title>
 <%@ include file="../include/js/header.jsp"%>
+	<link rel="stylesheet" href="${path}/include/css/style_search.css">
+	<style>
+		.totalSearchUl ul li {
+			width: calc((100% / 4) - 2px);
+		}
+		.hover_span{
+			cursor: pointer;
+		}
+
+		.hover_span:hover {
+			background-color: rgba(0,0,0,.1);
+		}
+	</style>
 </head>
 
 <header>
 	<%@include file="../include/top.jsp" %>
-	<link rel="stylesheet" href="${path}/include/css/style_table.css">
+
 </header>
 
 <main>
@@ -42,17 +55,25 @@
 			</c:choose>
 			<span>(${map.count})개</span>
 
-			<a href="${path}/game/write.do" style="float: right">게임등록</a>
+			<span class="hover_span" onclick="goInsert()" style="float: right">게임등록</span>
 
 		</div>
 		<div id="contentsMain">
 
-		<div class="game_rank_div">
+		<div class="totalSearchUl">
 			<ul>
-				<li><a href="${path}/game/gamerank/week">주간</a></li>
-				<li><a href="${path}/game/gamerank/rate">평점</a></li>
-				<li><a href="${path}/game/gamerank/newbie">신규</a></li>
-				<li><a href="${path}/game/gamerank/vcnt">조회수</a></li>
+				<li<c:if test="${sort eq 'week'}"> class="selected" </c:if>>
+					<a href="${path}/game/gamerank/week">주간</a>
+				</li>
+				<li<c:if test="${sort eq 'rate'}"> class="selected" </c:if>>
+					<a href="${path}/game/gamerank/rate">평점</a>
+				</li>
+				<li<c:if test="${sort eq 'newbie'}"> class="selected" </c:if>>
+					<a href="${path}/game/gamerank/newbie">신규</a>
+				</li>
+				<li<c:if test="${sort eq 'vcnt'}"> class="selected" </c:if>>
+					<a href="${path}/game/gamerank/vcnt">조회수</a>
+				</li>
 			</ul>
 		</div>
 
@@ -69,6 +90,19 @@
 <footer>
 	<%@include file="../include/footer.jsp" %>
 </footer>
+
+<script>
+	function goInsert() {
+		if("${sessionScope.userid}" == ""){
+			if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
+				location.href= "${path}/member/member_login.do";
+				return;
+			}
+		}else{
+			location.href= "${path}/game/write.do";
+		}
+	}
+</script>
 
 
 </body>

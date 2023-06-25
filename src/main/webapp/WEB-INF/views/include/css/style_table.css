@@ -285,6 +285,11 @@ a:visited {
     text-align: center;
 }
 
+.game_rank_div ul li.choice {
+    font-size: 1.3em;
+    color: black;
+}
+
 .game_rank_div ul li a {
     display: block;
     color: rgba(0,0,0,0.6);

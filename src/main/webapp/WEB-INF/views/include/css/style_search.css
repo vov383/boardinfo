@@ -24,8 +24,12 @@
     text-align: center;
     cursor: pointer;
     background-color: #F9841A;
+    border-top: 1px solid gainsboro;
     border-left: 1px solid gainsboro;
     border-right: 1px solid gainsboro;
+}
+.totalSearchUl ul li.selected {
+    background-color: white;
 }
 .totalSearchUl ul li a {
     font-size: 13px;

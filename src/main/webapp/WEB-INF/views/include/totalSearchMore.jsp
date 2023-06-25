@@ -20,7 +20,7 @@
 <main>
     <div id="contents">
         <div id="contentsHeader">
-            <h2>통합검색</h2>
+            <h2>${map.filter}검색</h2>
         </div>
 
         <div id="contentsLocation">
@@ -33,16 +33,34 @@
                     <div class="totalSearchUl">
                         <ul>
                             <li><a href="${path}/search/searchAll.do?gameKeyword=${gameKeyword}">통합검색</a></li>
-                            <li><a href="${path}/search/totalSearchMore/게임/${gameKeyword}">게임명</a></li>
-                            <li><a href="${path}/search/totalSearchMore/아티스트/${gameKeyword}">아티스트</a></li>
-                            <li><a href="${path}/search/totalSearchMore/디자이너/${gameKeyword}">디자이너</a></li>
-                            <li><a href="${path}/search/totalSearchMore/퍼블리셔/${gameKeyword}">퍼블리셔</a></li>
-                            <li><a href="${path}/search/totalSearchMore/자유게시판/${gameKeyword}">자유게시판</a></li>
-                            <li><a href="${path}/search/totalSearchMore/게임포럼/${gameKeyword}">게임포럼</a></li>
-                            <li><a href="${path}/search/totalSearchMore/모임게시판/${gameKeyword}">모임게시판</a></li>
-                            <li><a href="${path}/search/totalSearchMore/거래게시판/${gameKeyword}">거래게시판</a></li>
+                            <li<c:if test="${map.filter eq '게임'}"> class="selected" </c:if>>
+                                <a href="${path}/search/totalSearchMore/게임/${gameKeyword}">게임명</a>
+                            </li>
+                            <li<c:if test="${map.filter eq '아티스트'}"> class="selected" </c:if>>
+                                <a href="${path}/search/totalSearchMore/아티스트/${gameKeyword}">아티스트</a>
+                            </li>
+                            <li<c:if test="${map.filter eq '디자이너'}"> class="selected" </c:if>>
+                                <a href="${path}/search/totalSearchMore/디자이너/${gameKeyword}">디자이너</a>
+                            </li>
+                            <li<c:if test="${map.filter eq '퍼블리셔'}"> class="selected" </c:if>>
+                                <a href="${path}/search/totalSearchMore/퍼블리셔/${gameKeyword}">퍼블리셔</a>
+                            </li>
+                            <li<c:if test="${map.filter eq '자유게시판'}"> class="selected" </c:if>>
+                                <a href="${path}/search/totalSearchMore/자유게시판/${gameKeyword}">자유게시판</a>
+                            </li>
+                            <li<c:if test="${map.filter eq '게임포럼'}"> class="selected" </c:if>>
+                                <a href="${path}/search/totalSearchMore/게임포럼/${gameKeyword}">게임포럼</a>
+                            </li>
+                            <li<c:if test="${map.filter eq '모임게시판'}"> class="selected" </c:if>>
+                                <a href="${path}/search/totalSearchMore/모임게시판/${gameKeyword}">모임게시판</a>
+                            </li>
+                            <li<c:if test="${map.filter eq '거래게시판'}"> class="selected" </c:if>>
+                                <a href="${path}/search/totalSearchMore/거래게시판/${gameKeyword}">거래게시판</a>
+                            </li>
                         </ul>
                     </div>
+
+                <br>
 
                 <c:choose>
                     <c:when test="${not empty map.list or not empty map.alist or not empty map.dlist or not empty map.plist}">

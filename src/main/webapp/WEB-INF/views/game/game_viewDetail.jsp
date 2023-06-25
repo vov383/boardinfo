@@ -239,6 +239,10 @@
                 justify-content: center;
             }
 
+            .hover_span{
+                cursor: pointer;
+            }
+
             .before:hover, .next:hover, .hover_span:hover {
                 background-color: rgba(0,0,0,.1);
             }
@@ -714,7 +718,7 @@
                 <span>카테고리</span>
                 <div>
                 <c:forEach var="category" items="${map.clist}">
-                    <a class="infoItems" href="${path}/game/partrank/index?filter=gamecategory&num=${category.cnum}">${category.gamecategory}</a>
+                    <a class="infoItems" href="${path}/game/partrank/week?filter=gamecategory&num=${category.cnum}">${category.gamecategory}</a>
                 </c:forEach>
                 </div>
             </div>
@@ -723,7 +727,7 @@
                 <span>아티스트</span>
                 <div>
                     <c:forEach var="artist" items="${map.alist}">
-                        <a class="infoItems" href="${path}/game/partrank/index?filter=artist&num=${artist.anum}">${artist.artist}</a>
+                        <a class="infoItems" href="${path}/game/partrank/week?filter=artist&num=${artist.anum}">${artist.artist}</a>
                     </c:forEach>
                 </div>
             </div>
@@ -732,7 +736,7 @@
                 <span>디자이너</span>
                 <div>
                     <c:forEach var="designer" items="${map.dlist}">
-                        <a class="infoItems" href="${path}/game/partrank/index?filter=designer&num=${designer.dnum}">${designer.designer}</a>
+                        <a class="infoItems" href="${path}/game/partrank/week?filter=designer&num=${designer.dnum}">${designer.designer}</a>
                     </c:forEach>
                 </div>
             </div>
@@ -742,7 +746,7 @@
                 <span>게임방식</span>
                 <div>
                     <c:forEach var="mechanic" items="${map.mlist}">
-                        <a class="infoItems" href="${path}/game/partrank/index?filter=mechanic&num=${mechanic.mnum}">${mechanic.mechanic}</a>
+                        <a class="infoItems" href="${path}/game/partrank/week?filter=mechanic&num=${mechanic.mnum}">${mechanic.mechanic}</a>
                     </c:forEach>
                 </div>
             </div>
@@ -751,7 +755,7 @@
                 <span>퍼블리셔</span>
                 <div>
                     <c:forEach var="publisher" items="${map.plist}">
-                        <a class="infoItems" href="${path}/game/partrank/index?filter=publisher&num=${publisher.pnum}">${publisher.publisher}</a>
+                        <a class="infoItems" href="${path}/game/partrank/week?filter=publisher&num=${publisher.pnum}">${publisher.publisher}</a>
                     </c:forEach>
                 </div>
             </div>
@@ -1146,7 +1150,15 @@
 
 
            $("#btnGameUpdate").click(function(){
-               document.updateViewForm.submit();
+               if("${sessionScope.userid}" == ""){
+                   if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
+                       location.href= "${path}/member/member_login.do";
+                       return;
+                   }
+               }else{
+                   document.updateViewForm.submit();
+               }
+
            });
        });
 
