@@ -1,10 +1,10 @@
 package com.example.boardinfo.model.game.dao;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.example.boardinfo.model.game.dto.GameDTO;
+import com.example.boardinfo.model.game.dto.category.CategoryDTO;
 
 public interface GameDAO {
 
@@ -36,6 +36,13 @@ public interface GameDAO {
 	List<GameDTO> ExReList(Map<String, Object> map);
     List<GameDTO> weeklyList(Map<String, Object> map);
 	List<GameDTO> newbieList(Map<String, Object> map);
-
-    List<GameDTO> totalSearch(String gameKeyword);
+    List<GameDTO> totalSearch(Map<String, Object> map);
+    int totalSearchCount(Map<String, Object> map);
+    List<GameDTO> confirmList(Map<String, Object> map);
+	int confirmListCount(String sort);
+    List<String> attachlist(int gnum);
+	void denyGame(int gnum, String userid);
+	void gameAllow(GameDTO dto);
+    int game_list_themeCount(Map<String, Object> map);
+	List<GameDTO> game_list_theme(Map<String, Object> map);
 }

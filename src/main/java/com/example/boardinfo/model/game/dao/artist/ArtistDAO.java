@@ -19,5 +19,10 @@ public interface ArtistDAO {
 
     void deleteGame_Artist(String value, int gnum);
 
-    List<ArtistDTO> totalSearch(String gameKeyword);
+    List<ArtistDTO> totalSearch(Map<String, Object> map);
+    int totalSearchCount(Map<String, Object> map);
+
+    List<ArtistDTO> confirmList(Map<String, Object> map);
+
+    void deleteitem(int num);
 }

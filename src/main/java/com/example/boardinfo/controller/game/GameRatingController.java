@@ -4,14 +4,14 @@ import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.service.game.GameRatingService;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
 
 @Controller
 @RequestMapping("gameRating/*")

@@ -164,22 +164,24 @@
         update into tb_files ()
     </delete>
 
+    <!--마이페이지에서 중고거래 게시판에 작성한 목록 출력 sql
+    썸네일 이미지 포함, tb_files 테이블에서 MIN(file_reg_num)으로 tb_num에 해당하는 이미지 파일 중 가장 빠른 순번을 가져옴-->
     <select id="getTbList" resultType="tboardDto">
         select t.tb_num,
-               t.title,
-               t.price,
-               t.description,
-               t.view_count,
-               t.re_count,
-               t.category,
-               t.create_user,
-               t.create_date,
-               t.del,
-               t.update_user,
-               t.update_date,
-               t.address1,
-               t.address2,
-               f.fullName as first_img
+            t.title,
+            t.price,
+            t.description,
+            t.view_count,
+            t.re_count,
+            t.category,
+            t.CREATE_DATE,
+            t.create_user,
+            t.del,
+            t.update_user,
+            t.update_date,
+            t.address1,
+            t.address2,
+            f.fullName as first_img --썸네일 이미지
 
         from t_board t
                  LEFT JOIN (
@@ -194,7 +196,7 @@
                 FULLNAME
         ) f ON t.TB_NUM = f.TB_NUM
 
-        where t.del = 'N' and CREATE_USER =#{userid}
+        where t.del = 'N' and CREATE_USER = #{userid}
         order by t.tb_num desc
     </select>
 
@@ -208,7 +210,7 @@
                         select tb_num, create_date, title, category,
                                (select count(*)
                                 from tb_comments c
-                                where c.tb_num = t.tb_num and del='N') as re_count
+                                where c.tb_num = t.tb_num) as re_count
                         from t_board t
                         where t.del = 'N'
                     )a
@@ -217,22 +219,39 @@
     </select>
 
     <select id="totalSearch" resultType="tboardDto">
-        select  tb_num, create_date, title, category, address1, address2, view_count, price,re_count
+        select  tb_num, create_date, title, category, address1, address2, view_count, price,re_count, rn
         from    (
-                select  tb_num, create_date, title, category, address1, address2, view_count, price,
-                        (select count(*)
-                        from    tb_comments c
-                        where   c.tb_num = t.tb_num and del='N'
-                        ) as re_count
-                from t_board t
-                where upper(title) LIKE '%' || upper(#{gameKeyword}) || '%' AND t.del = 'N'
-                order by
-		            CASE WHEN UPPER(title) LIKE UPPER(#{gameKeyword}) || '%'
-		            THEN 1
-                    ELSE 2
-                    END
+                select  tb_num, create_date, title, category, address1, address2, view_count, price,re_count, rownum rn
+                from    (
+                        select  tb_num, create_date, title, category, address1, address2, view_count, price,
+                                (select count(*)
+                                from    tb_comments c
+                                where   c.tb_num = t.tb_num and del='N'
+                                ) as re_count
+                        from t_board t
+                        where regexp_like(title, #{gameKeyword},'i') AND t.del = 'N'
+                        order by
+		                    CASE WHEN regexp_like(title, '^'||#{gameKeyword},'i')
+		                    THEN 1
+                            ELSE 2
+                            END
+                            ,create_date desc
+                        )
                 )
-        where rownum between 1 and 6
+        <choose>
+            <when test="filter != null and 'none'.equalsIgnoreCase(filter)">
+                where rn between 1 and 6
+            </when>
+            <otherwise>
+                where rn between #{start} and #{end}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="totalSearchCount" resultType="int">
+        select  count(*)
+        from    t_board t
+        where   regexp_like(title, #{gameKeyword},'i') AND t.del = 'N'
     </select>
 
 </mapper>

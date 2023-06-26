@@ -602,7 +602,7 @@
 				type: "post",
 				success: function(data){
 					//data: 업로드한 파일 정보와 Http 상태 코드
-					var fileInfo=getFileInfo(data);
+					var fileInfo=getGameFileInfo(data);
 					console.log(fileInfo);
 					var html="<div><a href='"+fileInfo.getLink+"'>"+fileInfo.fileName+"</a><br>";
 					html += "<img src='${path}/uploadgame/displayFile?fileName="+data+"'>";

@@ -1,0 +1,36 @@
+.totalSearchDiv {
+    padding: 20px 0;
+    max-height: 400px;
+    clear: both;
+    margin-bottom: 30px;
+}
+
+.totalSearchUl {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.totalSearchUl ul {
+    width: 100%;
+    padding-inline-start: inherit;
+}
+
+.totalSearchUl ul li {
+    list-style: none;
+    float: left;
+    width: calc((100%/9) - 2px);
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #F9841A;
+    border-top: 1px solid gainsboro;
+    border-left: 1px solid gainsboro;
+    border-right: 1px solid gainsboro;
+}
+.totalSearchUl ul li.selected {
+    background-color: white;
+}
+.totalSearchUl ul li a {
+    font-size: 13px;
+}

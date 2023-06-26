@@ -1,5 +1,6 @@
 package com.example.boardinfo.model.game.dao.designer;
 
+import com.example.boardinfo.model.game.dto.artist.ArtistDTO;
 import com.example.boardinfo.model.game.dto.designer.DesignerDTO;
 
 import java.util.List;
@@ -16,8 +17,11 @@ public interface DesignerDAO {
 	List<DesignerDTO> view(int gnum);
 	void insert_designer_mapping(int gnum, int dnum);
     List<String> viewDesigner(int gnum);
-
     void deleteGame_Designer(String value, int gnum);
+    List<DesignerDTO> totalSearch(Map<String, Object> map);
+    int totalSearchCount(Map<String, Object> map);
 
-    List<DesignerDTO> totalSearch(String gameKeyword);
+    List<DesignerDTO> confirmList(Map<String, Object> map);
+
+    void deleteitem(int num);
 }

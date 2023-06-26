@@ -26,14 +26,19 @@
         }
 
         .boxForList{
-            flex-basis: 50%;
+            min-width: 50%;
+            max-width: 50%;
             display: flex;
             flex-direction: column;
             border-bottom: 2px solid #d9d9d9;
         }
 
         div[class='boxForList']:first-of-type{
-            margin-right: 70px;
+            padding-right: 35px;
+        }
+
+        div[class='boxForList']:nth-of-type(2){
+            padding-left: 35px;
         }
 
         .more{
@@ -60,6 +65,17 @@
             font-weight: bold;
         }
 
+        .boxForList > div:first-of-type > span:nth-of-type(2){
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+        }
+
+        .boxForList > div:first-of-type > span:nth-of-type(2) > a{
+            padding: 0;
+            margin: 0;
+        }
+
         .list{
             padding: 8px 0;
             display: flex;
@@ -68,6 +84,9 @@
 
         .list > div{
             padding: 3px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .list a{
@@ -94,6 +113,7 @@
             color: #C53A32;
             font-size: 0.8em;
         }
+
         #carouselDiv {
             height: 561px;
             margin-bottom: 50px;
@@ -301,8 +321,8 @@
 
 <br>
 <h1><a href="${path}/member/member_list.do" style="color: black;">인터셉터 확인</a></h1>
-<h1><a href="${path}/review/reviewlist.do" style="color: black;">커뮤니티 : 포럼게시판</a></h1>
-<h1><a href="${path}/review/freeBoardList.do" style="color: black;">커뮤니티 : 자유게시판</a></h1>
+<br>
+<h1><a href="${path}/admin/confirmList/insert" style="color: black;">어드민이 볼수있는 게임등록대기목록</a></h1>
 
 
 <%@include file="include/footer.jsp" %>

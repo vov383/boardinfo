@@ -3,6 +3,7 @@ package com.example.boardinfo.model.game.dao.mechanic;
 import java.util.List;
 import java.util.Map;
 
+import com.example.boardinfo.model.game.dto.artist.ArtistDTO;
 import com.example.boardinfo.model.game.dto.mechanic.MechanicDTO;
 
 public interface MechanicDAO {
@@ -18,4 +19,8 @@ public interface MechanicDAO {
     List<String> viewMechanic(int gnum);
 
     void deleteGame_Mechanic(String value, int gnum);
+
+    List<MechanicDTO> confirmList(Map<String, Object> map);
+
+    void deleteitem(int num);
 }

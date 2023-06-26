@@ -353,38 +353,35 @@
 			 , M.NICKNAME
 			 , R.CATEGORY
 			 , R.VIEWS
-			 , G.GNUM
-			 , G.GAMETITLE
-			 , R.GATHERING_ID    AS GATHERINGID
+			 , C.GNUM,
+				(SELECT GAMETITLE
+				 FROM GAME
+				 WHERE GNUM = C.GNUM) AS GAMETITLE
 			 , R.TITLE
-			 , R.FUN_SCORE
-								 AS FUNSCORE
-			 , R.REVIEW_SCORE    AS REVIEWSCORE
-			 , R.GAME_SCORE      AS GAMESCORE
 			 , R.REVIEW_DETAIL   AS
-									REVIEWDETAIL
+			REVIEWDETAIL
 			 , (SELECT COUNT(1)
 				FROM REVIEWGOOD
 				WHERE REVIEWPK = R.REG_NUM
 				  AND GOOD = 'Y'
 				  AND DEL = 'N') AS GOOD
 			 , (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM)
-								 AS RECNT
+			AS RECNT
 			 , R.DEL
 			 , R.CREATE_USER     AS CREATEUSER
 			 , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS')
-								 AS CREATEDATE
+			AS CREATEDATE
 			 , R.UPDATE_USER     AS UPDATEUSER
 			 , TO_CHAR(R.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS')
-								 AS UPDATEDATE
+			AS UPDATEDATE
 		FROM REVIEW R,
 			 MEMBER M,
-			 GAME G
+			 CHOICE_GAME C
 		WHERE R.CREATE_USER = M.USERID(+)
-		  AND R.GNUM
-			= G.GNUM(+)
+		  AND R.REG_NUM
+			= C.REVIEWREGNUM(+)
 		  AND R.DEL = 'N'
-		  and r.CREATE_USER = #{userid} /*검색*/ /*디테일 진입*/
+		  and R.CREATE_USER = #{userid} /*검색*/ /*디테일 진입*/
 		ORDER BY CREATEDATE DESC
 	</select>
 
@@ -399,7 +396,7 @@
 							   (
 								   select count(*)
 								   from reply_comments c
-								   where c.reg_num = r.reg_num and c.del = 'N'
+								   where c.reg_num = r.reg_num
 							   ) as recnt
 						from review r
 						where del = 'N'
@@ -410,7 +407,6 @@
 	</select>
 
 	<select id="getHotList" resultType="reviewDto">
-		--현재 편의상 조회수 2개이상, 댓글 1개이상, 좋아요 1개이상으로 구성
 		select 	*
 		from    (
 
@@ -421,7 +417,7 @@
 		            from    review r
 		            where   del='N' and
 		                    views > 2 and
-		                    (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) > 1 and
+		                    (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE REG_NUM = R.REG_NUM) > 1 and
 		                    (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') > 1
 		        )
 				where rnum between 1 and #{size}
@@ -451,6 +447,46 @@
 		        (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) > 1 and
 		        (SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') > 1
 
+	</select>
+
+	<select id="totalSearch" resultType="reviewDto">
+		select	*
+		from	(
+				select	a.*, rownum rn
+				from	(
+						select 	reg_num as regNum,
+								category,
+								title,
+								views,
+								create_date as createDate,
+								(	SELECT 	COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N')
+								AS GOOD,
+						        (	SELECT 	COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM )
+						        AS RECNT,
+						        (	SELECT 	MAX(B.GAMETITLE) || CASE (COUNT(1)-1) WHEN 0 THEN '' ELSE ' 외 ' || (COUNT(1)-1)END
+						        	FROM 	CHOICE_GAME A, GAME B
+						        	WHERE 	A.DEL = 'N' AND B.DEL = 'n' AND A.GNUM = B.GNUM AND A.REVIEWREGNUM = R.REG_NUM
+						        	GROUP BY A.REVIEWREGNUM )
+						        AS GAMETITLE
+						from 	review r
+						WHERE   regexp_like(title, #{gameKeyword},'i') and del='N' and category in (${boardDivision})
+						order by createDate desc
+        				) a
+        		)
+        <choose>
+			<when test="filter != null and 'none'.equalsIgnoreCase(filter)">
+				where rn between 1 and 6
+			</when>
+			<otherwise>
+				where rn between #{start} and #{end}
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="totalSearchCount" resultType="int">
+		select 	count(*)
+		from	review
+		where	regexp_like(title, #{gameKeyword},'i') and del='N'
 	</select>
 
 

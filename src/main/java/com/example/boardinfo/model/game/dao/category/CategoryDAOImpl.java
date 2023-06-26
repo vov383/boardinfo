@@ -74,5 +74,22 @@ public class CategoryDAOImpl implements CategoryDAO {
 
   }
 
+  @Override
+  public List<CategoryDTO> confirmList(Map<String, Object> map) {
+    return  sqlSession.selectList("category.confirmList", map);
+  }
+  @Override
+  public void deleteitem(int num) {
+    sqlSession.delete("category.deleteitem", num);
+  }
 
+  @Override
+  public int game_list_categoryCount() {
+    return sqlSession.selectOne("category.game_list_categoryCount");
+  }
+
+  @Override
+  public List<CategoryDTO> game_list_category(Map<String, Object> map) {
+    return sqlSession.selectList("category.game_list_category", map);
+  }
 }

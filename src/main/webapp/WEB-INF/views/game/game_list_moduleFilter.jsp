@@ -6,9 +6,9 @@
 <%@ page session="true"%>
 <!-- 세션사용여부 -->
 <link rel="stylesheet" href="${path}/include/css/style_table.css">
+<link rel="stylesheet" href="${path}/include/css/pagenation.css">
 
 <div class="service_list_song">
-    <h3>${param.filter}</h3>
     <table border="1" style="width:100%">
 
         <colgroup>
@@ -19,27 +19,53 @@
 
         </colgroup>
 
+        <tfoot>
 
+        <tr>
+
+            <td colspan="4" align="center">
+
+                <div id="paginationArea">
+                    <c:if test="${map.pager.curPage > 1}">
+                        <div class="pageItem" onclick="list(1)">&lt&lt</div>
+                    </c:if>
+                    <c:if test="${map.pager.curPage > 1}">
+                        <div class="pageItem" onclick="list(${map.pager.prevPage})">&lt</div>
+                    </c:if>
+                    <c:forEach var="num" begin="${map.pager.blockStart}" end="${map.pager.blockEnd}">
+                        <c:choose>
+                            <c:when test="${num == map.pager.curPage}">
+                                <div id="curPage" class="pageItem" onclick="list(${num})">${num}</div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="pageItem" onclick="list(${num})">${num}</div>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                    <c:if test="${map.pager.curPage < map.pager.totPage}">
+                        <div class="pageItem" onclick="list(${map.pager.nextPage})">&gt</div>
+                    </c:if>
+                    <c:if test="${map.pager.curPage < map.pager.totPage}">
+                        <div class="pageItem" onclick="list(${map.pager.totPage})">&gt&gt</div>
+                    </c:if>
+                </div>
+
+            </td>
+
+        </tr>
+
+        </tfoot>
 
         <tbody>
 
 <c:choose>
 
-    <c:when test="${param.filter != null && '아티스트'.equalsIgnoreCase(param.filter)}">
-
-        <c:choose>
-            <c:when test="${gameMap.alist == null}">
-                <tr>
-                    <td colspan="4" style="margin: auto"><h2>검색어에 해당하는 결과가 없습니다.</h2></td>
-                </tr>
-            </c:when>
-
-            <c:otherwise>
+    <c:when test="${map.filter != null && '아티스트'.equalsIgnoreCase(map.filter)}">
 
                 <c:set var="i" value="0" />
                 <c:set var="j" value="4" />
 
-                <c:forEach var="row" items="${gameMap.alist}">
+                <c:forEach var="row" items="${map.alist}">
 
                     <c:if test="${i%j==0}">
                         <tr>
@@ -48,7 +74,7 @@
                     <td class="filterTd"><div class="wrap">
                         <div class="wrap t_center">
                             <div class="ellipsis rank03">
-                                <a href="${path}/game/partrank/index?filter=artist&num=${row.anum}">${row.artist}</a>
+                                <a href="${path}/game/partrank/week?filter=artist&num=${row.anum}">${row.artist}</a>
                             </div>
                         </div>
                     </div></td>
@@ -61,16 +87,14 @@
 
                 </c:forEach>
 
-            </c:otherwise>
-        </c:choose>
 
     </c:when>
 
-    <c:when test="${param.filter != null && '디자이너'.equalsIgnoreCase(param.filter)}">
+    <c:when test="${map.filter != null && '디자이너'.equalsIgnoreCase(map.filter)}">
         <c:set var="i" value="0" />
         <c:set var="j" value="4" />
 
-        <c:forEach var="row" items="${gameMap.dlist}">
+        <c:forEach var="row" items="${map.dlist}">
 
             <c:if test="${i%j==0}">
                 <tr>
@@ -79,7 +103,7 @@
                 <td class="filterTd"><div class="wrap">
                     <div class="wrap t_center">
                         <div class="ellipsis rank03">
-                            <a href="${path}/game/partrank/index?filter=designer&num=${row.dnum}">${row.designer}</a>
+                            <a href="${path}/game/partrank/week?filter=designer&num=${row.dnum}">${row.designer}</a>
                         </div>
                     </div>
                 </div></td>
@@ -93,11 +117,11 @@
         </c:forEach>
     </c:when>
 
-    <c:when test="${param.filter != null && '퍼블리셔'.equalsIgnoreCase(param.filter)}">
+    <c:when test="${map.filter != null && '퍼블리셔'.equalsIgnoreCase(map.filter)}">
         <c:set var="i" value="0" />
         <c:set var="j" value="4" />
 
-        <c:forEach var="row" items="${gameMap.plist}">
+        <c:forEach var="row" items="${map.plist}">
 
             <c:if test="${i%j==0}">
                 <tr>
@@ -106,7 +130,7 @@
                 <td class="filterTd"><div class="wrap">
                     <div class="wrap t_center">
                         <div class="ellipsis rank03">
-                            <a href="${path}/game/partrank/index?filter=publisher&num=${row.pnum}">${row.publisher}</a>
+                            <a href="${path}/game/partrank/week?filter=publisher&num=${row.pnum}">${row.publisher}</a>
                         </div>
                     </div>
                 </div></td>
@@ -126,6 +150,18 @@
     </table>
 
 </div>
-<div>
-    <a href="#" style="display: inline-block; float: right;">전체 ${param.filter} 보기</a>
-</div>
+
+<c:if test="${map.gameKeyword != null && map.gameKeyword != ''}">
+    <div>
+        <a href="${path}/game/totalSearchMore/${map.filter}" style="display: inline-block; float: right;">더보기</a>
+    </div>
+</c:if>
+
+
+
+<script>
+    function list(page) {
+          location.href="${path}/search/totalSearchMore/${map.filter}/${map.gameKeyword}?curPage="+page;
+    }
+
+</script>

@@ -80,14 +80,18 @@ public class TBoardDAOImpl implements TBoardDAO {
 		return sqlSession.selectList("tboard.getTbList",userid);
 	}
 
-
 	@Override
 	public List<TBoardDTO> getHomeList(Integer size) {
 		return sqlSession.selectList("tboard.getHomeList", size);
 	}
 
 	@Override
-	public List<TBoardDTO> totalSearch(String gameKeyword) {
-		return sqlSession.selectList("tboard.totalSearch", gameKeyword);
+	public List<TBoardDTO> totalSearch(Map<String, Object> map) {
+		return sqlSession.selectList("tboard.totalSearch", map);
+	}
+
+	@Override
+	public int totalSearchCount(Map<String, Object> map) {
+		return sqlSession.selectOne("tboard.totalSearchCount", map);
 	}
 }

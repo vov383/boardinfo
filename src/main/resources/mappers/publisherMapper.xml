@@ -74,19 +74,56 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete>
 
 	<select id="totalSearch" resultType="publisherDto">
-		select 	pnum, publisher
+		SELECT 	pnum, publisher, rn
 		from	(
-				select 	pnum, publisher
-				from	publisher
-				where	UPPER(publisher) like '%' || UPPER(#{gameKeyword}) || '%'
-				order by
-						CASE WHEN UPPER(publisher) like UPPER(#{gameKeyword}) || '%'
-						THEN 1
-        		        ELSE 2
-        		        END
-        		)
-        where	rownum between 1 and 12
+				SELECT 	pnum, publisher, rownum rn
+				from	(
+						select 	pnum, publisher
+						from	publisher
+		<if test="gameKeyword != null and !'none'.equalsIgnoreCase(gameKeyword)">
+						where	regexp_like(publisher, #{gameKeyword},'i')
+						order by
+								CASE WHEN regexp_like(publisher, '^'||#{gameKeyword},'i')
+								THEN 1
+        				        ELSE 2
+        				        END
+		</if>
+        				)
+		<choose>
+			<when test="filter != null and 'none'.equalsIgnoreCase(filter)">
+				)
+				where rn between 1 and 12
+			</when>
+			<otherwise>
+				)
+				where rn between #{start} and #{end}
+			</otherwise>
+		</choose>
 	</select>
+
+	<select id="totalSearchCount" resultType="int">
+		select 	count(*)
+		from	publisher
+		<if test="gameKeyword != null and !'none'.equalsIgnoreCase(gameKeyword)">
+		where	regexp_like(publisher, #{gameKeyword},'i')
+		</if>
+	</select>
+
+	<select id="confirmList" resultType="publisherDto">
+		select 	p.pnum, p.publisher
+		from	publisher p
+		left join 	(
+					select 	pnum, count(*) count
+					from	game_publisher
+					group by pnum
+					) gp
+		on		p.pnum = gp.pnum
+		where 	gp.count = 0
+	</select>
+
+	<delete id="deleteitem">
+		delete from publisher where pnum=#{num}
+	</delete>
 	
 </mapper>
 

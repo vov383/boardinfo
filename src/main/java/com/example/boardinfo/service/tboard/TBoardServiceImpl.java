@@ -1,5 +1,6 @@
 package com.example.boardinfo.service.tboard;
 
+import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.tboard.dao.TBoardDAO;
 import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
 import com.example.boardinfo.model.tboard.dto.TBoardDTO;
@@ -157,6 +158,31 @@ public class TBoardServiceImpl implements TBoardService {
 
 	@Override
 	public List<TBoardDTO> totalSearch(String gameKeyword) {
-		return tboardDao.totalSearch(gameKeyword);
+		Map<String, Object> map = new HashMap<>();
+		map.put("gameKeyword", gameKeyword);
+		map.put("filter", "none");
+		return tboardDao.totalSearch(map);
+	}
+
+	@Override
+	public Map<String, Object> totalSearchMore(Map<String, Object> map) {
+		int curPage = Integer.parseInt(String.valueOf(map.get("curPage")));
+
+		int count = tboardDao.totalSearchCount(map);
+
+		Pager pager = new Pager(count, curPage, 10);
+		int start = pager.getPageBegin();
+		int end = pager.getPageEnd();
+
+		map.put("start",start);
+		map.put("end",end);
+
+
+		List<TBoardDTO> list = tboardDao.totalSearch(map);
+		map.put("list",list);
+		map.put("count",count);
+		map.put("pager",pager);
+
+		return map;
 	}
 }

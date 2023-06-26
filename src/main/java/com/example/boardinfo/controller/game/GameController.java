@@ -2,24 +2,16 @@ package com.example.boardinfo.controller.game;
 
 import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.artist.ArtistDTO;
-import com.example.boardinfo.model.game.dto.category.CategoryDTO;
 import com.example.boardinfo.model.game.dto.designer.DesignerDTO;
-import com.example.boardinfo.model.game.dto.mechanic.MechanicDTO;
 import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
 import com.example.boardinfo.service.game.GameRatingService;
 import com.example.boardinfo.service.game.GameService;
-import com.example.boardinfo.service.tboard.TBoardService;
-import com.example.boardinfo.util.UploadFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,8 +64,6 @@ public class GameController {
 
 		if(userid != null)
 			dto.setCreate_user(userid);
-		else
-			dto.setCreate_user("admin");
 		gameService.gameinsert(dto);
 		return "home";
 	}
@@ -164,8 +154,6 @@ public class GameController {
 
 		if(userid != null)
 			dto.setUpdate_user(userid);
-		else
-			dto.setUpdate_user("admin");
 
 		gameService.gameupdate(dto);
 		return "home";
@@ -198,10 +186,41 @@ public class GameController {
 	}
 
 	@RequestMapping("gameListMain.do")
-	public ModelAndView gameListMain(Map<String, Object> map, ModelAndView mav){
-		map = gameService.gameListMain();
+	public ModelAndView gameListMain(ModelAndView mav){
+		Map<String, Object> map = gameService.gameListMain();
 		mav.setViewName("game/game_main_carousel");
 		mav.addObject("map", map);
+		return mav;
+	}
+
+	@GetMapping(value = "totalSearchMore/{filter}")
+	public ModelAndView totalSearchMore(ModelAndView mav, Map<String, Object> map,
+										@RequestParam(required = false, defaultValue = "1") int curPage,
+										@PathVariable("filter") String filter){
+		map.put("filter", filter);
+		map.put("gameKeyword", "none");
+		map.put("curPage", curPage);
+		map = gameService.totalSearchMore(map);
+		mav.setViewName("game/game_creditList");
+		mav.addObject("map", map);
+		return mav;
+	}
+
+	@GetMapping("categoryList")
+	public ModelAndView categoryList(ModelAndView mav,
+									 @RequestParam(required = false, defaultValue = "1") int curPage){
+		mav.setViewName("game/game_list_category_theme");
+		mav.addObject("map",gameService.game_list_category(curPage));
+		mav.addObject("filter","category");
+		return mav;
+	}
+
+	@GetMapping("themeList/{sort}")
+	public ModelAndView themeList(ModelAndView mav, @PathVariable("sort") String sort,
+								  @RequestParam(required = false, defaultValue = "1") int curPage) {
+		mav.setViewName("game/game_list_category_theme");
+		mav.addObject("map", gameService.game_list_theme(curPage,sort));
+		mav.addObject("filter", "theme");
 		return mav;
 	}
 

@@ -103,7 +103,7 @@
                 <td><div class="wrap">
 
 			<span class="rank_wrap">
-				<span class="none">순위 기능 구현가능할지..</span>
+				<span class="none">순위 비교 기능 구현가능할지..</span>
 				<span class="none">0</span>
 			</span>
 
@@ -140,7 +140,7 @@
 
                 <td><div class="wrap t_center">
                     <div class="ellipsis rank03">
-                        카테고리항목
+                        ${row.theme}
                     </div>
                 </div></td>
 
@@ -188,8 +188,20 @@
         var currentPage = document.location.href;   //현재페이지 url
         if(currentPage.includes("filter"))  //currentPage에 filter라는 문자열이 있으면
             location.href="${path}/game/partrank/${sort}?filter=${map.filter}&num=${map.num}&curPage="+page;
-        else
-            location.href="${path}/game/gamerank/${sort}?curPage="+page;
+        else{
+            var sort = "${sort}";
+            if(sort === "search")
+                location.href="${path}/search/totalSearchMore/${map.filter}/${map.gameKeyword}?curPage="+page;
+            else{
+                var filter = "${filter}";
+                if(filter ==="theme"){
+                    location.href="${path}/game/game_list_category_theme/${sort}?curPage="+page;
+                }else
+                    location.href="${path}/game/gamerank/${sort}?curPage="+page;
+            }
+
+
+        }
     }
 
 </script>

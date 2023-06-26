@@ -1,9 +1,11 @@
 package com.example.boardinfo.controller.admin;
 
 import com.example.boardinfo.model.admin.dto.AdminDTO;
+import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.model.member.dto.MemberDTO;
 import com.example.boardinfo.service.admin.AdminService;
+import com.example.boardinfo.service.game.GameService;
 import com.example.boardinfo.service.gathering.GatheringService;
 import com.example.boardinfo.service.member.MemberService;
 import com.example.boardinfo.service.review.ReviewService;
@@ -39,6 +41,8 @@ public class AdminController {
     GatheringService gatheringService;
     @Inject
     TBoardService tBoardService;
+    @Inject
+    GameService gameService;
     //로깅
     private static final Logger logger
             = LoggerFactory.getLogger(AdminController.class);
@@ -207,5 +211,49 @@ public class AdminController {
             return map;
     }
 
+    /*게임 등록*/
+    @RequestMapping("confirmList/{sort}")
+    public ModelAndView confirmList(@RequestParam(required = false, defaultValue = "1") int curPage,
+                                    @PathVariable("sort")String sort, ModelAndView mav){
+        mav.setViewName("admin/admin_game_list");
+        mav.addObject("map", adminService.confirmList(curPage, sort));
+        mav.addObject("sort", sort);
+        return mav;
+    }
+
+    @RequestMapping("deleteitem/{filter}/{num}")
+    public String deleteitem(@PathVariable("filter")String filter, @PathVariable("num")int num){
+        adminService.deleteitem(filter,num);
+        return "home";
+    }
+
+    @RequestMapping("updateGame/{gnum}")
+    public ModelAndView updateGame(@PathVariable("gnum")int gnum, ModelAndView mav){
+        mav.setViewName("admin/admin_game_update");
+        mav.addObject("dto", gameService.updateView(gnum));
+        mav.addObject("clist", gameService.categorylist());
+        mav.addObject("mlist", gameService.mechaniclist());
+        mav.addObject("attachlist", gameService.attachlist(gnum));
+        return mav;
+    }
+
+    @RequestMapping("denyGame.do")
+    public String denyGame(@RequestParam("gnum")int gnum,HttpSession session){
+        String userid = (String)session.getAttribute("userid");
+
+        if(userid != null)
+            adminService.denyGame(gnum,userid);
+        return "home";
+    }
+
+    @RequestMapping("allowGame.do")
+    public String allowGame(@ModelAttribute GameDTO dto, HttpSession session){
+        String userid = (String)session.getAttribute("userid");
+
+        if(userid != null)
+            dto.setUpdate_user(userid);
+        adminService.allowGame(dto);
+        return "home";
+    }
 
 }
