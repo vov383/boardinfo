@@ -92,35 +92,36 @@ public class ReviewController {
 	}
 
 
-	// 신고하기 페이지
-	@RequestMapping("reviewdetailGood.do")
-	public ModelAndView reviewDetailwaring(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session) {
-
-		//신고하기
-		reviewservice.reviewDetailwaringCreate(reviewserchDTO, session);
-
-		String userid = (String) session.getAttribute("userid");
-		String adminid = (String) session.getAttribute("admin_id");
-		ModelAndView mav = new ModelAndView();
-
-		/*userid가 null이면 로그인 페이지로 이동*/
-		if (null == userid){
-			mav.setViewName("member/login");
-
-			/*userid가 null이 아니면 좋아요 적용*/
-		} else {
-			mav.setViewName("review/reviewDetail");
-			mav.addObject("userid", userid);
-			mav.addObject("adminid", adminid);
-			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-
-			/*댓글 출력*/
-			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
-		}
-
-		return mav;
-	}
+//	// 신고하기 페이지
+//	@RequestMapping("reviewdetailGood.do")
+//	public ModelAndView reviewDetailwaring(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session) {
+//
+//		//신고하기
+//		reviewservice.reviewDetailwaringCreate(reviewserchDTO, session);
+//
+//		String userid = (String) session.getAttribute("userid");
+//		String adminid = (String) session.getAttribute("admin_id");
+//		ModelAndView mav = new ModelAndView();
+//
+//		/*userid가 null이면 로그인 페이지로 이동*/
+//		if (null == userid){
+//			mav.setViewName("member/login");
+//
+//			/*userid가 null이 아니면 좋아요 적용*/
+//		} else {
+//			mav.setViewName("review/reviewDetail");
+//			mav.addObject("userid", userid);
+//			mav.addObject("adminid", adminid);
+//			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+//
+//			/*댓글 출력*/
+//			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+//		}
+//
+//		return mav;
+//	}
 	// 리뷰 좋아요 페이지
+
 	@RequestMapping("reviewdetailGood.do")
 	public ModelAndView reviewdetailGood(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session) {
 
