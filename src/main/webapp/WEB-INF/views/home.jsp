@@ -321,6 +321,8 @@
 
 <br>
 <h1><a href="${path}/member/member_list.do" style="color: black;">인터셉터 확인</a></h1>
+<br>
+<h1><a href="${path}/admin/confirmList/insert" style="color: black;">어드민이 볼수있는 게임등록대기목록</a></h1>
 
 
 <%@include file="include/footer.jsp" %>

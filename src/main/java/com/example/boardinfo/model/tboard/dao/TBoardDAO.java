@@ -34,5 +34,7 @@ public interface TBoardDAO {
     public List<TBoardDTO> getHomeList(Integer size);
 
     List<TBoardDTO> totalSearch(Map<String, Object> map);
+
+    int totalSearchCount(Map<String, Object> map);
 }
 

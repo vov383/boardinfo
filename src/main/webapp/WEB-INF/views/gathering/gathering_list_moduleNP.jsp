@@ -46,8 +46,96 @@
 
         </thead>
 
+<c:choose>
+    <c:when test="${sort != null and sort eq 'search'}">
+        <tfoot>
+
+        <tr>
+
+        <td colspan="4" align="center">
+
+        <div id="paginationArea">
+        <c:if test="${map.pager.curPage > 1}">
+            <div class="pageItem" onclick="list(1)">&lt&lt</div>
+        </c:if>
+        <c:if test="${map.pager.curPage > 1}">
+            <div class="pageItem" onclick="list(${map.pager.prevPage})">&lt</div>
+        </c:if>
+        <c:forEach var="num" begin="${map.pager.blockStart}" end="${map.pager.blockEnd}">
+            <c:choose>
+                <c:when test="${num == map.pager.curPage}">
+                    <div id="curPage" class="pageItem" onclick="list(${num})">${num}</div>
+                </c:when>
+                <c:otherwise>
+                    <div class="pageItem" onclick="list(${num})">${num}</div>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+        <c:if test="${map.pager.curPage < map.pager.totPage}">
+            <div class="pageItem" onclick="list(${map.pager.nextPage})">&gt</div>
+        </c:if>
+        <c:if test="${map.pager.curPage < map.pager.totPage}">
+            <div class="pageItem" onclick="list(${map.pager.totPage})">&gt&gt</div>
+        </c:if>
+        </div>
+
+        </td>
+
+        </tr>
+
+        </tfoot>
+
         <tbody>
 
+        <c:forEach var="row" items="${map.list}">
+
+            <tr>
+
+                <td><div class="wrap t_center"><span class="rank">${row.status}</span></div></td>
+
+
+                <td><div class="wrap t_center">
+                    <div class="ellipsis rank03">
+                            ${row.address1} / ${row.address2}
+                    </div>
+                </div></td>
+
+                <td><div class="wrap">
+                    <div class="wrap_song_info">
+                        <div class="ellipsis rank01"><span>
+					<a href="javascript:view(${row.gathering_id})">${row.title}</a>
+											</span>(${row.attendee_count} / ${row.maxPeople})</div>
+                    </div>
+                </div></td>
+
+                <td><div class="wrap t_center">
+                    <div class="ellipsis rank03">
+                            ${row.gathering_date}
+                    </div>
+                </div></td>
+
+                <td><div class="wrap t_center">
+                    <div class="ellipsis rank03">
+                            ${row.view_count}
+                    </div>
+                </div></td>
+
+                <td><div class="wrap t_center">
+                    <div class="ellipsis rank03">
+                            ${row.post_date}
+                    </div>
+                </div></td>
+
+            </tr>
+
+        </c:forEach>
+        </tbody>
+
+    </c:when>
+
+    <c:otherwise>
+
+        <tbody>
 
         <c:forEach var="row" items="${gatheringList}">
 
@@ -92,9 +180,24 @@
 
         </c:forEach>
         </tbody>
+
+    </c:otherwise>
+
+</c:choose>
+
     </table>
 
-    <a href="#" style="display: inline-block; float: right;">더보기</a>
+</div>
+
+<div>
+    <c:choose>
+        <c:when test="${sort != null and sort eq 'search'}">
+            <a href="${path}/gathering/list.do" style="display: inline-block; float: right;">더보기</a>
+        </c:when>
+        <c:otherwise>
+            <a href="${path}/search/totalSearchMore/${param.filter}/${gameKeyword}" style="display: inline-block; float: right;">더보기</a>
+        </c:otherwise>
+    </c:choose>
 </div>
 
 <script>
@@ -104,5 +207,9 @@
 
         let queryString = $("form[name='formGatheringSearch']").serialize() + '&curPage=' + "${page.curPage}";
         location.href="${path}/gathering/view/" + gathering_id + "?" + queryString;
+    }
+
+    function list(page) {
+        location.href="${path}/search/totalSearchMore/${map.filter}/${map.gameKeyword}?curPage="+page;
     }
 </script>

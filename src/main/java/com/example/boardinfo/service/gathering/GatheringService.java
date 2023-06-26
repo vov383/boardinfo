@@ -32,7 +32,6 @@ public interface GatheringService {
 	public int deleteReply(GatheringReplyDTO dto);
 	public List<GatheringDTO> getAttendingChatroomList(String user_id, Integer gathering_id);
 	public List<Integer> getMyActiveChats(String user_id);
-
 	List<GatheringDTO> totalSearch(String gameKeyword);
     Map<String, Object> totalSearchMore(Map<String, Object> map);
 

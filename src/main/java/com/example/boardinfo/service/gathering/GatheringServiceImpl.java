@@ -19,6 +19,7 @@ import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.member.dao.MemberDAO;
 import com.example.boardinfo.service.game.GameServiceImpl;
+import com.example.boardinfo.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -365,6 +366,7 @@ public class GatheringServiceImpl implements GatheringService {
 	@Override
 	public List<Integer> getMyActiveChats(String user_id) {
 		return gatheringDao.getMyActiveChats(user_id);
+	}
 
 	@Override
 	public List<GatheringDTO> totalSearch(String gameKeyword) {
@@ -386,6 +388,17 @@ public class GatheringServiceImpl implements GatheringService {
 
 	@Override
 	public Map<String, Object> totalSearchMore(Map<String, Object> map) {
+		int curPage = Integer.parseInt(String.valueOf(map.get("curPage")));
+
+		int count = gatheringDao.totalSearchCount(map);
+
+		Pager pager = new Pager(count, curPage, 10);
+		int start = pager.getPageBegin();
+		int end = pager.getPageEnd();
+
+		map.put("start",start);
+		map.put("end",end);
+
 		List<GatheringDTO> list = gatheringDao.totalSearch(map);
 		for(GatheringDTO dto : list) {
 			//status 세팅
@@ -396,6 +409,9 @@ public class GatheringServiceImpl implements GatheringService {
 			} else dto.setStatus("모집중");
 		}
 		map.put("list",list);
+		map.put("count",count);
+		map.put("pager",pager);
 		return map;
 	}
+
 }

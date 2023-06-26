@@ -13,14 +13,14 @@
     <table border="1" style="width:100%">
 
         <colgroup>
-            <col style="width: 62px"><!-- 순서 & 순위 -->
-            <col style="width: 50px"><!-- 순위등락 -->
+            <col style="width: 62px"><!-- 상태 -->
+            <col style="width: 50px"><!-- 빈칸 -->
             <col style="width: 80px"><!-- 이미지 -->
             <col><!-- 게임제목정보 -->
+            <col style="width: 100px"><!-- 제작연도 -->
             <col style="width: 100px"><!-- 테마 -->
-            <col style="width: 100px"><!-- 평점 -->
-            <col style="width: 100px"><!-- 난이도 -->
-            <col style="width: 100px"><!-- 조회수 -->
+            <col style="width: 100px"><!-- 등록인원 -->
+            <col style="width: 100px"><!-- 등록일 -->
         </colgroup>
 
 
@@ -28,7 +28,7 @@
 
         <tr>
             <th scope="col" colspan="2">
-                <div class="wrap t_center">순위</div>
+                <div class="wrap t_center">상태</div>
             </th>
             <th scope="col">
                 <div class="wrap none">이미지</div>
@@ -37,16 +37,16 @@
                 <div class="wrap pd_l_12">게임명</div>
             </th>
             <th scope="col">
+                <div class="wrap t_center">제작연도</div>
+            </th>
+            <th scope="col">
                 <div class="wrap t_center">테마</div>
             </th>
             <th scope="col">
-                <div class="wrap t_center">평점</div>
+                <div class="wrap t_center">등록자</div>
             </th>
             <th scope="col">
-                <div class="wrap t_center">난이도</div>
-            </th>
-            <th scope="col">
-                <div class="wrap t_center">조회수</div>
+                <div class="wrap t_center">등록일</div>
             </th>
         </tr>
 
@@ -97,7 +97,19 @@
 
             <tr>
 
-                <td><div class="wrap t_center"><span class="rank">${row.game_rank}</span><span class="none">위</span></div></td>
+                <td><div class="wrap t_center"><span class="rank">
+                        <c:choose>
+                            <c:when test="${sort eq 'insert'}">
+                                등록대기
+                            </c:when>
+                            <c:when test="${sort eq 'deny'}">
+                                등록거부
+                            </c:when>
+                            <c:when test="${sort eq 'delete'}">
+                                삭제대기
+                            </c:when>
+                        </c:choose>
+                </span></div></td>
 
                 <!-- 차트순위 추가 -->
                 <td><div class="wrap">
@@ -130,49 +142,35 @@
                 <td><div class="wrap">
                     <div class="wrap_song_info">
                         <div class="ellipsis rank01"><span>
-					<a href="${path}/game/view.do?gnum=${row.gnum}">${row.gametitle}(${row.release_year})</a>
+					<a href="${path}/admin/updateGame/${row.gnum}">${row.gametitle}</a>
 											</span></div><br>
                         <div class="ellipsis rank02">
-                            <a href="${path}/game/view.do?gnum=${row.gnum}">${row.gametitle_eng}</a>
+                            <a href="${path}/admin/updateGame/${row.gnum}">${row.gametitle_eng}</a>
                         </div>
                     </div>
                 </div></td>
 
                 <td><div class="wrap t_center">
                     <div class="ellipsis rank03">
-                        ${row.theme}
+                        ${row.release_year}
                     </div>
                 </div></td>
 
                 <td><div class="wrap t_center">
                     <div class="ellipsis rank03">
-                        <c:choose>
-                            <c:when test="${row.rate == null}">
-                                <strong>-</strong>
-                            </c:when>
-                            <c:otherwise>
-                                <strong><fmt:formatNumber value="${row.rate}" pattern="0.0"/>(${row.tot})</strong>
-                            </c:otherwise>
-                        </c:choose>
+                            ${row.theme}
                     </div>
                 </div></td>
 
                 <td><div class="wrap t_center">
                     <div class="ellipsis rank03">
-                        <c:choose>
-                        <c:when test="${row.weight == null}">
-                            <strong>-</strong>
-                        </c:when>
-                        <c:otherwise>
-                        <strong><strong><fmt:formatNumber value="${row.weight}" pattern="0.0"/>(${row.tot})</strong>
-                            </c:otherwise>
-                            </c:choose>
+                        ${row.create_user}
                     </div>
                 </div></td>
 
                 <td><div class="wrap t_center">
                     <div class="ellipsis rank03">
-                            ${row.totalviewcount}
+                        ${row.create_date}
                     </div>
                 </div></td>
 
@@ -185,23 +183,7 @@
 
 <script>
     function list(page) {
-        var currentPage = document.location.href;   //현재페이지 url
-        if(currentPage.includes("filter"))  //currentPage에 filter라는 문자열이 있으면
-            location.href="${path}/game/partrank/${sort}?filter=${map.filter}&num=${map.num}&curPage="+page;
-        else{
-            var sort = "${sort}";
-            if(sort === "search")
-                location.href="${path}/search/totalSearchMore/${map.filter}/${map.gameKeyword}?curPage="+page;
-            else{
-                var filter = "${filter}";
-                if(filter ==="theme"){
-                    location.href="${path}/game/game_list_category_theme/${sort}?curPage="+page;
-                }else
-                    location.href="${path}/game/gamerank/${sort}?curPage="+page;
-            }
-
-
-        }
+        location.href="${path}/admin/confirmList/${sort}?curPage="+page;
     }
 
 </script>

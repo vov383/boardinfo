@@ -69,6 +69,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				 from	category
 				 where	gamecategory=#{category})
 	</delete>
+
+	<select id="confirmList" resultType="categoryDto">
+		select 	c.cnum, c.gamecategory
+		from	category c
+		left join 	(
+					select 	cnum, count(*) count
+					from	game_category
+					group by cnum
+					) gc
+		on		c.cnum = gc.cnum
+		where	gc.count = 0
+	</select>
+
+	<delete id="deleteitem">
+		delete from category where cnum=#{num}
+	</delete>
+
+	<select id="game_list_categoryCount" resultType="int">
+		select	count(*)
+		from	category
+	</select>
+
+	<select id="game_list_category" resultType="categoryDto">
+		select	*
+		from	(
+				select 	a.*, rownum rn
+				from	(
+						select 	c.cnum, c.gamecategory, gc.count
+						from	category c
+						left join 	(
+									select 	cnum, count(*) count
+									from	game_category
+									group by cnum
+									) gc
+						on		c.cnum = gc.cnum
+						order by count desc
+						) a
+				)
+		where rn between #{start} and #{end}
+	</select>
 	
 </mapper>
 

@@ -166,8 +166,23 @@ public class TBoardServiceImpl implements TBoardService {
 
 	@Override
 	public Map<String, Object> totalSearchMore(Map<String, Object> map) {
+		int curPage = Integer.parseInt(String.valueOf(map.get("curPage")));
+
+		int count = tboardDao.totalSearchCount(map);
+
+		Pager pager = new Pager(count, curPage, 10);
+		int start = pager.getPageBegin();
+		int end = pager.getPageEnd();
+
+		map.put("start",start);
+		map.put("end",end);
+
+
 		List<TBoardDTO> list = tboardDao.totalSearch(map);
 		map.put("list",list);
+		map.put("count",count);
+		map.put("pager",pager);
+
 		return map;
 	}
 }

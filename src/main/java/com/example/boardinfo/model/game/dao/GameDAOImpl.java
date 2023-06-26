@@ -1,6 +1,5 @@
 package com.example.boardinfo.model.game.dao;
 
-import java.awt.image.ImageProducer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,8 +7,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
-import com.example.boardinfo.service.game.GameServiceImpl;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +32,6 @@ public class GameDAOImpl implements GameDAO {
 		List<GameDTO> list = new ArrayList<>();
 		String sort = (String)map.get("sort");
 		switch (sort){
-			case "index":
-				list = sqlSession.selectList("game.gameList", map);
-				break;
 			case "week":
 				list = sqlSession.selectList("game.gameList", map);
 				break;
@@ -50,8 +44,6 @@ public class GameDAOImpl implements GameDAO {
 			case "vcnt":
 				list = sqlSession.selectList("game.gameList_vcnt", map);
 				break;
-			default:
-				list = null;
 		}
 		return list;
 	}
@@ -100,9 +92,6 @@ public class GameDAOImpl implements GameDAO {
 		List<GameDTO> list = new ArrayList<>();
 		String sort = (String)map.get("sort");
 		switch (sort){
-			case "index":
-				list = sqlSession.selectList("game.filteredList", map);
-				break;
 			case "week":
 				list = sqlSession.selectList("game.filteredList", map);
 				break;
@@ -271,5 +260,45 @@ public class GameDAOImpl implements GameDAO {
 	@Override
 	public int totalSearchCount(Map<String, Object> map) {
 		return sqlSession.selectOne("game.totalSearchCount", map);
+	}
+
+	@Override
+	public List<GameDTO> confirmList(Map<String, Object> map) {
+		return sqlSession.selectList("game.confirmList", map);
+	}
+
+	@Override
+	public int confirmListCount(String sort) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("sort", sort);
+		return sqlSession.selectOne("game.confirmListCount", map);
+	}
+
+	@Override
+	public List<String> attachlist(int gnum) {
+		return sqlSession.selectList("game.attachlist", gnum);
+	}
+
+	@Override
+	public void denyGame(int gnum, String userid) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("gnum", gnum);
+		map.put("userid", userid);
+		sqlSession.update("game.denyGame",map);
+	}
+
+	@Override
+	public void gameAllow(GameDTO dto) {
+		sqlSession.update("game.gameAllow", dto);
+	}
+
+	@Override
+	public int game_list_themeCount(Map<String, Object> map) {
+		return sqlSession.selectOne("game.game_list_themeCount", map);
+	}
+
+	@Override
+	public List<GameDTO> game_list_theme(Map<String, Object> map) {
+		return sqlSession.selectList("game.game_list_theme", map);
 	}
 }

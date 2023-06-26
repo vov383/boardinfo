@@ -4,14 +4,16 @@ public class CategoryDTO {
   private int cnum;
   private String gamecategory;
   private String userid;
-  
-  
-  public CategoryDTO() {}
+  private int count;
 
-  public CategoryDTO(int cnum, String gamecategory, String userid) {
-    this.cnum = cnum;
-    this.gamecategory = gamecategory;
-    this.userid = userid;
+  @Override
+  public String toString() {
+    return "CategoryDTO{" +
+            "cnum=" + cnum +
+            ", gamecategory='" + gamecategory + '\'' +
+            ", userid='" + userid + '\'' +
+            ", count=" + count +
+            '}';
   }
 
   public int getCnum() {
@@ -38,12 +40,21 @@ public class CategoryDTO {
     this.userid = userid;
   }
 
-  @Override
-  public String toString() {
-    return "CategoryDTO{" +
-            "cnum=" + cnum +
-            ", gamecategory='" + gamecategory + '\'' +
-            ", userid='" + userid + '\'' +
-            '}';
+  public int getCount() {
+    return count;
   }
+
+  public void setCount(int count) {
+    this.count = count;
+  }
+
+  public CategoryDTO(int cnum, String gamecategory, String userid, int count) {
+    this.cnum = cnum;
+    this.gamecategory = gamecategory;
+    this.userid = userid;
+    this.count = count;
+  }
+
+  public CategoryDTO() {}
+
 }

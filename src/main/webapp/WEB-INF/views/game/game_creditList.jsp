@@ -43,46 +43,14 @@
 
         <div id="contentsMain">
             <div>
-
-                <c:if test="${map.gameKeyword ne 'none'}">
-                    <div class="totalSearchUl">
-                        <ul>
-                            <li><a href="${path}/search/searchAll.do?gameKeyword=${gameKeyword}">통합검색</a></li>
-                            <li><a href="${path}/search/totalSearchMore/게임/${gameKeyword}">게임명</a></li>
-                            <li><a href="${path}/search/totalSearchMore/아티스트/${gameKeyword}">아티스트</a></li>
-                            <li><a href="${path}/search/totalSearchMore/디자이너/${gameKeyword}">디자이너</a></li>
-                            <li><a href="${path}/search/totalSearchMore/퍼블리셔/${gameKeyword}">퍼블리셔</a></li>
-                            <li><a href="${path}/search/totalSearchMore/리뷰게시판/${gameKeyword}">리뷰게시판</a></li>
-                            <li><a href="${path}/search/totalSearchMore/모임게시판/${gameKeyword}">모임게시판</a></li>
-                            <li><a href="${path}/search/totalSearchMore/거래게시판/${gameKeyword}">거래게시판</a></li>
-                        </ul>
-                    </div>
-                </c:if>
-
                 <c:choose>
-                    <c:when test="${not empty map.list}">
-                        <c:if test="${map.filter eq '게임'}">
-                            <c:import url="game_list_module.jsp" charEncoding="UTF-8" />
-                        </c:if>
-                        <c:if test="${map.filter eq '아티스트' or map.filter eq '디자이너' or map.filter eq '퍼블리셔'}">
-                            <c:import url="game_list_moduleFilter.jsp" charEncoding="UTF-8" />
-                        </c:if>
-                        <c:if test="${map.filter eq '리뷰게시판'}">
-                            <c:import url="../review/review_list_moduleNP.jsp" charEncoding="UTF-8" />
-                        </c:if>
-                        <c:if test="${map.filter eq '모임게시판'}">
-                            <c:import url="../gathering/gathering_list_moduleNP.jsp" charEncoding="UTF-8" />
-                        </c:if>
-                        <c:if test="${map.filter eq '거래게시판'}">
-                            <c:import url="../tboard/tboard_list_moduleNP.jsp" charEncoding="UTF-8" />
-                        </c:if>
+                    <c:when test="${not empty map.alist or not empty map.dlist or not empty map.plist}">
+                        <c:import url="game_list_moduleFilter.jsp" charEncoding="UTF-8" />
                     </c:when>
                     <c:otherwise>
                         검색 결과가 없습니다.
                     </c:otherwise>
                 </c:choose>
-
-
 
 
             </div>
