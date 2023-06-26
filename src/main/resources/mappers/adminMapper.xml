@@ -39,13 +39,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <choose>
             <!-- profile이 null인 경우 -->
             <when test="profile == null">
-                INSERT INTO admin (name, admin_id, passwd, nickname, email, hp)
-                VALUES (#{name}, #{admin_id}, #{passwd}, #{nickname}, #{email}, #{hp})
+                INSERT INTO admin (name, admin_id, passwd, nickname, email, hp, del, create_date)
+                VALUES (#{name}, #{admin_id}, #{passwd}, #{nickname}, #{email}, #{hp}, 'n', sysdate)
             </when>
             <!-- profile이 값을 가지고 있는 경우 -->
             <otherwise>
-                INSERT INTO admin (profile, name, admin_id, passwd, nickname, email, hp)
-                VALUES (#{profile}, #{name}, #{admin_id}, #{passwd}, #{nickname}, #{email}, #{hp})
+                INSERT INTO admin (profile, name, admin_id, passwd, nickname, email, hp, del, create_date)
+                VALUES (#{profile}, #{name}, #{admin_id}, #{passwd}, #{nickname}, #{email}, #{hp}, 'n', sysdate)
             </otherwise>
         </choose>
     </insert>
