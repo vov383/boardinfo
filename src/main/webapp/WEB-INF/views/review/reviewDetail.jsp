@@ -282,6 +282,14 @@
             }
         }
 
+        //신고하기 → $("폼아이디).val()
+        function waring(regNum){
+            $("#formWringReport").val(regNum);
+            /*alert($("#reviewDetailGoodKey").val());*/
+            /*alert("클릭 테스트");*/
+            document.formWringReport.submit();
+        }
+
         //좋아요 → $("폼아이디).val()
         function good(regNum){
             $("#reviewDetailGoodKey").val(regNum);
@@ -308,6 +316,11 @@
 <form name="formreviewdel" method="post" action="${path}/review/reviewdelsave.do">
     <input type="hidden" name="reviewDetailKey" id="reviewDelKey">
     <input type="hidden" name="freeFlag" value="${freeFlag}">
+</form>
+
+<%--신고하기--%>
+<form name="formWringReport" method="post" action="${path}/review/reviewdetailGood.do">
+    <input type="hidden" name="reviewDetailKey" id="reviewDetailWringReport">
 </form>
 
 <%--좋아요--%>
@@ -372,14 +385,15 @@
 
                 <input type="hidden" name="regNumHidden" value="${vo.regNum}">
 
-                <button type="button" onclick="btnList()">목록</button>
+                    <button type="button" onclick="btnList()">목록</button>
                 <c:if test="${userid eq vo.createUser || adminid ne null}">
-                <button type="button" onclick ="reviewDel('${vo.regNum}')">삭제</button>
-                <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정</button>
+                    <button type="button" onclick ="reviewDel('${vo.regNum}')">삭제</button>
+                    <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정</button>
                 </c:if>
-                <%--좋아요--%>
+                <%--신고하기, 좋아요--%>
                 <c:if test="${userid ne vo.createUser}">
-                <button type="button" onclick="good('${vo.regNum}')"> &#x1f495 </button>
+                    <button type="button" onclick ="waring('${vo.regNum}')">&#9940;	신고하기</button>
+                    <button type="button" onclick="good('${vo.regNum}')"> &#x1f495 좋아요 </button>
                 </c:if>
 
             <h1>${vo.title}</h1>

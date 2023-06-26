@@ -113,6 +113,17 @@ public class ReviewServiceImpl implements ReviewService {
 
 
 
+	/*신고하기*/
+	@Transactional
+	@Override
+	public void reviewDetailwaringCreate(reviewSerchDTO reviewserchDTO, HttpSession session){
+
+		String userid = (String) session.getAttribute("userid");
+		reviewserchDTO.setCreateUser(userid);
+		reviewDAO.reviewDetailwaringCreate(reviewserchDTO);
+
+	}
+
 	/*리뷰 좋아요*/
 	@Transactional
 	@Override
