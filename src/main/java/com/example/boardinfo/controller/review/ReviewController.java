@@ -31,7 +31,6 @@ public class ReviewController {
 	@RequestMapping("reviewlist.do")
 	public ModelAndView revewlist(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session, PageDTO page, @RequestParam(name="freeFlag") String freeFlag) {
 
-		String userid = (String) session.getAttribute("userid");
 		ModelAndView mav = new ModelAndView();
 
 		/*조회 쿼리 이전에 페이징 처리 먼저 작업 → 조회 쿼리 이전에 불러와야 하기 때문임*/
@@ -75,10 +74,12 @@ public class ReviewController {
 		ModelAndView mav = new ModelAndView();
 
 		String userid = (String) session.getAttribute("userid");
+		String adminid = (String) session.getAttribute("admin_id");
 
 		mav.setViewName("review/reviewDetail");
 		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 		mav.addObject("userid", userid);
+		mav.addObject("adminid", adminid);
 
 		/*댓글 출력*/
 		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
@@ -99,6 +100,7 @@ public class ReviewController {
 		reviewservice.reviewGoodCreate(reviewserchDTO, session);
 
 		String userid = (String) session.getAttribute("userid");
+		String adminid = (String) session.getAttribute("admin_id");
 		ModelAndView mav = new ModelAndView();
 
 		/*userid가 null이면 로그인 페이지로 이동*/
@@ -109,6 +111,7 @@ public class ReviewController {
 		} else {
 			mav.setViewName("review/reviewDetail");
 			mav.addObject("userid", userid);
+			mav.addObject("adminid", adminid);
 			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 
 			/*댓글 출력*/
@@ -241,7 +244,9 @@ public class ReviewController {
 		mav.setViewName("review/reviewDetail");
 
 		String userid = (String) session.getAttribute("userid");
+		String adminid = (String) session.getAttribute("admin_id");
 		mav.addObject("userid", userid);
+		mav.addObject("adminid", adminid);
 
 		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
 		reviewserchDTO.setReviewDetailKey(replycommentsDTO.getRegNum());
@@ -266,7 +271,9 @@ public class ReviewController {
 		mav.setViewName("review/reviewDetail");
 
 		String userid = (String) session.getAttribute("userid");
+		String adminid = (String) session.getAttribute("admin_id");
 		mav.addObject("userid", userid);
+		mav.addObject("adminid", adminid);
 
 		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
 		reviewserchDTO.setReviewDetailKey(replycommentsDTO.getRegNum());

@@ -331,6 +331,13 @@
 <div id="contents">
     <div id="contentsHeader">
         <h2>커뮤니티</h2>
+
+<%--
+        <h2>admin : ${adminid}</h2>
+        <h2>user : ${userid}</h2>
+--%>
+
+
     </div>
 
     <c:if test='${"Y" eq freeFlag}'>
@@ -366,7 +373,7 @@
                 <input type="hidden" name="regNumHidden" value="${vo.regNum}">
 
                 <button type="button" onclick="btnList()">목록</button>
-                <c:if test="${userid eq vo.createUser}">
+                <c:if test="${userid eq vo.createUser || adminid ne null}">
                 <button type="button" onclick ="reviewDel('${vo.regNum}')">삭제</button>
                 <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정</button>
                 </c:if>
@@ -447,8 +454,9 @@
                     <td>${vo.createDate}</td>
                     <td style="display: none">${vo.replyRegNum}</td>
 
+
                         <%--로그인 id와 작성자가 같으면 수정, 삭제 버튼 보이기--%>
-                    <c:if test="${userid eq vo.createUser}">
+                    <c:if test="${userid eq vo.createUser || adminid ne null}">
                         <td name="reply_show_${vo.replyRegNum}${vo.regNum}">
                             <button type="button" onclick="btnReplyEditMode('${vo.replyRegNum}','${vo.regNum}')">수정</button>
                             <button type="button" onclick="btnReplyDel('${vo.replyRegNum}','${vo.regNum}')">삭제</button>
@@ -479,7 +487,7 @@
                     <td style="display: none">${vo.replyRegNum}</td>
 
                         <%--로그인 id와 작성자가 같으면 수정, 삭제 버튼 보이기--%>
-                    <c:if test="${userid eq vo.createUser}">
+                    <c:if test="${userid eq vo.createUser || adminid ne null}">
                         <td name="reply_show_${vo.replyRegNum}${vo.regNum}">
                             <button type="button" onclick="btnReplyEditMode('${vo.replyRegNum}','${vo.regNum}')">수정</button>
                             <button type="button" onclick="btnReplyDel('${vo.replyRegNum}','${vo.regNum}')">삭제</button>
