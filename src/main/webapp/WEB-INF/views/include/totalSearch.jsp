@@ -10,6 +10,7 @@
     <title>BOARDINFO</title>
     <%@ include file="js/header.jsp" %>
     <link rel="stylesheet" href="${path}/include/css/style_search.css">
+    <link rel="stylesheet" href="${path}/include/css/pagenation.css">
 </head>
 
 <body>
@@ -104,6 +105,7 @@
                     <c:import url="../gathering/gathering_list_moduleNP.jsp" charEncoding="UTF-8" >
                         <c:param name="filter" value="모임게시판"></c:param>
                     </c:import>
+
                 </div>
                 </c:if>
 

@@ -34,3 +34,43 @@
 .totalSearchUl ul li a {
     font-size: 13px;
 }
+
+
+/*게임랭킹창의 랭킹 기준 표시 부분*/
+/*리뷰게시판 게임포럼아래 세부항목에 사용*/
+.game_rank_div {
+    width: 100%;
+}
+
+.game_rank_div ul {
+    width: 40%;
+    padding-inline-start: inherit;
+}
+
+.game_rank_div ul li {
+    list-style: none;
+    float: left;
+    width: 20%;
+    height: 30px;
+    text-align: center;
+}
+
+.game_rank_div ul li.choice {
+    font-size: 1.3em;
+    color: black;
+}
+
+.game_rank_div ul li a {
+    display: block;
+    color: rgba(0,0,0,0.6);
+}
+
+.game_rank_div ul li a:hover {
+    font-size: 1.2em;
+    color: black;
+}
+
+.game_rank_div ul li a.selected {
+    font-size: 1.2em;
+    color: black;
+}

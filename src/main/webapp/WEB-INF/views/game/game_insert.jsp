@@ -604,7 +604,7 @@
 					//data: 업로드한 파일 정보와 Http 상태 코드
 					var fileInfo=getGameFileInfo(data);
 					console.log(fileInfo);
-					var html="<div><a href='"+fileInfo.getLink+"'>"+fileInfo.fileName+"</a><br>";
+					var html="<div><span>"+fileInfo.fileName+"</span><br>";
 					html += "<img src='${path}/uploadgame/displayFile?fileName="+data+"'>";
 					html += "<span data-src="+data+">[삭제]</span></div>";
 					html += "<input type='hidden' class='file' value='"+fileInfo.fullName+"'></div>";

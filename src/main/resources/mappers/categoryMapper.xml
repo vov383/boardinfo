@@ -13,8 +13,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="insert">
-		insert into category (cnum, gamecategory, userid)
-		values (seq_category.nextval, #{category}, #{userid})
+		insert into category (cnum, gamecategory, userid, gamecategory_ko)
+		values (seq_category.nextval, #{category}, #{userid}, #{gamecategory_ko})
 	</insert>
 	
 	<insert id="insertmapping">
@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="view" resultType="categoryDto">
-		select c.cnum, c.gamecategory
+		select c.cnum, c.gamecategory, gamecategory_ko
 		from category c, game_category gc
 		where c.cnum = gc.cnum and gc.gnum = #{gnum}
 	</select>
@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 
 	<select id="viewGamecategory" resultType="String">
-		select c.gamecategory
+		select c.gamecategory, c.gamecategory_ko
 		from category c, game_category gc
 		where c.cnum = gc.cnum and gc.gnum = #{gnum}
 	</select>
@@ -71,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete>
 
 	<select id="confirmList" resultType="categoryDto">
-		select 	c.cnum, c.gamecategory
+		select 	c.cnum, c.gamecategory, c.gamecategory_ko
 		from	category c
 		left join 	(
 					select 	cnum, count(*) count
@@ -96,7 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from	(
 				select 	a.*, rownum rn
 				from	(
-						select 	c.cnum, c.gamecategory, gc.count
+						select 	c.cnum, c.gamecategory, gc.count, c.gamecategory_ko
 						from	category c
 						left join 	(
 									select 	cnum, count(*) count

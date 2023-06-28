@@ -35,8 +35,8 @@ public class GameDAOImpl implements GameDAO {
 			case "week":
 				list = sqlSession.selectList("game.gameList", map);
 				break;
-			case "rate":
-				list = sqlSession.selectList("game.gameList_rate", map);
+			case "month":
+				list = sqlSession.selectList("game.gameList_month", map);
 				break;
 			case "newbie":
 				list = sqlSession.selectList("game.gameList_newbie", map);
@@ -95,8 +95,8 @@ public class GameDAOImpl implements GameDAO {
 			case "week":
 				list = sqlSession.selectList("game.filteredList", map);
 				break;
-			case "rate":
-				list = sqlSession.selectList("game.filteredList_rate", map);
+			case "month":
+				list = sqlSession.selectList("game.filteredList_month", map);
 				break;
 			case "newbie":
 				list = sqlSession.selectList("game.filteredList_newbie", map);
