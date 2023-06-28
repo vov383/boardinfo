@@ -320,7 +320,7 @@
 		   , MEMBER M
 		WHERE 1 = 1
 			AND RC.REG_NUM = #{reviewDetailKey}
-			AND RC.DEL = 'N'
+-- 			AND RC.DEL = 'N'
 			AND RC.CREATE_USER = M.USERID(+)
 		/*답글 진입*/
 		<if test="topReplyRegNum != '' and topReplyRegNum != null">
@@ -423,6 +423,7 @@
 				where rnum between 1 and #{size}
 	</select>
 
+	<!--인기글 쿼리-->
 	<select id="getHotAll" resultType="reviewDto">
 		--현재 편의상 조회수 2개이상, 댓글 1개이상, 좋아요 1개이상으로 구성
 		select 	*
