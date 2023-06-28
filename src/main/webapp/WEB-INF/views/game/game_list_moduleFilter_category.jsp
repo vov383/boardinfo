@@ -77,7 +77,7 @@
                             <br>
                             <div class="ellipsis rank02">
                                 <a href="${path}/game/partrank/week?filter=gamecategory&num=${row.cnum}">
-                                    한글컬럼 인풋후 사용
+                                        <%--${row.gamecategory_ko}--%>한글추가요망
                                 </a>
                             </div>
                         </div>

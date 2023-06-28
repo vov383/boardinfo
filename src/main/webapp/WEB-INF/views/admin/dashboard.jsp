@@ -37,6 +37,7 @@
                     <li><a href="${path}/admin/member_list">전체 회원 목록</a></li>
                     <li><a href="${path}/admin/userPostList">전체 글 목록</a></li>
                     <li><a href="#"></a></li>
+                    <li><a href="${path}/admin/confirmList/insert">게임등록 대기목록</a></li>
                 </ul>
             </nav>
         </div>

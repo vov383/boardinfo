@@ -51,8 +51,8 @@
 		
 	<!-- mongo 관련-->
     <mongo:mongo-client id="mongoClient"
-	host="localhost" 
-	port="27017" 
+	host="localhost"
+	port="27017"
 	credentials="boardinfo:1234@board-info">
         <mongo:client-options
 	connections-per-host="8"
@@ -63,8 +63,8 @@
 	socket-timeout="1500"
         />
     </mongo:mongo-client>
- 
- 	<bean id="mongoTemplate" 
+
+ 	<bean id="mongoTemplate"
 		class="org.springframework.data.mongodb.core.MongoTemplate">
 		<constructor-arg ref="mongoClient" />
 	    <constructor-arg name="databaseName" value="board-info" />

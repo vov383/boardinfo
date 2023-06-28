@@ -12,6 +12,16 @@
 <%@ include file="../include/js/header.jsp"%>
 <link rel="stylesheet" href="${path}/include/js/style_game.css">
 	<script src="${path}/include/js/common.js"></script>
+	<style>
+		#fileDrop {
+			float: right;
+			width: 80px;
+			height: 80px;
+			border: 1px solid black;
+			margin-right: 50px;
+			text-align: center;
+		}
+	</style>
 </head>
 
 <body>

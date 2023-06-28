@@ -118,7 +118,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 					group by anum
 					) ga
 		on		a.anum = ga.anum
-		where 	ga.count = 5
+		where 	ga.count = 0
 	</select>
 
 	<delete id="deleteitem">

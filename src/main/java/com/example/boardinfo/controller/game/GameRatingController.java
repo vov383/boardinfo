@@ -3,19 +3,26 @@ package com.example.boardinfo.controller.game;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.service.game.GameRatingService;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("gameRating/*")
 public class GameRatingController {
+    private static final Logger logger=
+            LoggerFactory.getLogger(GameRatingController.class);
 
     @Inject
     GameRatingService gameRatingService;
@@ -118,7 +125,25 @@ public class GameRatingController {
         return num;
     }
 
+    @ResponseBody
+    @RequestMapping("getMoreRatings.do")
+    public ModelAndView getMoreRatings(ModelAndView mav,
+                                       @RequestParam int gnum, HttpSession session,
+                                       @RequestParam String sort,
+                                       @RequestParam(required = false, defaultValue = "1") int curPage
+                                       ) {
 
+        logger.info("파라미터 넘어오는지 확인 : " + sort + "//" + curPage);
+
+        String user_id = (String) session.getAttribute("userid");
+        Map<String, Object> map = gameRatingService.getMoreRatings(gnum, user_id, curPage, sort);
+
+        mav.setViewName("game/game_list_rating_module");
+        mav.addObject("map",map);
+        mav.addObject("sort", sort);
+        return mav;
+
+    }
 
 
 
