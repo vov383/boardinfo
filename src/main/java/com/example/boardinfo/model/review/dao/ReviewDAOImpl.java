@@ -170,16 +170,6 @@ public class ReviewDAOImpl implements ReviewDAO {
     }
 
     @Override
-    public int getHotListCnt(reviewSerchDTO dto) {
-        return sqlSession.selectOne("review.getHotListCnt",dto);
-    }
-
-    @Override
-    public List<ReviewDTO> getHotAll(reviewSerchDTO dto) {
-        return sqlSession.selectList("review.getHotAll", dto);
-    }
-
-    @Override
     public List<ReviewDTO> totalSearch(Map<String, Object> map) {
         return sqlSession.selectList("review.totalSearch", map);
     }

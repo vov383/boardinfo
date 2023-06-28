@@ -1,9 +1,12 @@
 package com.example.boardinfo.controller.review;
 
 import com.example.boardinfo.model.review.dto.*;
+import com.example.boardinfo.service.game.GameServiceImpl;
 import com.example.boardinfo.service.review.ReviewService;
 import com.example.boardinfo.service.review.paging;
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,12 +27,17 @@ import java.util.Map;
 @Controller
 @RequestMapping("review/*")
 public class ReviewController {
+	private static final Logger logger=
+			LoggerFactory.getLogger(ReviewController.class);
 	@Inject
 	ReviewService reviewservice;
 
 	// 리뷰 리스트 페이지
 	@RequestMapping("reviewlist.do")
-	public ModelAndView revewlist(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session, PageDTO page, @RequestParam(name="freeFlag") String freeFlag) {
+	public ModelAndView revewlist(@ModelAttribute reviewSerchDTO reviewserchDTO,
+								  HttpSession session, PageDTO page,
+								  @RequestParam(name="freeFlag") String freeFlag,
+								  @RequestParam(name="detail", required = false, defaultValue = "A") String detail) {
 
 		ModelAndView mav = new ModelAndView();
 
@@ -39,14 +47,32 @@ public class ReviewController {
 		→ 0값으로 조회됨
 */
 //		System.out.println("freeFlag : " + freeFlag);
-		if ("Y".equals(freeFlag) || "N".equals(freeFlag)) {
+		//Y 자유, N 포럼 H 인기 A 전체
+		if ("Y".equals(freeFlag) || "N".equals(freeFlag) || "H".equals(freeFlag) || "A".equals(freeFlag)) {
 			reviewserchDTO.setFreeFlag(freeFlag);
 		}
-
+		logger.info("freeFlag가 안넘어가나?" + freeFlag);
+		logger.info("detail이 안넘어가나?" + detail);
 		if ("Y".equals(reviewserchDTO.getFreeFlag())) {
 			reviewserchDTO.setBoardDivision("'자유게시판'");
-		} else {
-			reviewserchDTO.setBoardDivision("'게임후기', '노하우', '질문'");
+		} else if("N".equals(reviewserchDTO.getFreeFlag())){
+
+			switch (detail){	//게임포럼내 게시글 분기를 만듬.
+				case "A":
+					reviewserchDTO.setBoardDivision("'게임후기', '노하우', '질문'");
+					break;
+				case "Q":
+					reviewserchDTO.setBoardDivision("'질문'");
+					break;
+				case "R":
+					reviewserchDTO.setBoardDivision("'게임후기'");
+					break;
+				case "K":
+					reviewserchDTO.setBoardDivision("'노하우'");
+					break;
+				default:
+					break;
+			}
 		}
 
 
@@ -56,6 +82,8 @@ public class ReviewController {
 
 		/*내가 보는 리스트의 총개수*/
 		int cnt = reviewservice.reviewListCnt(reviewserchDTO);
+		logger.info("카운트가 정확히 찍혀나오는지 : " + cnt);
+
 		page = paging.PagingMath(page, cnt);
 
 		reviewserchDTO.setStart(page.getStart());
@@ -64,6 +92,7 @@ public class ReviewController {
 		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 		mav.addObject("page", page);
 		mav.addObject("freeFlag", reviewserchDTO.getFreeFlag());
+		mav.addObject("detail",detail);
 
 		return mav;
 	}
@@ -478,13 +507,4 @@ public class ReviewController {
 		return map;
 	}
 
-	@GetMapping("hotAll.do")
-	public ModelAndView getHotAll(ModelAndView mav, @RequestParam(required = false, defaultValue = "1") int curPage){
-		Map<String, Object> map = new HashMap<>();
-
-		map = reviewservice.getHotList(curPage);
-		mav.setViewName("review/reviewMain_hot");
-		mav.addObject("map", map);
-		return mav;
-	}
 }

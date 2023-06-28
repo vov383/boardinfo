@@ -11,6 +11,7 @@
     <title>BOARDINFO</title>
     <%@ include file="../include/js/header.jsp"%>
     <link rel="stylesheet" href="${path}/include/css/style_search.css">
+    <link rel="stylesheet" href="${path}/include/css/pagenation.css">
 </head>
 
 <header>

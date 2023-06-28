@@ -63,7 +63,6 @@ public interface ReviewService {
 
     public List<ReviewDTO> getHomeList(Integer size);
     List<ReviewDTO> getHotList(Integer size);
-    Map<String, Object> getHotList(int curPage);
     Map<String, Object> totalSearch(String gameKeyword);
     Map<String, Object> totalSearchMore(Map<String, Object> map);
 

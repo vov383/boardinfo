@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <%@ page session="true"%>
 <!-- 세션사용여부 -->
@@ -91,7 +90,7 @@
 
             <tr>
 
-                <td><div class="wrap t_center"><span class="rank">${row.status}</span></div></td>
+                <td><div class="wrap t_center">${row.status}</div></td>
 
 
                 <td><div class="wrap t_center">
@@ -110,6 +109,7 @@
 
                 <td><div class="wrap t_center">
                     <div class="ellipsis rank03">
+                        <fmt:formatDate value="${row.gathering_date}" pattern="yyyy-MM-dd"/>
                             ${row.gathering_date}
                     </div>
                 </div></td>
@@ -141,7 +141,7 @@
 
             <tr>
 
-                <td><div class="wrap t_center"><span class="rank">${row.status}</span></div></td>
+                <td><div class="wrap t_center">${row.status}</div></td>
 
 
                 <td><div class="wrap t_center">

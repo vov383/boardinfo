@@ -15,7 +15,7 @@
         <title>커뮤니티 - 게임포럼</title>
     </c:if>
 
-
+    <link rel="stylesheet" href="${path}/include/css/style_search.css">
     <style>
 
         @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 100;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.otf) format('opentype');}
@@ -219,7 +219,9 @@
             font-size: 16px;
         }
 
-
+        .totalSearchUl ul li {
+            width: calc((100% / 4) - 2px);
+        }
     </style>
 
     <script>
@@ -291,6 +293,58 @@
         </div>
     </c:if>
 
+    <c:if test='${"A" eq freeFlag}'>
+        <div id="contentsLocation">
+            홈&gt 커뮤니티&gt 전체
+        </div>
+    </c:if>
+
+    <c:if test='${"H" eq freeFlag}'>
+        <div id="contentsLocation">
+            홈&gt 커뮤니티&gt 인기글
+        </div>
+    </c:if>
+
+    <%--목록상단 조건별 정렬--%>
+    <div class="totalSearchUl">
+        <ul>
+            <li<c:if test="${freeFlag eq 'A'}"> class="selected" </c:if>>
+                <a href="${path}/review/reviewlist.do?freeFlag=A">전체</a>
+            </li>
+            <li<c:if test="${freeFlag eq 'H'}"> class="selected" </c:if>>
+                <a href="${path}/review/reviewlist.do?freeFlag=H">인기</a>
+            </li>
+            <li<c:if test="${freeFlag eq 'N'}"> class="selected" </c:if>>
+                <a href="${path}/review/reviewlist.do?freeFlag=N&detail=A">게임포럼</a>
+            </li>
+            <li<c:if test="${freeFlag eq 'Y'}"> class="selected" </c:if>>
+                <a href="${path}/review/reviewlist.do?freeFlag=Y">자유게시판</a>
+            </li>
+        </ul>
+    </div>
+
+    <%--게임포럼인 경우 세부 갈래별 정렬--%>
+    <c:if test="${freeFlag eq 'N'}">
+
+    <div class="game_rank_div">
+        <ul>
+            <li>
+                <a<c:if test="${detail eq 'A'}"> class="selected" </c:if> href="${path}/review/reviewlist.do?freeFlag=N">전체</a>
+            </li>
+            <li>
+                <a<c:if test="${detail eq 'Q'}"> class="selected" </c:if> href="${path}/review/reviewlist.do?freeFlag=N&detail=Q">질문</a>
+            </li>
+            <li>
+                <a<c:if test="${detail eq 'K'}"> class="selected" </c:if> href="${path}/review/reviewlist.do?freeFlag=N&detail=K">노하우</a>
+            </li>
+            <li>
+                <a<c:if test="${detail eq 'R'}"> class="selected" </c:if> href="${path}/review/reviewlist.do?freeFlag=N&detail=R">게임후기</a>
+            </li>
+        </ul>
+    </div>
+
+    </c:if>
+
     <div id="contentsMain">
 
         <%--검색 및 글쓰기 버튼--%>
@@ -299,6 +353,7 @@
             <button type="button" id="search" onclick="searchFu('1')">검색</button>
             <button type="button" onclick="btnReviewInsert()">글쓰기</button>
         </div>
+
 
         <%--본문--%>
         <form name="reviewlist" method="post" action="${path}/review/reviewlist.do">
