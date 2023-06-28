@@ -89,21 +89,13 @@
     overflow: auto;
 }
 
-.category {
+.categories .category {
     font-size: .9em;
     padding: 8px 10px;
     white-space: nowrap;
     background-color: #f0f0f0;
     border-radius: 8px;
     height: 100%;
-}
-
-.category a {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    text-decoration: none;
-
 }
 
 .itemList {
@@ -124,12 +116,42 @@
     min-width: 0;
     border-radius: 8px;
 }
-.imgCard-thumbnail {
-    width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+.imgCard-thumbnail img{
+    width: 80%; /* Adjust the width as needed */
+    max-width: 80%; /* 이미지의 최대 가로 너비를 부모 요소의 가로 너비로 제한합니다. */
+    max-height: 50%;
+
+    object-fit: contain;
+}
+
+
+.info .title a {
+    color:black;
+    text-decoration: none;
+}
+.info .category {
+    background-color: #f0f0f0;
+    border-color: black;
+
+}
+
+.info .category a {
+    text-decoration: none;
+    font-size: .9em;
+    padding: 8px 10px;
+    white-space: nowrap;
+    margin: 5px 0;
+    border-radius: 8px;
+    height: 100%;
+
+}
+.price {
+    color : #dc6e1f;
+}
+
+.price .userNick {
+    color : black;
+    text-decoration: none;
 }
 
 .subInfo {
@@ -151,10 +173,11 @@
     background-position: center;
 }
 
+
 /*페이지네이션*/
 .pagenation {
     display: flex;
-    margin: 20px auto 0 auto;
+    margin: 20px auto;
 }
 
 #curPage {
