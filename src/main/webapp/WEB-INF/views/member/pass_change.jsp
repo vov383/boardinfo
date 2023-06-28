@@ -97,7 +97,7 @@ body {
 			      
 			});
 			
-			document.form1.action="${path}/member/pass_change/${email}";
+			document.form1.action="${path}/member/pass_change/${userid}";
 			document.form1.submit();
 			alert("변경되었습니다. 새 비밀번호로 로그인 해주세요.")
 		});
