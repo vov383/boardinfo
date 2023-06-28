@@ -76,4 +76,13 @@ public class MechanicDAOImpl implements MechanicDAO {
     map.put("gnum",gnum);
     sqlSession.delete("mechanic.deleteGame_Mechanic", map);
   }
+
+  @Override
+  public List<MechanicDTO> confirmList(Map<String, Object> map) {
+    return sqlSession.selectList("mechanic.confirmList", map);
+  }
+  @Override
+  public void deleteitem(int num) {
+    sqlSession.delete("mechanic.deleteitem", num);
+  }
 }

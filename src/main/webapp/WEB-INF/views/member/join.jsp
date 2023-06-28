@@ -173,7 +173,9 @@ function check() {
 		return;
 	}
 	//이메일 정규식
+
 	var exp4 = /^[a-z0-9]{2,15}@[a-z0-9]{2,9}\.[a-z]{2,}$/;
+
 	if(!exp4.test(email)){
 		alert("이메일 형식이 잘못되었습니다. ex)abc@abc.com");
 		$("#email").focus();

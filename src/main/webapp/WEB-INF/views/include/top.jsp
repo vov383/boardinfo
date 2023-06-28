@@ -14,7 +14,7 @@
                 <a href="${path}/" title="보드인포"><img src="${path}/images/boardinfo_logo.png" width="170px"></a>
             </div>
             <div id="header-right">
-                <form name="gameSearch" id="gameSearch" method="get" action="${path}/game/searchAll.do">
+                <form name="gameSearch" id="gameSearch" method="get" action="${path}/search/searchAll.do">
                     <div>
                         <input name="gameKeyword" id="gameKeyword" placeholder="보드게임 찾기" autocomplete="off">
                         <input type="hidden">
@@ -29,6 +29,9 @@
                         <a href="${path}/member/member_join.do" title="회원가입" class="sign" id="signUp">회원가입</a>
                     </c:when>
                     <c:when test="${sessionScope.admin_id != null && !sessionScope.admin_id.equals('')}">
+                        <a title="채팅" href="${path}/gathering/chatRoom.do"">
+                            <img src="${path}/images/chat.png" id="chatImg" alt="채팅">
+                        </a>
                         <!-- admin login 상태 -->
                         <div class="dropdown">
                             <div class="dropbtn"><a title="회원" class="sign" id="signIn">관리자 ${sessionScope.nickname}
@@ -42,13 +45,18 @@
                         <a id="adminLogoutBtn" class="sign">관리자 로그아웃</a>
                     </c:when>
                     <c:otherwise>
+                        <a title="채팅" href="${path}/gathering/chatRoom.do">
+                            <img src="${path}/images/chat.png" id="chatImg" alt="채팅">
+                        </a>
                         <!-- userid로 로그인한 상태 -->
                         <div class="dropdown">
-                            <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.nickname} 님<img
-                                    src="${path}/images/dropdown.png" width="16px"></a></div>
+                            <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.nickname} 님<img src="${path}/images/dropdown.png" width="16px"></a>
+
+                            </div>
                             <div class="dropdown-content">
-                                <a href="${path}/member/mypage/seong">마이페이지</a>
-                                <a href="${path}/member/pass_check_u?userid=${sessionScope.userid}">회원정보</a>
+
+                                <a href="${path}/mypage/goMypage/${sessionScope.userid}">마이페이지</a>
+                                <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
                             </div>
                         </div>
                         <a href="${path}/member/logout.do" class="sign">로그아웃</a>
@@ -63,39 +71,46 @@
 
             <li>
                 <div class="dropdown">
-                    <a href="${path}/game/gamerank/index" class="toMenu" title="게임정보">게임정보<img
-                            src="${path}/images/dropdown.png" width="34px"></a>
+                    <a href="#" class="toMenu" title="게임정보">
+                        게임정보<img src="${path}/images/dropdown.png" width="16px">
+                    </a>
+
                     <div class="dropdown-content">
-                        <a href="${path}/game/gamerank/week">게임순위</a>
-                        <a href="#">카테고리</a>
-                        <a href="#">디자이너</a>
-                        <a href="#">출판사</a>
+                        <a href="${path}/game/gamerank/week">베스트게임</a>
+                        <a href="${path}/game/gamerank/newbie">최신게임</a>
+                        <a href="${path}/game/categoryList">카테고리</a>
+                        <a href="/game/themeList/-">테마</a>
                     </div>
                 </div>
             </li>
             <li>
                 <div class="dropdown">
-                    <a href="#" class="toMenu" title="커뮤니티">커뮤니티<img src="${path}/images/dropdown.png" width="34px"></a>
+                    <a href="#" class="toMenu" title="게임포럼">게임포럼<img src="${path}/images/dropdown.png" width="16px"></a>
                     <div class="dropdown-content">
-                        <a href="#">게임후기</a>
-                        <a href="#">순위포럼</a>
-                        <a href="#">자유게시판</a>
+                        <a href="${path}/review/reviewlist.do?freeFlag=N">게임포럼</a>
+                        <a href="${path}/review/reviewlist.do?freeFlag=Y">자유게시판</a>
+
                     </div>
                 </div>
             </li>
             <li>
                 <div class="dropdown">
-                    <a href="#" class="toMenu" title="오프모임">오프모임<img src="${path}/images/dropdown.png" width="34px"></a>
+                    <a href="${paht}/review/reviewlist.do" class="toMenu" title="자유게시판">자유게시판</a>
+                </div>
+            </li>
+            <li>
+                <div class="dropdown">
+                    <a href="#" class="toMenu" title="오프모임">오프모임<img src="${path}/images/dropdown.png" width="16px"></a>
                     <div class="dropdown-content">
-                        <a href="#">모임모집</a>
-                        <a href="#">모임후기</a>
+                        <a href="${path}/gathering/list.do">모임 목록</a>
+                        <a href="${path}/gathering/add.do">모임 모집 글 작성</a>
                     </div>
                 </div>
             </li>
             <li>
                 <div class="dropdown">
                     <a href="${path}/tboard/list.do" class="toMenu" title="중고장터">중고장터
-                        <img src="${path}/images/dropdown.png" width="34px"></a>
+                        <img src="${path}/images/dropdown.png" width="16px"></a>
                     <div class="dropdown-content">
                         <a href="${paht}/tboard/list.do">전체</a>
                         <a href="${paht}/tboard/list.do?select_category=s">판매</a>
@@ -110,8 +125,10 @@
 </div>
 
 <script>
+
+
     function searchAll() {
-        const keyword = $("#gameKeyword").val();
+        var keyword = $("#gameKeyword").val();
         if (keyword !== "") {
             document.gameSearch.submit();
         }
@@ -119,15 +136,20 @@
 
     //검색기능
     $(document).ready(function () {
+
         //검색창 키입력후
-        $("#gameKeyword").keyup(function () {
-            if (Event.keyCode === '13') { //엔터입력시
+        $("#gameKeyword").keyup(function(event) {
+            if (event.which === 13) { // 엔터 입력시
+                event.preventDefault();
                 searchAll();  //검색하러감
             } else {
-                //자동완성
                 setTimeout(function () {  //딜레이
-
+                //자동완성
                     var input = $("#gameKeyword").val();
+
+                    if (input == "")
+                        $('#gameSearchDiv').empty()
+                    else {
                     $.ajax({
                         type: "get",
                         url: "${path}/game/autoGame.do/" + input,
@@ -143,8 +165,6 @@
                                     var gamephoto_url = item.gamephoto_url;
                                     var bgg_thumbnail = item.bgg_thumbnail;
                                     var bggnum = item.bggnum;
-                                    console.log(gnum);
-                                    console.log(gametitle);
 
                                     //var str => #gameSearchDiv 안에 들어갈 태그 입력
                                     var str = "<div class='searched_top'><div class='imageDiv'>";
@@ -164,7 +184,6 @@
 
                                     gameSearchDiv.append(str);
                                 });
-
                             } else {
                                 gameSearchDiv.hide(); // 값이 없을 경우 숨기기
                             }
@@ -173,10 +192,15 @@
                             console.log("에러..");
                         }
                     });
-                    if (input == "") $('#gameSearchDiv').empty();
+                    }
+                }, 1000) //settimeout 콜백함수로 1초 딜레이 후 검색창 작동
 
-                }, 500) //settimeout 콜백함수로 0.5초 딜레이 후 검색창 작동
+               ;
+
+
+
             }
+
         });
 
         /*관리자 로그아웃 버튼*/
@@ -187,21 +211,26 @@
         });
     });
 
-    // JavaScript to toggle dropdown
+    // javascript로 만든 드롭다운
     document.addEventListener('click', function (event) {
+        /*가장 가까운 dropdown클래스를 변수에 이벤트 할당*/
         var dropdown = event.target.closest('.dropdown');
         if (dropdown) {
+            /*dropdown이 true면 classList.toggle() show클래스가 없으면 추가 & 있으면 제거*/
             dropdown.querySelector('.dropdown-content').classList.toggle('show');
         } else {
+            /*dropdown이 false면*/
             var dropdowns = document.getElementsByClassName('dropdown-content');
             for (var i = 0; i < dropdowns.length; i++) {
                 var dropdownContent = dropdowns[i];
+                /*show클래스를 갖고 있으면 제거*/
                 if (dropdownContent.classList.contains('show')) {
                     dropdownContent.classList.remove('show');
                 }
-            }
-        }
+            }//for문 end
+        } //if else문 end
     });
+
 
 </script>
 <style>
@@ -239,5 +268,7 @@
     .dropdown:hover button {
         background-color: #eaeaea;
     }
+
+
 
 </style>

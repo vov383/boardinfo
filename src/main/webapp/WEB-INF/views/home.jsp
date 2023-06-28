@@ -29,14 +29,19 @@
         }
 
         .boxForList{
-            flex-basis: 50%;
+            min-width: 50%;
+            max-width: 50%;
             display: flex;
             flex-direction: column;
             border-bottom: 2px solid #d9d9d9;
         }
 
         div[class='boxForList']:first-of-type{
-            margin-right: 70px;
+            padding-right: 35px;
+        }
+
+        div[class='boxForList']:nth-of-type(2){
+            padding-left: 35px;
         }
 
         .more{
@@ -63,6 +68,17 @@
             font-weight: bold;
         }
 
+        .boxForList > div:first-of-type > span:nth-of-type(2){
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+        }
+
+        .boxForList > div:first-of-type > span:nth-of-type(2) > a{
+            padding: 0;
+            margin: 0;
+        }
+
         .list{
             padding: 8px 0;
             display: flex;
@@ -71,6 +87,9 @@
 
         .list > div{
             padding: 3px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .list a{
@@ -83,11 +102,13 @@
         }
 
         .cbadge{
-            width: 85px;
+            width: 100px;
             border-radius: 5px;
             padding: 0 10px;
-            margin-right: 6px;
+            margin-right: 10px;
             background-color: #d9d9d9;
+            display: inline-block;
+            text-align: center;
         }
 
         .reply{
@@ -95,6 +116,7 @@
             color: #C53A32;
             font-size: 0.8em;
         }
+
         #carouselDiv {
             height: 561px;
             margin-bottom: 50px;
@@ -257,7 +279,7 @@
             <div>
                 <div class="boxForList">
                     <div><span>HOT! 보드인이 주목중인 게시글</span>
-                        <span><a class="more" href="${path}/review/reviewlist.do">&gt</a></span></div>
+                        <span><a class="more" href="${path}/review/reviewlist.do?freeFlag=H">&gt</a></span></div>
 
                     <div class="list" id="hotList">
                     </div>
@@ -265,7 +287,7 @@
 
                 <div class="boxForList">
                     <div><span>커뮤니티</span>
-                        <span><a class="more" href="${path}/review/reviewlist.do">&gt</a></span></div>
+                        <span><a class="more" href="${path}/review/reviewlist.do?freeFlag=A">&gt</a></span></div>
 
                     <div class="list" id="communityList">
                     </div>
@@ -302,7 +324,7 @@
 
 <br>
 <h1><a href="${path}/member/member_list.do" style="color: black;">인터셉터 확인</a></h1>
-<h1><a href="${path}/review/reviewlist.do" style="color: black;">Review List</a></h1>
+<br>
 
 
 

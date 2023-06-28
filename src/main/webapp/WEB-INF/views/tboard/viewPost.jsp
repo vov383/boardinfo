@@ -97,7 +97,6 @@
     <script type="text/javascript">
         $(function () {
 
-
             /* 댓글 목록 출력 */
             getReplies();
 
@@ -128,7 +127,7 @@
                             alert("댓글 달기 실패");
                         }
                     },
-                    error: function () {
+                    error: function (request, status, error) {
                         alert("댓글 달기 실패");
                     }
                 });
@@ -216,7 +215,7 @@
 
         });
         /* dom요소가 다 실행되고 나면 실행되는 함수 */
-        window.onload = function () {
+        window.addEventListener('load', function () {
             /* 이미지 목록 출력 */
             let tb_num = ${map.dto.tb_num};
             /* 비동기 방식으로 첨부파일 가져옴... */
@@ -226,23 +225,76 @@
                 data: {"tb_num" : tb_num},
                 dataType: "json",
                 success: function (result) {
-                    /* 이미지 fullName으로 반복 */
-                    $.each(result, function (index, fullName) {
-                        /* img element 생성하고 src 설정하기
-                        * src에 대한 설명 => DB에는 이미지 파일이 경로와 s_가 더해져서 썸네일 파일명이 저장됨.
-                        * fullName.substring(0, 12)는 디렉토리
-                        * fullName.substring(14)는 s_를 뺀 나머지 uuid가 적용된 파일명 */
-                        var image = $("<img>").attr('src', '${path}/resources/uploaded_image'+ fullName.substr(0,12)+fullName.substr(14));
+                    /*이미지 경로는 result에 ArrayList로 담겨있음.*/
 
-                        /* imgSection에 image를 append */
-                        $(".imgSection").append(image);
+                    /*이미지 경로에서 '/_s' 를 모두 '/' 로 replace*/
+                    var originalFullName = result.map(function(fullName) {
+                        return fullName.replace('/s_', '/');
                     });
+
+                    /*부스트스랩 캐러셀 인디케이터 html 태그를 동적으로 생성*/
+
+                    var indicatorsHtml = '';
+                    originalFullName.forEach(function(fullName, index) {
+                        var isActive = (index === 0) ? 'active' : '';
+                        indicatorsHtml += '<button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="' + index + '" class="' + isActive + '" aria-current="true" aria-label="Slide ' + (index + 1) + '"></button>\n';
+                    });
+
+                    /*부트스트랩 아이템 태그 생성*/
+                    var itemsHtml = '';
+                    originalFullName.forEach(function(fullName, index) {
+                        var isActive = (index === 0) ? 'active' : '';
+                        itemsHtml += '<div class="carousel-item ' + isActive + '">\n';
+                        itemsHtml += '  <img src="'+'${path}/resources/uploaded_image' + fullName + '" class="d-block w-100" alt="...">\n';
+                        itemsHtml += '</div>\n';
+                    });
+
+                    // carouselHtml에 indicatorsHtml 과 itemsHtml 태그를 결합시켜.
+                    var carouselHtml = '<div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">\n' +
+                        '  <div class="carousel-indicators">\n' +
+                        indicatorsHtml +
+                        '  </div>\n' +
+                        '  <div class="carousel-inner">\n' +
+                        itemsHtml +
+                        '  </div>\n' +
+                        '  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">\n' +
+                        '    <span class="carousel-control-prev-icon" aria-hidden="true"></span>\n' +
+                        '    <span class="visually-hidden">Previous</span>\n' +
+                        '  </button>\n' +
+                        '  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">\n' +
+                        '    <span class="carousel-control-next-icon" aria-hidden="true"></span>\n' +
+                        '    <span class="visually-hidden">Next</span>\n' +
+                        '  </button>\n' +
+                        '</div>';
+
+                    // carouselHtml을 imgSection 에 결합시켜
+                    var imgSection = document.getElementById('imgSection');
+                    imgSection.innerHTML = carouselHtml;
+
+
+                    /*이미지 경로는 result에 ArrayList로 담겨있음.*/
+
+                    /*이미지 경로에서 '/_s' 를 모두 '/' 로 replace*/
+                    var originalFullName = result.map(function(fullName) {
+                        return fullName.replace('/s_', '/');
+                    });
+
+                    /*부스트스랩 캐러셀 인디케이터 html 태그를 동적으로 생성*/
+                    /*부트스트랩 아이템 태그 생성*/
+                    var itemsHtml = '';
+                    originalFullName.forEach(function(fullName, index) {
+                        var isActive = (index === 0) ? 'active' : '';
+                        itemsHtml += '<div class="carousel-item ' + isActive + '">\n';
+                        itemsHtml += '  <img src="' + '${path}/resources/uploaded_image' + fullName + '" class="d-block w-80" alt="...">\n';
+                        itemsHtml += '</div>\n';
+                    });
+
                 },
                 error: function(xhr, status, error){
-                    alert("AJax Fail");
+                    alert("이미지 목록 가져오기 실패");
                 }
             }); //이미지 목록 ajax End
-        };
+        });// window.addEventListener('load', function(){}); End
 
         /*댓글 목록 출력 함수*/
         function getReplies() {
@@ -300,11 +352,11 @@
                             //attribute는 속성, property는 상태라서 그런듯?
                             let childInsertLink = $('<a>').addClass('insertChildReply').attr("href", "javascript:showChildCommentForm(" + re_list[i].reply_reg_num + ")");
 
-                            let childReplyImg = $("<img>").attr({
-                                src: "${path}/images/reply_arrow.png",
-                                width: "15px"
-                            });
-                            childInsertLink.append(childReplyImg);
+                            <%--let childReplyImg = $("<img>").attr({--%>
+                            <%--    src: "${path}/images/reply_arrow.png",--%>
+                            <%--    width: "15px"--%>
+                            <%--});--%>
+                            childInsertLink.html('<i class="fa-solid fa-reply"></i>대댓글');
                             leftButtonDiv.append(childInsertLink);
                             leftDiv.append(leftButtonDiv);
 
@@ -313,11 +365,11 @@
 
                             let replyChangeLink = $('<a>').addClass('changeReply').prop("href", "javascript:changeReply(" + re_list[i].reply_reg_num + ")");
 
-                            let replyChangeImg = $("<img>").attr({
+                            /*let replyChangeBtn = $("<a>").attr({
                                 src: "${path}/images/trade/changeBtn.png",
                                 width: "30px"
-                            });
-                            replyChangeLink.append(replyChangeImg);
+                            });*/
+                            replyChangeLink.html('<i class="fa-regular fa-comment-dots"></i>수정|삭제');
                             rightButtonDiv.append(replyChangeLink);
                             rightDiv.append(rightButtonDiv);
 
@@ -488,7 +540,8 @@
             </div>
         </div>
         <div id="contentsMain">
-            <section class="imgSection">
+            <section class="imgSection" id="imgSection">
+
             </section>
             <section class="titleSection">
                 <div class="profileAndNickName">
@@ -496,24 +549,24 @@
                         <div class="userImg"><a class="userProfile"><img src="${path}/images/trade/defaultProfile.png"
                                                                          alt="유저 프로필 사진"></a></div>
                         <div class="dot"></div>
-                        <div class="nickName"><a class="userNickName">유저 닉네임(${map.dto.create_user})</a></div>
+                        <div class="nickName"><a class="userNickName">${map.dto.nickname}(${map.dto.create_user})</a></div>
                         <div class="dot"></div>
-                        <div class="dateTime"><i class="fa-regular fa-timer"></i><fmt:formatDate
-                                value="${map.dto.create_date}"
-                                pattern="yyyy-MM-dd hh:mm:ss"/></div>
+                        <div class="dateTime"><i class="fa-regular fa-timer"></i>
+                            ${map.dto.create_date}
+                        </div>
                         <div class="dot"></div>
                     </div>
                 </div>
                 <div class="categoryAndTitle">
                     <div class="category">
                         <c:choose>
-                            <c:when test="${map.dto.category == 's'}">
+                            <c:when test="${map.dto.category eq '판매'}">
                                 판매
                             </c:when>
-                            <c:when test="${map.dto.category == 'b'}">
+                            <c:when test="${map.dto.category eq '구매'}">
                                 구매
                             </c:when>
-                            <c:when test="${map.dto.category == 'n'}">
+                            <c:when test="${map.dto.category eq '나눔'}">
                                 나눔
                             </c:when>
                             <c:otherwise>
@@ -524,7 +577,7 @@
                     <div class="title">${map.dto.title}</div>
                 </div>
                 <div class="price">
-                    <fmt:formatNumber value="${map.dto.price}" pattern="###,###" /><div class="dot"></div><span>원</span>
+                    ${map.dto.price}<div class="dot"></div><span>원</span>
                 </div>
             </section>
 
@@ -533,7 +586,7 @@
                     ${map.dto.description}
                 </div>
                 <c:choose>
-                    <c:when test='${map.dto.address1 != null || map.dto.address1.equals("")}'>
+                    <c:when test='${map.dto.address1 != null || !map.dto.address1.equals("")}'>
                         <div class="placeContainer">
                             <div id="placeUpper">
                                 <div>
@@ -640,7 +693,8 @@
                                 </script>
                                 <div class="addressContainer">
                                     <ul>
-                                        <li>장소:&nbsp&nbsp${map.dto.address1} ${map.dto.address2} ${map.dto.address3}</li>
+                                        <li>장소:&nbsp;&nbsp;${map.dto.address1} ${map.dto.address2} ${map.dto.address3}</li>
+                                        <li>value="${map.dto.place_name}"</li>
                                     </ul>
                                 </div>
                             </div>

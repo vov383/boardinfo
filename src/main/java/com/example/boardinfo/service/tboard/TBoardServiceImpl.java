@@ -3,6 +3,7 @@ package com.example.boardinfo.service.tboard;
 import com.example.boardinfo.model.tboard.dao.TBoardDAO;
 import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
 import com.example.boardinfo.model.tboard.dto.TBoardDTO;
+import com.example.boardinfo.model.tboard.dto.TradeSearchDTO;
 import com.example.boardinfo.util.Pager;
 import com.example.boardinfo.util.UploadFileUtils;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -26,32 +28,23 @@ public class TBoardServiceImpl implements TBoardService {
 	TBoardDAO tboardDao;
 
 	@Override
-	public int countArticle(String select_category, String search_option, String keyword) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("select_category", select_category);
-		map.put("search_option", search_option);
-		map.put("keyword", "%"+keyword+"%");
-		return tboardDao.countArticle(map);
+	public int countArticle(TradeSearchDTO sDto) {
+		return tboardDao.countArticle(sDto);
 	}
 	@Override
-	public Map<String, Object> list(String select_category, String search_option, String keyword, int curPage) {
+	public Map<String, Object> list(TradeSearchDTO sDto) {
+
+		int count = tboardDao.countArticle(sDto);
+		Pager pager = new Pager(count, sDto.getCurPage(), 9);
+		sDto.setStart(pager.getPageBegin());
+		sDto.setEnd(pager.getPageEnd());
+
+		List<TBoardDTO> list = tboardDao.list(sDto);
+//		logger.info("@@@list 값 : @@@@@@@@ : "+list);
 		Map<String, Object> map = new HashMap<>();
-		map.put("select_category", select_category);
-		map.put("search_option", search_option);
-		map.put("keyword", "%"+keyword+"%");
-
-		int count = tboardDao.countArticle(map);
-		Pager pager = new Pager(count, curPage, 9);
-		int start = pager.getPageBegin();
-		int end = pager.getPageEnd();
-
-		map.put("start", start);
-		map.put("end", end);
-
-		List<TBoardDTO> list = tboardDao.list(map);
-//		List<String> fList = tboardDao.getFirstImage();
-
-		map.put("keyword", keyword);
+		sDto.setKeyword(sDto.getKeyword().substring(1, sDto.getKeyword().length()-1));/*keyword에서 맨앞%, 맨뒤% 제거*/
+		map.put("count", count);
+		map.put("sDto", sDto);
 		map.put("list", list);
 //		map.put("fList", fList);
 		map.put("pager", pager);
@@ -61,7 +54,16 @@ public class TBoardServiceImpl implements TBoardService {
 	@Transactional
 	@Override
 	public void insert(TBoardDTO dto, MultipartFile[] files, String uploadPath) throws Exception {
-			int result =  tboardDao.insert(dto);
+		
+		/*spring HtmlUtils를 활용해서 특수문자 처리*/
+		String title = HtmlUtils.htmlEscape(dto.getTitle());
+		String description = HtmlUtils.htmlEscape(dto.getDescription());
+		String price = HtmlUtils.htmlEscape(dto.getPrice());
+		dto.setTitle(title);
+		dto.setDescription(description);
+		dto.setPrice(price);
+		
+		int result =  tboardDao.insert(dto);
 			if(result == 1){/*insert에 성공하면*/
 
 				for(int i=0; i< files.length; i++) {
@@ -125,15 +127,11 @@ public class TBoardServiceImpl implements TBoardService {
 	}
 
 	@Override
-	public void deleteFile(String fileName) {
-		tboardDao.deleteFile(fileName);
+	public int deleteFile(Map<String, String> map) {
+		int result = tboardDao.deleteFile(map);
+		return result;
 	}
 
-
-    @Override
-	public void increaseRecnt(int tb_num) {
-		tboardDao.increaseRecnt(tb_num);
-	}
 
 	@Override
 	public List<String> getAttach(int tb_num) {
@@ -154,4 +152,57 @@ public class TBoardServiceImpl implements TBoardService {
 		return list;
 
 	}
+
+	@Override
+	public List<TBoardDTO> totalSearch(String gameKeyword) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("gameKeyword", gameKeyword);
+		map.put("filter", "none");
+		return tboardDao.totalSearch(map);
+	}
+
+	@Override
+	public Map<String, Object> totalSearchMore(Map<String, Object> map) {
+		int curPage = Integer.parseInt(String.valueOf(map.get("curPage")));
+
+		int count = tboardDao.totalSearchCount(map);
+
+		Pager pager = new Pager(count, curPage, 10);
+		int start = pager.getPageBegin();
+		int end = pager.getPageEnd();
+
+		map.put("start",start);
+		map.put("end",end);
+
+
+		List<TBoardDTO> list = tboardDao.totalSearch(map);
+		map.put("list",list);
+		map.put("count",count);
+		map.put("pager",pager);
+
+		return map;
+	}
+
+
+	/*중고거래 좋아요*/
+	@Transactional
+	@Override
+	public int goodCreate(TradeSearchDTO sDto, HttpSession session){
+		String userid = (String) session.getAttribute("userid");
+		String tb_num = sDto.getTb_num();
+		/*좋아요 KEY는 USERID + TB_NUM*/
+		String goodkey = userid+tb_num;
+		sDto.setGoodkey(goodkey);
+		sDto.setCreate_user(userid);
+		return tboardDao.goodCreate(sDto);
+
+	}
+	@Override
+	public int goodDelete(TradeSearchDTO sDto, HttpSession session) {
+		String userid = (String) session.getAttribute("userid");
+		sDto.setCreate_user(userid);
+		return tboardDao.goodDelete(sDto);
+	}
+
+	
 }

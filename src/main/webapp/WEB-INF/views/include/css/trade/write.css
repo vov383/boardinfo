@@ -139,6 +139,8 @@ form {
     display: flex;
     width: 100%;
 }
+
+/*이미지 드래그 앤 드롭 영역 시작*/
 :root {
     --bgColor: #3a3a3a;
     --hoverBg: #616161;
@@ -206,6 +208,9 @@ form {
     object-fit: cover;
     border-radius: 8px;
 }
+/*이미지 드래그 앤 드롭 영역 끝*/
+
+
 .labelAndItem {
     display: flex;
     flex-direction: row;

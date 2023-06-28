@@ -102,7 +102,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		address1, address2, place_name, maxpeople, view_count, nickname,
 		(select count(*)
 		from gathering_reply
-		where gathering_id = g.gathering_id and show='y') as reply_count,
+		where gathering_id = g.gathering_id) as reply_count,
 		(select count(*)
 		from attendee
 		where gathering_id = g.gathering_id and type = 'a') as attendee_count
@@ -128,7 +128,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
 
 	<if test="showAvailable==true">
-	and (sysdate + 1/48 ) <![CDATA[<]]> gathering_date
+	and sysdate <![CDATA[<]]> gathering_date
 	</if>
 
 	<if test="from!=null">
@@ -276,7 +276,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				from attendee
 				where gathering_id = #{gathering_id} and type = 'a'
 			   ) as attendeeCount,
-			   attendSystem, show
+			   attendSystem, show, gathering_date
 		from gathering
 		where gathering_id = #{gathering_id}
 	</select>
@@ -340,8 +340,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="gaListByUserid" resultType="gatheringDTO">
 		select gathering_id,
-			   writer_id,
-			   post_date,
+			   m.userid,
+			   post_date as create_date,
 			   title,
 			   gathering_date,
 			   address1,
@@ -353,10 +353,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			   (select count(*)
 				from attendee
 				where gathering_id = g.gathering_id
-				  and type = 'a') as attendee_count
+				  and type = 'a') as attendee_count,
+			   (select count(*)from GATHERING_REPLY where GATHERING_ID =g.GATHERING_ID) re_count
+
 		from gathering g
 				 join member m on g.writer_id = m.userid
-		where show = 'y' and userid = #{userid}
+		where show = 'y'
+		  and userid = #{userid}
 		order by gathering_id
 				desc
 	</select>
@@ -372,7 +375,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 						select g.gathering_id, g.post_date, g.title, g.address1,
 							   (select count(*)
 								from gathering_reply
-								where gathering_id = g.gathering_id and show = 'y') as reply_count
+								where gathering_id = g.gathering_id) as reply_count
 						from gathering g
 						where show = 'y'
 					)a
@@ -400,6 +403,72 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		set show = 'n', updater_id = #{updater_id}, update_date = sysdate
 		where reply_id = #{reply_id}
 	</update>
+
+
+	<select id="getAttendingGatheringList" resultType="gatheringDTO">
+		select a.gathering_id, g.title,
+			   (select count(*)
+				from attendee a2
+				where a.gathering_id = a2.gathering_id and type = 'a') as attendee_count
+		from attendee a
+				 join gathering g on a.gathering_id = g.gathering_id and g.show = 'y'
+		where user_id = #{user_id} and type = 'a'
+	</select>
+
+	<select id="getMyActiveChats" resultType="Integer">
+		select a.gathering_id
+		from attendee a
+		join gathering g on a.gathering_id = g.gathering_id
+		where user_id = #{user_id} and type = 'a' and g.finishChat = 'n'
+	</select>
+
+
+	<update id="updateLastVisit">
+		update attendee
+		set last_visit = #{date}
+		where gathering_id = #{gathering_id} and user_id = #{user_id}
+	</update>
+
+
+	<select id="totalSearch" resultType="gatheringDto">
+		select 	gathering_id, post_date, title, gathering_date, address1, address2, view_count, maxpeople,
+				attendee_count, rn
+		from	(
+				select 	gathering_id, post_date, title, gathering_date, address1, address2, view_count, maxpeople,
+						attendee_count, rownum rn
+				from	(
+						select	gathering_id, post_date, title, gathering_date, address1, address2, view_count,maxpeople,
+								(
+								select 	count(*)
+								from 	attendee
+								where 	gathering_id = g.gathering_id and type = 'a'
+								) as attendee_count
+						from	gathering g
+						where 	regexp_like(title, #{gameKeyword},'i') AND g.show = 'y'
+						order by
+					            CASE WHEN regexp_like(title, '^'||#{gameKeyword},'i')
+					            THEN 1
+        			            ELSE 2
+        			            END
+        			            , gathering_date desc
+        			    )
+        	    )
+		<choose>
+			<when test="filter != null and 'none'.equalsIgnoreCase(filter)">
+				where rn between 1 and 6
+			</when>
+			<otherwise>
+				where rn between #{start} and #{end}
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="totalSearchCount" resultType="int">
+		select	count(*)
+		from	gathering g
+		where 	regexp_like(title, #{gameKeyword},'i') AND g.show = 'y'
+	</select>
+
 
 
 </mapper>

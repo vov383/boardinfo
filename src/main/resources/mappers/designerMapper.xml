@@ -72,6 +72,58 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				 from	designer
 				 where	designer=#{designer})
 	</delete>
+
+	<select id="totalSearch" resultType="designerDto">
+		SELECT 	dnum, designer, rn
+		from	(
+				SELECT 	dnum, designer, rownum rn
+				from	(
+						select 	dnum, designer
+						from	designer
+		<if test="gameKeyword != null and !'none'.equalsIgnoreCase(gameKeyword)">
+						where	regexp_like(designer, #{gameKeyword},'i')
+						order by
+							CASE WHEN regexp_like(designer, '^'||#{gameKeyword},'i')
+							THEN 1
+        			        ELSE 2
+        			        END
+		</if>
+        			    )
+		<choose>
+			<when test="filter != null and 'none'.equalsIgnoreCase(filter)">
+				)
+				where rn between 1 and 12
+			</when>
+			<otherwise>
+				)
+				where rn between #{start} and #{end}
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="totalSearchCount" resultType="int">
+		select 	count(*)
+		from	designer
+		<if test="gameKeyword != null and !'none'.equalsIgnoreCase(gameKeyword)">
+		where	regexp_like(designer, #{gameKeyword},'i')
+		</if>
+	</select>
+
+	<select id="confirmList" resultType="designerDto">
+		select 	d.dnum, d.designer
+		from	designer d
+		left join 	(
+					select 	dnum, count(*) count
+					from	game_designer
+					group by dnum
+					) gd
+		on		d.dnum = gd.dnum
+		where	gd.count = 0
+	</select>
+
+	<delete id="deleteitem">
+		delete from designer where dnum=#{num}
+	</delete>
 	
 </mapper>
 
