@@ -19,4 +19,6 @@ public interface GameRatingService {
     public List<GameRatingDTO> getTopRatings(int gnum, int number, String user_id);
     public int likeIt(int gnum, String writer_id, String user_id);
     public int unLikeIt(int gnum, String writer_id, String user_id);
+
+    Map<String, Object> getMoreRatings(int gnum, String user_id, int curPage, String sort);
 }

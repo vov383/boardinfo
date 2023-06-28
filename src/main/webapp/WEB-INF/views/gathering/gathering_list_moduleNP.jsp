@@ -12,7 +12,7 @@
     <table border="1" style="width:100%">
 
         <colgroup>
-            <col style="width: 62px"><!-- 카테고리 -->
+            <col style="width: 130px"><!-- 카테고리 -->
             <col style="width: 160px"><!-- 지역 -->
             <col><!-- 제목 -->
             <col style="width: 160px"><!-- 시행날짜 -->

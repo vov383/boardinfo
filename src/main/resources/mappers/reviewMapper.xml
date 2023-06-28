@@ -459,7 +459,7 @@
 								category,
 								title,
 								views,
-								create_date as createDate,
+								to_char(create_date, 'yyyy-mm-dd') as createDate,
 								(	SELECT 	COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N')
 								AS GOOD,
 						        (	SELECT 	COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM )

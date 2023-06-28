@@ -61,9 +61,15 @@ public class GameController {
 	@RequestMapping("insert.do")
 	public String insert(@ModelAttribute GameDTO dto,HttpSession session) {
 		String userid = (String)session.getAttribute("userid");
+		String admin_id = (String)session.getAttribute("admin_id");
 
 		if(userid != null)
 			dto.setCreate_user(userid);
+		else if(admin_id != null)
+			dto.setCreate_user(admin_id);
+		else
+			return "home";
+
 		gameService.gameinsert(dto);
 		return "home";
 	}
@@ -72,12 +78,22 @@ public class GameController {
 	@RequestMapping("view.do")
 	public ModelAndView view(ModelAndView mav, int gnum, HttpServletRequest request,
 							 HttpSession session, HttpServletResponse response) throws Exception {
+		String userid = (String)session.getAttribute("userid");
+		String admin_id = (String)session.getAttribute("admin_id");
+		String logonid = "";
+
+		if(userid != null)
+			logonid = userid;
+		else if(admin_id != null)
+			logonid = admin_id;
+
+
 		//조회수
 		gameService.increaseViewcnt(gnum, request, response);
 		//정보
 		Map<String, Object> map = gameService.view(gnum);
 		//평가정보
-		Map<String, Object> statisticMap = gameRatingService.getStatistic(gnum, (String)session.getAttribute("userid"));
+		Map<String, Object> statisticMap = gameRatingService.getStatistic(gnum, logonid);
 
 		mav.setViewName("game/game_viewDetail");
 		mav.addObject("map", map);
@@ -151,9 +167,17 @@ public class GameController {
 	@RequestMapping("update.do")
 	public String update(@ModelAttribute GameDTO dto,HttpSession session) {
 		String userid = (String)session.getAttribute("userid");
+		String admin_id = (String)session.getAttribute("admin_id");
+		String logonid = "";
 
 		if(userid != null)
-			dto.setUpdate_user(userid);
+			logonid = userid;
+		else if(admin_id != null)
+			logonid = admin_id;
+		else{
+			return "home";
+		}
+		dto.setUpdate_user(logonid);
 
 		gameService.gameupdate(dto);
 		return "home";
@@ -162,7 +186,18 @@ public class GameController {
 	@RequestMapping("delete.do")
 	public String delete(@RequestParam("delete_gnum")int gnum, HttpSession session){
 		String userid = (String)session.getAttribute("userid");
-		gameService.deleteGame(gnum, userid);
+		String admin_id = (String)session.getAttribute("admin_id");
+		String logonid = "";
+
+		if(userid != null)
+			logonid = userid;
+		else if(admin_id != null)
+			logonid = admin_id;
+		else{
+			return "home";
+		}
+
+		gameService.deleteGame(gnum, logonid);
 		return "home";
 	}
 
@@ -185,6 +220,7 @@ public class GameController {
 		return map;
 	}
 
+	//메인페이지 캐러셀속 게임 출력
 	@RequestMapping("gameListMain.do")
 	public ModelAndView gameListMain(ModelAndView mav){
 		Map<String, Object> map = gameService.gameListMain();
@@ -193,6 +229,7 @@ public class GameController {
 		return mav;
 	}
 
+	//카테고리별 전체목록
 	@GetMapping(value = "totalSearchMore/{filter}")
 	public ModelAndView totalSearchMore(ModelAndView mav, Map<String, Object> map,
 										@RequestParam(required = false, defaultValue = "1") int curPage,

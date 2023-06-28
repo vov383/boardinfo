@@ -56,6 +56,7 @@ window.onload = function() {
     });
 
 };
+
 function changeEvent(event){
     const { target } = event;
     return [...target.files];
@@ -71,6 +72,7 @@ function handleUpdate(fileList) {
         // 새로운 FileReader 객체를 생성합니다.
         const reader = new FileReader();
 
+
         // 파일이 읽어질 때마다 호출되는 이벤트 리스너를 등록합니다.
         reader.addEventListener("load", (event) => {
             // 이미지 요소를 생성합니다.
@@ -82,10 +84,31 @@ function handleUpdate(fileList) {
             // 이미지를 담을 div 요소를 생성합니다.
             const imgContainer = el("div", { className: "container-img" }, img);
 
-            // 미리보기 영역에 이미지를 추가합니다.
+            // 이미지를 제거하는 버튼을 생성합니다.
+            const removeButton = el("button", {
+                className: "remove-button",
+                textContent: "제거",
+            });
+
+            // 제거 버튼에 이벤트를 추가합니다.
+            removeButton.addEventListener("click", () => {
+                // 프리뷰에서 이미지를 담은 div를 제거
+                imgContainer.remove();
+
+                // 내가 제거한 embed-img에 대응하는 file input에서 실제로 삭제
+                const fileIndex = Array.from(input.files).findIndex((inputFile) => inputFile.name === file.name);
+                if (fileIndex !== -1) {
+                    input.files[fileIndex] = null;
+                }
+            });
+
+            // 제거 버튼을 이미지 container div에 추가
+            imgContainer.append(removeButton);
+
+            // 미리보기 영역에 이미지를 추가
             preview.append(imgContainer);
             // debugger
-            input.append(fileList);
+
         });
 
         // 파일을 읽어들입니다.

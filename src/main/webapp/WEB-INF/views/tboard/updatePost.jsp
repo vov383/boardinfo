@@ -20,7 +20,6 @@
 
     <script type="text/javascript">
         $(function () { //자동으로 실행되는 코드
-            // debugger
             //목록 버튼
             $("#btnList").click(function () {
                 location.href = "${path}/tboard/list.do";
@@ -34,8 +33,13 @@
                 }
             });
             /*라디오 버튼 checked 구현*/
-            let categoryValue = ${map.dto.category};
-
+            let categoryValue = '${map.dto.category}';
+            let priceVisible = true;
+            if(categoryValue === '나눔') {
+                $("#price").css("visibility", "hidden");
+                $("#price").val(0);
+                priceVisible = false;
+            }
             function changeCheckedValue(categoryValue) {
                 var radios = document.getElementsByName("category");
 
@@ -49,9 +53,9 @@
             }
 
             /*나눔 카테고리 누르면 input[name=price] 안보이게*/
-            let priceVisible = true;
+            priceVisible = true;
             $('input[name=category]').change(function () {
-                if ($("input[name=category]:checked").val() == "n") {
+                if ($("input[name=category]:checked").val() == "나눔") {
                     $("#price").css("visibility", "hidden");
                     $("#price").val(0);
                     priceVisible = false;
@@ -66,35 +70,6 @@
 
         });
 
-        /* dom요소가 다 실행되고 나면 실행되는 함수 */
-        window.onload = function () {
-            /* 이미지 목록 출력 */
-            let tb_num = ${map.dto.tb_num};
-            /* 비동기 방식으로 첨부파일 가져옴... */
-            $.ajax({
-                url: "${path}/tboard/getAttach",
-                method: "get",
-                data: {"tb_num": tb_num},
-                dataType: "json",
-                success: function (result) {
-                    /* 이미지 fullName으로 반복 */
-                    $.each(result, function (index, fullName) {
-                        /* img element 생성하고 src 설정하기
-                        * src에 대한 설명 => DB에는 이미지 파일이 경로와 s_가 더해져서 썸네일 파일명이 저장됨.
-                        * fullName.substring(0, 12)는 디렉토리
-                        * fullName.substring(14)는 s_를 뺀 나머지 uuid가 적용된 파일명 */
-                        var image = $("<img>").attr('src', '${path}/resources/uploaded_image' + fullName.substr(0, 12) + fullName.substr(14));
-
-                        /* imgSection에 image를 append */
-                        $(".imgSection").append(image);
-                    });
-                },
-                error: function (xhr, status, error) {
-                    alert("AJax Fail");
-                }
-            }); //이미지 목록 ajax End
-
-        };
 
         function formSubmit() {
             // debugger
@@ -136,6 +111,32 @@
             }
         }
 
+        /*기존 이미지 제거하는 함수*/
+        function deleteOldImage(index){
+            const embedImg  = document.getElementById('embed-img_'+index);
+            var imgSrc = embedImg.getAttribute("src");
+            var fileName = imgSrc.substring(25);
+            debugger
+            $.ajax({
+                url: "${path}/tboard/deleteImage",
+                type: "post",
+                data: {
+                    fileName: fileName
+                },
+                dataType : "text",
+                success: function(result) {
+                    if (result == "deleted") {
+                        embedImg.parentNode.remove();//파일이 삭제되면 행 전체 <div>를 삭제처리
+                        //that은 span태그를 의미하는데 그 부모인 감싸고 있는 div 태그를 지운다는 뜻
+                    }
+                },
+                error: function (result) {
+                    alert(result);
+                    
+                }
+            });
+        }
+
     </script>
 </head>
 <body>
@@ -157,39 +158,56 @@
             <div class="postUpper">
                 <div id="categoryContainer">
                     <span>카테고리</span>
-                    <input type="radio" id="s" name="category" value="s"
-                           <c:if test='${map.dto.category.equals("s") }'>checked</c:if>
+                    <input type="radio" id="s" name="category" value="판매"
+                           <c:if test='${map.dto.category.equals("판매") }'>checked</c:if>
                     >
                     <label for="s">
                         <div class="category">판매</div>
                     </label>
                     <div class="dot"></div>
-                    <input type="radio" id="b" name="category" value="b" <c:if test='${map.dto.category.equals("b")}'>checked</c:if>
+                    <input type="radio" id="b" name="category" value="구매"
+                           <c:if test='${map.dto.category.equals("구매")}'>checked</c:if>
                     >
                     <label for="b">
                         <div class="category">구매</div>
                     </label>
                     <div class="dot"></div>
-                    <input type="radio" id="n" name="category" value="n"
-                           <c:if test='${map.dto.category.equals("n") }'>checked</c:if>
+                    <input type="radio" id="n" name="category" value="나눔"
+                           <c:if test='${map.dto.category.equals("나눔") }'>checked</c:if>
                     >
                     <label for="n">
                         <div class="category">나눔</div>
                     </label>
                     <div class="dot"></div>
-                    <input type="radio" id="f" name="category" value="f"
-                           <c:if test='${map.dto.category.equals("s") }'>checked</c:if>
+                    <input type="radio" id="f" name="category" value="완료"
+                           <c:if test='${map.dto.category.equals("완료") }'>checked</c:if>
                     >
                     <label for="f">
                         <div class="category">완료</div>
                     </label>
                 </div>
+
                 <div class="inputContainer">
                     <input name="title" id="title" placeholder="제목" value="${map.dto.title}" maxlength="100">
                     <input name="price" id="price" placeholder="가격" value="${map.dto.price}" maxlength="100">
                 </div>
             </div>
             <section class="imgSection">
+                <c:if test="${map.tbfList.size() > 0}">
+                    <div id="oldImages">
+                        <p class="preview-title">미리보기</p>
+                        <div class="preview">
+                            <c:forEach var="oldImage" items="${map.tbfList}" varStatus="status">
+                                <div class="container-img">
+                                    <img src="${path}/resources/uploaded_image${oldImage}" alt="" class="embed-img" id="embed-img_${status.index}">
+                                    <button class="removeOld" onclick="deleteOldImage(${status.index})">제거</button>
+                                </div>
+
+                            </c:forEach>
+                        </div>
+                    </div>
+                </c:if>
+
             </section>
 
             <section class="imageContainer">
@@ -317,15 +335,22 @@
             <div class="labelAndItem"><span>장소</span>
                 <input class="flex" disabled id="locationFull">
                 <div class="dot"></div>
-                <input type="text" name="address1" id="address1" value="${map.dto.address1}">
-                <input type="text" name="address2" id="address2" value="${map.dto.address2}">
-                <input type="text" name="address3" id="address3" value="${map.dto.address3}">
-                <input type="text" name="place_name" id="place_name" value="${map.dto.place_name3}">
-                <input type="hidden" name="lat" id="lat" value="${map.dto.lat}">
-                <input type="hidden" name="lng" id="lng" value="${map.dto.lng}">
+
                 <button type="button" id="locationSearchBtn" onclick="locationSearch()">검색</button>
                 <div class="dot"></div>
                 <button type="button" id="locationResetBtn" onclick="locationReset()">초기화</button>
+            </div>
+            <div class="addressInputCol">
+                <input type="text" name="address1" id="address1" value="${map.dto.address1}" disabled>
+                <div class="dot"></div>
+                <input type="text" name="address2" id="address2" value="${map.dto.address2}" disabled>
+                <div class="dot"></div>
+                <input type="text" name="address3" id="address3" value="${map.dto.address3}" disabled>
+                <div class="dot"></div>
+                <input type="text" name="place_name" id="place_name" value="${map.dto.place_name}" disabled>
+                <div class="dot"></div>
+                <input type="hidden" name="lat" id="lat" value="${map.dto.lat}">
+                <input type="hidden" name="lng" id="lng" value="${map.dto.lng}">
             </div>
     </div>
     <div class="btnContainer" style="display: flex; justify-content: center">
