@@ -276,7 +276,7 @@
             <div>
                 <div class="boxForList">
                     <div><span>HOT! 보드인이 주목중인 게시글</span>
-                        <span><a class="more" href="${path}/review/hotAll.do">&gt</a></span></div>
+                        <span><a class="more" href="${path}/review/reviewlist.do?freeFlag=H">&gt</a></span></div>
 
                     <div class="list" id="hotList">
                     </div>
@@ -284,7 +284,7 @@
 
                 <div class="boxForList">
                     <div><span>커뮤니티</span>
-                        <span><a class="more" href="${path}/review/reviewlist.do">&gt</a></span></div>
+                        <span><a class="more" href="${path}/review/reviewlist.do?freeFlag=A">&gt</a></span></div>
 
                     <div class="list" id="communityList">
                     </div>

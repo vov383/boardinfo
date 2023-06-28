@@ -41,13 +41,13 @@
 
 			<c:choose>
 				<c:when test="${map.sort != null and 'week'.equalsIgnoreCase(sort)}">
-					<span>보드인포 랭킹</span>
+					<span>주간 랭킹</span>
+				</c:when>
+				<c:when test="${map.sort != null and 'month'.equalsIgnoreCase(sort)}">
+					<span>월간 랭킹(미완)</span>
 				</c:when>
 				<c:when test="${map.sort != null and 'newbie'.equalsIgnoreCase(sort)}">
 					<span>신규등록</span>
-				</c:when>
-				<c:when test="${map.sort != null and 'rate'.equalsIgnoreCase(sort)}">
-					<span>평점 랭킹</span>
 				</c:when>
 				<c:when test="${map.sort != null and 'vcnt'.equalsIgnoreCase(sort)}">
 					<span>조회수 랭킹</span>

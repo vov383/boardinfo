@@ -635,11 +635,11 @@
                                     <fmt:formatNumber value="${statisticMap.AVGRATING}" pattern="0.0"/>
                                     </strong> (${statisticMap.TOT}명)
                                 </c:when>
-                                <c:otherwise>- (0명)</c:otherwise></c:choose><a href="#" class="goTo">&gt</a>
+                                <c:otherwise>- (0명)</c:otherwise></c:choose><a href="#evaluate" class="goTo">&gt</a>
                         </span>
                                 <span>
                             <img src="../images/medal105.png" width="45px" height="45px" style="vertical-align: middle;">
-                            이번 주 게임 <strong>${map.dto.game_rank}</strong>위<a href="#" class="goTo">&gt</a>
+                            이번 주 게임 <strong>${map.dto.game_rank}</strong>위<a href="${path}/game/gamerank/week" class="goTo">&gt</a>
                         </span>
                             </div>
 
@@ -777,7 +777,7 @@
             </div>
 
 
-            <div class="detailDiv">
+            <div class="detailDiv" id="evaluate">
                 <span class="smallTitle">보드인의 평가</span>
                 <div id="graphBigArea">
                     <ul>
