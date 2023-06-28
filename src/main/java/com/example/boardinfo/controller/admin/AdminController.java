@@ -238,20 +238,20 @@ public class AdminController {
     }
 
     @RequestMapping("denyGame.do")
-    public String denyGame(@RequestParam("gnum")int gnum,HttpSession session){
-        String userid = (String)session.getAttribute("userid");
+    public String denyGame(@RequestParam("deny_gnum")int gnum,HttpSession session){
+        String admin_id = (String)session.getAttribute("admin_id");
 
-        if(userid != null)
-            adminService.denyGame(gnum,userid);
+        if(admin_id != "")
+            adminService.denyGame(gnum,admin_id);
         return "home";
     }
 
     @RequestMapping("allowGame.do")
     public String allowGame(@ModelAttribute GameDTO dto, HttpSession session){
-        String userid = (String)session.getAttribute("userid");
+        String admin_id = (String)session.getAttribute("admin_id");
 
-        if(userid != null)
-            dto.setUpdate_user(userid);
+        if(admin_id != "")
+            dto.setUpdate_user(admin_id);
         adminService.allowGame(dto);
         return "home";
     }

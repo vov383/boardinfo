@@ -24,9 +24,9 @@ public class GameDTO {
 	}
 
 	private int release_year; //게임발매년도
-	private Date create_date; //업로드날짜 nn sysout기본
+	private String create_date; //업로드날짜 nn sysout기본
 	private String create_user; //업로드한 유저명
-	private Date update_date; //수정 날짜
+	private String update_date; //수정 날짜
 	private String update_user; //수정한 유저명
 	//private int viewcount; //조회수 매일 자정 viewcount_date 테이블에 저장후 초기화됨
 	private int totalviewcount; //조회수
@@ -131,11 +131,11 @@ public class GameDTO {
 		this.release_year = release_year;
 	}
 
-	public Date getCreate_date() {
+	public String getCreate_date() {
 		return create_date;
 	}
 
-	public void setCreate_date(Date create_date) {
+	public void setCreate_date(String create_date) {
 		this.create_date = create_date;
 	}
 
@@ -147,11 +147,11 @@ public class GameDTO {
 		this.create_user = create_user;
 	}
 
-	public Date getUpdate_date() {
+	public String getUpdate_date() {
 		return update_date;
 	}
 
-	public void setUpdate_date(Date update_date) {
+	public void setUpdate_date(String update_date) {
 		this.update_date = update_date;
 	}
 
@@ -291,7 +291,7 @@ public class GameDTO {
 		this.game_rank = game_rank;
 	}
 
-	public GameDTO(int gnum, int bggnum, String gametitle, String gametitle_eng, String players, String playtime, String ages, String language, String theme, int release_year, Date create_date, String create_user, Date update_date, String update_user, int totalviewcount, String nameStr, String designer, String gamecategory, String publisher, String artist, String mechanic, String expansion, String reimplement, String[] files, String bgg_thumbnail, String gamephoto_url, Double rate, Double weight, int tot, int game_rank) {
+	public GameDTO(int gnum, int bggnum, String gametitle, String gametitle_eng, String players, String playtime, String ages, String language, String theme, int release_year, String create_date, String create_user, String update_date, String update_user, int totalviewcount, String nameStr, String designer, String gamecategory, String publisher, String artist, String mechanic, String expansion, String reimplement, String[] files, String bgg_thumbnail, String gamephoto_url, Double rate, Double weight, int tot, int game_rank) {
 		this.gnum = gnum;
 		this.bggnum = bggnum;
 		this.gametitle = gametitle;

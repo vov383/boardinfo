@@ -41,13 +41,13 @@
 
 			<c:choose>
 				<c:when test="${map.sort != null and 'week'.equalsIgnoreCase(sort)}">
-					<span>보드인포 랭킹</span>
+					<span>주간 랭킹</span>
+				</c:when>
+				<c:when test="${map.sort != null and 'month'.equalsIgnoreCase(sort)}">
+					<span>월간 랭킹(미완)</span>
 				</c:when>
 				<c:when test="${map.sort != null and 'newbie'.equalsIgnoreCase(sort)}">
 					<span>신규등록</span>
-				</c:when>
-				<c:when test="${map.sort != null and 'rate'.equalsIgnoreCase(sort)}">
-					<span>평점 랭킹</span>
 				</c:when>
 				<c:when test="${map.sort != null and 'vcnt'.equalsIgnoreCase(sort)}">
 					<span>조회수 랭킹</span>
@@ -93,7 +93,7 @@
 
 <script>
 	function goInsert() {
-		if("${sessionScope.userid}" == ""){
+		if("${sessionScope.userid}" == "" && "${sessionScope.admin_id}" == ""){
 			if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
 				location.href= "${path}/member/member_login.do";
 				return;

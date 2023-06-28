@@ -45,7 +45,7 @@ public class GameAjaxUploadController {
 //
 	@ResponseBody //객체를 json형식으로 return can (서버 => 클라이언트) 
 	// 그 역은 @RequestBody
-	@RequestMapping(value = "/uploadgame/uploadAjax",
+	@RequestMapping(value = "uploadgame/uploadAjax",
 			method = RequestMethod.POST, 
 			produces = "text/plain;charset=utf-8") //한글이 깨지지 않도록 보완처리
 	// ResponseEntity : 업로드한 파일 정보와 Http 상태 코드를 함께 리턴
@@ -65,7 +65,6 @@ public class GameAjaxUploadController {
 		InputStream in = null;
 		ResponseEntity<byte[]> entity = null;
 		String uploadPath = request.getSession().getServletContext().getRealPath("/resources/uploaded_game");
-		
 		try {
 			//확장자 검사
 			String formatName = 

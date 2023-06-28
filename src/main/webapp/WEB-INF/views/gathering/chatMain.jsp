@@ -429,7 +429,7 @@
     var lastTime = "${lastTime}";
 
 
-    var sock = new SockJS('http://localhost:8098/ws-stomp');
+    var sock = new SockJS('http://localhost:80/ws-stomp');
     var stomp = Stomp.over(sock);
     let list;
     let chatList = {};

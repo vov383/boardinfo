@@ -385,10 +385,12 @@
 
                 <input type="hidden" name="regNumHidden" value="${vo.regNum}">
 
+
                     <button type="button" onclick="btnList()">목록</button>
                 <c:if test="${userid eq vo.createUser || adminid ne null}">
                     <button type="button" onclick ="reviewDel('${vo.regNum}')">삭제</button>
                     <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정</button>
+
                 </c:if>
                 <%--신고하기, 좋아요--%>
                 <c:if test="${userid ne vo.createUser}">
@@ -479,6 +481,7 @@
                     <td>${vo.createDate}</td>
                     <td style="display: none">${vo.replyRegNum}</td>
                     <td>${vo.del}</td>
+
 
 
                         <%--로그인 id와 작성자가 같으면 수정, 삭제 버튼 보이기--%>

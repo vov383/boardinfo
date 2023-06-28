@@ -61,6 +61,14 @@
     				<if test="boardDivision != '' and boardDivision != null">
         			   AND R.CATEGORY in (${boardDivision})
     				</if>
+					<!--위의 if문에 해당안되는 인기글 분기-->
+					/*--현재 편의상 조회수 2개이상, 댓글 1개이상, 좋아요 1개이상으로 구성*/
+					<if test='freeFlag != null and "H".equals(freeFlag)'>
+					   AND
+							r.views > 2 and
+							(SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) > 1 and
+							(SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') > 1
+					</if>
 				     ORDER BY CREATEDATE DESC
 			      ) A
     	<include refid = "pagingEnd"/>
@@ -89,6 +97,13 @@
 		/*카테고리 정렬*/
 		<if test="boardDivision != '' and boardDivision != null">
 			AND R.CATEGORY in (${boardDivision})
+		</if>
+		/*--현재 편의상 조회수 2개이상, 댓글 1개이상, 좋아요 1개이상으로 구성*/
+		<if test="freeFlag != null and 'H'.equals(freeFlag)">
+			AND
+			r.views > 2 and
+			(SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) > 1 and
+			(SELECT COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N') > 1
 		</if>
 
 	</select>
@@ -459,7 +474,7 @@
 								category,
 								title,
 								views,
-								create_date as createDate,
+								to_char(create_date, 'yyyy-mm-dd') as createDate,
 								(	SELECT 	COUNT(1) FROM REVIEWGOOD WHERE REVIEWPK = R.REG_NUM AND GOOD = 'Y' AND DEL = 'N')
 								AS GOOD,
 						        (	SELECT 	COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM )

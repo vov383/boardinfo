@@ -5,83 +5,82 @@
 
 <!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
 <mapper namespace="tboard">
-    <select id="selectBoardList" resultType="tboardDto">
-        <include refid="paging_header"/>
-        select t.tb_num,
-        t.title,
-        t.price,
-        t.description,
-        t.view_count,
-        t.re_count,
-        t.category,
-        t.create_user,
-        t.create_date,
-        t.del,
-        t.update_user,
-        t.update_date,
-        t.address1,
-        t.address2,
-        f.fullName as first_img
-
-        from t_board t
-        LEFT JOIN (
-            SELECT
-                MIN(file_reg_num) AS min_file_reg_num,
-                FULLNAME,
-                TB_NUM
-            FROM
-                TB_FILES
-            GROUP BY
-                TB_NUM,
-                FULLNAME
-            ) f ON t.TB_NUM = f.TB_NUM
-
-        where t.del = 'N'
-
-        <include refid="search"/>
-        order by t.tb_num desc
-        <include refid="paging_footer"/>
-    </select>
-
     <select id="countArticle" resultType="int">
-        select count(*) from t_board
-        where del = 'N'
-        <include refid="search"/>
-    </select>
-
-    <sql id="paging_header">
-        select *
-        from (select rownum as rn, A.*
-              from (
-    </sql>
-
-    <sql id="search">
+        select count(*) FROM t_board t JOIN member m on t.CREATE_USER = m.userid
+        WHERE 1=1
+        AND t.DEL = 'N'
         <choose>
             <when test="search_option != 'all' ">
-
-                <if test="select_category != 'all' ">
-                    and category = #{select_category}
+                <if test="category != 'all' ">
+                    AND category = #{category}
                 </if>
-                and ${search_option} like #{keyword}
+                AND ${search_option} LIKE #{keyword}
             </when>
             <otherwise>
-
-                <if test="select_category != 'all' ">
-                    and category = #{select_category}
+                <if test="category != 'all' ">
+                    AND category = #{category}
                 </if>
-                and (create_user like #{keyword} or title like #{keyword} or
-                description like #{keyword})
+                AND (t.create_user LIKE #{keyword} or title LIKE #{keyword} or
+                description LIKE #{keyword} or m.NICKNAME LIKE #{keyword})
             </otherwise>
         </choose>
-    </sql>
+    </select>
 
-    <sql id="paging_footer">
-        )A
-		) where rn between
-        #{start}
-        and
-        #{end}
-    </sql>
+
+    <select id="selectBoardList" resultType="tboardDto">
+        /*페이징 시작*/
+        select *
+        FROM (select A.*, row_number() over ( order by A.create_date desc) rnum
+        FROM (
+        /*select list 쿼리문 시작*/
+        select t.tb_num
+        , t.title
+        , TO_CHAR(t.price, '999,999,999') AS price /*가격*/
+        , t.description
+        , t.view_count
+        , t.category
+        , m.nickname
+        , t.address1
+        , t.address2
+        , f.FULLNAME as tb_thumbnail /*썸네일*/
+        , (select count(*) FROM TB_COMMENTS WHERE tb_num = t.TB_NUM) as re_count /*댓글 수*/
+        , (select count(*) FROM TRADEGOOD WHERE TB_NUM = t.TB_NUM) as good_count /*좋아요 수*/
+        , t.create_user
+        , TO_CHAR(t.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS create_date
+        , t.del
+        , t.update_user
+        , TO_CHAR(t.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS update_date
+        FROM t_board t
+        /* member 테이블에서 닉네임 */
+        JOIN member m on t.CREATE_USER = m.USERID
+        /*fb_files에서 썸네일 이미지로 쓸 파일명과 파일 id*/
+
+            LEFT JOIN (SELECT FULLNAME
+        , TB_NUM
+        , ROW_NUMBER() OVER (PARTITION BY TB_NUM ORDER BY FILE_REG_NUM) AS rn
+        FROM TB_FILES WHERE DEL = 'N') f ON t.TB_NUM = f.TB_NUM AND f.rn = 1
+        WHERE 1 = 1
+        AND t.DEL = 'N'
+
+        /*검색기능 search_option이 all일 때.. 전체검색*/
+        <choose>
+            <when test="search_option != 'all' ">
+                <if test="category != 'all' ">
+                    AND category = #{category}
+                </if>
+                AND ${search_option} LIKE #{keyword}
+            </when>
+            <otherwise>
+                <if test="category != 'all' ">
+                    AND category = #{category}
+                </if>
+                AND (create_user LIKE #{keyword} or title LIKE #{keyword} or
+                description LIKE #{keyword} or m.nickname LIKE #{keyword})
+            </otherwise>
+        </choose>
+        ORDER BY t.CREATE_DATE DESC) A)
+        WHERE rnum BETWEEN #{start} AND #{end}/*페이징 끝*/
+    </select>
 
 
     <insert id="insertBoard">
@@ -99,113 +98,133 @@
         </choose>
     </insert>
 
+
     <select id="viewPost" resultType="tboardDto">
-        select *
-        from t_board
-        where tb_num = #{tb_num}
+        select t.tb_num
+             , t.title
+             , t.price
+             , t.description
+             , t.category
+             , t.address1
+             , t.address2
+             , t.address3
+             , t.PLACE_NAME
+             , t.LAT
+             , t.LNG
+             , m.nickname
+             , (SELECT COUNT(*)
+                FROM TB_COMMENTS
+                WHERE tb_num = t.TB_NUM)                       AS re_count
+             , (SELECT COUNT(*)
+                FROM TRADEGOOD
+                WHERE TB_NUM = t.TB_NUM)                       AS good_count
+             , t.CREATE_USER
+             , TO_CHAR(t.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS create_date
+             , t.UPDATE_USER
+             , TO_CHAR(t.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS update_date
+
+        FROM t_board t
+                 /* member 테이블에서 닉네임 */
+                 JOIN member m on t.CREATE_USER = m.USERID
+        WHERE t.tb_num = #{tb_num}
     </select>
 
     <update id="updatePost">
         update t_board
-        set title       = #{title},
-            price       = #{price},
-            description = #{description},
-            category    = #{category},
-            update_date = sysdate
-        where tb_num = #{tb_num}
+        set title       = #{title}
+          , price       = #{price}
+          , description = #{description}
+          , category    = #{category}
+          , update_date = sysdate
+        WHERE tb_num = #{tb_num}
     </update>
 
     <delete id="deletePost">
         update t_board
         set del = #{Y}
-        where tb_num = #{tb_num}
+        WHERE tb_num = #{tb_num}
     </delete>
 
     <update id="increaseViewcnt">
         update t_board
-        set view_count = view_count + 1
-        where tb_num = #{tb_num}
+        set VIEW_COUNT = VIEW_COUNT + 1
+        WHERE tb_num = #{tb_num}
     </update>
 
-    <update id="increaseRecnt">
-        update t_board
-        set re_count = re_count + 1
-        where tb_num = #{tb_num}
-    </update>
-
+    <!--첨부파일 목록 가져오기-->
     <select id="getAttachList" resultType="String">
         select fullName
-        from tb_files
-        where tb_num = #{tb_num}
+        FROM tb_files
+        WHERE tb_num = #{tb_num} and DEL = 'N'
         order by FILE_REG_NUM
     </select>
 
+
+    <!--첨부파일-->
     <insert id="insertFile">
-        insert into tb_files (file_reg_num, tb_num,
-                              fullName, formatName, fileData, create_user)
+        insert into tb_files (file_reg_num, tb_num, fullName, formatName, fileData, create_user)
         values ((seq_tb_files.nextval), (seq_tboard.currval), #{fullName}, #{formatName}, #{fileData}, #{create_user})
     </insert>
 
     <select id="getFirstImageList" resultType="String">
         SELECT tb_num, LISTAGG(fullName, ',') WITHIN GROUP (ORDER BY file_reg_num) AS fileNames
         FROM TB_FILES
-        WHERE (tb_num
-            , file_reg_num) IN (
-            SELECT tb_num
-            , MIN (file_reg_num)
-            FROM TB_FILES
-            GROUP BY tb_num
-            )
+        WHERE (tb_num, file_reg_num) IN (SELECT tb_num
+                                              , MIN(file_reg_num)
+                                         FROM TB_FILES
+                                         GROUP BY tb_num)
         GROUP BY tb_num
     </select>
 
 
     <delete id="deleteAttach">
-        update into tb_files ()
+        update tb_files
+            set DEL = 'Y'
+            , UPDATE_DATE = SYSDATE
+            , UPDATE_USER = #{update_user}
+        WHERE FULLNAME = #{fileName}
     </delete>
+
 
     <!--마이페이지에서 중고거래 게시판에 작성한 목록 출력 sql
     썸네일 이미지 포함, tb_files 테이블에서 MIN(file_reg_num)으로 tb_num에 해당하는 이미지 파일 중 가장 빠른 순번을 가져옴-->
     <select id="getTbList" resultType="tboardDto">
-        select t.tb_num,
-            t.title,
-            t.price,
-            t.description,
-            t.view_count,
-            t.re_count,
-            t.category,
-            t.CREATE_DATE,
-            t.create_user,
-            t.del,
-            t.update_user,
-            t.update_date,
-            t.address1,
-            t.address2,
-            f.fullName as first_img --썸네일 이미지
+        select t.tb_num
+             , t.title
+             , t.price
+             , t.description
+             , t.view_count
+             , (select count(*) FROM TB_COMMENTS WHERE tb_num = t.TB_NUM) as re_count /*댓글 수*/
+             , (select count(*) FROM TRADEGOOD WHERE TB_NUM = t.TB_NUM) as good_count /*좋아요 수*/
+             , t.category
+             , t.CREATE_DATE
+             , t.create_user
+             , t.del
+             , t.update_user
+             , t.update_date
+             , t.address1
+             , t.address2
+             , f.fullName as first_img --썸네일 이미지
 
-        from t_board t
-                 LEFT JOIN (
-            SELECT
-                MIN(file_reg_num) AS min_file_reg_num,
-                FULLNAME,
-                TB_NUM
-            FROM
-                TB_FILES
-            GROUP BY
-                TB_NUM,
-                FULLNAME
-        ) f ON t.TB_NUM = f.TB_NUM
+        FROM t_board t
+                 LEFT JOIN (SELECT MIN(file_reg_num) AS min_file_reg_num
+                                 , FULLNAME
+                                 , TB_NUM
+                            FROM TB_FILES
+                            GROUP BY TB_NUM, FULLNAME) f ON t.TB_NUM = f.TB_NUM
 
-        where t.del = 'N' and CREATE_USER = #{userid}
+        WHERE t.del = 'N'
+          AND CREATE_USER = #{userid}
         order by t.tb_num desc
     </select>
 
+
     <select id="getHomeList" resultType="tboardDto">
         select *
-        from
+        FROM
             (
                 select a.*, row_number() over(order by a.create_date desc) rn
-                from
+                FROM
                     (
                         select tb_num, create_date, title, category,
                                (select count(*)
@@ -218,40 +237,43 @@
         where rn between 1 and #{size}
     </select>
 
+
     <select id="totalSearch" resultType="tboardDto">
-        select  tb_num, create_date, title, category, address1, address2, view_count, price,re_count, rn
+        <if test="filter != null and 'none'.equalsIgnoreCase(filter)">
+        select  tb_num, create_date, title, category, address1, address2, view_count, price,re_count
         from    (
-                select  tb_num, create_date, title, category, address1, address2, view_count, price,re_count, rownum rn
-                from    (
-                        select  tb_num, create_date, title, category, address1, address2, view_count, price,
-                                (select count(*)
-                                from    tb_comments c
-                                where   c.tb_num = t.tb_num and del='N'
-                                ) as re_count
-                        from t_board t
-                        where regexp_like(title, #{gameKeyword},'i') AND t.del = 'N'
-                        order by
-		                    CASE WHEN regexp_like(title, '^'||#{gameKeyword},'i')
-		                    THEN 1
-                            ELSE 2
-                            END
-                            ,create_date desc
-                        )
+        </if>
+                select  tb_num, create_date, title, category, address1, address2, view_count, price,
+                        (select count(*)
+                        from    tb_comments c
+                        where   c.tb_num = t.tb_num and del='N'
+                        ) as re_count
+                from t_board t
+                where regexp_like(title, #{gameKeyword},'i') AND t.del = 'N'
+                order by
+		            CASE WHEN regexp_like(title, '^'||#{gameKeyword},'i')
+		            THEN 1
+                    ELSE 2
+                    END
+        <if test="filter != null and 'none'.equalsIgnoreCase(filter)">
                 )
-        <choose>
-            <when test="filter != null and 'none'.equalsIgnoreCase(filter)">
-                where rn between 1 and 6
-            </when>
-            <otherwise>
-                where rn between #{start} and #{end}
-            </otherwise>
-        </choose>
+        where rownum between 1 and 6
+        </if>
     </select>
 
-    <select id="totalSearchCount" resultType="int">
-        select  count(*)
-        from    t_board t
-        where   regexp_like(title, #{gameKeyword},'i') AND t.del = 'N'
-    </select>
 
+    <!--좋아요 C-->
+    <insert id="goodCreate">
+        insert into TRADEGOOD (goodkey, tb_num, userid)
+        values (#{goodkey}, #{tb_num}, #{create_user})
+    </insert>
+
+
+    <!--좋아요 D-->
+    <delete id="goodDelete">
+        delete
+        FROM TRADEGOOD
+        WHERE tb_num = #{tb_num}
+          AND userid = #{create_user}
+    </delete>
 </mapper>

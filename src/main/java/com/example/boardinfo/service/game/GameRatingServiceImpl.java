@@ -1,8 +1,10 @@
 package com.example.boardinfo.service.game;
 
 import com.example.boardinfo.model.game.dao.gameRating.GameRatingDAO;
+import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.model.game.dto.gameRating.RatingStatisticDTO;
+import com.example.boardinfo.util.Pager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
@@ -257,5 +259,27 @@ public class GameRatingServiceImpl implements GameRatingService{
     @Override
     public int unLikeIt(int gnum, String writer_id, String user_id) {
         return gameRatingDAO.unLikeIt(gnum, writer_id, user_id);
+    }
+
+    @Override
+    public Map<String, Object> getMoreRatings(int gnum, String user_id, int curPage, String sort) {
+        Map<String, Object> map =new HashMap<>();
+        map.put("gnum",gnum);
+        map.put("sort", sort);
+        int count = gameRatingDAO.getMoreRatingsCount(map);
+
+        Pager pager = new Pager(count, curPage, 10);
+        int start = pager.getPageBegin();
+        int end = pager.getPageEnd();
+
+        map.put("user_id", user_id);
+        map.put("start",start);
+        map.put("end",end);
+
+        List<GameDTO> list = gameRatingDAO.getMoreRatings(map);
+        map.put("count", count);
+        map.put("pager",pager);
+        map.put("list",list);
+        return map;
     }
 }

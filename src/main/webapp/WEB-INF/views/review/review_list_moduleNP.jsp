@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <%@ page session="true"%>
 <!-- 세션사용여부 -->
@@ -12,11 +11,11 @@
     <table border="1" style="width:100%">
 
         <colgroup>
-            <col style="width: 62px"><!-- 카테고리 -->
-            <col style="width: 160px"><!-- 좋아요 -->
+            <col style="width: 130px"><!-- 카테고리 -->
+            <col style="width: 100px"><!-- 좋아요 -->
             <col><!-- 제목 -->
-            <col style="width: 100px"><!-- 게임 -->
-            <col style="width: 140px"><!-- 조회수 -->
+            <col style="width: 180px"><!-- 게임 -->
+            <col style="width: 60px"><!-- 조회수 -->
             <col style="width: 160px"><!-- 날짜 -->
         </colgroup>
 
@@ -92,7 +91,7 @@
 
                     <tr>
 
-                        <td><div class="wrap t_center"><span class="rank">${row.category}</span></div></td>
+                        <td><div class="wrap t_center">${row.category}</div></td>
 
                         <td><div class="wrap t_center">
                             <div class="ellipsis rank03">
@@ -121,8 +120,8 @@
                         </div></td>
 
                         <td><div class="wrap t_center">
-                            <div class="ellipsis rank03">
-                                    ${row.createDate}
+                            <div class="ellipsis rank03 createDate">
+                                ${row.createDate}
                             </div>
                         </div></td>
 
@@ -143,7 +142,7 @@
                         <c:forEach var="row" items="${reviewMap.list1}">
                             <tr>
 
-                                <td><div class="wrap t_center"><span class="rank">${row.category}</span></div></td>
+                                <td><div class="wrap t_center">${row.category}</div></td>
 
                                 <td><div class="wrap t_center">
                                     <div class="ellipsis rank03">
@@ -172,8 +171,8 @@
                                 </div></td>
 
                                 <td><div class="wrap t_center">
-                                    <div class="ellipsis rank03">
-                                            ${row.createDate}
+                                    <div class="ellipsis rank03 createDate">
+                                        ${row.createDate}
                                     </div>
                                 </div></td>
 
@@ -219,7 +218,7 @@
                                 </div></td>
 
                                 <td><div class="wrap t_center">
-                                    <div class="ellipsis rank03">
+                                    <div class="ellipsis rank03 createDate">
                                             ${row.createDate}
                                     </div>
                                 </div></td>
@@ -274,4 +273,5 @@
     function list(page) {
         location.href="${path}/search/totalSearchMore/${map.filter}/${map.gameKeyword}?curPage="+page;
     }
+
 </script>

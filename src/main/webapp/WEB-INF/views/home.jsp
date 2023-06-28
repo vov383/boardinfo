@@ -276,7 +276,7 @@
             <div>
                 <div class="boxForList">
                     <div><span>HOT! 보드인이 주목중인 게시글</span>
-                        <span><a class="more" href="${path}/review/hotAll.do">&gt</a></span></div>
+                        <span><a class="more" href="${path}/review/reviewlist.do?freeFlag=H">&gt</a></span></div>
 
                     <div class="list" id="hotList">
                     </div>
@@ -284,7 +284,7 @@
 
                 <div class="boxForList">
                     <div><span>커뮤니티</span>
-                        <span><a class="more" href="${path}/review/reviewlist.do">&gt</a></span></div>
+                        <span><a class="more" href="${path}/review/reviewlist.do?freeFlag=A">&gt</a></span></div>
 
                     <div class="list" id="communityList">
                     </div>
@@ -322,7 +322,6 @@
 <br>
 <h1><a href="${path}/member/member_list.do" style="color: black;">인터셉터 확인</a></h1>
 <br>
-<h1><a href="${path}/admin/confirmList/insert" style="color: black;">어드민이 볼수있는 게임등록대기목록</a></h1>
 
 
 <%@include file="include/footer.jsp" %>
