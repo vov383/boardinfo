@@ -207,6 +207,22 @@
 		  AND REG_NUM = #{reviewDetailKey}
 	</update>
 
+	<!-- 신고하기 입력 -->
+	<insert id="waringReport" parameterType="hashMap">
+		MERGE INTO WARNING_REPORT
+			  USING dual
+			  ON (WARNING_NO = #{reviewDetailKey}||#{createUser})
+		WHEN MATCHED THEN
+			 UPDATE
+			 	SET TABLE_WRITING_PK = #{reviewDetailKey}
+			 	 	,WARING = DECODE(WARING,'Y','N','Y')
+			 	 	,UPDATE_USER = #{createUser} /*지금 로그인 한 사람 정보가 필요*/
+			 	 	,CREATE_DATE = sysdate
+		WHEN NOT MATCHED THEN
+			INSERT (WARNING_NO, TABLE_WRITING_PK, WARING, CREATE_USER, CREATE_DATE)
+			VALUES (#{reviewDetailKey}||#{createUser} , #{reviewDetailKey} ,'Y', #{createUser} , sysdate)
+	</insert>
+
 	<!-- 좋아요 입력 -->
 	<insert id="reviewGood" parameterType="hashMap">
 		MERGE INTO REVIEWGOOD
@@ -319,7 +335,7 @@
 		   , MEMBER M
 		WHERE 1 = 1
 			AND RC.REG_NUM = #{reviewDetailKey}
-			AND RC.DEL = 'N'
+-- 			AND RC.DEL = 'N'
 			AND RC.CREATE_USER = M.USERID(+)
 		/*답글 진입*/
 		<if test="topReplyRegNum != '' and topReplyRegNum != null">
@@ -422,6 +438,7 @@
 				where rnum between 1 and #{size}
 	</select>
 
+	<!--인기글 쿼리-->
 	<select id="getHotAll" resultType="reviewDto">
 		--현재 편의상 조회수 2개이상, 댓글 1개이상, 좋아요 1개이상으로 구성
 		select 	*

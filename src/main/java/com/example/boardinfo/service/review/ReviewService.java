@@ -31,6 +31,9 @@ public interface ReviewService {
     /*리뷰 삭제*/
     void reviewDel(reviewSerchDTO reviewserchDTO);
 
+    /*신고하기*/
+    void reviewDetailwaringCreate(reviewSerchDTO reviewserchDTO, HttpSession session);
+
     /*리뷰 좋아요*/
     void reviewGoodCreate(reviewSerchDTO reviewserchDTO, HttpSession session);
 

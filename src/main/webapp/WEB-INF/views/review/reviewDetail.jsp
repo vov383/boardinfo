@@ -282,6 +282,14 @@
             }
         }
 
+        //신고하기 → $("폼아이디).val()
+        function waring(regNum){
+            $("#formWringReport").val(regNum);
+            /*alert($("#reviewDetailGoodKey").val());*/
+            /*alert("클릭 테스트");*/
+            document.formWringReport.submit();
+        }
+
         //좋아요 → $("폼아이디).val()
         function good(regNum){
             $("#reviewDetailGoodKey").val(regNum);
@@ -308,6 +316,11 @@
 <form name="formreviewdel" method="post" action="${path}/review/reviewdelsave.do">
     <input type="hidden" name="reviewDetailKey" id="reviewDelKey">
     <input type="hidden" name="freeFlag" value="${freeFlag}">
+</form>
+
+<%--신고하기--%>
+<form name="formWringReport" method="post" action="${path}/review/reviewdetailGood.do">
+    <input type="hidden" name="reviewDetailKey" id="reviewDetailWringReport">
 </form>
 
 <%--좋아요--%>
@@ -372,14 +385,17 @@
 
                 <input type="hidden" name="regNumHidden" value="${vo.regNum}">
 
-                <button type="button" onclick="btnList()">목록</button>
+
+                    <button type="button" onclick="btnList()">목록</button>
                 <c:if test="${userid eq vo.createUser || adminid ne null}">
-                <button type="button" onclick ="reviewDel('${vo.regNum}')">삭제</button>
-                <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정</button>
+                    <button type="button" onclick ="reviewDel('${vo.regNum}')">삭제</button>
+                    <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정</button>
+
                 </c:if>
-                <%--좋아요--%>
+                <%--신고하기, 좋아요--%>
                 <c:if test="${userid ne vo.createUser}">
-                <button type="button" onclick="good('${vo.regNum}')"> &#x1f495 </button>
+<%--                    <button type="button" onclick ="waring('${vo.regNum}')">&#9940;	신고하기</button>--%>
+                    <button type="button" onclick="good('${vo.regNum}')"> &#x1f495 좋아요 </button>
                 </c:if>
 
             <h1>${vo.title}</h1>
@@ -444,15 +460,28 @@
 
         <c:forEach items="${commentList}" var="vo">
 
+            <c:if test="${'Y' eq vo.del}">
+                <div>
+                    ${vo.commentDetail}, ${vo.del}
+                    삭제된 댓글 입니다.
+                </div>
+
+            </c:if>
+
+
         <table style="table-layout:fixed;" width="700">
 
 
             <%--댓글 답글 나누기, topReplyRegNum == null이면 댓글--%>
-            <c:if test="${null eq vo.topReplyRegNum}">
+
+                <c:if test="${null eq vo.topReplyRegNum}">
+
                 <tr>
                     <td><b>${vo.nickname}</b></td>
                     <td>${vo.createDate}</td>
                     <td style="display: none">${vo.replyRegNum}</td>
+                    <td>${vo.del}</td>
+
 
 
                         <%--로그인 id와 작성자가 같으면 수정, 삭제 버튼 보이기--%>
@@ -466,9 +495,11 @@
                             <button type="button" onclick="btnReplyEdit('${vo.replyRegNum}','${vo.regNum}')">저장</button>
                         </td>
                     </c:if>
-
-
                 </tr>
+
+
+
+
             <tr>   <%--댓글 보여주기, 수정시 입력창 활성화 style="display: none"--%>
                 <td colspan="4" name="reply_show_${vo.replyRegNum}${vo.regNum}">
                     <pre>${vo.commentDetail}</pre>
@@ -499,6 +530,7 @@
                     </c:if>
 
 
+
                 </tr>
             <tr>
                 <td colspan="4" name="reply_show_${vo.replyRegNum}${vo.regNum}" style="padding-left:70px">
@@ -509,6 +541,7 @@
                             ${vo.commentDetail}
                     </textarea></td>
             </c:if>
+
 
 
                 <%--답글 입력창 보이기--%>

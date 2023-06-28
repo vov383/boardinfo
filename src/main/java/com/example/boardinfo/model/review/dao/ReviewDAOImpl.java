@@ -88,6 +88,14 @@ public class ReviewDAOImpl implements ReviewDAO {
 
     }
 
+    /*신고하기*/
+    @Override
+    public void reviewDetailwaringCreate(reviewSerchDTO reviewserchDTO) {
+
+        sqlSession.insert("review.waringReport", reviewserchDTO);
+
+    }
+
     /*리뷰 좋아요*/
     @Override
     public void reviewGoodCreate(reviewSerchDTO reviewserchDTO) {
