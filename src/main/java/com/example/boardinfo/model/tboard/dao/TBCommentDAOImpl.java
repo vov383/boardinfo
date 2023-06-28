@@ -1,17 +1,15 @@
 package com.example.boardinfo.model.tboard.dao;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
+import com.example.boardinfo.model.tboard.dto.TBCommentDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import com.example.boardinfo.model.tboard.dto.TBCommentDTO;
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class TBCommentDAOImpl implements TBCommentDAO {
@@ -48,7 +46,6 @@ public class TBCommentDAOImpl implements TBCommentDAO {
     @Override
     public int insertReply(TBCommentDTO re_dto) {
         //mybatis는 insert, update, delete문을 실행했을 경우 resultType이 없고 수정에 성공한 row의 갯수를 반환한다.
-        /*여기서 댓글 500에러 발생*/
         int result = sqlSession.insert("tbComment.insertReply", re_dto);
         return result;
     }
@@ -65,7 +62,6 @@ public class TBCommentDAOImpl implements TBCommentDAO {
         Map<String, Integer> map = new HashMap<>();
         map.put("parent_reply", parent_reply);
         map.put("inner_order", inner_order);
-        logger.info("map 테스트 : " +map);
         //대댓글 댓글달기 실패지점
         sqlSession.update("tbComment.replyOrderUpdate", map);
     }
@@ -82,7 +78,7 @@ public class TBCommentDAOImpl implements TBCommentDAO {
     }
 
     @Override
-    public int deleteReply(Map map) {
+    public int deleteReply(Map<String, Object> map) {
         return sqlSession.delete("tbComment.deleteReply", map);
     }
 

@@ -28,8 +28,10 @@ public class ReviewDTO extends PageDTO {
 	private String rnum;			// 게시글 순번
 	private String recnt;			// 댓글 개수
 	private String choiceRegNum;	// 선택된 게임 테이블 PK
-	private String freeFlag;	// 선택된 게임 테이블 PK
-
+	private String freeFlag;		// 선택된 게임 테이블 PK
+	private String warningNo;		// 신고하기 테이블 PK
+	private String tableWritingPk;	// 각 테이블의 글 PK (댓글 포함)
+	private String waring;			// 신고하기 (기본값 : N)
 
 	public String getRegNum() {
 		return regNum;
@@ -237,5 +239,29 @@ public class ReviewDTO extends PageDTO {
 
 	public void setFreeFlag(String freeFlag) {
 		this.freeFlag = freeFlag;
+	}
+
+	public String getWarningNo() {
+		return warningNo;
+	}
+
+	public void setWarningNo(String warningNo) {
+		this.warningNo = warningNo;
+	}
+
+	public String getTableWritingPk() {
+		return tableWritingPk;
+	}
+
+	public void setTableWritingPk(String tableWritingPk) {
+		this.tableWritingPk = tableWritingPk;
+	}
+
+	public String getWaring() {
+		return waring;
+	}
+
+	public void setWaring(String waring) {
+		this.waring = waring;
 	}
 }

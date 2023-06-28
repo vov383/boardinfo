@@ -169,6 +169,18 @@
                     }
                 });
             });
+            /*가격에 숫자만 입력되도록 처리*/
+            $('#price').on("propertychange keyup paste input", function() {
+                let price = $(this).val();
+
+                // 숫자인지 아닌지 확인
+                if (isNaN(price)) {
+                    $(this).val(''); // input[id=price] 비워
+                    /*에러 alert*/
+                    alert("가격 입력란은 숫자만 입력해주세요!");
+                    return;
+                }
+            });
 
             /*카테고리 나눔 누르면 가격 사라지는 버튼*/
             let priceVisible = true;
@@ -204,7 +216,6 @@
                 alert("상품 설명을 입력해 주세요.");
                 return;
             }
-
             document.insertForm.action = "${path}/tboard/insert.do";
             document.insertForm.submit();
         }
@@ -246,17 +257,17 @@
             <div class="postUpper">
                 <div id="categoryContainer">
                     <span>카테고리</span>
-                    <input type="radio" id="s" name="category" value="s" checked="checked">
+                    <input type="radio" id="s" name="category" value="판매" checked="checked">
                     <label for="s">
                         <div class="category">판매</div>
                     </label>
                     <div class="dot"></div>
-                    <input type="radio" id="b" name="category" value="b">
+                    <input type="radio" id="b" name="category" value="구매">
                     <label for="b">
                         <div class="category">구매</div>
                     </label>
                     <div class="dot"></div>
-                    <input type="radio" id="n" name="category" value="n">
+                    <input type="radio" id="n" name="category" value="나눔">
                     <label for="n">
                         <div class="category">나눔</div>
                     </label>
@@ -280,7 +291,7 @@
                 <textarea id="description" name="description" placeholder="상품설명을 자유롭게 적어보세요"></textarea>
                 <script>
                     CKEDITOR.replace("description", {
-                        filebrowserUploadUrl: "${path}/tupload/imageUpload.do"
+                        removePlugins: 'uploadfile'
                     });
                 </script>
             </div>
