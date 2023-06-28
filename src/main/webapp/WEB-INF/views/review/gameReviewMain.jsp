@@ -323,6 +323,9 @@
         </ul>
     </div>
 
+    <%--게임포럼인 경우 세부 갈래별 정렬--%>
+    <c:if test="${freeFlag eq 'N'}">
+
     <div class="game_rank_div">
         <ul>
             <li>
@@ -339,6 +342,8 @@
             </li>
         </ul>
     </div>
+
+    </c:if>
 
     <div id="contentsMain">
 

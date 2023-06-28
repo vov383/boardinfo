@@ -478,13 +478,4 @@ public class ReviewController {
 		return map;
 	}
 
-	@GetMapping("hotAll.do")
-	public ModelAndView getHotAll(ModelAndView mav, @RequestParam(required = false, defaultValue = "1") int curPage){
-		Map<String, Object> map = new HashMap<>();
-
-		map = reviewservice.getHotList(curPage);
-		mav.setViewName("review/reviewMain_hot");
-		mav.addObject("map", map);
-		return mav;
-	}
 }

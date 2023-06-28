@@ -210,27 +210,6 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public Map<String, Object> getHotList(int curPage) {
-		Map<String, Object> map = new HashMap<>();
-
-		reviewSerchDTO dto = new reviewSerchDTO();
-		int cnt = reviewDAO.getHotListCnt(dto);
-		PageDTO page = new PageDTO();
-		page = paging.Paging(page);
-		page = paging.PagingMath(page, cnt);
-
-		dto.setStart(page.getStart());
-		dto.setEnd(page.getEnd());
-
-		List<ReviewDTO> list = reviewDAO.getHotAll(dto);
-
-		map.put("list", list);
-		map.put("page", page);
-
-		return map;
-	}
-
-	@Override
 	public Map<String, Object> totalSearch(String gameKeyword) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("gameKeyword", gameKeyword);
