@@ -122,7 +122,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="view" resultType="gameDto">
     	select 	g.gnum, bggnum, gametitle, gametitle_eng, players, playtime, ages, language, bgg_thumbnail,
-         	   	release_year, g.create_date, totalviewcount, ga.fullname gamephoto_url, game_rank, theme
+         	   	release_year, to_char(g.create_date, 'yyyy-mm-dd') as create_date, totalviewcount, ga.fullname gamephoto_url, game_rank, theme
 		from 	game g
 		left join 	(
         	   		select 	gnum, fullname
@@ -553,7 +553,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   				SELECT 	GAME.*,
     					ROW_NUMBER() OVER (ORDER BY GAME.create_date DESC) AS game_rank
   				FROM 	(
-    					SELECT 	GAMETITLE, GNUM, GAMETITLE_ENG, BGG_THUMBNAIL,RELEASE_YEAR,CREATE_DATE, theme
+    					SELECT 	GAMETITLE, GNUM, GAMETITLE_ENG, BGG_THUMBNAIL,RELEASE_YEAR,
+    					to_char(create_date, 'yyyy-mm-dd') as CREATE_DATE, theme
     					FROM 	GAME
     					where	del = 'n' and confirmed = 'allow'
   						) GAME
@@ -690,7 +691,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				select	a.*, rownum rn
 				from	(
 						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.release_year,g.theme,
-								g.bgg_thumbnail, ga.fullname AS gamephoto_url, g.CREATE_DATE, g.CREATE_USER
+								g.bgg_thumbnail, ga.fullname AS gamephoto_url,
+								to_char(g.create_date, 'yyyy-mm-dd') as CREATE_DATE, g.CREATE_USER
 						FROM 	game g
 						LEFT JOIN 	(
 									SELECT 	gnum, fullname
@@ -721,7 +723,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where rn between #{start} and #{end}
 	</select>
 
-	<select id="attachlist" resultType="List">
+	<select id="attachlist" resultType="String">
 		select	fullname
 		from	GAME_ATTACH
 		where	gnum=#{gnum}
@@ -745,7 +747,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				release_year=#{release_year},
 				update_user=#{update_user},
 				update_date=sysdate,
-				theme=#{theme}
+				theme=#{theme},
 				confirmed='allow'
 		where gnum=#{gnum}
 	</update>

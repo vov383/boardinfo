@@ -159,7 +159,7 @@ public class GameServiceImpl implements GameService {
 
     //확장게임 테이블에 insert
     String expansion = dto.getExpansion();
-    if(expansion != null) {
+    if(expansion != null && expansion != "") {
       //확장게임 배열
       String[] expansions = expansion.split(",");
       for (String str : expansions) {
@@ -169,7 +169,7 @@ public class GameServiceImpl implements GameService {
 
     //재구현게임 테이블에 insert
     String reimplement = dto.getReimplement();
-    if(reimplement != null){
+    if(reimplement != null && reimplement != ""){
       //재구현게임 배열
       String[] reimplements = reimplement.split(",");
       for(String str : reimplements){

@@ -13,7 +13,7 @@
     <table border="1" style="width:100%">
 
         <colgroup>
-            <col style="width: 62px"><!-- 상태 -->
+            <col style="width: 130px"><!-- 상태 -->
             <col style="width: 50px"><!-- 빈칸 -->
             <col style="width: 80px"><!-- 이미지 -->
             <col><!-- 게임제목정보 -->

@@ -1,5 +1,6 @@
 package com.example.boardinfo.model.game.dao.gameRating;
 
+import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.model.game.dto.gameRating.RatingStatisticDTO;
 
@@ -24,4 +25,7 @@ public interface GameRatingDAO {
     Map<String, Object> getRateWeight(int gnum);
 
     List<GameRatingDTO> getRateListbyUserid(String userid);
+
+    int getMoreRatingsCount(Map<String, Object> map);
+    List<GameDTO> getMoreRatings(Map<String, Object> map);
 }
