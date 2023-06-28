@@ -54,6 +54,7 @@
 
                             </div>
                             <div class="dropdown-content">
+
                                 <a href="${path}/mypage/goMypage/${sessionScope.userid}">마이페이지</a>
                                 <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
                             </div>

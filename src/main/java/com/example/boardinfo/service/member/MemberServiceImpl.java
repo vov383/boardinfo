@@ -94,7 +94,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public boolean getDelValue(String userid) {
 	    MemberDTO delMember = memberDao.getDelValue(userid);
-	    if (delMember != null && "y".equals(delMember.getDel())) {
+	    if (delMember != null && "Y".equals(delMember.getDel())) {
 	        return true; // 탈퇴한 회원인 경우
 	    }
 	    return false; // 탈퇴하지 않은 회원인 경우
@@ -129,9 +129,16 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void pass_change(Map<String, Object> map, MemberDTO dto) {
+	public void pass_change(Map<String, Object> map, MemberDTO dto , HttpSession session) {
+		session.invalidate();
 		memberDao.pass_change(map,dto);
 		
+		
+	}
+
+	@Override
+	public String getCurrentPassword(String userid) {
+		return memberDao.getCurrentPassword(userid);
 	}
 
 

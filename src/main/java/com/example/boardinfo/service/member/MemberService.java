@@ -25,7 +25,8 @@ public interface MemberService {
     public String getNickname(String user_id);
 	String get_searchId(String name, String hp);
 	String get_PwCheck(String userid, String email);
-	void pass_change(Map<String, Object> map, MemberDTO dto);
+	void pass_change(Map<String, Object> map, MemberDTO dto, HttpSession session);
+	String getCurrentPassword(String userid);
 
 		
 

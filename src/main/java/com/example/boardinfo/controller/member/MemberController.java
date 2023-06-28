@@ -1,4 +1,3 @@
-
 package com.example.boardinfo.controller.member;
 
 import java.io.File;
@@ -24,11 +23,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -56,12 +51,27 @@ public class MemberController {
 	public String join() {
 		return "member/join";
 	}
+	
+	//패스워드 확인 / 변경창
+	@RequestMapping("pass_check_p")
+	public String pass_check_p(@RequestParam String userid, Model model) {
+		//모델에 자료 저장
+		model.addAttribute("dto", memberService.viewMember(userid));
+		return "member/pass_check_p";
+	}
+	//패스워드 확인 / 회원탈퇴창
+	@RequestMapping("pass_check_d")
+	public String pass_check_d(@RequestParam String userid, Model model) {
+		//모델에 자료 저장
+		model.addAttribute("dto", memberService.viewMember(userid));
+		return "member/pass_check_d";
+	}
 
 	//회원로그인 창이동
 	@RequestMapping("member_login.do")
 	public String login() {
 		return "member/login";
-	}
+	}	
 
 	//회원아이디찾기 창이동
 	@RequestMapping("findidmove.do")
@@ -130,13 +140,13 @@ public class MemberController {
 	}
 
 	@RequestMapping("login_check.do")
-	public ModelAndView login_check(MemberDTO dto, HttpSession session, boolean rememberId) {
+	public ModelAndView login_check(MemberDTO dto, HttpSession session) {
 		//로그인 성공 true, 실패 false
 		boolean result = memberService.loginCheck(dto, session);
 		boolean getDelValue = memberService.getDelValue(dto.getUserid()); // 회원 탈퇴 여부 확인
 		ModelAndView mav = new ModelAndView();
 		if (result) { //로그인 성공
-			mav.setViewName("home");
+			mav.setViewName("redirect:/");
 		} else {
 			mav.setViewName("member/login");//뷰이름
 			if (getDelValue) {
@@ -182,15 +192,15 @@ public class MemberController {
 		}
 	}
 	//회원 상세정보 
-	@RequestMapping("member_view.do")
-	public String view(@RequestParam String userid, Model model) {
+	@RequestMapping("pass_check_u")
+	public String pass_check_u(@RequestParam String userid, Model model) {
 		//모델에 자료 저장
 		model.addAttribute("dto", memberService.viewMember(userid));
-		return "member/view";
+		return "member/pass_check_u";
 	}
 	//회원 상세정보 페이지 비밀번호 체크
-	@RequestMapping("pass_check.do")
-	public String checkPw(MemberDTO dto, Model model) {
+	@RequestMapping("pass_check.do/{userid}")
+	public String checkPw(MemberDTO dto, Model model ,@PathVariable("userid") String userid) {
 		//비밀번호 체크
 		boolean result=memberService.checkPw(dto.getUserid(), dto.getPasswd());
 		if(result) {//비번이 맞으면
@@ -199,9 +209,38 @@ public class MemberController {
 		}else {//비번이 틀리면
 			model.addAttribute("dto", dto);
 			model.addAttribute("message", "비밀번호를 확인하세요.");
-			return "member/view";
+			return "member/pass_check_u";
 		}
 	}
+	
+	//회원 비밀번호 변경 페이지 비밀번호 체크
+	@RequestMapping("pass_check2.do/{userid}")
+	public String checkPw2(MemberDTO dto, Model model ,@PathVariable("userid") String userid) {
+		//비밀번호 체크
+		boolean result=memberService.checkPw(dto.getUserid(), dto.getPasswd());
+		if(result) {//비번이 맞으면
+			model.addAttribute("dto", memberService.viewMember(dto.getUserid()));
+			return "member/p_pass_change";
+		}else {//비번이 틀리면
+			model.addAttribute("dto", dto);
+			model.addAttribute("message", "비밀번호를 확인하세요.");
+			return "member/pass_check_p";
+		}
+	}
+	//회원탈퇴 페이지 비밀번호 체크
+		@RequestMapping("pass_check3.do/{userid}")
+		public String checkPw3(MemberDTO dto, Model model ,@PathVariable("userid") String userid) {
+			//비밀번호 체크
+			boolean result=memberService.checkPw(dto.getUserid(), dto.getPasswd());
+			if(result) {//비번이 맞으면
+				model.addAttribute("dto", memberService.viewMember(dto.getUserid()));
+				return "member/delete_member";
+			}else {//비번이 틀리면
+				model.addAttribute("dto", dto);
+				model.addAttribute("message", "비밀번호를 확인하세요.");
+				return "member/pass_check_d";
+			}
+		}
 
 	//회원 상세정보 수정		
 	@RequestMapping("update.do")
@@ -236,7 +275,8 @@ public class MemberController {
 		memberService.updateMember(dto);
 		HttpSession session = request.getSession();
 		session.setAttribute("name",dto.getName());
-		return "home";
+		session.setAttribute("nickname",dto.getNickname());
+		return "redirect:/";
 	}
 
 	//회원 삭제 (del='n'  ->  del='y')로 변경 후 보이지 않게 처리
@@ -244,7 +284,7 @@ public class MemberController {
 	public String delete(@RequestParam("userid") String userid,HttpSession session ) {
 		memberService.deleteMember(userid, session);
 
-		return "home";
+		return "redirect:/";
 	}
 	
 	
@@ -369,7 +409,7 @@ public class MemberController {
 }
 	//변경할 비밀번호를 입력한 후에 확인 버튼을 누르면 넘어오는 컨트롤러
     @RequestMapping("pass_change/{userid}")
-    public ModelAndView pass_change(@PathVariable String userid, HttpServletRequest request, MemberDTO dto, HttpServletResponse pass) throws Exception{
+    public ModelAndView pass_change(@PathVariable String userid,String newPw,HttpServletRequest request, MemberDTO dto, HttpServletResponse pass ,HttpSession session) throws Exception{
     	
     	 String passwd = request.getParameter("new_pw");
          String userid2 = userid;
@@ -383,14 +423,36 @@ public class MemberController {
             map.put("userid", dto.getUserid());
             map.put("passwd", dto.getPasswd());
             
-            memberService.pass_change(map,dto);
+            memberService.pass_change(map,dto, session);
             
             ModelAndView mv = new ModelAndView();
-    	    mv.setViewName("home");
+    	    mv.setViewName("redirect:/");
     	    return mv;
     }
 
+	/*마이페이지로 이동*/
+	@GetMapping("mypage/{userid}")
+	public ModelAndView moveToMyPage(@PathVariable(value="userid") String userid, ModelAndView mav) throws Exception{
+		try {
+			MemberDTO dto = memberService.viewMember(userid);
+			Map<String, Object> map = new HashMap<>();
+			map.put("dto", dto);
 
+			mav.setViewName("member/mypage");
+//			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
 
+			mav.addObject("map", map);
+//			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
+			return mav;
+		}catch (Exception e){
+			e.printStackTrace();
+			return new ModelAndView("home");
+
+		}
+
+	}
 
 }
+
+
+
