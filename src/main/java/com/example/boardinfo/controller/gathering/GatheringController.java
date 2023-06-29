@@ -146,7 +146,7 @@ public class GatheringController {
 		}
 
 		int count = gatheringService.countList(showAvailable, address1List, from, to, option, keyword);
-		Pager pager = new Pager(count, curPage, 15);
+		Pager pager = new Pager(count, curPage, 12);
 		int start = pager.getPageBegin();
 		int end = pager.getPageEnd();
 		list = gatheringService.list(showAvailable, address1List, from, to, start, end, option, keyword);
@@ -187,22 +187,7 @@ public class GatheringController {
 		String user_id = null;
 		if(session!=null) user_id=(String)session.getAttribute("userid");
 
-		boolean updateViewCount = true;
-
-		//다시 풀어놨음~~ 채팅때문에 접속이 빈번한 경우에 대비
-		if(cookie!=null) {
-			String gatheringViewCookie = cookie.getValue();
-				if(gatheringViewCookie.indexOf("["+gathering_id+"]")!=-1) {
-					updateViewCount = false;
-				}
-				else{
-					response.addCookie(new Cookie("gatheringView", gatheringViewCookie + "_["+gathering_id+"]"));
-				}
-			}
-			else {
-				response.addCookie(new Cookie("gatheringView", "["+gathering_id+"]"));
-			}
-
+		gatheringService.updateViewCount(gathering_id, cookie, response);
 		GatheringDTO dto = gatheringService.getGatheringDetails(gathering_id);
 
 		if(dto!=null){
@@ -237,9 +222,26 @@ public class GatheringController {
 	//해당회원인지 확인해야 함
 	@RequestMapping("edit/{gathering_id}")
 	public ModelAndView edit(@PathVariable int gathering_id, ModelAndView mav,
-							 HttpSession session, HttpServletRequest request){
+							 HttpSession session, HttpServletRequest request,
+							 RedirectAttributes redirectAttributes){
 
 		GatheringDTO dto = gatheringService.simpleView(gathering_id);
+
+		LocalDateTime now = LocalDateTime.now();
+		if(dto.getGathering_date().isBefore(now)) {
+			String message = "모임 기간이 지난 글은 수정할 수 없습니다.";
+			redirectAttributes.addFlashAttribute("message", message);
+
+			if (request.getHeader("Referer") != null) {
+				mav.setViewName("redirect:" + request.getHeader("Referer"));
+				return mav;
+
+			} else {
+				mav.setViewName("redirect:/gathering/list.do");
+				return mav;
+			}
+		}
+
 		String user_id = (String)session.getAttribute("userid");
 		if(user_id != null && dto.getWriter_id()!=null && user_id.equals(dto.getWriter_id())){
 			LocalDateTime post_date = dto.getPost_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -251,10 +253,9 @@ public class GatheringController {
 			return mav;
 		}
 
-		//다시 뒤로 보내주기
 		else{
 			if(request.getHeader("Referer")!=null){
-				mav.setViewName("redirect:request.getHeader('Referer')");
+				mav.setViewName("redirect:" + request.getHeader("Referer"));
 				return mav;
 			}
 			else{

@@ -123,6 +123,10 @@
             margin-bottom: 50px;
         }
 
+        footer button{
+            color: black;
+        }
+
     </style>
 
 
@@ -246,7 +250,6 @@
                         }
 
 
-
                         tboardList.append(str);
 
                     }
@@ -289,7 +292,6 @@
                 <div class="boxForList">
                     <div><span>커뮤니티</span>
                         <span><a class="more" href="${path}/review/reviewlist.do?freeFlag=A">&gt</a></span></div>
-
                     <div class="list" id="communityList">
                     </div>
                 </div>

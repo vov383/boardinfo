@@ -15,6 +15,7 @@
     </div>
   </div>
 </footer>
+
 <script>
   const adminLoginBtn = document.getElementById("adminLoginBtn");
   adminLoginBtn.addEventListener("click", function () {

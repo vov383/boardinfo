@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>글쓰기 - 모임모집</title>
+  <title>글쓰기 - 오프모임</title>
   
 <%@ include file="../include/js/header.jsp" %>
 
@@ -148,26 +148,6 @@
     #btn-reset{
       border: 1px solid black;
       background-color: white;
-    }
-
-
-    footer{
-      font-size: 15px;
-      color: #DFDFDF;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 190px;
-      background-color: #3D3D43;
-      bottom: 0;
-      clear: both;
-    }
-    
-    
-    footer > div{
-      width: 100%;
-      max-width: 1120px;
     }
 
 
@@ -425,10 +405,10 @@
 
 <div id="contents">
   <div id="contentsHeader">
-    <h2>모임모집</h2>
+    <h2>오프모임</h2>
   </div>
   <div id="contentsLocation">
-    홈 &gt 오프모임 &gt 모임모집  
+    홈 &gt 오프모임 &gt 모임등록
   </div>
   <div id="contentsMain">
     <form name="gatheringAddForm" method="post" action="${path}/gathering/add.do">

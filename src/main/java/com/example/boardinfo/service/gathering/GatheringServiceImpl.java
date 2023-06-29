@@ -9,6 +9,8 @@ import java.util.*;
 
 
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
@@ -139,7 +141,6 @@ public class GatheringServiceImpl implements GatheringService {
 
 	@Override
 	public GatheringDTO simpleView(int gathering_id) {
-		gatheringDao.updateViewCount(gathering_id);
 		GatheringDTO dto = gatheringDao.view(gathering_id);
 
 		if (dto != null) {
@@ -418,8 +419,17 @@ public class GatheringServiceImpl implements GatheringService {
 		return map;
 	}
 
-
-
-
-
+	@Override
+	public void updateViewCount(int gathering_id, Cookie cookie, HttpServletResponse response) {
+		if(cookie!=null) {
+			String gatheringViewCookie = cookie.getValue();
+			if(gatheringViewCookie.indexOf("["+gathering_id+"]")==-1) {
+				response.addCookie(new Cookie("gatheringView", gatheringViewCookie + "_["+gathering_id+"]"));
+				gatheringDao.updateViewCount(gathering_id);
+			}
+		}
+		else {
+			response.addCookie(new Cookie("gatheringView", "["+gathering_id+"]"));
+		}
+	}
 }

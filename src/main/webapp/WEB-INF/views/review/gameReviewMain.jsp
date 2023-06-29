@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,209 +16,129 @@
         <title>커뮤니티 - 게임포럼</title>
     </c:if>
 
-    <link rel="stylesheet" href="${path}/include/css/style_search.css">
     <style>
 
-        @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 100;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.otf) format('opentype');}
-
-        @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 300;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype');}
-
-        @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 400;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype');}
-
-        @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 500;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.otf) format('opentype');}
-
-        @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 700;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.otf) format('opentype');}
-
-        @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 900;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');}
-
-        * {
-            font-family: 'Noto Sans KR', sans-serif;
-            font-size: 15px;
+        .totalSearchUl ul {
+            padding-inline-start: inherit;
+            border-bottom: 1px solid #d1d1d1;
         }
 
-        html, body{
-            margin: 0 0;
-            padding: 0 0;
-            min-height: 100%;
-        }
-
-        div, input, span{
-            box-sizing: border-box;
-        }
-
-        #header-upper-box > div{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 77px;
-            flex-basis: 1120px;
-            max-width: 1120px;
-        }
-
-        form[name="gameSearch"] > div:first-of-type{
-            background-color: white;
-            position: relative;
-            width: 320px;
-            height: 34px;
-            padding: 2px 10px;
-            border: 2px black solid;
-            border-radius: 20px;
-        }
-
-        form[name="gameSearch"] img{
-            width: 20px;
-            position: absolute;
-            top: 5px;
-            right: 12px;
-            margin: 0;
-            -webkit-user-drag: none;
-        }
-
-        #header-right input:first-of-type{
-            width: 270px;
-            height: 25px;
-            padding-left: 20px;
-            border: none;
-            font-size: 16px;
-            background-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .menu li {
+        .totalSearchUl ul li {
+            margin-right: 2px;
+            list-style: none;
             display: inline-block;
-            flex: 0 0 25%;
-            max-width: 25%;
-            height: 100%;
-            line-height: 45px;
+            height: 36px;
+            width: calc((50%/4) - 5px);
+            min-width: 100px;
+            line-height: 36px;
+            text-align: center;
+            cursor: pointer;
+            border-top: 1px solid #d1d1d1;
+            border-left: 1px solid #d1d1d1;
+            border-right: 1px solid #d1d1d1;
         }
 
-        .toMenu > img{
-            margin-left: -4px;
-            -webkit-user-drag: none;
+        .totalSearchUl ul li.selected {
+            background-color: #1432B1;
+            border-top: 1px solid #1432B1;
+            border-left: 1px solid #1432B1;
+            border-right: 1px solid #1432B1;
+            color: white;
+            font-weight: bold;
         }
 
-        #contents{
-            display: flex;
-            flex-direction: column;
-            margin: auto;
-            max-width: 1120px;
-            min-height: 100%;
-            padding: 129px 0 0 0;
-            font-size: 16px;
-        }
-
-        #contentsHeader{
-            margin: 0;
-            padding-top: 32px;
-            padding-bottom: 5px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        #contentsHeader h2{
-            font-size: 1.9em;
-            margin-top: 0;
-            margin-bottom: 5px;
-        }
-
-        #contentsLocation{
-            margin-bottom: 30px;
-        }
-
-        #contentsMain{
-            border-top: 2px solid black;
-            margin-bottom: 80px;
-            flex-grow: 1;
-            min-height: 420px;
-        }
-
-        #postUpper > div:first-of-type{
-            padding: 30px 0;
-        }
-
-        #postUpper > div:nth-of-type(2){
-            padding: 30px 0 30px 0;
-            flex-grow: 1;
-            display: flex;
-            justify-content: space-between;
-            flex-direction: column;
-        }
-
-        .labelAndItem > span:first-of-type{
-            width: 90px;
-            text-align: right;
-            margin-right: 25px;
-        }
-
-        .labelAndItem input{
-            padding-left: 8px;
-        }
-
-        .labelAndItem input[type="date"]{
-            width: 190px;
-        }
-
-        .labelAndItem input[type="number"]{
-            width:100px;
-            margin-right: 5px;
-        }
-
-
-        input[name="question"]{
+        .game_rank_div ul {
+            margin: 0 0 40px 0;
+            padding: 0;
             width: 100%;
+            padding-inline-start: inherit;
         }
 
-        #postMain > div:last-of-type{
+        .game_rank_div ul li {
+            border-radius: 5px;
+            background-color: #e9e9e9;
+            margin-right: 6px;
+            cursor: pointer;
+            list-style: none;
+            float: left;
+            width: calc((30%/4) - 5px);
+            min-width: 90px;
+            height: 30px;
+            line-height: 30px;
             text-align: center;
         }
 
-        #postMain ul{
-            list-style-position: inside;
-            margin: 0;
-            padding: 20px 10px 30px 10px;
-        }
-
-        button[id*="btn-"]{
-            cursor: pointer;
-            width: 82px;
-            height: 34px;
-            font-size: 16px;
+        .game_rank_div .selected{
             font-weight: bold;
-            border-radius: 0;
         }
 
-        footer{
-            font-size: 15px;
-            color: #DFDFDF;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 190px;
-            background-color: #3D3D43;
-            bottom: 0;
-            clear: both;
-        }
-
-        footer > div{
+        table{
             width: 100%;
-            max-width: 1120px;
+            table-layout: fixed;
+            border-collapse: collapse;
         }
 
-        table{border-collapse:collapse; background-color:#fff8e1}
-        tr, td{border-color: #ffffff; border-style: solid;}
-        tr:nth-child(1n+2){background-color: #ffffff;}
-
-        /*    !*짝수줄만 배경색을 다르게*!
-            tr:nth-child(2n+0){background-color: #ffffaf;}*/
-
-
-        .totalSearchUl ul li {
-            width: calc((100% / 4) - 2px);
+        th{
+            border-bottom: 2px solid #e9e9e9;
+            padding: 6px 0;
         }
+
+        th:last-of-type{
+            max-width: 120px;
+        }
+
+        td{
+            padding: 4px 0;
+            border-bottom: 1px solid #d9d9d9;
+        }
+
+        .letLeft{
+            text-align: left;
+        }
+
+        table a{
+            text-decoration: none;
+            color: black;
+        }
+
+        table a:hover{
+            text-decoration: underline;
+        }
+
+        .reply{
+            margin-left: 10px;
+            color: #C53A32;
+            font-size: 0.8em;
+        }
+
+        .searchBox{
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            height: 30px;
+        }
+
+        .searchBox input{
+            width: 300px;
+            padding-left: 5px;
+            margin-right: 5px;
+        }
+
+        .searchBox button{
+            padding: 0 20px;
+        }
+
+
+        #btn-write{
+            margin: 10px 0;
+            float: right;
+        }
+
 
         #paginationArea{
+            clear: both;
             display: flex;
+            justify-content: center;
             margin: 20px auto 0 auto;
         }
 
@@ -306,42 +227,44 @@
 
     <c:if test='${"Y" eq freeFlag}'>
         <div id="contentsLocation">
-            홈&gt 커뮤니티&gt 자유게시판
+            홈 &gt 커뮤니티 &gt 자유게시판
         </div>
     </c:if>
 
     <c:if test='${"N" eq freeFlag}'>
         <div id="contentsLocation">
-            홈&gt 커뮤니티&gt 게임포럼
+            홈 &gt 커뮤니티 &gt 게임포럼
         </div>
     </c:if>
 
     <c:if test='${"A" eq freeFlag}'>
         <div id="contentsLocation">
-            홈&gt 커뮤니티&gt 전체
+            홈 &gt 커뮤니티
         </div>
     </c:if>
 
     <c:if test='${"H" eq freeFlag}'>
         <div id="contentsLocation">
-            홈&gt 커뮤니티&gt 인기글
+            홈 &gt 커뮤니티 &gt 인기글
         </div>
     </c:if>
 
     <%--목록상단 조건별 정렬--%>
     <div class="totalSearchUl">
         <ul>
-            <li<c:if test="${freeFlag eq 'A'}"> class="selected" </c:if>>
-                <a href="${path}/review/reviewlist.do?freeFlag=A">전체</a>
+            <li onclick="location.href='${path}/review/reviewlist.do'"
+            <c:if test="${freeFlag eq 'A'}"> class="selected" </c:if>>
+                전체
             </li>
-            <li<c:if test="${freeFlag eq 'H'}"> class="selected" </c:if>>
-                <a href="${path}/review/reviewlist.do?freeFlag=H">인기</a>
+            <li onclick="location.href='${path}/review/reviewlist.do?freeFlag=H'"
+                    <c:if test="${freeFlag eq 'H'}"> class="selected" </c:if>>
+                인기
             </li>
-            <li<c:if test="${freeFlag eq 'N'}"> class="selected" </c:if>>
-                <a href="${path}/review/reviewlist.do?freeFlag=N&detail=A">게임포럼</a>
+            <li onclick="location.href='${path}/review/reviewlist.do?freeFlag=N&detail=A'" <c:if test="${freeFlag eq 'N'}"> class="selected" </c:if>>
+               게임포럼
             </li>
-            <li<c:if test="${freeFlag eq 'Y'}"> class="selected" </c:if>>
-                <a href="${path}/review/reviewlist.do?freeFlag=Y">자유게시판</a>
+            <li onclick="location.href='${path}/review/reviewlist.do?freeFlag=Y'" <c:if test="${freeFlag eq 'Y'}"> class="selected" </c:if>>
+                자유게시판
             </li>
         </ul>
     </div>
@@ -351,17 +274,21 @@
 
     <div class="game_rank_div">
         <ul>
-            <li>
-                <a<c:if test="${detail eq 'A'}"> class="selected" </c:if> href="${path}/review/reviewlist.do?freeFlag=N">전체</a>
+            <li <c:if test="${detail eq 'A'}"> class="selected"</c:if>
+                    onclick="location.href='${path}/review/reviewlist.do?freeFlag=N'">
+               전체
             </li>
-            <li>
-                <a<c:if test="${detail eq 'Q'}"> class="selected" </c:if> href="${path}/review/reviewlist.do?freeFlag=N&detail=Q">질문</a>
+            <li <c:if test="${detail eq 'Q'}"> class="selected" </c:if>
+                    onclick="location.href='${path}/review/reviewlist.do?freeFlag=N&detail=Q'">
+                질문
             </li>
-            <li>
-                <a<c:if test="${detail eq 'K'}"> class="selected" </c:if> href="${path}/review/reviewlist.do?freeFlag=N&detail=K">노하우</a>
+            <li <c:if test="${detail eq 'K'}"> class="selected" </c:if>
+                    onclick="location.href='${path}/review/reviewlist.do?freeFlag=N&detail=K'">
+                노하우
             </li>
-            <li>
-                <a<c:if test="${detail eq 'R'}"> class="selected" </c:if> href="${path}/review/reviewlist.do?freeFlag=N&detail=R">게임후기</a>
+            <li <c:if test="${detail eq 'R'}"> class="selected" </c:if>
+                    onclick="location.href='${path}/review/reviewlist.do?freeFlag=N&detail=R'">
+                게임후기
             </li>
         </ul>
     </div>
@@ -370,48 +297,59 @@
 
     <div id="contentsMain">
 
-        <%--검색 및 글쓰기 버튼--%>
-        <div class="searchBox">
-            <input type="text" id="searchTitle" placeholder="제목 및 내용을 검색하세요.">
-            <button type="button" id="search" onclick="searchFu('1')">검색</button>
-            <button type="button" onclick="btnReviewInsert()">글쓰기</button>
-        </div>
-
-
         <%--본문--%>
         <form name="reviewlist" method="post" action="${path}/review/reviewlist.do">
-            <table style="table-layout:fixed;">
+            <table>
                 <tr>
                     <th style="width: 50px;">No.</th>
-                    <th style="width: 100px;">카테고리</th>
-                    <th style="width: 300px;">제목</th>
-                    <th style="width: 150px;">닉네임</th>
-                    <th style="width: 200px;">게임</th>
-                    <th style="width: 50px;">&#128366;</th> <%--조회수--%>
-                    <th style="width: 50px;">&#x1f495</th> <%--좋아요--%>
-                    <th style="width: 50px;">댓글</th>
-                    <th style="width: 200px;">등록일자</th>
+                    <th style="width: 120px;">카테고리</th>
+                    <th class='letLeft' style="width: 300px;">제목</th>
+                    <c:if test="${freeFlag!='Y'}">
+                        <th class="letLeft" style="width: 200px;">게임</th>
+                    </c:if>
+                    <th class="letLeft" style="width: 150px;">작성자</th>
+                    <th style="width: 50px;">조회수</th>
+                    <th style="width: 50px;"><img src="${path}/images/game/pink_heart.png" width="15px"></th>
+                    <th style="width: 80px;">작성일</th>
                 </tr>
 
                 <c:forEach items="${list}" var="vo">
                     <tr>
                         <td style="text-align: center;">${vo.rnum}</td>
                         <td style="text-align: center;">${vo.category}</td>
-                        <td style="text-align: center;"><a href="javascript:reviewDetail('${vo.regNum}')">${vo.title}</a></td>
-                        <td style="text-align: center;">${vo.nickName}</td>
-                        <td style="text-align: center;">${vo.gametitle}</td>
+                        <td class="letLeft"><a href="javascript:reviewDetail('${vo.regNum}')">${vo.title}
+                                <c:if test="${vo.recnt>0}"><span class="reply">${vo.recnt}</span></c:if></a></td>
+                        <c:if test="${freeFlag!='Y'}">
+                        <td class="letLeft">${vo.gametitle}</td>
+                        </c:if>
+                        <td class="letLeft">${vo.nickName}</td>
                         <td style="text-align: center;">${vo.views}</td>
-                        <td style="text-align: center;">${vo.good}</td>
-                        <td style="text-align: center;">${vo.recnt}</td>
-                        <td style="text-align: center;">${vo.createDate}</td>
-
-
+                        <td style="text-align: center;">
+                                <c:if test="${vo.good>0}">
+                                    ${vo.good}
+                                </c:if>
+                        </td>
+                        <c:set var="originalValue" value="${vo.createDate}" />
+                        <td style="text-align: center;">
+                            <c:out value="${fn:substringBefore(originalValue, ' ')}" />
+                        </td>
                     </tr>
                 </c:forEach>
             </table>
         </form>
 
-<%--
+            <%--검색 버튼--%>
+            <div class="searchBox">
+                <input type="text" id="searchTitle" placeholder="제목 및 내용을 검색하세요.">
+                <button type="button" id="search" onclick="searchFu('1')">검색</button>
+            </div>
+
+
+            <c:if test="${freeFlag!='H'}">
+                <button type="button" onclick="btnReviewInsert()" id="btn-write">글쓰기</button>
+            </c:if>
+
+        <%--
               private int nowPage;                 // 현재 페이지
               private int cntPage;                 // 화면 페이지 개수 (가로)
               private int cntPerPage;              // 쿼리 리스트 개수 (세로)
@@ -456,18 +394,11 @@
                     <c:if test="${page.lastPage > page.nowPage}">
                         <div class="pageItem" onclick="searchFu('${page.nowPage+1}')">&gt</div>
                     </c:if>
-                    <c:if test="${page.lastPage ne page.nowPage}">
+                    <c:if test="${page.lastPage ne page.nowPage && page.lastPage > 1}">
                         <div class="pageItem" onclick="searchFu('${page.lastPage}')">&gt&gt</div>
                     </c:if>
 
                 </div>
-
-
-
-
-
-
-
 
 
 
@@ -476,7 +407,6 @@
     </div>
 </div>
 
-<%--!!!F;O;O;T;E;R 첨부해주세요--%>
 <%@include file="../include/footer.jsp" %>
 
 </body>

@@ -19,6 +19,8 @@ public class ChoiceGameDTO {
 	private String createDate;		// 등록 일자
 	private String updateUser;		// 수정자
 	private String updateDate;		// 수정 일자
+	private int game_rank; //주간순위
+	private int game_rank_month; //월간순위
 
 	public String getChoiceRegNum() {
 		return choiceRegNum;
@@ -154,6 +156,22 @@ public class ChoiceGameDTO {
 
 	public void setUpdateDate(String updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	public int getGame_rank() {
+		return game_rank;
+	}
+
+	public void setGame_rank(int game_rank) {
+		this.game_rank = game_rank;
+	}
+
+	public int getGame_rank_month() {
+		return game_rank_month;
+	}
+
+	public void setGame_rank_month(int game_rank_month) {
+		this.game_rank_month = game_rank_month;
 	}
 }
 

@@ -102,17 +102,53 @@
 
 
     .memberArea .dropdown-content{
-        min-width: 120px;
+        top: calc(100% + 5px);
         width: 100%;
+        right: 0;
+        min-width: 90px;
+        max-width: 90px;
         flex-direction: column;
     }
 
     .memberArea .dropdown-content a{
-        min-width: 120px;
+        min-width: 90px;
         width: 100%;
         padding: 10px 0;
     }
 
+    .noticeList{
+        position: absolute;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+
+        margin-top: 20px;
+        width: 385px;
+        min-height: 100px;
+        right: -40px;
+        background-color: white;
+        box-shadow: 10px 10px 20px 0 rgba(0,0,0,.1);
+        border-radius: 10px;
+    }
+
+    .noticeList::after{
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        right: 44px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: transparent transparent #EDECEC transparent;
+    }
+
+
+    .noticeList > div:first-child{
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        width: 100%;
+        background-color: #EDECEC;
+        padding: 10px 14px;
+    }
 
     .toast-chat{
         margin-top: 8px;
@@ -146,7 +182,7 @@
         position: absolute;
         bottom: 100%;
         left: 50%;
-        border-width: 5px;
+        border-width: 8px;
         border-style: solid;
         border-color: transparent transparent white transparent;
     }
@@ -188,6 +224,15 @@
                                 </span><img src="${path}/images/chat.png" id="chatImg" alt="채팅">
                                 <div class="toast-chat"></div>
                             </div>
+                            <div id="noticeArea">
+                                <a title="알림" href="#">
+                                    <span id="unreadNotice"></span>
+                                    <img src="${path}/images/notice.png" id="noticeImg" alt="알림">
+                                </a>
+                                <div class="noticeList">
+                                    <div>알림</div>
+                                </div>
+                            </div>
                         </a>
                         <!-- admin login 상태 -->
 
@@ -213,6 +258,15 @@
                                 </a>
                                 <div class="toast-chat"></div>
                             </div>
+                        <div id="noticeArea">
+                            <a title="알림" href="#">
+                                <span id="unreadNotice"></span>
+                                <img src="${path}/images/notice.png" id="noticeImg" alt="알림">
+                            </a>
+                            <div class="noticeList">
+                                <div>알림</div>
+                            </div>
+                        </div>
                         <!-- userid로 로그인한 상태 -->
                    <div class="memberArea">
                         <div class="toMenu">
@@ -254,13 +308,13 @@
                 </div>
             </li>
             <li>
-                <div class="toMenu">
+                <div class="toMenu" onclick="location.href='${path}/review/reviewlist.do?freeFlag=A'">
                     커뮤니티
                     <img src="${path}/images/dropdown.png" width="16px">
                 </div>
                 <div class="dropdown-content">
-                    <a href="${path}/review/reviewlist.do?freeFlag=N">전체</a>
-                    <a href="${path}/review/reviewlist.do?freeFlag=N">인기글</a>
+                    <a href="${path}/review/reviewlist.do?freeFlag=A">전체</a>
+                    <a href="${path}/review/reviewlist.do?freeFlag=H">인기글</a>
                     <a href="${path}/review/reviewlist.do?freeFlag=N">게임포럼</a>
                     <a href="${path}/review/reviewlist.do?freeFlag=Y">자유게시판</a>
                 </div>
@@ -523,25 +577,29 @@
         });
     });
 
-    // javascript로 만든 드롭다운
+    /* javascript로 만든 드롭다운
     document.addEventListener('click', function (event) {
-        /*가장 가까운 dropdown클래스를 변수에 이벤트 할당*/
+        //가장 가까운 dropdown클래스를 변수에 이벤트 할당
         var dropdown = event.target.closest('.dropdown');
         if (dropdown) {
-            /*dropdown이 true면 classList.toggle() show클래스가 없으면 추가 & 있으면 제거*/
+            //dropdown이 true면 classList.toggle() show클래스가 없으면 추가 & 있으면 제거
             dropdown.querySelector('.dropdown-content').classList.toggle('show');
         } else {
-            /*dropdown이 false면*/
+            //dropdown이 false면
             var dropdowns = document.getElementsByClassName('dropdown-content');
             for (var i = 0; i < dropdowns.length; i++) {
                 var dropdownContent = dropdowns[i];
-                /*show클래스를 갖고 있으면 제거*/
+                //show클래스를 갖고 있으면 제거
                 if (dropdownContent.classList.contains('show')) {
                     dropdownContent.classList.remove('show');
                 }
-            }//for문 end
-        } //if else문 end
+            } //for문 end
+        } // if else문 end
     });
+
+    */
+
+
 
 
 
@@ -581,9 +639,7 @@
             var chatAlarm = $("<span class='alarmMessages'>" + chatMessageDto.nickname + ": "
                 + chatMessageDto.message + "</span>");
             chatAlarm.click(function(){
-
                 location.href = "${path}/chat/room.do?gathering_id=" + msg_gathering_id;
-
             });
 
             $(".toast-chat").append(chatAlarm);

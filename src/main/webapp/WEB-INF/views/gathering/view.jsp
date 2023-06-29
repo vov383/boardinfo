@@ -300,18 +300,6 @@
             margin-right: 5px;
         }
 
-        footer{
-            font-size: 15px;
-            color: #DFDFDF;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding-left: 200px;
-            height: 190px;
-            background-color: #3D3D43;
-            bottom: 0;
-            clear: both;
-        }
 
         /*여기부터 모달*/
         .popup-wrap{
@@ -778,6 +766,12 @@
 <body>
 <%@include file="../include/top.jsp" %>
 
+<c:if test="${message!=null}">
+    <script>
+        alert("${message}");
+    </script>
+</c:if>
+
 <div id="contents">
     <div id="contentsHeader">
         <h2>모임모집</h2>
@@ -978,9 +972,11 @@
                     <span>댓글[<span id="countReplies"></span>]</span>
                     <span>이 모임에 대해 궁금한 사항이 있으면 댓글을 달아보세요.</span>
                     <c:if test="${sessionScope.userid==dto.writer_id}">
-                        <button type="button" id="btn-Edit"
-                                onclick='editPost()'>수정
-                        </button>
+                        <c:if test="${dto.status == '모집중'}">
+                            <button type="button" id="btn-Edit"
+                                    onclick='editPost()'>수정
+                            </button>
+                        </c:if>
                         <button type="button" id="btn-Delete"
                                 onclick="deletePost()"> 삭제
                         </button>

@@ -141,14 +141,6 @@ public class TBoardServiceImpl implements TBoardService {
 	@Override
 	public List<TBoardDTO> getHomeList(Integer size) {
 		List<TBoardDTO> list = tboardDao.getHomeList(size);
-
-		for(TBoardDTO item : list){
-			if(item.getCategory().equals("s")) item.setCategory("판매");
-			else if(item.getCategory().equals("b")) item.setCategory("구매");
-			else if(item.getCategory().equals("n")) item.setCategory("나눔");
-			else item.setCategory("완료");
-		}
-
 		return list;
 
 	}
