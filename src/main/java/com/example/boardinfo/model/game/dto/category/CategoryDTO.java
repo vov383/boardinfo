@@ -3,6 +3,16 @@ package com.example.boardinfo.model.game.dto.category;
 public class CategoryDTO {
   private int cnum;
   private String gamecategory;
+
+  public String getGamecategory_ko() {
+    return gamecategory_ko;
+  }
+
+  public void setGamecategory_ko(String gamecategory_ko) {
+    this.gamecategory_ko = gamecategory_ko;
+  }
+
+  private String gamecategory_ko;
   private String userid;
   private int count;
 
