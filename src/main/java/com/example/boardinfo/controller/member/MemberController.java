@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.example.boardinfo.service.chat.ChatService;
+import com.google.gson.Gson;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
@@ -37,6 +39,9 @@ public class MemberController {
 
 	@Inject
 	MemberService memberService;
+
+	@Inject
+	ChatService chatService;
 
 	//회원리스트
 	@RequestMapping("member_list.do")
@@ -144,9 +149,18 @@ public class MemberController {
 		//로그인 성공 true, 실패 false
 		boolean result = memberService.loginCheck(dto, session);
 		boolean getDelValue = memberService.getDelValue(dto.getUserid()); // 회원 탈퇴 여부 확인
+
 		ModelAndView mav = new ModelAndView();
 		if (result) { //로그인 성공
-			mav.setViewName("redirect:/");
+
+
+			//활성화된 채팅정보 저장
+			List<Integer> activeChats = chatService.getMyActiveChats(dto.getUserid());
+			Gson gson = new Gson();
+			session.setAttribute("activeChats", gson.toJson(activeChats));
+
+			mav.setViewName("home");
+
 		} else {
 			mav.setViewName("member/login");//뷰이름
 			if (getDelValue) {

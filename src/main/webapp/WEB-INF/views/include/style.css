@@ -67,7 +67,7 @@
       font-size: 15px;
     }
 
-    #header-left a, #header-right a{
+    #header-left a{
         display: flex;
         align-items: center;
     }
@@ -111,9 +111,14 @@
       margin: 0 30px;
     }
 
+    #chatArea{
+        margin-left: 35px;
+        position: relative;
+    }
+
+
 
     #chatImg{
-        margin-left: 35px;
         width: 28px;
     }
 
@@ -121,6 +126,17 @@
         cursor: pointer;
     }
 
+
+    #unreadChat{
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background-color: red;
+        border-radius: 50px;
+        color: white;
+        font-size: 13px;
+        opacity: 0;
+    }
 
     .nav{
       margin: 0 auto;

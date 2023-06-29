@@ -2,6 +2,7 @@ package com.example.boardinfo.model.chat.dao;
 
 import javax.inject.Inject;
 
+import com.example.boardinfo.model.gathering.dto.ChatRoomDTO;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -12,8 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
 
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 @Repository
@@ -27,13 +27,17 @@ public class ChatMessageDAOImpl implements ChatMessageDAO {
 	}
 
 	@Override
-	public List<ChatMessageDTO> getList(int gathering_id, int curPage, boolean desc) {
+	public List<ChatMessageDTO> getList(int gathering_id, int curPage, boolean desc, Date accessDate) {
 
 		int pageSize = 30;
 		int skip = (curPage-1) * pageSize;
 
-		Query query = new Query(Criteria.where("gathering_id").is(gathering_id))
-				.with(Sort.by(Sort.Direction.DESC, "insertDate")).skip(skip).limit(pageSize);
+
+		Query query = new Query(Criteria.where("gathering_id").is(gathering_id)
+				.and("insertDate").lt(accessDate))
+				.with(Sort.by(Sort.Direction.DESC, "insertDate"))
+				.skip(skip)
+				.limit(pageSize);
 
 		List<ChatMessageDTO> list = mongoTemplate.find(query, ChatMessageDTO.class, "chatMessage");
 
@@ -69,4 +73,21 @@ public class ChatMessageDAOImpl implements ChatMessageDAO {
 		return results.getMappedResults();
 
 	}
+
+
+	@Override
+	public boolean hasUnreadMessages(List<ChatRoomDTO> myRooms) {
+		for (ChatRoomDTO room : myRooms) {
+			Query query = new Query()
+					.addCriteria(Criteria.where("gathering_id").is(room.getGathering_id())
+							.and("insertDate").gt(room.getLast_visit()));
+			boolean hasUnread = mongoTemplate.exists(query, ChatMessageDTO.class, "chatMessage");
+			if (hasUnread) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 }

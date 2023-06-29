@@ -107,7 +107,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from attendee
 		where gathering_id = g.gathering_id and type = 'a') as attendee_count
 		from gathering g
-		join member m on g.writer_id = m.userid
+		left join member m on g.writer_id = m.userid
 	    where
 	        show = 'y'
 	        <if test="address1List!=null and address1List.length!=0">
@@ -169,6 +169,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="view" resultType="gatheringDTO">
+	select g.*, m.nickname as nickname
+	from gathering g
+		left join member m on g.writer_id = m.userid
+	where g.gathering_id = #{gathering_id} and show = 'y'
+
+	<!--
 	select g.*, m.nickname,
 	(select count(*)
 	from attendee
@@ -176,6 +182,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	from gathering g
 	join member m on g.writer_id = m.userid
 	where gathering_id = #{gathering_id} and show = 'y'
+	-->
 	</select>
 	
 	<update id="viewCount">
@@ -405,8 +412,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
 
 
-	<select id="getAttendingGatheringList" resultType="gatheringDTO">
-		select a.gathering_id, g.title,
+	<select id="getAttendingGatheringList" resultType="chatRoomDTO">
+		select a.gathering_id, g.title, a.last_visit,
+
 			   (select count(*)
 				from attendee a2
 				where a.gathering_id = a2.gathering_id and type = 'a') as attendee_count
@@ -414,6 +422,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				 join gathering g on a.gathering_id = g.gathering_id and g.show = 'y'
 		where user_id = #{user_id} and type = 'a'
 	</select>
+
+	<select id="attendeeList" resultType="String">
+		select user_id
+		from attendee
+		where gathering_id = #{gathering_id} and type = 'a'
+		order by attendee_id
+	</select>
+
+	<select id="attendeeInfoList" resultType="attendeeDTO">
+				select attendee_id, user_id, nickname, profile
+				from attendee a
+				left join member m on a.user_id = m.userid
+				where gathering_id = #{gathering_id} and type = 'a'
+	</select>
+
+
+	<select id="waitingInfoList" resultType="attendeeDTO">
+		select attendee_id, user_id, nickname, profile
+		from attendee a
+				 left join member m on a.user_id = m.userid
+		where gathering_id = #{gathering_id} and type = 'w'
+	</select>
+
 
 	<select id="getMyActiveChats" resultType="Integer">
 		select a.gathering_id
@@ -429,6 +460,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where gathering_id = #{gathering_id} and user_id = #{user_id}
 	</update>
 
+
+
+	<select id="getMyChatsLastVisit" resultType="chatRoomDTO">
+		select a.gathering_id, a.last_visit
+		from attendee a
+				 join gathering g on a.gathering_id = g.gathering_id
+		where user_id = #{user_id} and type = 'a' and
+		      (g.finishChat = 'n' or
+		       g.finishChat = 'y' and trunc(g.gathering_date+3)+1 <![CDATA[>]]>= a.last_visit)
+	</select>
+
+
+	<update id="leaveAll">
+		update attendee
+		set type = 'l', update_date = sysdate
+		where gathering_id = #{gathering_id} and type = 'a'
+	</update>
+
+	<delete id="cancelAllApplications">
+		delete attendee
+        where gathering_id = #{gathering_id} and type = 'w'
+	</delete>
 
 	<select id="totalSearch" resultType="gatheringDto">
 		select 	gathering_id, post_date, title, gathering_date, address1, address2, view_count, maxpeople,
@@ -468,6 +521,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from	gathering g
 		where 	regexp_like(title, #{gameKeyword},'i') AND g.show = 'y'
 	</select>
+
 
 
 
