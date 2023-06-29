@@ -1102,7 +1102,7 @@
 
                        let topReview = "<div class='topReview' data-writer='" + list[i].userid + "'> <span class='reviewStar'><span>" + rating + "</span>"
                             +"<img src='${path}/images/game/yellow_star.png' width='90px' height='85px' style='vertical-align: middle'></span>"
-                            +"<div><div>"+ list[i].userid + "&nbsp;&nbsp;&nbsp;&nbsp;" + list[i].create_date + "</div>"
+                            +"<div><div>"+ list[i].nickname + "&nbsp;&nbsp;&nbsp;&nbsp;" + list[i].create_date + "</div>"
                             + rating_comment
                             +"<div><div class='reviewDetail'>" + weightSpan + bestSpan + goodSpan + badSpan + "</div>"
                             +likeItDiv + "</div></div></div>";

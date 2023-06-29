@@ -152,10 +152,10 @@
                         }
                         hotList.append(str);
                     }
-                    else alert("에러가 발생했습니다.");
+                    else console.log("에러가 발생했습니다.");
                 },
                 error: function(){
-                    alert("에러가 발생했습니다.");
+                    console.log("에러가 발생했습니다.");
                 }
 
             });
@@ -181,10 +181,10 @@
                         communityList.append(str);
 
                     }
-                    else alert("에러가 발생했습니다.");
+                    else console.log("에러가 발생했습니다.");
                 },
                 error: function(){
-                    alert("에러가 발생했습니다.");
+                    console.log("에러가 발생했습니다.");
                 }
 
             });
@@ -211,10 +211,10 @@
                         gatheringList.append(str);
 
                     }
-                    else alert("에러가 발생했습니다.");
+                    else console.log("에러가 발생했습니다.");
                 },
                 error: function(){
-                    alert("에러가 발생했습니다.");
+                    console.log("에러가 발생했습니다.");
                 }
 
             });
@@ -244,10 +244,10 @@
                         tboardList.append(str);
 
                     }
-                    else alert("에러가 발생했습니다.");
+                    else console.log("에러가 발생했습니다.");
                 },
                 error: function(){
-                    alert("에러가 발생했습니다.");
+                    console.log("에러가 발생했습니다.");
                 }
 
             });

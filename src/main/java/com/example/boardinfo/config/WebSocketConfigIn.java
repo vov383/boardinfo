@@ -1,6 +1,6 @@
 package com.example.boardinfo.config;
 
-import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
+import com.example.boardinfo.model.gathering.dto.GatheringAlarmDTO;
 import com.example.boardinfo.service.chat.ChatRoomStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -12,21 +12,15 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.socket.config.annotation.*;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Map;
 
 @Configuration
-//@EnableWebSocket
 @EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+public class WebSocketConfigIn implements WebSocketMessageBrokerConfigurer {
 
 
     @Autowired
@@ -44,7 +38,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-stomp").addInterceptors(new HttpSessionHandshakeInterceptor())
+        registry.addEndpoint("/ws-stomp/in").addInterceptors(new HttpSessionHandshakeInterceptor())
                 .setAllowedOrigins("*").withSockJS().setHeartbeatTime(10000);
     }
 
@@ -57,24 +51,27 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 StompHeaderAccessor accessor =
                         MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
-                    if (StompCommand.DISCONNECT.equals(accessor.getCommand())) {
 
+                if(StompCommand.CONNECT.equals(accessor.getCommand())){
+                    if (accessor.containsNativeHeader("inChatRoom")) {
+                        String user_id = accessor.getFirstNativeHeader("user_id");
+                        Integer gathering_id = Integer.parseInt(accessor.getFirstNativeHeader("inChatRoom"));
                         String session_id = (String) message.getHeaders().get("simpSessionId");
-
-                        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-                        HttpServletRequest request = attributes.getRequest();
-                        HttpSession session = request.getSession();
-                        if(session.getAttribute("curSession").equals(session_id)){
-                            session.removeAttribute("curSession");
-                            session.removeAttribute("curChat");
-                        }
-
-                        ChatMessageDTO chatMessage = chatRoomStore.leaveOrRemoveRoom(session_id);
-                        if(chatMessage.getUserId()!=null){
-                            messagingTemplate.convertAndSend("/sub/alarm/user/" +
-                                   chatMessage.getUserId(), chatMessage);
-                            }
+                        chatRoomStore.joinOrCreateRoom(gathering_id, user_id, session_id);
+                    }
                 }
+
+
+                else if (StompCommand.DISCONNECT.equals(accessor.getCommand())) {
+                    String sessionId = (String) message.getHeaders().get("simpSessionId");
+                    GatheringAlarmDTO alarm = chatRoomStore.leaveOrRemoveRoom(sessionId);
+                    if(alarm!=null){
+                        alarm.setMessage(sessionId);
+                        messagingTemplate.convertAndSend("/sub/alarm/user/" +
+                                    alarm.getUser_id(), alarm);
+                    }
+                }
+
 
                 return message;
 

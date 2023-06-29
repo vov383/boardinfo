@@ -11,6 +11,8 @@ public class AttendeeDTO {
     private Date create_date;
     private Date update_date;
     private String answer;
+    private String nickname;
+    private String profile;
 
 
     public AttendeeDTO() {
@@ -78,6 +80,21 @@ public class AttendeeDTO {
         this.answer = answer;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
 
     @Override
     public String toString() {

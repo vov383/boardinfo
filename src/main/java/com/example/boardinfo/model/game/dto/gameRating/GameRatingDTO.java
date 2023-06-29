@@ -3,6 +3,7 @@ package com.example.boardinfo.model.game.dto.gameRating;
 public class GameRatingDTO {
     private int gnum;
     private String userid;
+    private String nickname;
     private float rating;
     private float weight;
     private int participant1;
@@ -114,7 +115,6 @@ public class GameRatingDTO {
         this.myLike = myLike;
     }
 
-
     public String getCreate_date() {
         return create_date;
     }
@@ -131,11 +131,21 @@ public class GameRatingDTO {
         this.update_date = update_date;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+
     @Override
     public String toString() {
         return "GameRatingDTO{" +
                 "gnum=" + gnum +
                 ", userid='" + userid + '\'' +
+                ", nickname='" + nickname + '\'' +
                 ", rating=" + rating +
                 ", weight=" + weight +
                 ", participant1=" + participant1 +
@@ -146,8 +156,8 @@ public class GameRatingDTO {
                 ", rating_comment='" + rating_comment + '\'' +
                 ", likeCount=" + likeCount +
                 ", myLike=" + myLike +
-                ", create_date=" + create_date +
-                ", update_date=" + update_date +
+                ", create_date='" + create_date + '\'' +
+                ", update_date='" + update_date + '\'' +
                 '}';
     }
 }

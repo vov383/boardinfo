@@ -3,6 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+
 <!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
 <mapper namespace="gameRating">
 	<insert id="add">
@@ -91,21 +92,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				select a.*, rownum rn
 				from
 				(
-				select userid, count(l.user_id) likeCount, r.gnum, rating, weight, participant1, participant2,
-				participant3, participant4, participant5, rating_comment, to_char(create_date, 'YYYY-MM-dd') create_date, count(l2.user_id) myLike
+				select r.userid, nickname, nvl(likeCount,0) likeCount, nvl(myLike,0) myLike, gnum, rating, weight, participant1, participant2,
+				participant3, participant4, participant5, rating_comment, to_char(create_date, 'YYYY-MM-dd') create_date
 				from game_rating r
-				left join game_rating_like l on r.userid = l.writer_id
-				left join (
-				select writer_id, user_id from game_rating_like
-				where  gnum=#{gnum} and user_id =#{user_id}
-				)l2 on r.userid = l2.writer_id
-				where r.gnum = #{gnum}
-				group by l.writer_id, userid, r.gnum, rating, weight, participant1, participant2, participant3,
-				participant4, participant5, rating_comment, create_date, l2.user_id, l2.writer_id
+				join member m on r.userid = m.userid
+				left join
+				(
+				select count(*) likeCount, writer_id
+				from game_rating_like
+				where gnum = 20
+				group by writer_id
+				) l
+				on r.userid = l.writer_id
+				left join
+				(
+				select count(*) myLike, writer_id
+				from game_rating_like
+				where gnum = 20 and user_id = 'kim123'
+				group by writer_id
+				) u
+				on r.userid = u.writer_id
+				where r.gnum = 20
 				order by likeCount desc, create_date desc
 				)a
 				)
-				where rn <![CDATA[<]]>= #{number}
+				where rn <![CDATA[<]]>= 3
 			</when>
 			<otherwise>
 				select *
@@ -113,13 +124,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				(
 				select a.*, rownum rn
 				from
-				(select userid, count(l.user_id) likeCount, r.gnum, rating, weight, participant1, participant2,
+				(
+				select r.userid, nickname, nvl(likeCount,0) likeCount, gnum, rating, weight, participant1, participant2,
 				participant3, participant4, participant5, rating_comment, to_char(create_date, 'YYYY-MM-dd') create_date
 				from game_rating r
-				left join game_rating_like l on r.userid = l.writer_id
-				where r.gnum =#{gnum}
-				group by writer_id, userid, r.gnum, rating, weight, participant1, participant2, participant3,
-				participant4, participant5, rating_comment, create_date
+				join member m on r.userid = m.userid
+				left join
+				(
+				select count(*) likeCount, writer_id
+				from game_rating_like
+				where gnum = #{gnum}
+				group by writer_id
+				) l
+				on r.userid = l.writer_id
+				where r.gnum = #{gnum}
 				order by likeCount desc, create_date desc
 				)a
 				)

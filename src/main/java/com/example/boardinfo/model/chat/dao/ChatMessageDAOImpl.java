@@ -27,13 +27,17 @@ public class ChatMessageDAOImpl implements ChatMessageDAO {
 	}
 
 	@Override
-	public List<ChatMessageDTO> getList(int gathering_id, int curPage, boolean desc) {
+	public List<ChatMessageDTO> getList(int gathering_id, int curPage, boolean desc, Date accessDate) {
 
 		int pageSize = 30;
 		int skip = (curPage-1) * pageSize;
 
-		Query query = new Query(Criteria.where("gathering_id").is(gathering_id))
-				.with(Sort.by(Sort.Direction.DESC, "insertDate")).skip(skip).limit(pageSize);
+
+		Query query = new Query(Criteria.where("gathering_id").is(gathering_id)
+				.and("insertDate").lt(accessDate))
+				.with(Sort.by(Sort.Direction.DESC, "insertDate"))
+				.skip(skip)
+				.limit(pageSize);
 
 		List<ChatMessageDTO> list = mongoTemplate.find(query, ChatMessageDTO.class, "chatMessage");
 
@@ -72,18 +76,18 @@ public class ChatMessageDAOImpl implements ChatMessageDAO {
 
 
 	@Override
-	public long countMyUnreads(List<ChatRoomDTO> myRooms) {
-		long unread = 0L;
-
+	public boolean hasUnreadMessages(List<ChatRoomDTO> myRooms) {
 		for (ChatRoomDTO room : myRooms) {
 			Query query = new Query()
 					.addCriteria(Criteria.where("gathering_id").is(room.getGathering_id())
-							.and("timestamp").gt(room.getLast_visit()));
-			long unreadCount = mongoTemplate.count(query, ChatMessageDTO.class);
-			unread += unreadCount;
+							.and("insertDate").gt(room.getLast_visit()));
+			boolean hasUnread = mongoTemplate.exists(query, ChatMessageDTO.class, "chatMessage");
+			if (hasUnread) {
+				return true;
+			}
 		}
 
-		return unread;
+		return false;
 	}
 
 }

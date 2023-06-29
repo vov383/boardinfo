@@ -1,11 +1,7 @@
 package com.example.boardinfo.model.gathering.dto;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -50,9 +46,9 @@ public class GatheringDTO {
 	private int attendee_count;
 	private String show;
 	private String finishChat;
+	private List<AttendeeDTO> attendeeDTOList;
+	private List<AttendeeDTO> waitingDTOList;
 
-	private ChatMessageDTO lastChat;
-	
 
 
 	public int getGathering_id() {
@@ -279,12 +275,19 @@ public class GatheringDTO {
 		this.finishChat = finishChat;
 	}
 
-
-	public ChatMessageDTO getLastChat() {
-		return lastChat;
+	public List<AttendeeDTO> getAttendeeDTOList() {
+		return attendeeDTOList;
 	}
 
-	public void setLastChat(ChatMessageDTO lastChat) {
-		this.lastChat = lastChat;
+	public void setAttendeeDTOList(List<AttendeeDTO> attendeeDTOList) {
+		this.attendeeDTOList = attendeeDTOList;
+	}
+
+	public List<AttendeeDTO> getWaitingDTOList() {
+		return waitingDTOList;
+	}
+
+	public void setWaitingDTOList(List<AttendeeDTO> waitingDTOList) {
+		this.waitingDTOList = waitingDTOList;
 	}
 }

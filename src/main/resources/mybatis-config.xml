@@ -26,6 +26,8 @@
 		<typeAlias type="com.example.boardinfo.model.gathering.dto.GatheringDTO" alias="gatheringDTO"/>
 		<typeAlias type="com.example.boardinfo.model.gathering.dto.GatheringReplyDTO" alias="gatheringReplyDTO"/>
 		<typeAlias type="com.example.boardinfo.model.gathering.dto.ChatRoomDTO" alias="chatRoomDTO"/>
+		<typeAlias type="com.example.boardinfo.model.gathering.dto.GatheringAlarmDTO" alias="gatheringAlarmDTO"/>
+		<typeAlias type="com.example.boardinfo.model.gathering.dto.AttendeeDTO" alias="attendeeDTO"/>
 
 
 		<typeAlias type="com.example.boardinfo.model.tboard.dto.TBoardDTO" 

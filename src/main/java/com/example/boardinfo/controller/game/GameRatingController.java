@@ -96,7 +96,6 @@ public class GameRatingController {
         List<GameRatingDTO> list = gameRatingService.getTopRatings(gnum, number, user_id);
         HashMap<String, List<GameRatingDTO>> map = new HashMap<>();
         map.put("list", list);
-        System.out.println("사이즈는 " + list.size());
         return map;
     }
 

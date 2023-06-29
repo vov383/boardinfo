@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -203,7 +204,7 @@ public class GatheringDAOImpl implements GatheringDAO {
 	}
 
 	@Override
-	public List<GatheringDTO> getAttendingGatheringList(String user_id) {
+	public List<ChatRoomDTO> getAttendingGatheringList(String user_id) {
 		return sqlSession.selectList("gathering.getAttendingGatheringList", user_id);
 	}
 
@@ -215,7 +216,7 @@ public class GatheringDAOImpl implements GatheringDAO {
 
 
 	@Override
-	public void updateLastVisit(int gathering_id, String user_id, LocalDate date) {
+	public void updateLastVisit(int gathering_id, String user_id, LocalDateTime date) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("gathering_id", gathering_id);
 		map.put("user_id", user_id);
@@ -225,12 +226,28 @@ public class GatheringDAOImpl implements GatheringDAO {
 
 
 	@Override
-	public List<ChatRoomDTO> getMyLastVisit(String user_id, Integer curChat) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("user_id", user_id);
-		map.put("curChat", curChat);
-		return sqlSession.selectList("gathering.getMyChatsLastVisit", map);
+	public List<ChatRoomDTO> getMyLastVisit(String user_id) {
+		return sqlSession.selectList("gathering.getMyChatsLastVisit", user_id);
 	}
 
+	@Override
+	public List<String> leaveAll(int gathering_id) {
+		List<String> attendeeList = sqlSession.selectList("gathering.attendeeList", gathering_id);
+
+		//참가자는 leave, 신청자는 삭제
+		sqlSession.update("gathering.leaveAll", gathering_id);
+		sqlSession.delete("gathering.cancelAllApplications", gathering_id);
+		return attendeeList;
+	}
+
+	@Override
+	public List<AttendeeDTO> getAttendeeInfoList(int gathering_id){
+		return sqlSession.selectList("gathering.attendeeInfoList", gathering_id);
+	}
+
+	@Override
+	public List<AttendeeDTO> getWaitingInfoList(int gathering_id) {
+		return sqlSession.selectList("gathering.waitingInfoList", gathering_id);
+	}
 }
 

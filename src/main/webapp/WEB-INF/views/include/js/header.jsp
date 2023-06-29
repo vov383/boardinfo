@@ -6,5 +6,7 @@
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <script src="https://kit.fontawesome.com/bde109fc2f.js" crossorigin="anonymous"></script>
 <script src="${path}/include/js/jquery-3.6.3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <link href="${path}/include/style.css" type="text/css" rel="stylesheet">
 

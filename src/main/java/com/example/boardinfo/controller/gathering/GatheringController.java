@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 import com.example.boardinfo.service.chat.ChatService;
@@ -59,7 +60,7 @@ public class GatheringController {
 		dto.setWriter_id(user_id);
 
 		//에러처리 해야함
-		int new_gathering_id = gatheringService.addPost(dto);
+		int new_gathering_id = gatheringService.addPost(dto, session);
 		return "redirect:/gathering/view/" + new_gathering_id;
 	}
 
@@ -68,7 +69,7 @@ public class GatheringController {
 	public String delete(@RequestParam int gathering_id, HttpSession session,
 						 RedirectAttributes redirectAttributes) {
 		String user_id = (String)session.getAttribute("userid");
-		String message = gatheringService.deletePost(gathering_id, user_id);
+		String message = gatheringService.deletePost(gathering_id, user_id, session);
 		redirectAttributes.addFlashAttribute("message", message);
 		return "redirect:/gathering/list.do";
 	}
@@ -186,7 +187,7 @@ public class GatheringController {
 				response.addCookie(new Cookie("gatheringView", "["+gathering_id+"]"));
 			}
 
-		GatheringDTO dto = gatheringService.view(gathering_id, updateViewCount);
+		GatheringDTO dto = gatheringService.getGatheringDetails(gathering_id);
 
 		if(dto!=null){
 			mav.setViewName("/gathering/view");
@@ -205,6 +206,7 @@ public class GatheringController {
 			mav.addObject("curPage", curPage);
 			mav.addObject("address1List", address1List);
 			mav.addObject("showAvailable", showAvailable);
+			mav.addObject("waitCount", dto.getWaitingDTOList().size());
 		}
 
 		else{
@@ -221,9 +223,7 @@ public class GatheringController {
 	public ModelAndView edit(@PathVariable int gathering_id, ModelAndView mav,
 							 HttpSession session, HttpServletRequest request){
 
-		GatheringDTO dto = gatheringService.view(gathering_id, false);
-
-
+		GatheringDTO dto = gatheringService.simpleView(gathering_id);
 		String user_id = (String)session.getAttribute("userid");
 		if(user_id != null && dto.getWriter_id()!=null && user_id.equals(dto.getWriter_id())){
 			LocalDateTime post_date = dto.getPost_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -237,7 +237,6 @@ public class GatheringController {
 
 		//다시 뒤로 보내주기
 		else{
-			System.out.println(request.getHeader("Referer"));
 			if(request.getHeader("Referer")!=null){
 				mav.setViewName("redirect:request.getHeader('Referer')");
 				return mav;
@@ -282,7 +281,7 @@ public class GatheringController {
 										   @RequestParam(value="answer", required=false) String answer
 										   ){
 		String user_id = (String)session.getAttribute("userid");
-		String message = gatheringService.addAttendee(gathering_id, user_id, answer);
+		String message = gatheringService.addAttendee(gathering_id, user_id, answer, session);
 		Map<String, String> map = new HashMap<>();
 		map.put("message", message);
 		return map;
@@ -293,7 +292,7 @@ public class GatheringController {
 	@RequestMapping("/withdraw.do")
 	public Map<String, String> withdrawAttendee(@RequestParam int gathering_id, HttpSession session){
 		String user_id = (String)session.getAttribute("userid");
-		String message = gatheringService.withDrawAttendee(gathering_id, user_id);
+		String message = gatheringService.withDrawAttendee(gathering_id, user_id, session);
 		Map<String, String> map = new HashMap<>();
 		map.put("message", message);
 		return map;

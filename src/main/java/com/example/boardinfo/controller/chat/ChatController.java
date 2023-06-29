@@ -1,9 +1,11 @@
 package com.example.boardinfo.controller.chat;
 
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
+import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.service.chat.ChatService;
+import com.example.boardinfo.service.gathering.GatheringAlarmService;
 import com.example.boardinfo.service.gathering.GatheringService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -16,6 +18,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
+import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +35,9 @@ public class ChatController {
     GatheringService gatheringService;
 
     @Inject
+    GatheringAlarmService gatheringAlarmService;
+
+    @Inject
     ChatService chatService;
 
     @GetMapping("/room.do")
@@ -38,18 +47,25 @@ public class ChatController {
         String user_id = (String) session.getAttribute("userid");
 
         //채팅방 목록 불러오기
-        List<GatheringDTO> rlist = chatService.getAttendingChatroomList(user_id, gathering_id);
-        mav.addObject("rlist", rlist);
+        Map<String, Object> map = chatService.getAttendingChatroomList(user_id, gathering_id);
+        mav.addObject("rlist", map.get("rlist"));
+        mav.addObject("unread", map.get("unread"));
         mav.addObject("user_id", user_id);
         mav.setViewName("gathering/chatMain");
 
         Map<String, String> nicknameMap = null;
+        Date accessDate = new Date();
 
         if(gathering_id != null) {
 
             if (gatheringService.checkIfAttendee(gathering_id, user_id) == AttendeeType.ATTENDING) {
-                GatheringDTO dto = gatheringService.view(gathering_id, false);
-                List<ChatMessageDTO> list = chatService.chatList(gathering_id, 1, false);
+                GatheringDTO dto = gatheringService.simpleView(gathering_id);
+                List<AttendeeDTO> attendeeDTOList = gatheringService.getAttendeeList(gathering_id);
+                dto.setAttendeeDTOList(attendeeDTOList);
+                dto.setAttendee_count(attendeeDTOList.size());
+
+                List<ChatMessageDTO> list = chatService.chatList(gathering_id, 1, false, accessDate);
+
                 nicknameMap = chatService.getNicknameMap(gathering_id);
 
                 for (ChatMessageDTO item : list) {
@@ -75,16 +91,27 @@ public class ChatController {
 
         Gson gson = new Gson();
         mav.addObject("nicknameMap", gson.toJson(nicknameMap));
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = dateFormat.format(accessDate);
+        mav.addObject("accessDate", dateString);
         return mav;
     }
 
 
     @ResponseBody
     @GetMapping("/viewMoreChat.do")
-    public Map<String, Object> viewMoreChat(@RequestParam int gathering_id, @RequestParam int curPage) {
+    public Map<String, Object> viewMoreChat(@RequestParam int gathering_id,
+                                            @RequestParam int curPage, @RequestParam String dateString) {
 
-        List<ChatMessageDTO> list = chatService.chatList(gathering_id, curPage, true);
-        System.out.println("curPage" + curPage);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date accessDate = new Date();
+        try{
+            accessDate = dateFormat.parse(dateString);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        List<ChatMessageDTO> list = chatService.chatList(gathering_id, curPage, true, accessDate);
         Map<String, Object> map = new HashMap<>();
         map.put("list", list);
         return map;
@@ -117,16 +144,25 @@ public class ChatController {
 
     @ResponseBody
     @GetMapping("/unreadCount.do")
-    public Map<String, Long> getActiveUnreadCount(HttpSession session) {
+    public Map<String, Boolean> getActiveUnreadCount(HttpSession session) {
 
         String user_id = (String) session.getAttribute("userid");
-        Integer curChat = (Integer) session.getAttribute("curChat");
-        long count = chatService.getMyUnreadCount(user_id, curChat);
-        Map<String, Long> map = new HashMap<>();
-        map.put("chatCount", count);
+        Gson gson = new Gson();
+        String json = (String) session.getAttribute("activeChats");
+        Type listType = new TypeToken<List<Integer>>() {}.getType();
+        List<Integer> activeChats = gson.fromJson(json, listType);
+        boolean unread = chatService.checkUnreadMessage(user_id, activeChats);
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("unread", unread);
         return map;
     }
 
+
+    @ResponseBody
+    @GetMapping("/updateByAlarm.do")
+    public void updateByAlarm(HttpSession session, String alarm_id) {
+        gatheringAlarmService.updateSessionByAlarm(alarm_id, session);
+    }
 
 
 }
