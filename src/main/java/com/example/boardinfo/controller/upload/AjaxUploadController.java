@@ -129,7 +129,7 @@ public class AjaxUploadController {
 				'/', File.pathSeparatorChar)).delete();
 		
 		//레코드 삭제 기능 추가
-		tboardService.deleteFile(fileName);
+		//tboardService.deleteFile(fileName);
 		gameService.deleteFile(fileName);
 		
 		return new ResponseEntity<String>("deleted", HttpStatus.OK);
