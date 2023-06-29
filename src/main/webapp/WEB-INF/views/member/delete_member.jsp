@@ -190,12 +190,14 @@ li {
 	border-style: solid;
 	width : 100%;
 	border-color: black white black;
+	padding-bottom: 30px;
 }
 .num2 {
 	border: 1px;
 	border-style: solid;
 	width : 100%;
 	border-color: white white black;
+	padding-bottom: 30px;
 }
 
 span{
@@ -250,7 +252,7 @@ span{
 					
 				</div>
 				<form name="form1" method="post" >
-				<input type="button" value="탈퇴하기" name="btnDelete" id="btnDelete" >
+				<input type="button" value="탈퇴하기" name="btnDelete" id="btnDelete"  style="margin-left: 45px;">
 				</form>
 			</div>
 		</div>
