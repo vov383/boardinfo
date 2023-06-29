@@ -2,16 +2,32 @@ package com.example.boardinfo.service.gathering;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.*;
+
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
+
 import com.example.boardinfo.model.gathering.dao.GatheringAlarmDAO;
 import com.example.boardinfo.model.gathering.dto.GatheringAlarmDTO;
 import com.example.boardinfo.model.gathering.dto.*;
 import com.example.boardinfo.service.chat.ChatService;
+
+import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
+import com.example.boardinfo.model.gathering.dto.AttendeeType;
+import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
+import com.example.boardinfo.model.review.dto.ReviewDTO;
+import com.example.boardinfo.model.member.dao.MemberDAO;
+import com.example.boardinfo.service.game.GameServiceImpl;
+import com.example.boardinfo.util.Pager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -22,7 +38,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GatheringServiceImpl implements GatheringService {
-
+	private static final Logger logger=
+			LoggerFactory.getLogger(GatheringServiceImpl.class);
 	@Inject
 	GatheringDAO gatheringDao;
 
@@ -355,6 +372,99 @@ public class GatheringServiceImpl implements GatheringService {
 	@Override
 	public int deleteReply(GatheringReplyDTO dto) {
 		return gatheringDao.deleteReply(dto);
+	}
+
+	@Override
+	public List<GatheringDTO> getAttendingChatroomList(String user_id, Integer gathering_id) {
+		List<GatheringDTO> gatheringList = gatheringDao.getAttendingGatheringList(user_id);
+
+		List<Integer> idList = new ArrayList<>();
+		List<GatheringDTO> resultList = new ArrayList<>();
+
+		for(GatheringDTO item : gatheringList) {
+			idList.add(item.getGathering_id());
+		}
+
+		List<ChatMessageDTO> lastMessages = chatMessageDAO.getLastChatMessages(idList);
+
+		for(ChatMessageDTO item : lastMessages){
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
+			item.setFormattedDate(dateFormat.format(item.getInsertDate()));
+
+			if(item.getUserId().equals("SYSTEM")){
+				String message = item.getMessage();
+				int index = message.indexOf("]");
+				if(index!=-1){
+					String user = message.substring(1, index);
+					item.setMessage(memberDAO.getNickname(user) + message.substring(index+1));
+				}
+			}
+
+			Optional<GatheringDTO> dto = gatheringList.stream()
+					.filter(g -> g.getGathering_id() == item.getGathering_id())
+					.findFirst();
+
+			if(dto.isPresent()){
+				GatheringDTO g = dto.get();
+				g.setLastChat(item);
+
+				resultList.add(g);
+			}
+
+		}
+		return resultList;
+	}
+
+	@Override
+	public List<Integer> getMyActiveChats(String user_id) {
+		return gatheringDao.getMyActiveChats(user_id);
+	}
+
+	@Override
+	public List<GatheringDTO> totalSearch(String gameKeyword) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("gameKeyword", gameKeyword);
+		map.put("filter", "none");
+		List<GatheringDTO> list = gatheringDao.totalSearch(map);
+
+		for(GatheringDTO dto : list) {
+			//status 세팅
+			LocalDateTime now = LocalDateTime.now();
+			LocalDateTime gathering_date = dto.getGathering_date();
+			if (now.isAfter(gathering_date)) {
+				dto.setStatus("모임종료");
+			} else dto.setStatus("모집중");
+		}
+		return list;
+	}
+
+	@Override
+	public Map<String, Object> totalSearchMore(Map<String, Object> map) {
+		int curPage = Integer.parseInt(String.valueOf(map.get("curPage")));
+
+		int count = gatheringDao.totalSearchCount(map);
+
+		Pager pager = new Pager(count, curPage, 10);
+		int start = pager.getPageBegin();
+		int end = pager.getPageEnd();
+
+		map.put("start",start);
+		map.put("end",end);
+
+		List<GatheringDTO> list = gatheringDao.totalSearch(map);
+		for(GatheringDTO dto : list) {
+			//status 세팅
+			LocalDateTime now = LocalDateTime.now();
+			LocalDateTime gathering_date = dto.getGathering_date();
+			if (now.isAfter(gathering_date)) {
+				dto.setStatus("모임종료");
+			} else dto.setStatus("모집중");
+		}
+		map.put("list",list);
+		map.put("count",count);
+		map.put("pager",pager);
+		return map;
 	}
 
 }

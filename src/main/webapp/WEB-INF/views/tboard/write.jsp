@@ -169,7 +169,20 @@
                     }
                 });
             });
+            /*가격에 숫자만 입력되도록 처리*/
+            $('#price').on("propertychange keyup paste input", function() {
+                let price = $(this).val();
 
+                // 숫자인지 아닌지 확인
+                if (isNaN(price)) {
+                    $(this).val(''); // input[id=price] 비워
+                    /*에러 alert*/
+                    alert("가격 입력란은 숫자만 입력해주세요!");
+                    return;
+                }
+            });
+
+            /*카테고리 나눔 누르면 가격 사라지는 버튼*/
             let priceVisible = true;
             $('input[name=category]').change(function () {
                 if ($("input[name=category]:checked").val() == "n") {
@@ -202,28 +215,7 @@
             if (CKEDITOR.instances.description.getData().length < 1) {
                 alert("상품 설명을 입력해 주세요.");
                 return;
-            } else {
-                var editor = CKEDITOR.instances.description; // Assuming 'gathering_content' is the CKEditor instance name
-                var content = editor.getData(); // Retrieve the CKEditor content
-
-                var parser = new DOMParser();
-                var doc = parser.parseFromString(content, 'text/html');
-
-                // Get all <img> tags
-                var imgTags = doc.getElementsByTagName('img');
-                debugger
-
-                const input = document.getElementById("input");
-                // Extract the information from the <img> tags
-                for (var i = 0; i < imgTags.length; i++) {
-                    var imgSrc = imgTags[i].getAttribute('src'); // Get the 'src' attribute of the <img> tag
-                    // Do whatever you need with the 'imgSrc' value
-                    debugger
-
-                }
-
             }
-
             document.insertForm.action = "${path}/tboard/insert.do";
             document.insertForm.submit();
         }
@@ -265,17 +257,17 @@
             <div class="postUpper">
                 <div id="categoryContainer">
                     <span>카테고리</span>
-                    <input type="radio" id="s" name="category" value="s" checked="checked">
+                    <input type="radio" id="s" name="category" value="판매" checked="checked">
                     <label for="s">
                         <div class="category">판매</div>
                     </label>
                     <div class="dot"></div>
-                    <input type="radio" id="b" name="category" value="b">
+                    <input type="radio" id="b" name="category" value="구매">
                     <label for="b">
                         <div class="category">구매</div>
                     </label>
                     <div class="dot"></div>
-                    <input type="radio" id="n" name="category" value="n">
+                    <input type="radio" id="n" name="category" value="나눔">
                     <label for="n">
                         <div class="category">나눔</div>
                     </label>
@@ -295,16 +287,11 @@
                 <div class="preview" id="preview"></div>
             </section>
 
-            <div> 첨부파일을 등록하세요
-                <div class="fileDrop"></div>
-                <div id="uploadedList"></div>
-            </div>
-
             <div id="postMain">
                 <textarea id="description" name="description" placeholder="상품설명을 자유롭게 적어보세요"></textarea>
                 <script>
                     CKEDITOR.replace("description", {
-                        filebrowserUploadUrl: "${path}/tupload/imageUpload.do"
+                        removePlugins: 'uploadfile'
                     });
                 </script>
             </div>

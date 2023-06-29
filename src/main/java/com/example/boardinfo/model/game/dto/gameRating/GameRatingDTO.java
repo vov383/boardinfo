@@ -17,6 +17,26 @@ public class GameRatingDTO {
 
     private String create_date;
     private String update_date;
+    
+    /*게임 타이틀과 bgg_thumbnail을 list로 반환하기 위해 멤버변수 추가*/
+    private String gametitle;
+    private String bgg_thumbnail;
+
+    public String getGametitle() {
+        return gametitle;
+    }
+
+    public void setGametitle(String gametitle) {
+        this.gametitle = gametitle;
+    }
+
+    public String getBgg_thumbnail() {
+        return bgg_thumbnail;
+    }
+
+    public void setBgg_thumbnail(String bgg_thumbnail) {
+        this.bgg_thumbnail = bgg_thumbnail;
+    }
 
 
     public int getGnum() {

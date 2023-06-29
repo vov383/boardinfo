@@ -1,6 +1,7 @@
 package com.example.boardinfo.service.admin;
 
 import com.example.boardinfo.model.admin.dto.AdminDTO;
+import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.model.member.dto.MemberDTO;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 public interface AdminService {
     List<AdminDTO> getAdminList();
@@ -57,4 +59,12 @@ public interface AdminService {
     void reviewStatistics();
 
     List<GameRatingDTO> gameRatinglist(String userid);
+
+    Map<String, Object> confirmList(int curPage, String sort);
+
+    void deleteitem(String filter, int num);
+
+    void denyGame(int gnum, String userid);
+
+    void allowGame(GameDTO dto);
 }

@@ -43,9 +43,15 @@ public interface GatheringDAO {
 	public int deleteReply(GatheringReplyDTO dto);
 	public List<ChatRoomDTO> getAttendingGatheringList(String user_id);
 	public List<Integer> getMyActiveChats(String user_id);
+
 	public void updateLastVisit(int gatheringId, String user_id, LocalDateTime date);
 	public List<ChatRoomDTO> getMyLastVisit(String user_id);
 	public List<String> leaveAll(int gathering_id);
 	public List<AttendeeDTO> getAttendeeInfoList(int gathering_id);
 	public List<AttendeeDTO> getWaitingInfoList(int gatheringId);
+
+  List<GatheringDTO> totalSearch(Map<String, Object> map);
+	int totalSearchCount(Map<String, Object> map);
+
+
 }

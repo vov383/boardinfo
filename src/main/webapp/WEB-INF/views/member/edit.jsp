@@ -83,7 +83,7 @@ function check() {
 		return;
 	}
 	//이메일 정규식
-	var exp4 = /^[a-z0-9]{2,9}@[a-z0-9]{2,9}\.[a-z]{2,}$/;
+	var exp4 = /^[a-z0-9]{2,15}@[a-z0-9]{2,9}\.[a-z]{2,}$/;
 	if(!exp4.test(email)){
 		alert("이메일 형식이 잘못되었습니다. ex)abc@abc.com");
 		$("#email").focus();
@@ -104,7 +104,7 @@ function check() {
 }
 $(function() {
 	$("#btnDelete").click(function(){
-		if(confirm('삭제하시겠습니까?')){
+		if(confirm('탈퇴하시겠습니까?')){
 			document.form1.action="${path}/member/delete.do";
 			document.form1.submit();
 			alert("회원탈퇴가 완료되었습니다.");
@@ -130,10 +130,6 @@ $(function() {
  <tr>
   <td>아이디</td>
   <td><input value="${dto.userid}" id="userid" name="userid" readonly></td>
- </tr>
- <tr>
-  <td>비밀번호</td>
-  <td><input type="password" id="passwd" name="passwd" readonly></td>
  </tr>
  <tr>
   <td>닉네임</td>

@@ -224,7 +224,6 @@ public class GatheringDAOImpl implements GatheringDAO {
 		sqlSession.update("gathering.updateLastVisit", map);
 	}
 
-
 	@Override
 	public List<ChatRoomDTO> getMyLastVisit(String user_id) {
 		return sqlSession.selectList("gathering.getMyChatsLastVisit", user_id);
@@ -248,6 +247,16 @@ public class GatheringDAOImpl implements GatheringDAO {
 	@Override
 	public List<AttendeeDTO> getWaitingInfoList(int gathering_id) {
 		return sqlSession.selectList("gathering.waitingInfoList", gathering_id);
+
+	@Override
+	public List<GatheringDTO> totalSearch(Map<String, Object> map) {
+		return sqlSession.selectList("gathering.totalSearch", map);
+	}
+
+	@Override
+	public int totalSearchCount(Map<String, Object> map) {
+		return sqlSession.selectOne("gathering.totalSearchCount", map);
+
 	}
 }
 

@@ -125,8 +125,8 @@ footer{
 						</tr>
 						<tr>
 							<td colspan="3"><button type="button" name="findidbtn"
-									id="findidbtn" onclick="searchId()">확인</button> <a
-								href="${path}/"><button type="button">메인으로</button></a></td>
+									id="findidbtn" onclick="searchId()">확인</button> 
+									<a href="${path}/"><button type="button">메인으로</button></a></td>
 						</tr>
 					</table>
 				</fieldset>

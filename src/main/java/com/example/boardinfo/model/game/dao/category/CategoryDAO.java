@@ -18,4 +18,12 @@ public interface CategoryDAO {
   List<String> viewGamecategory(int gnum);
 
   void deleteGame_Category(String category, int gnum);
+
+    List<CategoryDTO> confirmList(Map<String, Object> map);
+
+    void deleteitem(int num);
+
+    int game_list_categoryCount();
+
+  List<CategoryDTO> game_list_category(Map<String, Object> map);
 }

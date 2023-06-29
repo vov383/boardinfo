@@ -2,6 +2,7 @@ package com.example.boardinfo.service.gathering;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
@@ -41,6 +42,9 @@ public interface GatheringService {
 	public int updateReply(GatheringReplyDTO dto);
 	public int deleteReply(GatheringReplyDTO dto);
     public List<AttendeeDTO> getAttendeeList(Integer gathering_id);
+
+	List<GatheringDTO> totalSearch(String gameKeyword);
+    Map<String, Object> totalSearchMore(Map<String, Object> map);
 
 
 }
