@@ -174,6 +174,7 @@
             flex-wrap: wrap;
         }
 
+
         #attendeeList a{
             color: black;
             text-decoration: none;
@@ -187,9 +188,13 @@
             margin-right: 7px;
         }
 
+        .attendee span{
+            font-size: 13px;
+        }
+
         .attendee img{
-            width: 45px;
-            height: 45px;
+            width: 42px;
+            height: 42px;
             margin-bottom: 3px;
         }
 
@@ -923,10 +928,10 @@
                         	</c:choose>
 
                         </li>
-                        <li>${dto.attendee_count}/${dto.maxPeople}명 참가중 <c:if test="${waitCount}>0">, ${waitCount}명 대기중</c:if>
+                        <li>${dto.attendee_count}/${dto.maxPeople}명 참가중<c:if test="${waitCount>0}"> (대기 ${waitCount}명)</c:if>
                             <div id="attendeeList">
                                 <c:forEach var="attendee" items="${dto.attendeeDTOList}">
-                                    <a href="${path}/member/mypage/goMypage/${attendee.user_id}">
+                                    <a href="${path}/mypage/goMypage/${attendee.user_id}">
                                     <div class="attendee">
                                         <img src="${path}/images/${attendee.profile}">
                                         <span>${attendee.nickname}</span>
@@ -1007,7 +1012,7 @@
     <div class="popup-wrap">
         <div class="popup">
             <div class="popup-body">
-                <div>이 모임은 허가제 모입입니다.<br>
+                <div>이 모임은 허가제 모임입니다.<br>
                     다음 질문에 답한 뒤 모임장의 승인을 받아야 참석할 수 있습니다.</div>
                 <div>[질문]&nbsp;${dto.question}</div>
                 <input name="answer">
