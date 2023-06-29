@@ -21,9 +21,6 @@ import com.example.boardinfo.service.chat.ChatService;
 import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
-import com.example.boardinfo.model.member.dao.MemberDAO;
-import com.example.boardinfo.service.game.GameServiceImpl;
 import com.example.boardinfo.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -372,52 +369,8 @@ public class GatheringServiceImpl implements GatheringService {
 		return gatheringDao.deleteReply(dto);
 	}
 
-	@Override
-	public List<GatheringDTO> getAttendingChatroomList(String user_id, Integer gathering_id) {
-		List<GatheringDTO> gatheringList = gatheringDao.getAttendingGatheringList(user_id);
 
-		List<Integer> idList = new ArrayList<>();
-		List<GatheringDTO> resultList = new ArrayList<>();
 
-		for(GatheringDTO item : gatheringList) {
-			idList.add(item.getGathering_id());
-		}
-
-		List<ChatMessageDTO> lastMessages = chatMessageDAO.getLastChatMessages(idList);
-
-		for(ChatMessageDTO item : lastMessages){
-
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
-			item.setFormattedDate(dateFormat.format(item.getInsertDate()));
-
-			if(item.getUserId().equals("SYSTEM")){
-				String message = item.getMessage();
-				int index = message.indexOf("]");
-				if(index!=-1){
-					String user = message.substring(1, index);
-					item.setMessage(memberDAO.getNickname(user) + message.substring(index+1));
-				}
-			}
-
-			Optional<GatheringDTO> dto = gatheringList.stream()
-					.filter(g -> g.getGathering_id() == item.getGathering_id())
-					.findFirst();
-
-			if(dto.isPresent()){
-				GatheringDTO g = dto.get();
-				g.setLastChat(item);
-
-				resultList.add(g);
-			}
-
-		}
-		return resultList;
-	}
-
-	@Override
-	public List<Integer> getMyActiveChats(String user_id) {
-		return gatheringDao.getMyActiveChats(user_id);
-	}
 
 	@Override
 	public List<GatheringDTO> totalSearch(String gameKeyword) {
@@ -464,5 +417,9 @@ public class GatheringServiceImpl implements GatheringService {
 		map.put("pager",pager);
 		return map;
 	}
+
+
+
+
 
 }

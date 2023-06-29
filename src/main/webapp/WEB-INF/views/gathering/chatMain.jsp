@@ -370,7 +370,7 @@
               <button type="button" onclick="withdraw()">채팅방 나가기</button>
               <div id="attendeeList">
                   <c:forEach var="attendee" items="${dto.attendeeDTOList}">
-                      <a class="attendee-wrap" href="${path}/member/mypage/goMypage/${attendee.user_id}">
+                      <a class="attendee-wrap" href="${path}/mypage/goMypage/${attendee.user_id}">
                           <div class="attendee">
                               <img src="${path}/images/${attendee.profile}">
                               <span>${attendee.nickname}</span>

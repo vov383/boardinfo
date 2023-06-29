@@ -33,7 +33,6 @@
             max-width: 50%;
             display: flex;
             flex-direction: column;
-            border-bottom: 2px solid #d9d9d9;
         }
 
         div[class='boxForList']:first-of-type{
@@ -83,6 +82,8 @@
             padding: 8px 0;
             display: flex;
             flex-direction: column;
+            border-bottom: 2px solid #d9d9d9;
+            min-height: 238px;
         }
 
         .list > div{
@@ -102,9 +103,8 @@
         }
 
         .cbadge{
-            width: 100px;
             border-radius: 5px;
-            padding: 0 10px;
+            padding: 0 15px;
             margin-right: 10px;
             background-color: #d9d9d9;
             display: inline-block;
@@ -118,6 +118,7 @@
         }
 
         #carouselDiv {
+            margin-top: 24px;
             height: 561px;
             margin-bottom: 50px;
         }
@@ -316,18 +317,6 @@
 
     </div>
 </div>
-
-
-
-<h1><a href="${path}/sample/sample.do" style="color: black;">SAMPLE CLICK</a></h1>
-<br>
-
-<br>
-<h1><a href="${path}/member/member_list.do" style="color: black;">인터셉터 확인</a></h1>
-<br>
-
-
-
 <%@include file="include/footer.jsp" %>
 </body>
 

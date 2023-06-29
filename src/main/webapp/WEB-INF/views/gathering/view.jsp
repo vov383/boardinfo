@@ -928,10 +928,10 @@
                         	</c:choose>
 
                         </li>
-                        <li>${dto.attendee_count}/${dto.maxPeople}명 참가중<c:if test="${waitCount>0}">, ${waitCount}명 대기중</c:if>
+                        <li>${dto.attendee_count}/${dto.maxPeople}명 참가중<c:if test="${waitCount>0}"> (대기 ${waitCount}명)</c:if>
                             <div id="attendeeList">
                                 <c:forEach var="attendee" items="${dto.attendeeDTOList}">
-                                    <a href="${path}/member/mypage/goMypage/${attendee.user_id}">
+                                    <a href="${path}/mypage/goMypage/${attendee.user_id}">
                                     <div class="attendee">
                                         <img src="${path}/images/${attendee.profile}">
                                         <span>${attendee.nickname}</span>
