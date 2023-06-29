@@ -48,8 +48,7 @@
       max-width: 300px;
       word-break: break-all;      
     }
-    
-    
+
      #postInfo{
 	   text-align: right;
 	   padding-bottom: 5px;
@@ -83,6 +82,7 @@
             position: relative;
         }
 
+
         #profileArea{
             padding: 30px 0 30px 50px;
             flex-grow: 1;
@@ -97,7 +97,7 @@
             border-radius: 5px;
             padding: 0 10px;
             margin-right: 6px;
-]        }
+        }
 
         #title{
             padding-top: 10px;
@@ -106,11 +106,15 @@
         }
 
         #profileArea > ul{
+            min-height: 215px;
             padding-left: 25px;
             flex-grow: 1;
+            flex-shrink: 0;
             display: flex;
             flex-direction: column;
-            padding-bottom: 10px;
+            padding-top: 15px;
+            margin-top: 0;
+            margin-bottom: 10px;
         }
 
         #profileArea > ul > li{
@@ -156,6 +160,39 @@
             border: 0;
             color: white;
         }
+
+        #attendeeListShow{
+            cursor: pointer;
+        }
+
+        #attendeeList{
+            margin-top: 10px;
+            left: 30px;
+            display: flex;
+            min-width: 200px;
+            max-height: 500px;
+            flex-wrap: wrap;
+        }
+
+        #attendeeList a{
+            color: black;
+            text-decoration: none;
+
+        }
+
+        .attendee{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 7px;
+        }
+
+        .attendee img{
+            width: 45px;
+            height: 45px;
+            margin-bottom: 3px;
+        }
+
 
        #postMain{
             padding: 30px 13px;
@@ -258,7 +295,6 @@
             margin-right: 5px;
         }
 
-
         footer{
             font-size: 15px;
             color: #DFDFDF;
@@ -315,6 +351,7 @@
         .popup-body button:first-of-type{
             margin-right: 10px;
         }
+
 
 
     </style>
@@ -421,7 +458,6 @@
                         for(let i=0; i<list.length; i++){
 
                             let addReplySpan = "";
-
                             if(list[i].show == 'y'){
                                 if("${sessionScope.userid}" == list[i].creator_id){
                                     addReplySpan =
@@ -447,6 +483,7 @@
                             let writer = $("<span>").text(list[i].nickname);
 
                             let text = "";
+
                             if(list[i].show == 'y'){
                                 text= $("<div>").text(list[i].reply_text);
                             }
@@ -728,6 +765,7 @@
         }
 
 
+
     </script>
 
 
@@ -885,9 +923,18 @@
                         	</c:choose>
 
                         </li>
-                        <li>${dto.attendee_count}/${dto.maxPeople}명 참가중
-                            <img src="${path}/images/more.png" width="30px"
-                                         style="vertical-align: middle; padding-bottom: 2px;"></li>
+                        <li>${dto.attendee_count}/${dto.maxPeople}명 참가중 <c:if test="${waitCount}>0">, ${waitCount}명 대기중</c:if>
+                            <div id="attendeeList">
+                                <c:forEach var="attendee" items="${dto.attendeeDTOList}">
+                                    <a href="${path}/member/mypage/goMypage/${attendee.user_id}">
+                                    <div class="attendee">
+                                        <img src="${path}/images/${attendee.profile}">
+                                        <span>${attendee.nickname}</span>
+                                    </div>
+                                    </a>
+                                </c:forEach>
+                            </div>
+                        </li>
                     </ul>
                     <div>
                         <span>작성자: ${dto.nickname}</span>
@@ -899,7 +946,7 @@
                             <c:when test="${type == 'ATTENDING'}">
                                 <div>
                                 <button type="button" id="bigBtn-chat"
-                                        onclick="location.href='${path}/gathering/chatRoom.do?gathering_id=${dto.gathering_id}'">
+                                        onclick="location.href='${path}/chat/room.do?gathering_id=${dto.gathering_id}'">
                                     채팅하기</button>
                                     <c:if test="${dto.writer_id != sessionScope.userid}">
                                     <button type="button" class="bigBtn-cancel"

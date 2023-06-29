@@ -1,11 +1,9 @@
 package com.example.boardinfo.model.gathering.dao;
 
-import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
-import com.example.boardinfo.model.gathering.dto.AttendeeType;
-import com.example.boardinfo.model.gathering.dto.GatheringDTO;
-import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
+import com.example.boardinfo.model.gathering.dto.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -43,10 +41,17 @@ public interface GatheringDAO {
     public String getReplyWriter(int reply_id);
 	public int updateReply(GatheringReplyDTO dto);
 	public int deleteReply(GatheringReplyDTO dto);
-	public List<GatheringDTO> getAttendingGatheringList(String user_id);
+	public List<ChatRoomDTO> getAttendingGatheringList(String user_id);
 	public List<Integer> getMyActiveChats(String user_id);
-	public void updateLastVisit(int gatheringId, String userId, LocalDate date);
-  	List<GatheringDTO> totalSearch(Map<String, Object> map);
+
+	public void updateLastVisit(int gatheringId, String user_id, LocalDateTime date);
+	public List<ChatRoomDTO> getMyLastVisit(String user_id);
+	public List<String> leaveAll(int gathering_id);
+	public List<AttendeeDTO> getAttendeeInfoList(int gathering_id);
+	public List<AttendeeDTO> getWaitingInfoList(int gatheringId);
+
+  List<GatheringDTO> totalSearch(Map<String, Object> map);
 	int totalSearchCount(Map<String, Object> map);
+
 
 }

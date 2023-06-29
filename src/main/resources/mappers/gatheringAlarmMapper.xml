@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="gatheringAlarm">
+
+    <insert id="addAlarm">
+        insert into alarm
+            (alarm_id, user_id, message, type, gathering_id, process)
+        values
+            (#{alarm_id}, #{user_id}, #{message}, #{type}, #{gathering_id}, #{process})
+    </insert>
+
+
+    <select id="isProcessed" resultType="gatheringAlarmDTO">
+        select alarm_id, process
+        from alarm
+        where alarm_id = #{alarm_id}
+    </select>
+
+
+    <update id="processDone">
+        update alarm
+        set process = 'd'
+        where alarm_id = #{alarm_id}
+    </update>
+
+
+    <insert id="gatheringDeleted">
+            insert into alarm
+            (alarm_id, user_id, message, type, gathering_id, process)
+            <trim suffixOverrides="union all">
+            <foreach collection="attendeeList" item="attendee">
+            select #{chatAlarm.alarm_id}||#{attendee}, #{attendee}, #{chatAlarm.message},
+                #{chatAlarm.type}, #{chatAlarm.gathering_id}, #{chatAlarm.process}
+            from dual
+            union all
+            </foreach>
+            </trim>
+    </insert>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

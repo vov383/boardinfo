@@ -31,14 +31,14 @@
 
 
 
-  		<property name="url"
-  			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe" />
+		<property name="url"
+ 			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe" />
+  		<property name="username" value="spring" />
 
-<!--  		<property name="username" value="spring" />-->
-		<property name="username" value="boardinfo" />
 
 
 		<property name="password" value="1234" />
+
 
 	</bean>
 	<!-- 아파치 DBCP 설정 -->

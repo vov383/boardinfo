@@ -8,7 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="memberList" resultType="com.example.boardinfo.model.member.dto.MemberDTO">
 		select * 
 		from member
-		where del = 'n'
+		where del = 'N'
 		order by name 
 	</select>
 	
@@ -75,7 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	 
 	 <update id="deleteMember" parameterType="String">
 	    update member
-	    set del = 'y'
+	    set del = 'Y'
 	    where userid = #{userid}
 	 </update>
 	
@@ -107,7 +107,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		set passwd = #{passwd}
 		where userid = #{userid}
 	</update>
-
+	
+	<select id="getCurrentPassword" resultType="java.lang.String">
+    SELECT passwd
+    FROM member
+    WHERE userid = #{userid}
+</select>
 </mapper>
 
 

@@ -100,28 +100,6 @@ public class GameRatingServiceImpl implements GameRatingService{
         data.put("rows", body);
         return data;
 
-        /* 구조는 이런 식으로 가야 함
-        {
-            "rows":[
-            {"c":[{"v":},{"v":0.5값}]},
-            {"c":[{"v":"1"},{"v":1값}]},
-            {"c":[{"v":},{"v":1.5값}]},
-            {"c":[{"v":"2"},{"v":2값}]},
-            {"c":[{"v":},{"v":2.5값}]},
-            {"c":[{"v":"3"},{"v":3값}]},
-            {"c":[{"v":},{"v":3.5값}]},
-            {"c":[{"v":"4"},{"v":4값}]},
-            {"c":[{"v":},{"v":4.5값}]},
-            {"c":[{"v":"5"},{"v":5값}]}
-],
-
-            "cols":[
-            {"label":"별점","type":"string"},
-            {"label":"별점값","type":"number"}
-]
-        }
-         */
-
     }
 
     @Override

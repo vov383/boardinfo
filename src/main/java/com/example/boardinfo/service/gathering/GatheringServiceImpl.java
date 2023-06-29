@@ -1,6 +1,5 @@
 package com.example.boardinfo.service.gathering;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -10,9 +9,15 @@ import java.util.*;
 
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
-import com.example.boardinfo.model.chat.dao.ChatMessageDAO;
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
+
+import com.example.boardinfo.model.gathering.dao.GatheringAlarmDAO;
+import com.example.boardinfo.model.gathering.dto.GatheringAlarmDTO;
+import com.example.boardinfo.model.gathering.dto.*;
+import com.example.boardinfo.service.chat.ChatService;
+
 import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
@@ -22,12 +27,12 @@ import com.example.boardinfo.service.game.GameServiceImpl;
 import com.example.boardinfo.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.example.boardinfo.model.gathering.dao.GatheringDAO;
-import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -39,32 +44,38 @@ public class GatheringServiceImpl implements GatheringService {
 	GatheringDAO gatheringDao;
 
 	@Inject
-	ChatMessageDAO chatMessageDAO;
+	ChatService chatService;
+
+	@Inject
+	GatheringAlarmDAO gatheringAlarmDAO;
 
 	@Autowired
 	ApplicationEventPublisher eventPublisher;
 
-	@Inject
-	MemberDAO memberDAO;
 
 
 	@Transactional
 	@Override
-	public int addPost(GatheringDTO dto) {
+	public int addPost(GatheringDTO dto, HttpSession session) {
 		int new_gathering_id = gatheringDao.addPost(dto);
 		gatheringDao.addAttendee(new AttendeeDTO(dto.getWriter_id(), new_gathering_id, AttendeeType.ATTENDING));
 
-		ChatMessageDTO notice = new ChatMessageDTO();
-		notice.setGathering_id(new_gathering_id);
-		notice.setUserId(dto.getWriter_id());
-		notice.setType(ChatMessageDTO.MessageType.ATTEND);
+		ChatMessageDTO notice = new ChatMessageDTO(ChatMessageDTO.MessageType.ATTEND,
+				new_gathering_id, dto.getWriter_id());
 		eventPublisher.publishEvent(notice);
+
+		//얘도 연결시키라고 알려줘야 함
+		GatheringAlarmDTO alarm = new GatheringAlarmDTO(dto.getWriter_id(),
+				GatheringAlarmDTO.AlarmType.ATTEND, dto.getGathering_id());
+		eventPublisher.publishEvent(alarm);
+		chatService.updateActiveChatList(session);
 
 		return new_gathering_id;
 	}
 
+	@Transactional
 	@Override
-	public String deletePost(int gathering_id, String user_id) {
+	public String deletePost(int gathering_id, String user_id, HttpSession session) {
 		String message;
 
 		//일단 이 사람이 글쓴이인지 확인
@@ -72,8 +83,24 @@ public class GatheringServiceImpl implements GatheringService {
 		if (map.get("WRITER_ID").equals(user_id)) {
 			int num = gatheringDao.deletePost(gathering_id);
 
-			//참가자 전원 leave로 바꿔버리고 apply는 삭제해버릴까? 고민좀 해보자
-			if (num >=1) message = "게시물이 정상적으로 삭제되었습니다.";
+			//참가자 전원 leave로 바꿔버리고 apply는 삭제해야
+			if (num >=1) {
+				message = "게시물이 정상적으로 삭제되었습니다.";
+
+				List<String> attendeeList = gatheringDao.leaveAll(gathering_id);
+
+				//모임이 삭제됐다고 알림 통보
+				GatheringAlarmDTO alarm = new GatheringAlarmDTO();
+				String alarm_id = UUID.randomUUID().toString() + "_";
+				alarm.setAlarm_id(alarm_id);
+				alarm.setGathering_id(gathering_id);
+				alarm.setType(GatheringAlarmDTO.AlarmType.DELETED);
+				alarm.setProcess("n");
+				gatheringAlarmDAO.noticeGatheringDeleted(alarm, attendeeList);
+				eventPublisher.publishEvent(alarm);
+				chatService.updateActiveChatList(session);
+
+			}
 			else message = "요청한 작업 처리 중 에러가 발생하였습니다.";
 		}
 		else message = "잘못된 요청입니다.";
@@ -114,10 +141,8 @@ public class GatheringServiceImpl implements GatheringService {
 	}
 
 	@Override
-	public GatheringDTO view(int gathering_id, boolean updateViewCount) {
-		if (updateViewCount) {
-			gatheringDao.updateViewCount(gathering_id);
-		}
+	public GatheringDTO simpleView(int gathering_id) {
+		gatheringDao.updateViewCount(gathering_id);
 		GatheringDTO dto = gatheringDao.view(gathering_id);
 
 		if (dto != null) {
@@ -131,6 +156,27 @@ public class GatheringServiceImpl implements GatheringService {
 		return dto;
 	}
 
+
+	@Override
+	public GatheringDTO getGatheringDetails(int gathering_id) {
+		GatheringDTO dto = simpleView(gathering_id);
+		List<AttendeeDTO> attendees = gatheringDao.getAttendeeInfoList(gathering_id);
+		System.out.println("dto있냐" + dto);
+		System.out.println("attendee있냐" + attendees);
+		dto.setAttendeeDTOList(attendees);
+
+		List<AttendeeDTO> waitings = gatheringDao.getWaitingInfoList(gathering_id);
+		dto.setWaitingDTOList(waitings);
+
+		dto.setAttendee_count(dto.getAttendeeDTOList().size());
+		return dto;
+	}
+
+
+	@Override
+	public List<AttendeeDTO> getAttendeeList(Integer gathering_id) {
+		return gatheringDao.getAttendeeInfoList(gathering_id);
+	}
 
 	@Transactional
 	@Override
@@ -148,12 +194,10 @@ public class GatheringServiceImpl implements GatheringService {
 		//대댓글인 경우
 		else {
 			GatheringReplyDTO mother = gatheringDao.getReply(dto.getMother_reply());
-			System.out.println("mother : " + mother);
 			dto.setDepth(mother.getDepth() + 1);
 			dto.setParent_reply(mother.getParent_reply());
 			int target = gatheringDao.getTargetReplyOrder(mother);
 			dto.setInner_order(target);
-			System.out.println("target : " + target);
 			gatheringDao.replyOrderUpdate(dto.getParent_reply(), dto.getInner_order());
 		}
 
@@ -186,10 +230,9 @@ public class GatheringServiceImpl implements GatheringService {
 	}
 
 	@Override
-	public String addAttendee(int gathering_id, String user_id, String answer) {
+	public String addAttendee(int gathering_id, String user_id, String answer, HttpSession session) {
 
 		String message = "";
-
 
 		//몇가지 조건 확인해야 함
 		//(1) 이미 모임에 참가해 있지는 않는가?
@@ -234,12 +277,15 @@ public class GatheringServiceImpl implements GatheringService {
 						AttendeeDTO dto = new AttendeeDTO(user_id, gathering_id, AttendeeType.ATTENDING);
 						int num = gatheringDao.addAttendee(dto);
 						if (num >= 1) message = "모임에 성공적으로 가입되었습니다.";
-
-						ChatMessageDTO notice = new ChatMessageDTO();
-						notice.setGathering_id(dto.getGathering_id());
-						notice.setUserId(user_id);
-						notice.setType(ChatMessageDTO.MessageType.ATTEND);
+						ChatMessageDTO notice = new ChatMessageDTO(ChatMessageDTO.MessageType.ATTEND,
+								dto.getGathering_id(), user_id);
 						eventPublisher.publishEvent(notice);
+
+						//얘도 연결시키라고 알려줘야 함
+						GatheringAlarmDTO alarm = new GatheringAlarmDTO(
+								user_id, GatheringAlarmDTO.AlarmType.ATTEND, dto.getGathering_id());
+						eventPublisher.publishEvent(alarm);
+						chatService.updateActiveChatList(session);
 					}
 				}
 
@@ -248,7 +294,7 @@ public class GatheringServiceImpl implements GatheringService {
 
 
 	@Override
-	public String withDrawAttendee(int gatheringId, String userId) {
+	public String withDrawAttendee(int gatheringId, String userId, HttpSession session) {
 		String message = "";
 
 		if (gatheringDao.checkIfAttendee(gatheringId, userId) == AttendeeType.ATTENDING) {
@@ -267,11 +313,18 @@ public class GatheringServiceImpl implements GatheringService {
 			int num = gatheringDao.withdrawAttendee(gatheringId, userId);
 			if (num >= 1) {
 				message = "모임에서 성공적으로 탈퇴되었습니다.";
+				chatService.updateActiveChatList(session);
+
 				ChatMessageDTO notice = new ChatMessageDTO();
 				notice.setGathering_id(gatheringId);
 				notice.setUserId(userId);
 				notice.setType(ChatMessageDTO.MessageType.LEAVE);
 				eventPublisher.publishEvent(notice);
+
+				GatheringAlarmDTO alarm = new GatheringAlarmDTO(
+						userId, GatheringAlarmDTO.AlarmType.LEAVE, gatheringId);
+				eventPublisher.publishEvent(alarm);
+
 			} else message = "요청하신 작업 처리 중 에러가 발생하였습니다.";
 		} else {
 			message = "요청하신 작업 처리 중 에러가 발생하였습니다.\n이 모임의 참가자가 맞는지 다시 한번 확인해 주세요.";
@@ -313,8 +366,8 @@ public class GatheringServiceImpl implements GatheringService {
 	@Override
 	public int updateReply(GatheringReplyDTO dto) {
 		return gatheringDao.updateReply(dto);
-	}
 
+	}
 
 	@Override
 	public int deleteReply(GatheringReplyDTO dto) {

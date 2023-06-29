@@ -1,89 +1,168 @@
 package com.example.boardinfo.controller.chat;
 
-
-import com.example.boardinfo.model.chat.dao.ChatMessageDAO;
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
-import com.example.boardinfo.model.member.dao.MemberDAO;
-import com.example.boardinfo.service.chat.ChatRoomStore;
-import org.springframework.context.event.EventListener;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
+import com.example.boardinfo.model.gathering.dto.AttendeeType;
+import com.example.boardinfo.model.gathering.dto.GatheringDTO;
+import com.example.boardinfo.service.chat.ChatService;
+import com.example.boardinfo.service.gathering.GatheringAlarmService;
+import com.example.boardinfo.service.gathering.GatheringService;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
+import java.lang.reflect.Type;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
+@RequestMapping("chat/*")
 public class ChatController {
-    @Inject
-    ChatMessageDAO chatMessageDao;
 
     @Inject
-    ChatRoomStore chatRoomStore;
+    GatheringService gatheringService;
 
+    @Inject
+    GatheringAlarmService gatheringAlarmService;
 
-    private SimpMessagingTemplate messagingTemplate;
+    @Inject
+    ChatService chatService;
 
-    public ChatController(SimpMessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
+    @GetMapping("/room.do")
+    public ModelAndView ChatRoomMain(@RequestParam(required = false) Integer gathering_id,
+                                     HttpSession session, ModelAndView mav){
+
+        String user_id = (String) session.getAttribute("userid");
+
+        //채팅방 목록 불러오기
+        Map<String, Object> map = chatService.getAttendingChatroomList(user_id, gathering_id);
+        mav.addObject("rlist", map.get("rlist"));
+        mav.addObject("unread", map.get("unread"));
+        mav.addObject("user_id", user_id);
+        mav.setViewName("gathering/chatMain");
+
+        Map<String, String> nicknameMap = null;
+        Date accessDate = new Date();
+
+        if(gathering_id != null) {
+
+            if (gatheringService.checkIfAttendee(gathering_id, user_id) == AttendeeType.ATTENDING) {
+                GatheringDTO dto = gatheringService.simpleView(gathering_id);
+                List<AttendeeDTO> attendeeDTOList = gatheringService.getAttendeeList(gathering_id);
+                dto.setAttendeeDTOList(attendeeDTOList);
+                dto.setAttendee_count(attendeeDTOList.size());
+
+                List<ChatMessageDTO> list = chatService.chatList(gathering_id, 1, false, accessDate);
+
+                nicknameMap = chatService.getNicknameMap(gathering_id);
+
+                for (ChatMessageDTO item : list) {
+                    if (item.getUserId().equals("SYSTEM")) {
+                        String message = item.getMessage();
+                        int index = message.indexOf("]");
+                        if (index != -1) {
+                            String user = message.substring(1, index);
+                            item.setMessage(nicknameMap.get(user) + message.substring(index + 1));
+                        }
+                    }
+                    item.setNickname(nicknameMap.get(item.getUserId()));
+                }
+
+                mav.addObject("gathering_id", gathering_id);
+                mav.addObject("dto", dto);
+                mav.addObject("list", list);
+            } else {
+                //멤버가 아니라면
+                mav.addObject("message", "모임의 멤버만 채팅 내용을 볼 수 있습니다.");
+            }
+        }
+
+        Gson gson = new Gson();
+        mav.addObject("nicknameMap", gson.toJson(nicknameMap));
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = dateFormat.format(accessDate);
+        mav.addObject("accessDate", dateString);
+        return mav;
     }
 
 
-    @MessageMapping("/chat/room")
-    public void handleRoom(ChatMessageDTO chatMessage, SimpMessageHeaderAccessor accessor){
-        System.out.println(chatMessage.toString());
-        String session_id = accessor.getSessionId();
-        ChatMessageDTO.MessageType type = chatMessage.getType();
-        chatMessage.setMessage(session_id);
+    @ResponseBody
+    @GetMapping("/viewMoreChat.do")
+    public Map<String, Object> viewMoreChat(@RequestParam int gathering_id,
+                                            @RequestParam int curPage, @RequestParam String dateString) {
 
-        if(type.equals(ChatMessageDTO.MessageType.FOCUS)){
-            chatRoomStore.joinOrCreateRoom(chatMessage.getGathering_id(), chatMessage.getUserId(), session_id);
-            messagingTemplate.convertAndSend("/sub/alarm/user/" +
-                    chatMessage.getUserId(), chatMessage);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date accessDate = new Date();
+        try{
+            accessDate = dateFormat.parse(dateString);
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        else if(type.equals(ChatMessageDTO.MessageType.BLUR)){
-            chatRoomStore.leaveOrRemoveRoom(session_id);
-            messagingTemplate.convertAndSend("/sub/alarm/user/" +
-                    chatMessage.getUserId(), chatMessage);
-        }
-
+        List<ChatMessageDTO> list = chatService.chatList(gathering_id, curPage, true, accessDate);
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", list);
+        return map;
     }
 
 
+    /*
+    @ResponseBody
+    @RequestMapping("/getMyActiveChats.do")
+    public Map<String, Object> getMyActiveChats(HttpSession session){
+        String user_id = (String)session.getAttribute("userid");
+        String message = "";
+        List<Integer> glist = null;
+        Map<String, Object> map = new HashMap<>();
 
-    @EventListener
-    @MessageMapping("/chat/message")
-    public void handleMessage(ChatMessageDTO chatMessage) {
-        ChatMessageDTO.MessageType type = chatMessage.getType();
-
-        if(type.equals(ChatMessageDTO.MessageType.ATTEND)) {
-            chatMessage.setMessage("[" + chatMessage.getUserId() + "]님이 입장하셨습니다.");
-            chatMessage.setUserId("SYSTEM");
+        if(user_id == null){
+            //오류 발생시키기
         }
 
-        else if(type.equals(ChatMessageDTO.MessageType.LEAVE)) {
-            chatMessage.setMessage("[" + chatMessage.getUserId() + "]님이 퇴장하셨습니다.");
-            chatMessage.setUserId("SYSTEM");
+        else{
+            glist = gatheringService.getMyActiveChats(user_id);
         }
 
-        else if(type.equals(ChatMessageDTO.MessageType.CLOSE)){
-            chatMessage.setMessage("모임이 종료된 지 3일이 지나 채팅이 종료되었습니다.\n우리 다음에 또 만나요!");
-            chatMessage.setUserId("SYSTEM");
-        }
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd'T'HH:mm");
-        chatMessage.setFormattedDate(dateFormat.format(chatMessage.getInsertDate()));
-
-        messagingTemplate.convertAndSend("/sub/chat/room/" +
-                chatMessage.getGathering_id(), chatMessage);
-        chatMessageDao.insert(chatMessage);
-
+        map.put("glist", glist);
+        return map;
     }
 
+     */
+
+
+    @ResponseBody
+    @GetMapping("/unreadCount.do")
+    public Map<String, Boolean> getActiveUnreadCount(HttpSession session) {
+
+        String user_id = (String) session.getAttribute("userid");
+        Gson gson = new Gson();
+        String json = (String) session.getAttribute("activeChats");
+        Type listType = new TypeToken<List<Integer>>() {}.getType();
+        List<Integer> activeChats = gson.fromJson(json, listType);
+        boolean unread = chatService.checkUnreadMessage(user_id, activeChats);
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("unread", unread);
+        return map;
+    }
+
+
+    @ResponseBody
+    @GetMapping("/updateByAlarm.do")
+    public void updateByAlarm(HttpSession session, String alarm_id) {
+        gatheringAlarmService.updateSessionByAlarm(alarm_id, session);
+    }
 
 
 }

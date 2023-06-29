@@ -106,6 +106,11 @@ public class MemberDAOImpl implements MemberDAO {
 		
 	}
 
+	@Override
+	public String getCurrentPassword(String userid) {
+		return sqlSession.selectOne("member.getCurrentPassword",userid);
+	}
+
 
 
 	

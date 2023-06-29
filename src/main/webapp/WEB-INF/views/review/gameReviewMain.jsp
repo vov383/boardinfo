@@ -212,16 +212,39 @@
             tr:nth-child(2n+0){background-color: #ffffaf;}*/
 
 
-        ul.pagingCenter {
-            text-align: center;
-        }
-        h1 {
-            font-size: 16px;
-        }
-
         .totalSearchUl ul li {
             width: calc((100% / 4) - 2px);
         }
+
+        #paginationArea{
+            display: flex;
+            margin: 20px auto 0 auto;
+        }
+
+        .pageItem{
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            line-height: 35px;
+            text-align: center;
+            margin: 0 3px;
+            font-size: 1.2em;
+        }
+
+        .pageItem:hover{
+            cursor: pointer;
+        }
+
+        .pageItem:not(#curPage):hover{
+            background-color: #D9D9D9;
+        }
+
+        #curPage{
+            border: 2px solid #1432B1;
+            color: #1432B1;
+            line-height: 31px;
+        }
+
     </style>
 
     <script>
@@ -409,66 +432,56 @@
         <div class="paging-btn">
 
             <%--페이징--%>
-            <ul class="pagingCenter">
-                <h1>
-            <c:if test="${1 ne page.nowPage}">
+                <div id="paginationArea">
+                    <c:if test="${1 ne page.nowPage}">
+                        <div class="pageItem" onclick="searchFu('1')">&lt&lt</div>
+                    </c:if>
 
-                <a href="javascript:searchFu('1')">
-                    처음
-                </a>&nbsp;
+                    <c:if test="${1 < page.nowPage}">
+                        <div class="pageItem" onclick="searchFu('${page.nowPage-1}')">&lt</div>
+                    </c:if>
 
-            </c:if>
+                    <%--현재 페이지--%>
+                    <c:forEach var="num" begin="${page.startPage}" end="${page.endPage}">
+                        <c:choose>
+                            <c:when test="${num == page.nowPage}">
+                                <div id="curPage" class="pageItem" onclick="searchFu(${num})">${num}</div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="pageItem" onclick="searchFu(${num})">${num}</div>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
 
-            <c:if test="${1 < page.nowPage}">
-                <a href="javascript:searchFu('${page.nowPage-1}')">
-                    이전
-                </a>&nbsp;
-            </c:if>
+                    <c:if test="${page.lastPage > page.nowPage}">
+                        <div class="pageItem" onclick="searchFu('${page.nowPage+1}')">&gt</div>
+                    </c:if>
+                    <c:if test="${page.lastPage ne page.nowPage}">
+                        <div class="pageItem" onclick="searchFu('${page.lastPage}')">&gt&gt</div>
+                    </c:if>
 
-            <%--현재 페이지--%>
-            <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
-                <c:if test="${i eq page.nowPage}">
-                    &nbsp;&nbsp;${i}&nbsp;
-                </c:if>&nbsp;
-                <c:if test="${i ne page.nowPage}">
-                    <a href="javascript:searchFu('${i}')">
-                            ${i}
-                    </a>&nbsp;
-                </c:if>
+                </div>
 
-            </c:forEach>
 
-            <c:if test="${page.lastPage > page.nowPage}">
-                <a href="javascript:searchFu('${page.nowPage+1}')">
-                    다음
-                </a>&nbsp;
-            </c:if>
 
-            <c:if test="${page.lastPage ne page.nowPage}">
-                <a href="javascript:searchFu('${page.lastPage}')">
-                    마지막
-                </a>&nbsp;
-            </c:if>
-                </h1>
-            </ul>
 
-                <ul class="pagingCenter">
-            <h1>☆☆☆☆☆  광고주를 모십니다!  ☆☆☆☆☆</h1>
-            <h1>★★★★★  광고주를 모십니다!  ★★★★★</h1>
-            <h1>☆☆☆☆☆  광고주를 모십니다!  ☆☆☆☆☆</h1>
-                </ul>
+
+
+
+
+
 
         </div>
 
     </div>
 </div>
+
 <%--!!!F;O;O;T;E;R 첨부해주세요--%>
 <%@include file="../include/footer.jsp" %>
 
 </body>
 
 </html>
-
 
 
 

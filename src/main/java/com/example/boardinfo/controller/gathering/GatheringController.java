@@ -1,6 +1,22 @@
 package com.example.boardinfo.controller.gathering;
 
-import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.inject.Inject;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
+
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
@@ -8,12 +24,10 @@ import com.example.boardinfo.service.chat.ChatService;
 import com.example.boardinfo.service.gathering.GatheringService;
 import com.example.boardinfo.service.member.MemberService;
 import com.example.boardinfo.util.Pager;
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -43,9 +57,6 @@ public class GatheringController {
 	GatheringService gatheringService;
 
 	@Inject
-	ChatService chatService;
-
-	@Inject
 	MemberService memberService;
 
 
@@ -65,7 +76,7 @@ public class GatheringController {
 		dto.setWriter_id(user_id);
 
 		//에러처리 해야함
-		int new_gathering_id = gatheringService.addPost(dto);
+		int new_gathering_id = gatheringService.addPost(dto, session);
 		return "redirect:/gathering/view/" + new_gathering_id;
 	}
 
@@ -74,7 +85,7 @@ public class GatheringController {
 	public String delete(@RequestParam int gathering_id, HttpSession session,
 						 RedirectAttributes redirectAttributes) {
 		String user_id = (String)session.getAttribute("userid");
-		String message = gatheringService.deletePost(gathering_id, user_id);
+		String message = gatheringService.deletePost(gathering_id, user_id, session);
 		redirectAttributes.addFlashAttribute("message", message);
 		return "redirect:/gathering/list.do";
 	}
@@ -192,7 +203,7 @@ public class GatheringController {
 				response.addCookie(new Cookie("gatheringView", "["+gathering_id+"]"));
 			}
 
-		GatheringDTO dto = gatheringService.view(gathering_id, updateViewCount);
+		GatheringDTO dto = gatheringService.getGatheringDetails(gathering_id);
 
 		if(dto!=null){
 			mav.setViewName("/gathering/view");
@@ -211,6 +222,7 @@ public class GatheringController {
 			mav.addObject("curPage", curPage);
 			mav.addObject("address1List", address1List);
 			mav.addObject("showAvailable", showAvailable);
+			mav.addObject("waitCount", dto.getWaitingDTOList().size());
 		}
 
 		else{
@@ -227,9 +239,7 @@ public class GatheringController {
 	public ModelAndView edit(@PathVariable int gathering_id, ModelAndView mav,
 							 HttpSession session, HttpServletRequest request){
 
-		GatheringDTO dto = gatheringService.view(gathering_id, false);
-
-
+		GatheringDTO dto = gatheringService.simpleView(gathering_id);
 		String user_id = (String)session.getAttribute("userid");
 		if(user_id != null && dto.getWriter_id()!=null && user_id.equals(dto.getWriter_id())){
 			LocalDateTime post_date = dto.getPost_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -243,7 +253,6 @@ public class GatheringController {
 
 		//다시 뒤로 보내주기
 		else{
-			System.out.println(request.getHeader("Referer"));
 			if(request.getHeader("Referer")!=null){
 				mav.setViewName("redirect:request.getHeader('Referer')");
 				return mav;
@@ -288,7 +297,7 @@ public class GatheringController {
 										   @RequestParam(value="answer", required=false) String answer
 										   ){
 		String user_id = (String)session.getAttribute("userid");
-		String message = gatheringService.addAttendee(gathering_id, user_id, answer);
+		String message = gatheringService.addAttendee(gathering_id, user_id, answer, session);
 		Map<String, String> map = new HashMap<>();
 		map.put("message", message);
 		return map;
@@ -299,7 +308,7 @@ public class GatheringController {
 	@RequestMapping("/withdraw.do")
 	public Map<String, String> withdrawAttendee(@RequestParam int gathering_id, HttpSession session){
 		String user_id = (String)session.getAttribute("userid");
-		String message = gatheringService.withDrawAttendee(gathering_id, user_id);
+		String message = gatheringService.withDrawAttendee(gathering_id, user_id, session);
 		Map<String, String> map = new HashMap<>();
 		map.put("message", message);
 		return map;
@@ -314,88 +323,10 @@ public class GatheringController {
 		Map<String, String> map = new HashMap<>();
 		map.put("message", message);
 		return map;
+
 	}
 
 
-
-	@GetMapping("/chatRoom.do")
-	public ModelAndView ChatRoomMain(@RequestParam (required = false) Integer gathering_id,
-									 HttpSession session, ModelAndView mav){
-
-		String user_id = (String) session.getAttribute("userid");
-
-		//채팅방 목록 불러오기
-		List<GatheringDTO> rlist = gatheringService.getAttendingChatroomList(user_id, gathering_id);
-		mav.addObject("rlist", rlist);
-		mav.addObject("user_id", user_id);
-		mav.setViewName("gathering/chatMain");
-
-		Map<String, String> nicknameMap = null;
-
-		if(gathering_id != null) {
-
-			if (gatheringService.checkIfAttendee(gathering_id, user_id) == AttendeeType.ATTENDING) {
-				GatheringDTO dto = gatheringService.view(gathering_id, false);
-				List<ChatMessageDTO> list = chatService.chatList(gathering_id, 1, false);
-				nicknameMap = chatService.getNicknameMap(gathering_id);
-
-				for (ChatMessageDTO item : list) {
-					if (item.getUserId().equals("SYSTEM")) {
-						String message = item.getMessage();
-						int index = message.indexOf("]");
-						if (index != -1) {
-							String user = message.substring(1, index);
-							item.setMessage(nicknameMap.get(user) + message.substring(index + 1));
-						}
-					}
-					item.setNickname(nicknameMap.get(item.getUserId()));
-				}
-
-				mav.addObject("gathering_id", gathering_id);
-				mav.addObject("dto", dto);
-				mav.addObject("list", list);
-			} else {
-				//멤버가 아니라면
-				mav.addObject("message", "모임의 멤버만 채팅 내용을 볼 수 있습니다.");
-			}
-		}
-
-		Gson gson = new Gson();
-		mav.addObject("nicknameMap", gson.toJson(nicknameMap));
-		return mav;
-	}
-
-
-	@ResponseBody
-	@GetMapping("/viewMoreChat.do")
-	public Map<String, Object> viewMoreChat(@RequestParam int gathering_id, @RequestParam int curPage) {
-
-		List<ChatMessageDTO> list = chatService.chatList(gathering_id, curPage, true);
-		System.out.println("curPage" + curPage);
-		Map<String, Object> map = new HashMap<>();
-		map.put("list", list);
-		return map;
-	}
-
-	@ResponseBody
-	@RequestMapping("/getMyActiveChats.do")
-	public Map<String, Object> getMyActiveChats(HttpSession session){
-		String user_id = (String)session.getAttribute("userid");
-		String message = "";
-		List<Integer> glist = null;
-		Map<String, Object> map = new HashMap<>();
-
-		if(user_id == null){
-			//오류 발생시키기
-		}
-
-		else{
-			glist = gatheringService.getMyActiveChats(user_id);
-		}
-
-		map.put("glist", glist);
-		return map;
-	}
 
 
 	@ResponseBody
@@ -461,6 +392,8 @@ public class GatheringController {
 		map.put("num", num);
 		return map;
 	}
+
+
 
 
 
