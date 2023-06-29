@@ -142,7 +142,7 @@
 
                                 <a href="${path}/mypage/goMypage/${sessionScope.userid}">마이페이지</a>
 
-                                <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
+                                <a href="${path}/member/pass_check_u?userid=${sessionScope.userid}">회원정보</a>
                                 <a href="${path}/member/logout.do" class="sign">로그아웃</a>
                             </div>
                         </div>

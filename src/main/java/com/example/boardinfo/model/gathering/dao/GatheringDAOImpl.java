@@ -247,7 +247,7 @@ public class GatheringDAOImpl implements GatheringDAO {
 	@Override
 	public List<AttendeeDTO> getWaitingInfoList(int gathering_id) {
 		return sqlSession.selectList("gathering.waitingInfoList", gathering_id);
-
+	}
 	@Override
 	public List<GatheringDTO> totalSearch(Map<String, Object> map) {
 		return sqlSession.selectList("gathering.totalSearch", map);
