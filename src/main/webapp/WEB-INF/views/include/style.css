@@ -189,7 +189,7 @@
 
     #contentsHeader{
       margin: 0;
-      padding-top: 32px;
+      padding-top: 25px;
       padding-bottom: 5px;
       display: flex;
       flex-direction: column;
@@ -197,13 +197,13 @@
     }
 
     #contentsHeader h2{
-      font-size: 1.9em;
+      font-size: 1.8em;
       margin-top: 0;
       margin-bottom: 5px;
     }
 
     #contentsLocation{
-      margin-bottom: 30px;
+      margin-bottom: 28px;
     }
 
     #contentsMain{

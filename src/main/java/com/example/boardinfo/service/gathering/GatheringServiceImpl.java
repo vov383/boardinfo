@@ -144,8 +144,6 @@ public class GatheringServiceImpl implements GatheringService {
 	public GatheringDTO getGatheringDetails(int gathering_id) {
 		GatheringDTO dto = simpleView(gathering_id);
 		List<AttendeeDTO> attendees = gatheringDao.getAttendeeInfoList(gathering_id);
-		System.out.println("dto있냐" + dto);
-		System.out.println("attendee있냐" + attendees);
 		dto.setAttendeeDTOList(attendees);
 
 		List<AttendeeDTO> waitings = gatheringDao.getWaitingInfoList(gathering_id);
