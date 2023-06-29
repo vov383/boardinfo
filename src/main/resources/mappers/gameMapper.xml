@@ -14,13 +14,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="gameList" resultType="gameDto">
 		SELECT 	gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, game_rank,
-				rate, weight, bgg_thumbnail, tot, theme
+				rate, weight, bgg_thumbnail, tot, theme, game_rank_month
 		FROM 	(
 				SELECT 	a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.bgg_thumbnail,
-						a.game_rank, a.gamephoto_url, a.rate, a.weight,a.tot, a.theme
+						a.game_rank, a.gamephoto_url, a.rate, a.weight,a.tot, a.theme, a.game_rank_month
 				FROM 	(
 						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,g.theme,
-								g.bgg_thumbnail, g.game_rank, ga.fullname AS gamephoto_url, gr.rate, gr.weight, gr.tot
+								g.bgg_thumbnail, g.game_rank, ga.fullname AS gamephoto_url, gr.rate, gr.weight,
+								gr.tot, g.game_rank_month
 						FROM 	game g
 						LEFT JOIN 	(
 									SELECT 	gnum, fullname
@@ -39,10 +40,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 									) gr
 						ON 		g.gnum = gr.gnum
 						WHERE 	g.del = 'n' and g.confirmed = 'allow'
-						ORDER BY 	game_rank
-						) a
-				)
-		WHERE 	game_rank BETWEEN #{start} AND #{end}
+						<if test="sort != null and 'week'.equalsIgnoreCase(sort)">
+							ORDER BY 	game_rank
+							) a
+							)
+							WHERE 	game_rank BETWEEN #{start} AND #{end}
+						</if>
+						<if test="sort != null and 'month'.equalsIgnoreCase(sort)">
+							ORDER BY 	game_rank_month
+							) a
+							)
+							WHERE 	game_rank_month BETWEEN #{start} AND #{end}
+						</if>
+
 	</select>
 
 	<select id="gameList_vcnt" resultType="gameDto">
@@ -177,14 +187,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<bind name="filterColumn" value="filter+'.'+filter"/>
 	<bind name="mappingTable" value="'game_'+filter"/>
 		SELECT 	gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url,bgg_thumbnail,
-				nameStr, rate, weight, game_rank, rn, tot, theme
+				nameStr, rate, weight, game_rank, tot, theme, game_rank_month, rn
 		FROM 	(
 				SELECT 	a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.bgg_thumbnail,
-						a.gamephoto_url,  a.nameStr, a.rate, a.weight,a.game_rank, rownum rn, a.tot, a.theme
+						a.gamephoto_url,  a.nameStr, a.rate, a.weight,a.game_rank, a.tot, rownum rn,
+						a.theme, a.game_rank_month
 				FROM 	(
 						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
 								g.bgg_thumbnail,g.game_rank, ga.fullname AS gamephoto_url, b.${filter} as nameStr,
-								gr.rate, gr.weight, gr.tot, g.theme
+								gr.rate, gr.weight, gr.tot, g.theme, g.game_rank_month
 						FROM 	game g
 						LEFT JOIN 	(
 									SELECT 	gnum, fullname
@@ -231,10 +242,86 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 									) b
 						on 		g.gnum = b.gnum
 						WHERE 	g.del = 'n' and b.num=#{num} and g.confirmed = 'allow'
-						ORDER BY game_rank
+		<if test="sort != null and 'week'.equalsIgnoreCase(sort)">
+			ORDER BY 	game_rank
+			) a
+			)
+			WHERE 	rn BETWEEN #{start} AND #{end}
+		</if>
+		<if test="sort != null and 'month'.equalsIgnoreCase(sort)">
+			ORDER BY 	game_rank_month
+			) a
+			)
+			WHERE 	rn BETWEEN #{start} AND #{end}
+		</if>
+
+	</select>
+
+	<select id="filteredList_newbie" resultType="gameDto">
+		<bind name="filterColumn" value="filter+'.'+filter"/>
+		<bind name="mappingTable" value="'game_'+filter"/>
+		SELECT 	gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url,bgg_thumbnail,
+				nameStr, rate, weight, tot, theme, rn, game_rank
+		FROM 	(
+				SELECT 	a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.bgg_thumbnail,
+						a.gamephoto_url,  a.nameStr, a.rate, a.weight, a.tot,rownum rn, a.rcount, a.game_rank,
+						a.theme
+				FROM 	(
+						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
+								g.bgg_thumbnail, ga.fullname AS gamephoto_url, b.${filter} as nameStr, gr.rate, g.game_rank,
+								gr.weight, gr.tot, g.theme,	ROW_NUMBER() OVER (ORDER BY g.create_date DESC) AS rcount
+						FROM 	game g
+						LEFT JOIN 	(
+									SELECT 	gnum, fullname
+									FROM 	(
+											SELECT 	ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
+													gnum, fullname
+											FROM 	game_attach
+											)
+									WHERE 	rnum = 1
+									) ga
+						ON 		g.gnum = ga.gnum
+						LEFT JOIN 	(
+									SELECT 	gnum, avg(rating) as rate, avg(weight) as weight, count(*) as tot
+									FROM 	game_rating
+									GROUP BY 	gnum
+									) gr
+						ON 		g.gnum = gr.gnum
+						left join 	(
+								<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
+									select 	gnum, f.${filter}, f.anum num
+									from    ${mappingTable} m, ${filter} f
+									where 	m.anum = f.anum
+								</if>
+								<if test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
+									select 	gnum, f.${filter}, f.cnum num
+									from    game_category m, category f
+									where 	m.cnum = f.cnum
+								</if>
+								<if test="filter != null and 'designer'.equalsIgnoreCase(filter)">
+									select 	gnum, f.${filter}, f.dnum num
+									from    ${mappingTable} m, ${filter} f
+									where 	m.dnum = f.dnum
+								</if>
+								<if test="filter != null and 'mechanic'.equalsIgnoreCase(filter)">
+									select 	gnum, f.${filter}, f.mnum num
+									from    ${mappingTable} m, ${filter} f
+									where 	m.mnum = f.mnum
+								</if>
+								<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
+									select 	gnum, f.${filter}, f.pnum num
+									from    ${mappingTable} m, ${filter} f
+									where 	m.pnum = f.pnum
+								</if>
+									) b
+						on 		g.gnum = b.gnum
+						WHERE 	g.del = 'n' and b.num=#{num} and g.confirmed = 'allow'
+
+						ORDER BY 	rcount
 						) a
 				)
-		WHERE rn BETWEEN #{start} AND #{end}
+		WHERE 	rn BETWEEN #{start} AND #{end}
+
 
 	</select>
 
@@ -242,15 +329,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="filteredList_vcnt" resultType="gameDto">
 	<bind name="filterColumn" value="filter+'.'+filter"/>
 	<bind name="mappingTable" value="'game_'+filter"/>
-		SELECT 	gnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, game_rank, rn,
-				nameStr, rate, weight, tot, BGG_THUMBNAIL, theme
+		SELECT 	gnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, game_rank,
+				nameStr, rate, weight, tot, BGG_THUMBNAIL, theme, rn
 		FROM 	(
-				SELECT 	a.gnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.GAME_RANK,
-						a.gamephoto_url, rownum rn, a.nameStr, a.rate, a.weight, a.tot,a.BGG_THUMBNAIL, a.theme
+				SELECT 	a.gnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.GAME_RANK, a.rcount,
+						a.gamephoto_url, a.nameStr, a.rate, a.weight, a.tot,a.BGG_THUMBNAIL, a.theme, rownum rn
 				FROM 	(
-						SELECT 	g.gnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
-								ga.fullname AS gamephoto_url, RANK() OVER (ORDER BY g.totalviewcount DESC) AS rscore,
-								b.${filter} as nameStr, gr.rate, gr.weight, gr.tot, g.BGG_THUMBNAIL, g.GAME_RANK, g.theme
+						SELECT 	g.gnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year, g.game_rank,
+								ga.fullname AS gamephoto_url, row_number() over (ORDER BY g.totalviewcount DESC) AS rcount,
+								b.${filter} as nameStr, gr.rate, gr.weight, gr.tot, g.BGG_THUMBNAIL,
+								g.theme
 						FROM 	game g
 						LEFT JOIN 	(
 									SELECT 	gnum, fullname
@@ -297,7 +385,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 									) b
 						on 		g.gnum = b.gnum
 						WHERE 	g.del = 'n' and b.num=#{num} and g.confirmed = 'allow'
-						ORDER BY rscore, game_rank
+						ORDER BY rcount, game_rank
 						) a
 				)
 		WHERE rn BETWEEN #{start} AND #{end}
@@ -316,7 +404,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				release_year=#{release_year},
 				update_user=#{update_user},
 				update_date=sysdate,
-				theme=#{theme}
+				theme=#{theme},
 				confirmed='checking'
 		where gnum=#{gnum}
 	</update>

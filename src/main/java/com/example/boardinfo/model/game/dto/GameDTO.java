@@ -55,6 +55,15 @@ public class GameDTO {
 	private Double weight;
 	private int tot;
 	private int game_rank;
+	private int game_rank_month;
+
+	public int getGame_rank_month() {
+		return game_rank_month;
+	}
+
+	public void setGame_rank_month(int game_rank_month) {
+		this.game_rank_month = game_rank_month;
+	}
 
 	public GameDTO() {
 	}
