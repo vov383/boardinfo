@@ -214,17 +214,25 @@
                                 <div class="toast-chat"></div>
                             </div>
                         <!-- userid로 로그인한 상태 -->
-                   <div class="memberArea">
+<!--  -->
+                        <div class="dropdown">
+                            <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.nickname} 님<img src="${path}/images/dropdown.png" width="16px"></a>
+
+                            </div>
+                            <div class="dropdown-content">
+                                <a href="${path}/mypage/goMypage/${sessionScope.userid}">마이페이지</a>
+                                <a href="${path}/member/pass_check_u?userid=${sessionScope.userid}">회원정보</a>
+                                <a href="${path}/member/logout.do" class="sign">로그아웃</a>
+                            </div>
+<!-- 수진님꺼  -->
+<!--                    <div class="memberArea">
                         <div class="toMenu">
                             ${sessionScope.nickname} 님
                             <img src="${path}/images/dropdown.png" width="16px">
-                        </div>
-                        <div class="dropdown-content">
-                         <a href="${path}/mypage/goMypage/${sessionScope.userid}">마이페이지</a>
-                         <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
-                         <a href="${path}/member/logout.do" class="sign">로그아웃</a>
-                        </div>
-                   </div>
+                        </div> 
+                   </div> -->
+                          
+                          
                     </c:otherwise>
                 </c:choose>
             </div>

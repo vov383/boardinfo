@@ -294,8 +294,8 @@ public class MemberController {
 	}
 
 	//회원 삭제 (del='n'  ->  del='y')로 변경 후 보이지 않게 처리
-	@RequestMapping("delete.do")
-	public String delete(@RequestParam("userid") String userid,HttpSession session ) {
+	@RequestMapping("delete.do/{userid}")
+	public String delete(@PathVariable(value="userid") String userid,HttpSession session ) {
 		memberService.deleteMember(userid, session);
 
 		return "redirect:/";
