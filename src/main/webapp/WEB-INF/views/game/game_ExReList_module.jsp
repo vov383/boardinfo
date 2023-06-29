@@ -107,6 +107,8 @@
                     // result 값으로 행을 추가
                     for (var i = 0; i < map.list.length; i++) {
                         var row = map.list[i];
+                        var rate = Number(row.rate).toFixed(1);
+                        var weight = Number(row.weight).toFixed(1);
                         var tableRow = '<tr>';
                         tableRow += '<td><p>' + row.game_rank + '</p></td>';
                         tableRow += '<td id="imgTd">';
@@ -124,12 +126,13 @@
                         tableRow += '<td><a href="${path}/game/view.do?gnum=' + row.gnum + '">' + row.gametitle + '<br>(' + row.gametitle_eng + ')</a></td>';
                         tableRow += '<td>' + row.category + '</td>';
                         if (row.rate != null && row.rate != "") {
-                            tableRow += '<td><strong>' + row.rate + '(' + row.tot + ')</strong></td>';
+
+                            tableRow += '<td><strong>'+ rate +'</strong>(' + row.tot + ')</td>';
                         } else {
                             tableRow += '<td><strong>-</strong></td>';
                         }
                         if (row.weight != null && row.weight != "") {
-                            tableRow += '<td><strong>' + row.weight + '(' + row.tot + ')</strong></td>';
+                            tableRow += '<td><strong>'+ weight +'</strong>(' + row.tot + ')</td>';
                         } else {
                             tableRow += '<td><strong>-</strong></td>';
                         }

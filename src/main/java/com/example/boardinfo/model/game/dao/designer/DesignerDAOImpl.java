@@ -74,4 +74,23 @@ public class DesignerDAOImpl implements DesignerDAO {
 		map.put("gnum",gnum);
 		sqlSession.delete("designer.deleteGame_Designer", map);
 	}
+
+	@Override
+	public List<DesignerDTO> totalSearch(Map<String, Object> map) {
+		return sqlSession.selectList("designer.totalSearch", map);
+	}
+
+	@Override
+	public int totalSearchCount(Map<String, Object> map) {
+		return sqlSession.selectOne("designer.totalSearchCount", map);
+	}
+
+	@Override
+	public List<DesignerDTO> confirmList(Map<String, Object> map) {
+		return sqlSession.selectList("designer.confirmList", map);
+	}
+	@Override
+	public void deleteitem(int num) {
+		sqlSession.delete("designer.deleteitem", num);
+	}
 }

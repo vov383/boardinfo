@@ -12,6 +12,16 @@
 <%@ include file="../include/js/header.jsp"%>
 <link rel="stylesheet" href="${path}/include/js/style_game.css">
 	<script src="${path}/include/js/common.js"></script>
+	<style>
+		#fileDrop {
+			float: right;
+			width: 80px;
+			height: 80px;
+			border: 1px solid black;
+			margin-right: 50px;
+			text-align: center;
+		}
+	</style>
 </head>
 
 <body>
@@ -367,6 +377,25 @@
 
 			<tr>
 
+				<td>테마</td>
+				<td>
+					<select name="theme" id="theme">
+						<option value="-">선택하세요(필수 아님)</option>
+						<option value="가족게임">가족게임</option>
+						<option value="어린이게임">어린이게임</option>
+						<option value="전쟁게임">전쟁게임</option>
+						<option value="전략게임">전략게임</option>
+						<option value="추상게임">추상게임</option>
+						<option value="컬렉터블게임">컬렉터블게임</option>
+						<option value="테마게임">테마게임</option>
+						<option value="파티게임">파티게임</option>
+					</select>
+				</td>
+
+			</tr>
+
+			<tr>
+
 				<td colspan="2">
 					<button type="button" id="btnGameUpdate">등록</button>
 					<button type="button" id="btnGameDelete">삭제</button>
@@ -402,6 +431,9 @@
 	}
 
 	$(document).ready(function () {
+		//게임테마 기존 값 유지
+		$("#theme").val("${dto.theme}").attr("selected","selected");
+
 		//게임 수정 버튼클릭
 		$("#btnGameUpdate").click(function() {
 			//null값확인, 자료형확인필요함 -> 정규식응용
@@ -554,7 +586,7 @@
 					//data: 업로드한 파일 정보와 Http 상태 코드
 					var fileInfo=getFileInfo(data);
 					console.log(fileInfo);
-					var html="<div><a href='"+fileInfo.getLink+"'>"+fileInfo.fileName+"</a><br>";
+					var html="<div><span>"+fileInfo.fileName+"</span><br>";
 					html += "<img src='${path}/uploadgame/displayFile?fileName="+data+"'>";
 					html += "<span data-src="+data+">[삭제]</span></div>";
 					html += "<input type='hidden' class='file' value='"+fileInfo.fullName+"'></div>";

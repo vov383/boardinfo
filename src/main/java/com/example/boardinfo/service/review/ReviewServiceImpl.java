@@ -1,10 +1,9 @@
 package com.example.boardinfo.service.review;
 
 import com.example.boardinfo.model.review.dao.ReviewDAO;
-import com.example.boardinfo.model.review.dto.ReplyCommentsDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
-import com.example.boardinfo.model.review.dto.TestDTO;
-import com.example.boardinfo.model.review.dto.reviewSerchDTO;
+import com.example.boardinfo.model.review.dto.*;
+
+import com.example.boardinfo.util.Pager;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +12,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -31,7 +32,19 @@ public class ReviewServiceImpl implements ReviewService {
 		return list;
 	}
 
-	/*리뷰 목록 조회*/
+	/*게임 목록 출력*/
+	@Override // 덮어쓰기 의미
+	public List<ChoiceGameDTO> gameListOut(reviewSerchDTO reviewserchDTO){
+
+
+		List<ChoiceGameDTO> gameList = reviewDAO.gameListOut(reviewserchDTO);
+		/*System.out.println("vo : " + new Gson().toJson(list));*/
+
+		return gameList;
+	}
+
+
+	/*리뷰 목록 카운트*/
 	@Override // 덮어쓰기 의미
 	public int reviewListCnt(reviewSerchDTO reviewserchDTO){
 		return reviewDAO.reviewListCnt(reviewserchDTO);
@@ -100,6 +113,17 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 
+
+	/*신고하기*/
+	@Transactional
+	@Override
+	public void reviewDetailwaringCreate(reviewSerchDTO reviewserchDTO, HttpSession session){
+
+		String userid = (String) session.getAttribute("userid");
+		reviewserchDTO.setCreateUser(userid);
+		reviewDAO.reviewDetailwaringCreate(reviewserchDTO);
+
+	}
 
 	/*리뷰 좋아요*/
 	@Transactional
@@ -194,6 +218,55 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public List<ReviewDTO> getHotList(Integer size) {
 		return reviewDAO.getHotList(size);
+	}
+
+	@Override
+	public Map<String, Object> totalSearch(String gameKeyword) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("gameKeyword", gameKeyword);
+		map.put("filter", "none");
+
+		map.put("boardDivision","'자유게시판'");
+		List<ReviewDTO> list1 = reviewDAO.totalSearch(map);
+		map.replace("boardDivision","'자유게시판'","'게임후기', '노하우', '질문'");
+		List<ReviewDTO> list2 = reviewDAO.totalSearch(map);
+		map.remove("boardDivision");
+
+
+		map.put("list1", list1);
+		map.put("list2", list2);
+		return map;
+
+	}
+
+	@Override
+	public Map<String, Object> totalSearchMore(Map<String, Object> map) {
+		int curPage = Integer.parseInt(String.valueOf(map.get("curPage")));
+
+		int count = reviewDAO.totalSearchCount(map);
+
+		Pager pager = new Pager(count, curPage, 10);
+		int start = pager.getPageBegin();
+		int end = pager.getPageEnd();
+
+		map.put("start",start);
+		map.put("end",end);
+
+		String filter = (String)map.get("filter");
+		if(filter.indexOf("자유게시판") != -1) {
+			map.put("boardDivision", "'자유게시판'");
+			List<ReviewDTO> list = reviewDAO.totalSearch(map);
+			map.put("list",list);
+		}else{
+			map.put("boardDivision", "'게임후기', '노하우', '질문'");
+			List<ReviewDTO> list = reviewDAO.totalSearch(map);
+			map.put("list",list);
+		}
+		map.remove("boardDivision");
+		map.put("count",count);
+		map.put("pager",pager);
+
+		return map;
 	}
 }
 

@@ -12,7 +12,10 @@
     <%@ include file="include/js/header.jsp" %>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+	<script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js"
+            charset="utf-8"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    
     <style>
 
         #main_lower{
@@ -99,11 +102,13 @@
         }
 
         .cbadge{
-            width: 85px;
+            width: 100px;
             border-radius: 5px;
             padding: 0 10px;
-            margin-right: 6px;
+            margin-right: 10px;
             background-color: #d9d9d9;
+            display: inline-block;
+            text-align: center;
         }
 
         .reply{
@@ -274,7 +279,7 @@
             <div>
                 <div class="boxForList">
                     <div><span>HOT! 보드인이 주목중인 게시글</span>
-                        <span><a class="more" href="${path}/review/reviewlist.do">&gt</a></span></div>
+                        <span><a class="more" href="${path}/review/reviewlist.do?freeFlag=H">&gt</a></span></div>
 
                     <div class="list" id="hotList">
                     </div>
@@ -282,7 +287,7 @@
 
                 <div class="boxForList">
                     <div><span>커뮤니티</span>
-                        <span><a class="more" href="${path}/review/reviewlist.do">&gt</a></span></div>
+                        <span><a class="more" href="${path}/review/reviewlist.do?freeFlag=A">&gt</a></span></div>
 
                     <div class="list" id="communityList">
                     </div>
@@ -319,6 +324,8 @@
 
 <br>
 <h1><a href="${path}/member/member_list.do" style="color: black;">인터셉터 확인</a></h1>
+<br>
+
 
 
 <%@include file="include/footer.jsp" %>

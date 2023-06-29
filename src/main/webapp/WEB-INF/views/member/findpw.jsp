@@ -103,6 +103,7 @@ body {
 		</h2>
 		<div class="input_section">
 			<form method="post" name="searchFormP">
+			<p> 인증번호 전송은 시간이 소요될 수 있습니다.</p>
 				<fieldset>
 					<legend>비밀번호 찾기</legend>
 					<table>

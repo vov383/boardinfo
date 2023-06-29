@@ -1,5 +1,6 @@
 package com.example.boardinfo.model.game.dao.gameRating;
 
+import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.model.game.dto.gameRating.RatingStatisticDTO;
 import org.apache.ibatis.session.SqlSession;
@@ -157,5 +158,15 @@ public class GameRatingDAOImpl implements GameRatingDAO  {
 	@Override
 	public List<GameRatingDTO> getRateListbyUserid(String userid) {
 		return session.selectList("rateListbyUserid", userid);
+	}
+
+	@Override
+	public int getMoreRatingsCount(Map<String, Object> map) {
+		return session.selectOne("gameRating.getMoreRatingsCount",map);
+	}
+
+	@Override
+	public List<GameDTO> getMoreRatings(Map<String, Object> map) {
+		return session.selectList("getMoreRatings", map);
 	}
 }

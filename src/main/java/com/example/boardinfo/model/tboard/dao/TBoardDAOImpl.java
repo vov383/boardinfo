@@ -2,6 +2,7 @@ package com.example.boardinfo.model.tboard.dao;
 
 import com.example.boardinfo.model.tboard.dto.TBAttachDTO;
 import com.example.boardinfo.model.tboard.dto.TBoardDTO;
+import com.example.boardinfo.model.tboard.dto.TradeSearchDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -17,13 +18,13 @@ public class TBoardDAOImpl implements TBoardDAO {
 
 	@Override
 	public int countArticle(
-			Map<String, Object> map) {
-		return sqlSession.selectOne("tboard.countArticle", map);
+			TradeSearchDTO sDto) {
+		return sqlSession.selectOne("tboard.countArticle", sDto);
 	}
 
 	@Override
-	public List<TBoardDTO> list(Map<String, Object> map) {
-		return sqlSession.selectList("tboard.selectBoardList", map);
+	public List<TBoardDTO> list(TradeSearchDTO sDto) {
+		return sqlSession.selectList("tboard.selectBoardList", sDto);
 	}
 	@Override
 	public int insert(TBoardDTO dto) {
@@ -55,18 +56,14 @@ public class TBoardDAOImpl implements TBoardDAO {
 	}
 
 	@Override
-	public void increaseRecnt(int tb_num) {
-		sqlSession.update("tboard.increaseRecnt", tb_num);
-	}
-
-	@Override
 	public List<String> getAttach(int tb_num) {
 		return sqlSession.selectList("tboard.getAttachList", tb_num);
 	}
 
 	@Override
-	public void deleteFile(String fileName) {
-		sqlSession.delete("tboard.deleteAttach", fileName);
+	public int deleteFile(Map<String, String> map) {
+		int result = sqlSession.delete("tboard.deleteAttach", map);
+		return result;
 	}
 
 	@Override
@@ -80,10 +77,29 @@ public class TBoardDAOImpl implements TBoardDAO {
 		return sqlSession.selectList("tboard.getTbList",userid);
 	}
 
-
 	@Override
 	public List<TBoardDTO> getHomeList(Integer size) {
 		return sqlSession.selectList("tboard.getHomeList", size);
 	}
 
+	@Override
+	public List<TBoardDTO> totalSearch(Map<String, Object> map) {
+		return sqlSession.selectList("tboard.totalSearch", map);
+	}
+
+	@Override
+	public int totalSearchCount(Map<String, Object> map) {
+		return sqlSession.selectOne("tboard.totalSearchCount", map);
+	}
+
+	/*중고거래 좋아요*/
+	@Override
+	public int goodCreate(TradeSearchDTO sDto) {
+		return sqlSession.insert("tboard.goodCreate", sDto);
+	}
+
+	@Override
+	public int goodDelete(TradeSearchDTO sDto) {
+		return sqlSession.delete("tboard.goodDelete", sDto);
+	}
 }

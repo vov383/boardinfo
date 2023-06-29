@@ -157,28 +157,99 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where gnum = #{gnum} and writer_id = #{writer_id} and user_id = #{user_id}
 	</delete>
 
+	<!-- game_rating 테이블과 game 테이블을 join 해서 r.gnum 으로 g.gametitle과 g.bgg_thumbnail 컬럼값 가져옴
+	그리고 game_rating_like 테이블의 count를 r.userid 로 가져옴 -->
 	<select id="rateListbyUserid" resultType="gameRatingDTO">
-		select *
-		from (select userid,
-					 count(l.user_id)                   likeCount,
-					 r.gnum,
-					 rating,
-					 weight,
-					 participant1,
-					 participant2,
-					 participant3,
-					 participant4,
-					 participant5,
-					 rating_comment,
-					 to_char(create_date, 'YYYY-MM-dd') create_date
-			  from game_rating r
-					   left join game_rating_like l on r.userid = l.writer_id
-			  where r.userid = #{userid}
-			  group by writer_id, userid, r.gnum, rating, weight,
-					   participant1, participant2, participant3, participant4, participant5, rating_comment, create_date
-			  order by likeCount desc, create_date desc
-			 )
+		select r.userid
+			 , count(l.user_id)                   as likeCount
+			 , r.gnum
+			 , g.GAMETITLE
+			 , g.BGG_THUMBNAIL
+			 , r.rating
+			 , r.weight
+			 , r.participant1
+			 , r.participant2
+			 , r.participant3
+			 , r.participant4
+			 , r.participant5
+			 , r.rating_comment
+			 , to_char(r.create_date, 'YYYY-MM-dd') as create_date
+		from game_rating r
+				 join game g on r.GNUM = g.GNUM
+				 left join game_rating_like l on r.userid = l.writer_id
+		where r.userid = #{userid}
+		group by r.userid, r.gnum, r.rating, r.weight, r.participant1, r.participant2, r.participant3, r.participant4, r.participant5, r.rating_comment, r.create_date, g.GAMETITLE, g.BGG_THUMBNAIL
+		order by likeCount desc, create_date desc
 	</select>
+
+<!--    댓글더보기	-->
+	<select id="getMoreRatings" resultType="gameRatingDTO">
+		<choose>
+			<when test="user_id != null">
+				select *
+				from
+				(
+				select a.*, rownum rn
+				from
+				(
+				select userid, count(l.user_id) likeCount, r.gnum, rating, weight, participant1, participant2,
+				participant3, participant4, participant5, rating_comment, to_char(create_date, 'YYYY-MM-dd') create_date, count(l2.user_id) myLike
+				from game_rating r
+				left join game_rating_like l on r.userid = l.writer_id
+				left join (
+				select writer_id, user_id from game_rating_like
+				where  gnum=#{gnum} and user_id =#{user_id}
+				)l2 on r.userid = l2.writer_id
+				where r.gnum = #{gnum}
+				group by l.writer_id, userid, r.gnum, rating, weight, participant1, participant2, participant3,
+				participant4, participant5, rating_comment, create_date, l2.user_id, l2.writer_id
+				<choose>
+					<when test="sort != null and 'like'.equalsIgnoreCase(sort)">
+						order by likeCount desc, create_date desc
+					</when>
+					<otherwise>
+						order by create_date desc, likeCount desc
+					</otherwise>
+				</choose>
+				)a
+				)
+				where rn between #{start} and #{end}
+			</when>
+			<otherwise>
+				select *
+				from
+				(
+				select a.*, rownum rn
+				from
+				(select userid, count(l.user_id) likeCount, r.gnum, rating, weight, participant1, participant2,
+				participant3, participant4, participant5, rating_comment, to_char(create_date, 'YYYY-MM-dd') create_date
+				from game_rating r
+				left join game_rating_like l on r.userid = l.writer_id
+				where r.gnum =#{gnum}
+				group by writer_id, userid, r.gnum, rating, weight, participant1, participant2, participant3,
+				participant4, participant5, rating_comment, create_date
+				<choose>
+					<when test="sort != null and 'like'.equalsIgnoreCase(sort)">
+						order by likeCount desc, create_date desc
+					</when>
+					<otherwise>
+						order by create_date desc, likeCount desc
+					</otherwise>
+				</choose>
+				)a
+				)
+				where rn between #{start} and #{end}
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="getMoreRatingsCount" resultType="int">
+		select 	count(*)
+		from	game_rating
+		where	gnum=#{gnum}
+	</select>
+
+
 
 </mapper>
 

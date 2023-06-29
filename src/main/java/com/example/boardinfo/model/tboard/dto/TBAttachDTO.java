@@ -1,7 +1,6 @@
 package com.example.boardinfo.model.tboard.dto;
 
 import java.util.Arrays;
-import java.util.Date;
 
 public class TBAttachDTO {
 
@@ -12,13 +11,21 @@ public class TBAttachDTO {
 	private byte[] fileData;
 	private String del;
 	private String create_user;
-	private Date create_date;
+	private String create_date;
 
 	private String update_user;
-	private Date update_date;
+	private String update_date;
 
 	public String getFormatName() {
 		return formatName;
+	}
+
+	public void setCreate_date(String create_date) {
+		this.create_date = create_date;
+	}
+
+	public void setUpdate_date(String update_date) {
+		this.update_date = update_date;
 	}
 
 	public void setFormatName(String formatName) {
@@ -74,28 +81,12 @@ public class TBAttachDTO {
 		this.create_user = create_user;
 	}
 
-	public Date getCreate_date() {
-		return create_date;
-	}
-
-	public void setCreate_date(Date create_date) {
-		this.create_date = create_date;
-	}
-
 	public String getUpdate_user() {
 		return update_user;
 	}
 
 	public void setUpdate_user(String update_user) {
 		this.update_user = update_user;
-	}
-
-	public Date getUpdate_date() {
-		return update_date;
-	}
-
-	public void setUpdate_date(Date update_date) {
-		this.update_date = update_date;
 	}
 
 	@Override
@@ -108,9 +99,9 @@ public class TBAttachDTO {
 				", fileData=" + Arrays.toString(fileData) +
 				", del='" + del + '\'' +
 				", create_user='" + create_user + '\'' +
-				", create_date=" + create_date +
+				", create_date='" + create_date + '\'' +
 				", update_user='" + update_user + '\'' +
-				", update_date=" + update_date +
+				", update_date='" + update_date + '\'' +
 				'}';
 	}
 }

@@ -1,10 +1,12 @@
 package com.example.boardinfo.controller.review;
 
-import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.review.dto.*;
+import com.example.boardinfo.service.game.GameServiceImpl;
 import com.example.boardinfo.service.review.ReviewService;
 import com.example.boardinfo.service.review.paging;
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,14 +27,18 @@ import java.util.Map;
 @Controller
 @RequestMapping("review/*")
 public class ReviewController {
+	private static final Logger logger=
+			LoggerFactory.getLogger(ReviewController.class);
 	@Inject
 	ReviewService reviewservice;
 
 	// 리뷰 리스트 페이지
 	@RequestMapping("reviewlist.do")
-	public ModelAndView revewlist(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session, PageDTO page) {
+	public ModelAndView revewlist(@ModelAttribute reviewSerchDTO reviewserchDTO,
+								  HttpSession session, PageDTO page,
+								  @RequestParam(name="freeFlag") String freeFlag,
+								  @RequestParam(name="detail", required = false, defaultValue = "A") String detail) {
 
-		String userid = (String) session.getAttribute("userid");
 		ModelAndView mav = new ModelAndView();
 
 		/*조회 쿼리 이전에 페이징 처리 먼저 작업 → 조회 쿼리 이전에 불러와야 하기 때문임*/
@@ -40,30 +46,53 @@ public class ReviewController {
 		System.out.println("pagepagepagepagepagepagepagepagepagepage : " + new Gson().toJson(page));
 		→ 0값으로 조회됨
 */
+//		System.out.println("freeFlag : " + freeFlag);
+		//Y 자유, N 포럼 H 인기 A 전체
+		if ("Y".equals(freeFlag) || "N".equals(freeFlag) || "H".equals(freeFlag) || "A".equals(freeFlag)) {
+			reviewserchDTO.setFreeFlag(freeFlag);
+		}
+		logger.info("freeFlag가 안넘어가나?" + freeFlag);
+		logger.info("detail이 안넘어가나?" + detail);
+		if ("Y".equals(reviewserchDTO.getFreeFlag())) {
+			reviewserchDTO.setBoardDivision("'자유게시판'");
+		} else if("N".equals(reviewserchDTO.getFreeFlag())){
+
+			switch (detail){	//게임포럼내 게시글 분기를 만듬.
+				case "A":
+					reviewserchDTO.setBoardDivision("'게임후기', '노하우', '질문'");
+					break;
+				case "Q":
+					reviewserchDTO.setBoardDivision("'질문'");
+					break;
+				case "R":
+					reviewserchDTO.setBoardDivision("'게임후기'");
+					break;
+				case "K":
+					reviewserchDTO.setBoardDivision("'노하우'");
+					break;
+				default:
+					break;
+			}
+		}
+
 
 		page = paging.Paging(page);
-		System.out.println("한글테스트 : " + new Gson().toJson(page));
 
-		/*userid가 null이면 로그인 페이지로 이동*/
-//		if (null == userid){
-//			mav.setViewName("member/login");
+		mav.setViewName("review/gameReviewMain");
 
-		/*userid가 null이 아니면 리뷰 목록 조회로 이동*/
-//		} else {
-			mav.setViewName("review/gameReviewMain");
+		/*내가 보는 리스트의 총개수*/
+		int cnt = reviewservice.reviewListCnt(reviewserchDTO);
+		logger.info("카운트가 정확히 찍혀나오는지 : " + cnt);
 
-			/*내가 보는 리스트의 총개수*/
-			int cnt = reviewservice.reviewListCnt(reviewserchDTO);
-			page = paging.PagingMath(page, cnt);
+		page = paging.PagingMath(page, cnt);
 
-			reviewserchDTO.setStart(page.getStart());
-			reviewserchDTO.setEnd(page.getEnd());
+		reviewserchDTO.setStart(page.getStart());
+		reviewserchDTO.setEnd(page.getEnd());
 
-			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-			mav.addObject("page", page);
-
-
-//		}
+		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+		mav.addObject("page", page);
+		mav.addObject("freeFlag", reviewserchDTO.getFreeFlag());
+		mav.addObject("detail",detail);
 
 		return mav;
 	}
@@ -74,47 +103,78 @@ public class ReviewController {
 		ModelAndView mav = new ModelAndView();
 
 		String userid = (String) session.getAttribute("userid");
+		String adminid = (String) session.getAttribute("admin_id");
 
-		/*userid가 null이면 로그인 페이지로 이동*/
-		if (null == userid){
-			mav.setViewName("member/login");
+		mav.setViewName("review/reviewDetail");
+		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+		mav.addObject("userid", userid);
+		mav.addObject("adminid", adminid);
 
-			/*userid가 null이 아니면 리뷰 상세 페이지 이동*/
-		} else {
-			mav.setViewName("review/reviewDetail");
-			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+		/*댓글 출력*/
+		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+		mav.addObject("freeFlag", reviewserchDTO.getFreeFlag());
 
-			mav.addObject("userid", userid);
+		/*게임 목록 출력*/
+		mav.addObject("gameList", reviewservice.gameListOut(reviewserchDTO));
 
-			/*댓글 출력*/
-			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
-		}
-
-/*		System.out.println("testestestestest");
-		System.out.println("testestestestest");
-		System.out.println("testestestestest");
-		System.out.println("reviewserchDTO : " + reviewserchDTO.getReviewDetailKey());*/
 		return mav;
 	}
 
 
+//	// 신고하기 페이지
+//	@RequestMapping("reviewdetailGood.do")
+//	public ModelAndView reviewDetailwaring(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session) {
+//
+//		//신고하기
+//		reviewservice.reviewDetailwaringCreate(reviewserchDTO, session);
+//
+//		String userid = (String) session.getAttribute("userid");
+//		String adminid = (String) session.getAttribute("admin_id");
+//		ModelAndView mav = new ModelAndView();
+//
+//		/*userid가 null이면 로그인 페이지로 이동*/
+//		if (null == userid){
+//			mav.setViewName("member/login");
+//
+//			/*userid가 null이 아니면 좋아요 적용*/
+//		} else {
+//			mav.setViewName("review/reviewDetail");
+//			mav.addObject("userid", userid);
+//			mav.addObject("adminid", adminid);
+//			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+//
+//			/*댓글 출력*/
+//			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+//		}
+//
+//		return mav;
+//	}
 	// 리뷰 좋아요 페이지
+
 	@RequestMapping("reviewdetailGood.do")
 	public ModelAndView reviewdetailGood(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session) {
 
 		//좋아요
 		reviewservice.reviewGoodCreate(reviewserchDTO, session);
 
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("review/reviewDetail");
-
 		String userid = (String) session.getAttribute("userid");
-		mav.addObject("userid", userid);
+		String adminid = (String) session.getAttribute("admin_id");
+		ModelAndView mav = new ModelAndView();
 
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+		/*userid가 null이면 로그인 페이지로 이동*/
+		if (null == userid){
+			mav.setViewName("member/login");
 
-		/*댓글 출력*/
-		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+			/*userid가 null이 아니면 좋아요 적용*/
+		} else {
+			mav.setViewName("review/reviewDetail");
+			mav.addObject("userid", userid);
+			mav.addObject("adminid", adminid);
+			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+
+			/*댓글 출력*/
+			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+		}
 
 		return mav;
 	}
@@ -123,21 +183,40 @@ public class ReviewController {
 	@RequestMapping("reviewreplysave.do")
 	public ModelAndView reviewReply(@ModelAttribute ReplyCommentsDTO replyCommentsDTO, HttpSession session) {
 
-		/*댓글 입력*/
-		reviewservice.reviewReply(replyCommentsDTO, session);
-
-		/*댓글의 상단 리뷰 내용 출력*/
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("review/reviewDetail");
-		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
-		reviewserchDTO.setReviewDetailKey(replyCommentsDTO.getRegNum());
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-
-		/*댓글 출력*/
-		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
-
 		String userid = (String) session.getAttribute("userid");
-		mav.addObject("userid", userid);
+		ModelAndView mav = new ModelAndView();
+
+		/*userid가 null이면 로그인 페이지로 이동*/
+		if (null == userid){
+			mav.setViewName("member/login");
+
+			/*userid가 null이 아니면 댓글 입력 페이지 이동*/
+		} else {
+
+			/*댓글 입력*/
+			reviewservice.reviewReply(replyCommentsDTO, session);
+
+			/*댓글의 상단 리뷰 내용 출력*/
+			reviewSerchDTO review = new reviewSerchDTO();
+			review.setReviewDetailKey(replyCommentsDTO.getRegNum());
+			review.setFreeFlag(replyCommentsDTO.getFreeFlag());
+			mav = revewDetail(review, session);
+
+
+
+
+//
+//			/*댓글의 상단 리뷰 내용 출력*/
+//			mav.setViewName("review/reviewDetail");
+//			reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
+//			reviewserchDTO.setReviewDetailKey(replyCommentsDTO.getRegNum());
+//			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+//
+//			/*댓글 출력*/
+//			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+//
+//			mav.addObject("userid", userid);
+		}
 
 		return mav;
 	}
@@ -145,42 +224,71 @@ public class ReviewController {
 	// 리뷰 대댓글 입력
 	@RequestMapping("topreplyinsetsave.do")
 	public ModelAndView topreplyinsetsave(@ModelAttribute ReplyCommentsDTO replyCommentsDTO, HttpSession session) {
-System.out.println("1");
-		/*답글 입력*/
-		reviewservice.topreplyinsetsave(replyCommentsDTO, session);
-		System.out.println("2");
-		/*댓글의 상단 리뷰 내용 출력*/
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("review/reviewDetail");
-		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
-		reviewserchDTO.setReviewDetailKey(replyCommentsDTO.getRegNum());
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-
-		/*댓글 출력*/
-		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+//		System.out.println("1");
 
 		String userid = (String) session.getAttribute("userid");
-		mav.addObject("userid", userid);
+		ModelAndView mav = new ModelAndView();
 
+		/*userid가 null이면 로그인 페이지로 이동*/
+		if (null == userid){
+			mav.setViewName("member/login");
+
+		/*userid가 null이 아니면 답글 입력 페이지 이동*/
+		} else {
+			/*답글 입력*/
+			reviewservice.topreplyinsetsave(replyCommentsDTO, session);
+//			System.out.println("2");
+
+			reviewSerchDTO review = new reviewSerchDTO();
+			review.setReviewDetailKey(replyCommentsDTO.getRegNum());
+			review.setFreeFlag(replyCommentsDTO.getFreeFlag());
+			mav = revewDetail(review, session);
+//
+//			/*댓글의 상단 리뷰 내용 출력*/
+//			mav.setViewName("review/reviewDetail");
+//			reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
+//			reviewserchDTO.setReviewDetailKey(replyCommentsDTO.getRegNum());
+//			reviewserchDTO.setFreeFlag(replyCommentsDTO.getFreeFlag());
+//			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+//
+//			/*댓글 출력*/
+//			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+//
+//			mav.addObject("userid", userid);
+		}
 		return mav;
 	}
 
 
 	// 리뷰 입력 및 수정할 페이지
 	@RequestMapping("reviewInsert.do")
-	public ModelAndView reviewInsert(@ModelAttribute reviewSerchDTO reviewserchDTO){
-		/*첫 입력*/
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("review/ReviewInsert");
+	public ModelAndView reviewInsert(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session){
 
-		/*System.out.println("getReviewDetailKey : " + reviewserchDTO.getReviewDetailKey());*/
+		String userid = (String) session.getAttribute("userid");
+		ModelAndView mav = new ModelAndView();
+
+		/*userid가 null이면 로그인 페이지로 이동*/
+		if (null == userid){
+			mav.setViewName("member/login");
+
+			/*userid가 null이 아니면 답글 입력 페이지 이동*/
+		} else {
+
+			/*첫 입력 페이지*/
+			mav.setViewName("review/ReviewInsert");
 
 		if (null == reviewserchDTO.getReviewDetailKey()) reviewserchDTO.setReviewDetailKey("1");
 
-		/*수정*/
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+			/*수정 페이지*/
+			mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+			mav.addObject("freeFlag", reviewserchDTO.getFreeFlag());
+			mav.addObject("gameList", reviewservice.gameListOut(reviewserchDTO));
+
+		}
+
 		return mav;
 	}
+
 
 	// 댓글 수정할 페이지
 	@RequestMapping("reviewreplyedit.do")
@@ -194,7 +302,9 @@ System.out.println("1");
 		mav.setViewName("review/reviewDetail");
 
 		String userid = (String) session.getAttribute("userid");
+		String adminid = (String) session.getAttribute("admin_id");
 		mav.addObject("userid", userid);
+		mav.addObject("adminid", adminid);
 
 		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
 		reviewserchDTO.setReviewDetailKey(replycommentsDTO.getRegNum());
@@ -219,7 +329,9 @@ System.out.println("1");
 		mav.setViewName("review/reviewDetail");
 
 		String userid = (String) session.getAttribute("userid");
+		String adminid = (String) session.getAttribute("admin_id");
 		mav.addObject("userid", userid);
+		mav.addObject("adminid", adminid);
 
 		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
 		reviewserchDTO.setReviewDetailKey(replycommentsDTO.getRegNum());
@@ -284,65 +396,38 @@ System.out.println("1");
 
 	// 리뷰 저장 후 페이지
 	@RequestMapping("reviewinsertsave.do")
-	public ModelAndView insertPage(@ModelAttribute ReviewDTO reviewDTO, HttpSession session){
+	public String insertPage(@ModelAttribute ReviewDTO reviewDTO, HttpSession session){
+
 		reviewservice.reviewCreate(reviewDTO, session);
 
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("review/gameReviewMain");
+//		ModelAndView mav = new ModelAndView();
+//		mav.setViewName("review/gameReviewMain");
+//
+//		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
+//		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
+//		return mav;
 
-		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-		return mav;
+		return "redirect:/review/reviewlist.do?freeFlag="+reviewDTO.getFreeFlag();
 	}
-
-	// 수정 할 페이지
-	@RequestMapping("reviewedit.do")
-	public ModelAndView edit(@ModelAttribute reviewSerchDTO reviewserchDTO){
-		ModelAndView mav = new ModelAndView();
 
 /*
-		System.out.println("testestestestest");
-		System.out.println("testestestestest");
-		System.out.println("testestestestest");
-		System.out.println("reviewserchDTO : " + reviewserchDTO.getReviewDetailKey());
-*/
-
-		mav.setViewName("review/reviewEdit");
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-		return mav;
-	}
 
 	// 수정 후 페이지
 	@RequestMapping("revieweditsave.do")
-	public ModelAndView editSave(@ModelAttribute ReviewDTO reviewDTO){
-		ModelAndView mav = new ModelAndView();
-		/*System.out.println("testtesttesttesttest");*/
+	public String editSave(@ModelAttribute ReviewDTO reviewDTO){
 		reviewservice.reviewUpdate(reviewDTO);
-		reviewSerchDTO reviewserchDTO = new reviewSerchDTO();
-		reviewserchDTO.setReviewDetailKey(reviewDTO.getRegNum());
-		mav.setViewName("/review/reviewDetail");
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
-
-		return mav;
+		return "redirect:/review/reviewlist.do?freeFlag="+reviewDTO.getFreeFlag();
 	}
+*/
 
 	// 삭제 후 페이지
 	@RequestMapping("reviewdelsave.do")
-	public ModelAndView reviewDelSave(@ModelAttribute reviewSerchDTO reviewserchDTO){
-		ModelAndView mav = new ModelAndView();
-/*
-		System.out.println("testtesttesttesttest");
-		System.out.println("testtesttesttesttest");
-		System.out.println("testtesttesttesttest");
-		System.out.println("reviewserchDTO.getReviewDetailKey() : "+ reviewserchDTO.getReviewDetailKey());
-*/
+	public String reviewDelSave(@ModelAttribute reviewSerchDTO reviewserchDTO){
 
 		reviewservice.reviewDel(reviewserchDTO);
-		reviewserchDTO = new reviewSerchDTO();
-		mav.setViewName("/review/gameReviewMain");
-		mav.addObject("list", reviewservice.reviewlist(reviewserchDTO));
 
-		return mav;
+		return "redirect:/review/reviewlist.do?freeFlag="+reviewserchDTO.getFreeFlag();
+
 	}
 
 
@@ -351,17 +436,17 @@ System.out.println("1");
 
 
 	// Blob Test, 입력P
-    @RequestMapping("reviewBlobInsert.do")
-    public String insert(@ModelAttribute TestDTO testdto){
-        return "/review/ReviewBlobInsert";
-    }
+	@RequestMapping("reviewBlobInsert.do")
+	public String insert(@ModelAttribute TestDTO testdto){
+		return "/review/ReviewBlobInsert";
+	}
 
-    // Blob Test, 저장P
-    @RequestMapping("reviewBlobInsertPage.do")
-    public String insertPage(@ModelAttribute TestDTO testdto){
-        reviewservice.create(testdto);
-        return "/review/ReviewBlobInsert";
-    }
+	// Blob Test, 저장P
+	@RequestMapping("reviewBlobInsertPage.do")
+	public String insertPage(@ModelAttribute TestDTO testdto){
+		reviewservice.create(testdto);
+		return "/review/ReviewBlobInsert";
+	}
 
 
 
@@ -410,7 +495,8 @@ System.out.println("1");
 	@ResponseBody
 	@GetMapping("/hotList")
 	public Map<String, List<ReviewDTO>> getHotList(
-			@RequestParam(value="size", required=false) Integer size){
+			@RequestParam(value="size", required=false) Integer size
+			){
 
 		if(size == null) size = 8;
 		List<ReviewDTO> list = reviewservice.getHotList(size);
@@ -420,4 +506,5 @@ System.out.println("1");
 
 		return map;
 	}
+
 }

@@ -46,6 +46,18 @@ body {
 .footer_col {
 	text-shadow: gray;
 }
+
+.input_section table {
+	display: flex;
+	align-items: center;
+}
+
+.input_section td:first-child {
+	width: 100px;
+	min-width: 100px;
+	justify-content: center; /* 가운데 정렬을 위한 설정 */
+}
+
 </style>
 <script type="text/javascript">
 	$(function() {
@@ -80,7 +92,7 @@ body {
 			<a href="${path}/"><img alt="로고" src="../resources/uploaded_image/boardinfo_logo.png"></a>
 		</h2>
 		<div class="input_section">
-			<form method="post" action="pass_num/${dice}/${email}">
+			<form method="post" action="pass_num/${dice}/${userid}">
 				<fieldset>
 					<legend>인증번호 체크</legend>
 					<table>

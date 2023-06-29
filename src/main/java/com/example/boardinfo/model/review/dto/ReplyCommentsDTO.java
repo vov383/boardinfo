@@ -13,6 +13,7 @@ public class ReplyCommentsDTO {
 	private String updateUser;		// 수정자
 	private String updateDate;		// 수정 일자
 	private String nickname;		// 닉네임
+	private String freeFlag;		//
 
 
 	public String getReplyRegNum() {
@@ -93,6 +94,14 @@ public class ReplyCommentsDTO {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public String getFreeFlag() {
+		return freeFlag;
+	}
+
+	public void setFreeFlag(String freeFlag) {
+		this.freeFlag = freeFlag;
 	}
 }
 
