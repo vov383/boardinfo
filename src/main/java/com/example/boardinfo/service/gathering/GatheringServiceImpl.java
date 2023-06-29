@@ -370,8 +370,6 @@ public class GatheringServiceImpl implements GatheringService {
 	}
 
 
-
-
 	@Override
 	public List<GatheringDTO> totalSearch(String gameKeyword) {
 		Map<String, Object> map = new HashMap<>();
