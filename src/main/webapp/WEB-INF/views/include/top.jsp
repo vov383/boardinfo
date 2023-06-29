@@ -119,7 +119,7 @@
     .noticeList{
         position: absolute;
         z-index: 100;
-        display: flex;
+        display: none;
         flex-direction: column;
 
         margin-top: 20px;

@@ -80,7 +80,7 @@
 
         th{
             border-bottom: 2px solid #e9e9e9;
-            padding: 6px 0;
+            padding: 8px 0;
         }
 
         th:last-of-type{
@@ -88,7 +88,7 @@
         }
 
         td{
-            padding: 4px 0;
+            padding: 6px 0;
             border-bottom: 1px solid #d9d9d9;
         }
 
