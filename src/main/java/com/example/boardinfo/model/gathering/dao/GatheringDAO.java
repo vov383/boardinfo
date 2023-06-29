@@ -49,9 +49,8 @@ public interface GatheringDAO {
 	public List<String> leaveAll(int gathering_id);
 	public List<AttendeeDTO> getAttendeeInfoList(int gathering_id);
 	public List<AttendeeDTO> getWaitingInfoList(int gatheringId);
-
-  List<GatheringDTO> totalSearch(Map<String, Object> map);
-	int totalSearchCount(Map<String, Object> map);
+	public List<GatheringDTO> totalSearch(Map<String, Object> map);
+	public int totalSearchCount(Map<String, Object> map);
 
 
 }

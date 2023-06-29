@@ -33,10 +33,8 @@ public class GameDAOImpl implements GameDAO {
 		String sort = (String)map.get("sort");
 		switch (sort){
 			case "week":
-				list = sqlSession.selectList("game.gameList", map);
-				break;
 			case "month":
-				list = sqlSession.selectList("game.gameList_month", map);
+				list = sqlSession.selectList("game.gameList", map);
 				break;
 			case "newbie":
 				list = sqlSession.selectList("game.gameList_newbie", map);
@@ -93,10 +91,8 @@ public class GameDAOImpl implements GameDAO {
 		String sort = (String)map.get("sort");
 		switch (sort){
 			case "week":
-				list = sqlSession.selectList("game.filteredList", map);
-				break;
 			case "month":
-				list = sqlSession.selectList("game.filteredList_month", map);
+				list = sqlSession.selectList("game.filteredList", map);
 				break;
 			case "newbie":
 				list = sqlSession.selectList("game.filteredList_newbie", map);

@@ -21,9 +21,6 @@ import com.example.boardinfo.service.chat.ChatService;
 import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
-import com.example.boardinfo.model.member.dao.MemberDAO;
-import com.example.boardinfo.service.game.GameServiceImpl;
 import com.example.boardinfo.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -161,8 +158,6 @@ public class GatheringServiceImpl implements GatheringService {
 	public GatheringDTO getGatheringDetails(int gathering_id) {
 		GatheringDTO dto = simpleView(gathering_id);
 		List<AttendeeDTO> attendees = gatheringDao.getAttendeeInfoList(gathering_id);
-		System.out.println("dto있냐" + dto);
-		System.out.println("attendee있냐" + attendees);
 		dto.setAttendeeDTOList(attendees);
 
 		List<AttendeeDTO> waitings = gatheringDao.getWaitingInfoList(gathering_id);
@@ -374,8 +369,6 @@ public class GatheringServiceImpl implements GatheringService {
 		return gatheringDao.deleteReply(dto);
 	}
 
-	
-
 	@Override
 	public List<GatheringDTO> totalSearch(String gameKeyword) {
 		Map<String, Object> map = new HashMap<>();
@@ -421,5 +414,9 @@ public class GatheringServiceImpl implements GatheringService {
 		map.put("pager",pager);
 		return map;
 	}
+
+
+
+
 
 }
