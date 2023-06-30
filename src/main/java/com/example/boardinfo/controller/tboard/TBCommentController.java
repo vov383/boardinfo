@@ -5,6 +5,8 @@ import com.example.boardinfo.service.tboard.TBCommentService;
 import com.example.boardinfo.service.tboard.TBoardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -75,16 +77,34 @@ public class TBCommentController {
 
 	@RequestMapping("editReply.do")
 	@ResponseBody
-	public boolean editeReply(
+	public ResponseEntity<String> editeReply(
 			@ModelAttribute TBCommentDTO re_dto,
 			HttpSession session
 	){
-		//세션에 저장된 아이디객체 가져와
-		String update_user = (String)session.getAttribute("userid");
-		re_dto.setUpdate_user(update_user);
-		boolean result = tbcommentService.editReply(re_dto);
-		return result;
+		boolean result = false;
+		//세션에 저장된 아이디 또는 admin id 가져와
+		/*userid 와 admin_id 둘 다 null 이면*/
+		if(session.getAttribute("userid") == null && session.getAttribute("admin_id") == null){
+			return new ResponseEntity("비정상적인 접근입니다", HttpStatus.BAD_REQUEST);
+		}else{
+			if(session.getAttribute("userid")!= null){
+				String update_user = (String)session.getAttribute("userid");
+				re_dto.setUpdate_user(update_user);
+			}else{
+				String update_user = (String)session.getAttribute("admin_id");
+				re_dto.setUpdate_user(update_user);
+			}
+			/*댓글 수정 성공이면 result = true*/
+			result = tbcommentService.editReply(re_dto);
+			if(result){
+				return new ResponseEntity<>("댓글 수정에 성공했습니다.", HttpStatus.OK);
+			}else{
+				return new ResponseEntity("댓글 수정에 실패했습니다.", HttpStatus.BAD_REQUEST);
+			}
+
+		}
 	}
+
 	@RequestMapping("deleteReply.do")
 	@ResponseBody
 	public boolean deleteReply(

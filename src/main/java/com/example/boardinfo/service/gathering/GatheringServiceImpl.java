@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
 
 import com.example.boardinfo.model.gathering.dao.GatheringAlarmDAO;
-import com.example.boardinfo.model.gathering.dto.GatheringAlarmDTO;
+import com.example.boardinfo.model.gathering.dao.GatheringDAO;
 import com.example.boardinfo.model.gathering.dto.*;
 import com.example.boardinfo.service.chat.ChatService;
 
@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import com.example.boardinfo.model.gathering.dao.GatheringDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -158,6 +157,8 @@ public class GatheringServiceImpl implements GatheringService {
 	public GatheringDTO getGatheringDetails(int gathering_id) {
 		GatheringDTO dto = simpleView(gathering_id);
 		List<AttendeeDTO> attendees = gatheringDao.getAttendeeInfoList(gathering_id);
+		System.out.println("dto있냐" + dto);
+		System.out.println("attendee있냐" + attendees);
 		dto.setAttendeeDTOList(attendees);
 
 		List<AttendeeDTO> waitings = gatheringDao.getWaitingInfoList(gathering_id);
@@ -368,6 +369,7 @@ public class GatheringServiceImpl implements GatheringService {
 	public int deleteReply(GatheringReplyDTO dto) {
 		return gatheringDao.deleteReply(dto);
 	}
+
 
 	@Override
 	public List<GatheringDTO> totalSearch(String gameKeyword) {

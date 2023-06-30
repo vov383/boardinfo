@@ -102,7 +102,7 @@
     <select id="viewPost" resultType="tboardDto">
         select t.tb_num
              , t.title
-             , t.price
+             , TO_CHAR(t.price, '999,999,999,999') as price
              , t.description
              , t.category
              , t.address1

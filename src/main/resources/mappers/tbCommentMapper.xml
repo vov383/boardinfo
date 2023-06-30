@@ -21,13 +21,16 @@
 
     <!-- 댓글들을 ArrayList (dto 반환함) -->
     <select id="getReplyList" resultType="tbCommentDto">
-        select reply_reg_num,
-               parent_reply,
-               inner_order,
-               depth,
-               content,
-               create_user,
-               create_date as create_date
+        select reply_reg_num
+             , parent_reply
+             , inner_order
+             , depth
+             , content
+             , create_user
+             , to_char(create_date, 'YYYY-MM-DD HH24:MI:SS') as create_date
+             , UPDATE_USER
+             , to_char(UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') as update_date
+             , DEL
         from tb_comments
         where tb_num = #{tb_num}
         order by parent_reply, inner_order
