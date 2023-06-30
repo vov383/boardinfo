@@ -97,7 +97,7 @@
 
             <tr>
 
-                <td><div class="wrap t_center"><span class="rank">
+                <td><div class="wrap t_center">
                         <c:choose>
                             <c:when test="${sort eq 'insert'}">
                                 등록대기
@@ -109,7 +109,7 @@
                                 삭제대기
                             </c:when>
                         </c:choose>
-                </span></div></td>
+                </div></td>
 
                 <!-- 차트순위 추가 -->
                 <td><div class="wrap">
@@ -142,10 +142,10 @@
                 <td><div class="wrap">
                     <div class="wrap_song_info">
                         <div class="ellipsis rank01"><span>
-					<a href="${path}/admin/updateGame/${row.gnum}">${row.gametitle}</a>
+					<a href="${path}/admin/updateGame/${sort}/${row.gnum}">${row.gametitle}</a>
 											</span></div><br>
                         <div class="ellipsis rank02">
-                            <a href="${path}/admin/updateGame/${row.gnum}">${row.gametitle_eng}</a>
+                            <a href="${path}/admin/updateGame/${sort}/${row.gnum}">${row.gametitle_eng}</a>
                         </div>
                     </div>
                 </div></td>

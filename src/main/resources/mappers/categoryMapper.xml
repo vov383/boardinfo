@@ -109,6 +109,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				)
 		where rn between #{start} and #{end}
 	</select>
+
+	<insert id="update_category_mapping">
+		insert into game_category (gnum, cnum)
+		<choose>
+			<when test="cnum != 0">
+				values (#{gnum},#{cnum})
+			</when>
+			<otherwise>
+				values (#{gnum}, seq_category.nextval)
+			</otherwise>
+		</choose>
+	</insert>
 	
 </mapper>
 

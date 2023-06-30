@@ -124,6 +124,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deleteitem">
 		delete from designer where dnum=#{num}
 	</delete>
+
+	<insert id="update_designer_mapping">
+		insert into game_designer (gnum, dnum)
+		<choose>
+			<when test="dnum != 0">
+				values (#{gnum},#{dnum})
+			</when>
+			<otherwise>
+				values (#{gnum}, seq_designer.nextval)
+			</otherwise>
+		</choose>
+	</insert>
 	
 </mapper>
 

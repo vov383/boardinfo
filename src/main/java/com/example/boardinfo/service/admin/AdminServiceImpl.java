@@ -329,6 +329,11 @@ public class AdminServiceImpl implements AdminService {
         gameDao.denyGame(gnum,userid);
     }
 
+    @Override
+    public void deleteGame(int gnum, String userid) {
+        gameDao.deleteGame(gnum,userid);
+    }
+
     @Transactional
     @Override
     public void allowGame(GameDTO dto) {

@@ -422,8 +422,19 @@
 			<tr>
 
 				<td colspan="2">
-					<button type="button" id="btnGameAllow">등록하기</button>
-					<button type="button" id="btnGameDeny">거부하기</button>
+					<c:choose>
+						<c:when test="${sort eq 'insert'}">
+							<button type="button" id="btnGameAllow">등록하기</button>
+							<button type="button" id="btnGameDeny">거부하기</button>
+						</c:when>
+						<c:when test="${sort eq 'deny'}">
+							<button type="button" id="btnGameAllow">등록하기</button>
+							<button type="button" id="btnGameDelete">삭제하기</button>
+						</c:when>
+						<c:when test="${sort eq 'delete'}">
+							<button type="button" id="btnGameAllow">등록하기</button>
+						</c:when>
+					</c:choose>
 				</td>
 
 			</tr>
@@ -443,6 +454,9 @@
 
 	<form name="denyform" method="post" action="${path}/admin/denyGame.do">
 		<input type="hidden" name="deny_gnum" value="${dto.gnum}">
+	</form>
+	<form name="deleteform" method="post" action="${path}/admin/deleteGame.do">
+		<input type="hidden" name="delete_gnum" value="${dto.gnum}">
 	</form>
 
 
@@ -573,6 +587,10 @@
 		//게임 등록거부 버튼 클릭
 		$("#btnGameDeny").click(function(){
 			document.denyform.submit();
+		});
+		//게임 삭제 버튼 클릭
+		$("#btnGameDelete").click(function(){
+			document.deleteform.submit();
 		});
 	});
 

@@ -92,4 +92,21 @@ public class CategoryDAOImpl implements CategoryDAO {
   public List<CategoryDTO> game_list_category(Map<String, Object> map) {
     return sqlSession.selectList("category.game_list_category", map);
   }
+
+  @Override
+  public void update_category_mapping(int gnum) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("gnum", gnum);
+    int cnum = 0;
+    map.put("cnum",cnum);
+    sqlSession.insert("category.update_category_mapping", map);
+  }
+
+  @Override
+  public void update_category_mapping(int gnum, int cnum) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("gnum", gnum);
+    map.put("cnum",cnum);
+    sqlSession.delete("category.update_category_mapping", map);
+  }
 }

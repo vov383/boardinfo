@@ -224,12 +224,14 @@ public class AdminController {
     @RequestMapping("deleteitem/{filter}/{num}")
     public String deleteitem(@PathVariable("filter")String filter, @PathVariable("num")int num){
         adminService.deleteitem(filter,num);
-        return "home";
+        return "redirect:/";
     }
 
-    @RequestMapping("updateGame/{gnum}")
-    public ModelAndView updateGame(@PathVariable("gnum")int gnum, ModelAndView mav){
+    @RequestMapping("updateGame/{sort}/{gnum}")
+    public ModelAndView updateGame(@PathVariable("sort")String sort, @PathVariable("gnum")int gnum,
+                                   ModelAndView mav){
         mav.setViewName("admin/admin_game_update");
+        mav.addObject("sort", sort);
         mav.addObject("dto", gameService.updateView(gnum));
         mav.addObject("clist", gameService.categorylist());
         mav.addObject("mlist", gameService.mechaniclist());
@@ -243,7 +245,7 @@ public class AdminController {
 
         if(admin_id != "")
             adminService.denyGame(gnum,admin_id);
-        return "home";
+        return "redirect:/";
     }
 
     @RequestMapping("allowGame.do")
@@ -253,7 +255,16 @@ public class AdminController {
         if(admin_id != "")
             dto.setUpdate_user(admin_id);
         adminService.allowGame(dto);
-        return "home";
+        return "redirect:/";
+    }
+
+    @RequestMapping("deleteGame.do")
+    public String deleteGame(@RequestParam("delete_gnum")int gnum,HttpSession session){
+        String admin_id = (String)session.getAttribute("admin_id");
+
+        if(admin_id != "")
+            adminService.deleteGame(gnum,admin_id);
+        return "redirect:/";
     }
 
 }
