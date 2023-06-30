@@ -324,7 +324,7 @@
                         <c:forEach items="${gameList}" var="gl" varStatus="status">
                             <div class="choiceGameItem" onclick="location.href='${path}/game/view.do?gnum=${gl.gnum}'">
                                 <div>
-                                   ${gl.gametitle} (${gl.RELEASE_YEAR})
+                                        ${gl.gametitle} <c:if test="${gl.RELEASE_YEAR!=null && gl.RELEASE_YEAR>0}">(${gl.RELEASE_YEAR})</c:if>
                                 </div>
                                 <div>
                                     주간순위:

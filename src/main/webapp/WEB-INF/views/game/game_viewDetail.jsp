@@ -49,7 +49,7 @@
         }
 
         #titleArea h2{
-            font-size: 20px;
+            font-size: 22px;
             margin: 0 2px 0 0;
             padding: 0;
         }

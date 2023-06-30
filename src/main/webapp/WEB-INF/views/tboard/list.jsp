@@ -126,8 +126,8 @@
         .itemCard {
             flex-grow: 0;
             flex-shrink: 0;
-            flex-basis: calc(25% - 10px);
-            margin: 10px;
+            flex-basis: calc(25% - 12px);
+            margin: 6px;
             padding: 20px;
             border: 1px solid #d9d9d9;
             display: flex;
