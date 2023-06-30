@@ -201,7 +201,7 @@
             margin-right: 4px;
         }
         .reCount {
-            color: #0f74a8;
+            color: #1432B1;
         }
         .interestCount i {
             margin-right: 4px;
@@ -279,6 +279,7 @@
 <header>
     <%@include file="../include/top.jsp" %>
 </header>
+
 <div id="contents">
     <div id="contentsHeader">
         <h2>중고장터</h2>
