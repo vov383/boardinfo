@@ -16,7 +16,6 @@
     <style>
 
     #contentsMain{
-		border-top: 1px solid #D9D9D9;
 		padding-top: 10px;
 		display: flex;
 	}
@@ -27,6 +26,7 @@
 	}
 	
 	#chatRoomListBox{
+        padding-top: 42px;
         min-width: 300px;
         max-width: 300px;
         margin-right: 20px;
@@ -39,7 +39,8 @@
         border: 1px solid #d9d9d9;
         padding: 1px;
     }
-	
+
+    /*
 	form[name="chatRoomSearch"]{
 		position: relative;
 		margin-bottom: 10px;
@@ -58,6 +59,7 @@
 		top: 7px;
 		right: 15px;
 	}
+     */
 	
 	.chatRoom{
         border-bottom: 1px solid #D9D9D9;
@@ -175,16 +177,19 @@
     }
 
     #attendeeList{
+        overflow-x:auto;
+        white-space:nowrap;
+
         background-color: white;
         top: 125%;
-        left: 12%;
-        margin-top: 2px;
+        left: 0;
+        margin-top: 3px;
 
         position: absolute;
         z-index: 10;
         box-shadow: 0 4px 5px -2px rgba(0,0,0,.1);
 
-        width: 76%;
+        width: 100%;
         padding-bottom: 8px;
         display: none;
         flex-wrap: wrap;
@@ -205,10 +210,15 @@
         align-items: center;
     }
 
+    .attendee span{
+        font-weight: normal;
+        font-size: 13px;
+    }
+
     .attendee img{
-        width: 45px;
-        height: 45px;
-        margin-bottom: 3px;
+        width: 42px;
+        height: 42px;
+        margin: 8px 0 3px 0;
     }
 
     #msgArea{
@@ -319,10 +329,14 @@
   <div id="contentsMain">
   
   <div id="chatRoomListBox">
+
+<!--
 	  <form name="chatRoomSearch">
 	  <input name="chatRoomKeyword" placeholder="채팅방 검색">
 	  <img src="${path}/images/search.png" onclick="" width="20px">
 	  </form>
+-->
+
   <div id="chatRoomList">
 	  <c:forEach var="room" items="${rlist}">
 		  <div class="chatRoom" data-room="${room.gathering_id}">
@@ -356,7 +370,7 @@
               <button type="button" onclick="withdraw()">채팅방 나가기</button>
               <div id="attendeeList">
                   <c:forEach var="attendee" items="${dto.attendeeDTOList}">
-                      <a class="attendee-wrap" href="${path}/member/mypage/goMypage/${attendee.user_id}">
+                      <a class="attendee-wrap" href="${path}/mypage/goMypage/${attendee.user_id}">
                           <div class="attendee">
                               <img src="${path}/images/${attendee.profile}">
                               <span>${attendee.nickname}</span>
@@ -847,6 +861,7 @@
                     });
 
 
+
                 } else {
                     stomp.subscribe("/sub/chatting/room/" + chatList[i], function (msg) {
                         //이 채팅방을 찾아서 제일 위로
@@ -1089,7 +1104,6 @@
 
 
     function withdraw(){
-
         if("${dto.writer_id}" == "${sessionScope.userid}") {
             if (confirm("채팅방을 나가려면 게시글을 삭제해야 합니다.\n게시글 상세페이지로 이동하시겠습니까?")){
                 location.href="${path}/gathering/view/" + gathering_id;
@@ -1106,7 +1120,7 @@
                     "gathering_id": "${dto.gathering_id}"
                 },
                 success: function(result){
-                    location.href="${path}/gathering/chatRoom.do";
+                    location.href="${path}/chat/room.do";
                 },
                 error: function(e){
                     if(e.status==999){

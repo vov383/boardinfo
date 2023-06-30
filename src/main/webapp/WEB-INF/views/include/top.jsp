@@ -6,38 +6,113 @@
 
 <style>
 
-    .dropdown {
+    .memberArea{
+        display: flex;
+        justify-content: center;
+
+        text-align: center;
+        width: 100%;
+        min-width: 120px;
+        cursor: pointer;
         position: relative;
-        display: inline-block;
     }
 
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f9f9f9;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-        z-index: 1;
+
+    .nav{
+        margin: 0 auto;
+        max-width: 1120px;
     }
 
-    .dropdown-content a {
+    .menu {
+        margin: 0;
+        max-width: 600px;
+        height: 45px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        list-style: none;
+        padding: 0;
+    }
+
+      .menu li {
+          display: flex;
+          justify-content: center;
+          flex: 0 0 25%;
+          max-width: 25%;
+          height: 100%;
+          line-height: 45px;
+          position: relative;
+      }
+
+      .menu li:hover{
+          cursor: pointer;
+      }
+
+    .menu li a, .memberArea a{
+        display: block;
         color: black;
-        padding: 12px 16px;
         text-decoration: none;
-        display: block;
     }
 
-    .dropdown-content a:hover {
-        background-color: #eaeaea;
+    .memberArea a:hover{
+        text-decoration: none;
     }
 
-    .dropdown:hover .dropdown-content {
-        display: block;
+    .toMenu{
+          position: relative;
+          font-size: 16px;
+          font-weight: bold;
+          text-decoration: none;
+          color: black;
+      }
+
+      .toMenu > img{
+          top: 35%;
+          left: 100%;
+          position: absolute;
+          margin-left: 4px;
+          -webkit-user-drag: none;
+      }
+
+        .memberArea img{
+            top: 20%;
+        }
+
+
+    .dropdown-content{
+          position: absolute;
+          display: none;
+          top: 100%;
+          width: 100%;
+          background-color: white;
+          box-shadow: 4px 6px 5px 1px rgba(0, 0, 0, 0.1);
+          z-index: 1;
+      }
+
+
+      .dropdown-content a{
+          width: 100%;
+          text-align: center;
+      }
+
+      .dropdown-content a:hover{
+          background-color: #e9e9e9
+      }
+
+
+    .memberArea .dropdown-content{
+        min-width: 120px;
+        width: 100%;
+        flex-direction: column;
     }
 
-    .dropdown:hover button {
-        background-color: #eaeaea;
+    .memberArea .dropdown-content a{
+        min-width: 120px;
+        width: 100%;
+        padding: 10px 0;
     }
+
 
     .toast-chat{
         margin-top: 8px;
@@ -79,6 +154,7 @@
 
 </style>
 
+
 <div id="header">
 
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -88,7 +164,7 @@
     <div id="header-upper-box">
         <div>
             <div id="header-left">
-                <a href="${path}/" title="보드인포"><img src="${path}/images/boardinfo_logo.png" width="170px"></a>
+                <a href="${path}/" title="보드인포"><img src="${path}/images/logo.png" width="170px"></a>
             </div>
             <div id="header-right">
                 <form name="gameSearch" id="gameSearch" method="get" action="${path}/search/searchAll.do">
@@ -114,9 +190,12 @@
                             </div>
                         </a>
                         <!-- admin login 상태 -->
-                        <div class="dropdown">
-                            <div class="dropbtn"><a title="회원" class="sign" id="signIn">관리자 ${sessionScope.nickname}
-                                님<img src="${path}/images/dropdown.png" width="16px"></a></div>
+
+                        <div class="memberArea">
+                            <div class="toMenu">
+                                관리자 ${sessionScope.nickname}님
+                                <img src="${path}/images/dropdown.png" width="16px">
+                            </div>
                             <div class="dropdown-content">
                                 <a href="#">내활동</a>
                                 <a href="${path}/admin/admin_view.do?admin_id=${sessionScope.admin_id}">관리자 정보</a>
@@ -124,6 +203,7 @@
                                 <a id="adminLogoutBtn" class="sign">관리자 로그아웃</a>
                             </div>
                         </div>
+
                     </c:when>
                     <c:otherwise>
                             <div id="chatArea">
@@ -134,18 +214,25 @@
                                 <div class="toast-chat"></div>
                             </div>
                         <!-- userid로 로그인한 상태 -->
+<!--  -->
                         <div class="dropdown">
                             <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.nickname} 님<img src="${path}/images/dropdown.png" width="16px"></a>
 
                             </div>
                             <div class="dropdown-content">
-
                                 <a href="${path}/mypage/goMypage/${sessionScope.userid}">마이페이지</a>
-
-                                <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
+                                <a href="${path}/member/pass_check_u?userid=${sessionScope.userid}">회원정보</a>
                                 <a href="${path}/member/logout.do" class="sign">로그아웃</a>
                             </div>
-                        </div>
+<!-- 수진님꺼  -->
+<!--                    <div class="memberArea">
+                        <div class="toMenu">
+                            ${sessionScope.nickname} 님
+                            <img src="${path}/images/dropdown.png" width="16px">
+                        </div> 
+                   </div> -->
+                          
+                          
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -154,56 +241,50 @@
 
     <div class="nav">
         <ul class="menu">
-
             <li>
-                <div class="dropdown">
-                    <a href="#" class="toMenu" title="게임정보">
-                        게임정보<img src="${path}/images/dropdown.png" width="16px">
+                <div class="toMenu" onclick="location.href='${path}/game/gamerank/week'">
+                        게임정보
+                    <img src="${path}/images/dropdown.png" width="16px">
+                </div>
+                <div class="dropdown-content">
+                    <a href="${path}/game/gamerank/week">베스트게임</a>
+                    <a href="${path}/game/gamerank/newbie">최신게임</a>
+                    <a href="${path}/game/categoryList">카테고리</a>
+                    <a href="/game/themeList/-">테마</a>
+                    <c:choose>
+                        <c:when test="${sessionScope.admin_id != null && !sessionScope.admin_id.equals('')}">
+                            <a href="#" onclick="goInsert()">게임등록</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="#" onclick="goInsert()">게임등록신청</a>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </li>
+            <li>
+                <div class="toMenu">
+                    커뮤니티
+                    <img src="${path}/images/dropdown.png" width="16px">
+                </div>
+                <div class="dropdown-content">
+                    <a href="${path}/review/reviewlist.do?freeFlag=N">전체</a>
+                    <a href="${path}/review/reviewlist.do?freeFlag=N">인기글</a>
+                    <a href="${path}/review/reviewlist.do?freeFlag=N">게임포럼</a>
+                    <a href="${path}/review/reviewlist.do?freeFlag=Y">자유게시판</a>
+                </div>
+            </li>
+            <li>
+                <div class="toMenu">
+                    <a href="${path}/gathering/list.do" class="toMenu" title="오프모임">
+                    오프모임
                     </a>
-
-                    <div class="dropdown-content">
-                        <a href="${path}/game/gamerank/week">베스트게임</a>
-                        <a href="${path}/game/gamerank/newbie">최신게임</a>
-                        <a href="${path}/game/categoryList">카테고리</a>
-                        <a href="/game/themeList/-">테마</a>
-                    </div>
                 </div>
             </li>
             <li>
-                <div class="dropdown">
-                    <a href="#" class="toMenu" title="게임포럼">게임포럼<img src="${path}/images/dropdown.png" width="16px"></a>
-                    <div class="dropdown-content">
-                        <a href="${path}/review/reviewlist.do?freeFlag=N">게임포럼</a>
-                        <a href="${path}/review/reviewlist.do?freeFlag=Y">자유게시판</a>
-
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="dropdown">
-                    <a href="${paht}/review/reviewlist.do" class="toMenu" title="자유게시판">자유게시판</a>
-                </div>
-            </li>
-            <li>
-                <div class="dropdown">
-                    <a href="#" class="toMenu" title="오프모임">오프모임<img src="${path}/images/dropdown.png" width="16px"></a>
-                    <div class="dropdown-content">
-                        <a href="${path}/gathering/list.do">모임 목록</a>
-                        <a href="${path}/gathering/add.do">모임 모집 글 작성</a>
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="dropdown">
-                    <a href="${path}/tboard/list.do" class="toMenu" title="중고장터">중고장터
-                        <img src="${path}/images/dropdown.png" width="16px"></a>
-                    <div class="dropdown-content">
-                        <a href="${paht}/tboard/list.do">전체</a>
-                        <a href="${paht}/tboard/list.do?select_category=s">판매</a>
-                        <a href="${paht}/tboard/list.do?select_category=b">구매</a>
-                        <a href="${paht}/tboard/list.do?select_category=n">나눔</a>
-                        <a href="${paht}/tboard/list.do?select_category=f">완료</a>
-                    </div>
+                <div class="toMenu">
+                    <a href="${path}/tboard/list.do" class="toMenu" title="중고장터">
+                        중고장터
+                    </a>
                 </div>
             </li>
         </ul>
@@ -231,7 +312,32 @@
 
 
     //검색기능
-    $(document).ready(function () {
+    $(document).ready(function(){
+
+        var timeOutId;
+
+        $(".menu li, .memberArea").on("mouseleave", function() {
+            var $dropdown = $(this).find(".dropdown-content");
+            timeOutId = setTimeout(function() {
+                $dropdown.slideUp(300, function() {
+                    $dropdown.css("display", "none");
+                });
+            }, 100);
+        });
+
+
+        $(".menu li, .memberArea").on("mouseenter", function(){
+            var $dropdown = $(this).find(".dropdown-content");
+            if($dropdown.is(":visible")){
+                clearTimeout(timeOutId);
+            }
+            else{
+                $(this).find(".dropdown-content").slideDown(200, function() {
+                    $(this).css("display", "block");
+                });
+            }
+        });
+
 
 
         //관리자버전도 만들어야
@@ -501,6 +607,17 @@
         }
     }
 
+
+    function goInsert() {
+        if("${sessionScope.userid}" == "" && "${sessionScope.admin_id}" == ""){
+            if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
+                location.href= "${path}/member/member_login.do";
+                return;
+            }
+        }else{
+            location.href= "${path}/game/write.do";
+        }
+    }
 
 
 </script>

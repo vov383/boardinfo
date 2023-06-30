@@ -107,7 +107,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from attendee
 		where gathering_id = g.gathering_id and type = 'a') as attendee_count
 		from gathering g
-		left join member m on g.writer_id = m.userid
+		join member m on g.writer_id = m.userid
 	    where
 	        show = 'y'
 	        <if test="address1List!=null and address1List.length!=0">
@@ -139,7 +139,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	and trunc(gathering_date, 'DD') <![CDATA[<]]>= #{to}
 	</if>
 
-		<if test="keyword!=null and !keyword.equals('')">
+	      <if test="keyword!=null and !keyword.equals('')">
 			<choose>
 				<when test="option.equals('title')">
 					and Lower(title) like lower('%'||#{keyword}||'%')
@@ -171,7 +171,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="view" resultType="gatheringDTO">
 	select g.*, m.nickname as nickname
 	from gathering g
-		left join member m on g.writer_id = m.userid
+		join member m on g.writer_id = m.userid
 	where g.gathering_id = #{gathering_id} and show = 'y'
 
 	<!--
