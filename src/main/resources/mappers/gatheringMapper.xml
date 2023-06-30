@@ -413,6 +413,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 	<select id="getAttendingGatheringList" resultType="chatRoomDTO">
+
 		select a.gathering_id, g.title, a.last_visit,
 
 			   (select count(*)
@@ -421,6 +422,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from attendee a
 				 join gathering g on a.gathering_id = g.gathering_id and g.show = 'Y'
 		where user_id = #{user_id} and type = 'a'
+
 	</select>
 
 	<select id="attendeeList" resultType="String">

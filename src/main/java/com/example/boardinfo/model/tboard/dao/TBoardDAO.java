@@ -28,8 +28,7 @@ public interface TBoardDAO {
 
     int fileAttach(TBAttachDTO fDto);
 
-
-    List<TBoardDTO> getTbListByUserid(String userid);
+	/*mypageDao로 옮김*/
 
     public List<TBoardDTO> getHomeList(Integer size);
 

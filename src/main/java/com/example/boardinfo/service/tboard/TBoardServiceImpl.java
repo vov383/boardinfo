@@ -40,7 +40,6 @@ public class TBoardServiceImpl implements TBoardService {
 		sDto.setEnd(pager.getPageEnd());
 
 		List<TBoardDTO> list = tboardDao.list(sDto);
-//		logger.info("@@@list 값 : @@@@@@@@ : "+list);
 		Map<String, Object> map = new HashMap<>();
 		sDto.setKeyword(sDto.getKeyword().substring(1, sDto.getKeyword().length()-1));/*keyword에서 맨앞%, 맨뒤% 제거*/
 		map.put("count", count);
