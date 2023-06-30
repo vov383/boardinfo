@@ -270,8 +270,8 @@
                     <img src="${path}/images/dropdown.png" width="16px">
                 </div>
                 <div class="dropdown-content">
-                    <a href="${path}/review/reviewlist.do?freeFlag=N">전체</a>
-                    <a href="${path}/review/reviewlist.do?freeFlag=N">인기글</a>
+                    <a href="${path}/review/reviewlist.do?freeFlag=A">전체</a>
+                    <a href="${path}/review/reviewlist.do?freeFlag=H">인기글</a>
                     <a href="${path}/review/reviewlist.do?freeFlag=N">게임포럼</a>
                     <a href="${path}/review/reviewlist.do?freeFlag=Y">자유게시판</a>
                 </div>

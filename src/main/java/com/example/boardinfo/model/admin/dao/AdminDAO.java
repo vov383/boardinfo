@@ -27,6 +27,16 @@ public interface AdminDAO {
 
     List<GameRatingDTO> gameRatinglist(String userid);
 
+    void deleteGameAdmin(int gnum, String admin_id);
+    void deleteGameArtist(int gnum);
+    void deleteGameCategory(int gnum);
+    void deleteGameDesigner(int gnum);
+    void deleteGameMechanic(int gnum);
+    void deleteGamePublisher(int gnum);
+    void deleteGameEx(int gnum);
+    void deleteGameRe(int gnum);
+
+
     /*게임 정보 통계*/
 
     /*회원 활동 통계*/

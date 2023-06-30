@@ -263,7 +263,7 @@ public class AdminController {
         String admin_id = (String)session.getAttribute("admin_id");
 
         if(admin_id != "")
-            adminService.deleteGame(gnum,admin_id);
+            adminService.deleteGameAdmin(gnum,admin_id);
         return "redirect:/";
     }
 

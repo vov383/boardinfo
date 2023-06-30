@@ -91,21 +91,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<when test="dept != null and 'admin'.equalsIgnoreCase(dept)">
 			insert into game
 			(gnum, bggnum, gametitle, gametitle_eng, players, playtime,
-			ages, language, release_year, create_user, theme, confirmed, del,UPDATE_DATE, UPDATE_USER, CREATE_DATE
+			ages, language, release_year, create_user, theme, confirmed, UPDATE_DATE, UPDATE_USER, CREATE_DATE,del
 			)
 			values
 			(seq_game.nextval, #{dto.bggnum}, #{dto.gametitle}, #{dto.gametitle_eng}, #{dto.players},
 			#{dto.playtime}, #{dto.ages}, #{dto.language}, #{dto.release_year}, #{dto.create_user}, #{dto.theme},
-			'checking', 'y', sysdate, #{dto.create_user}, sysdate
+			'allow', sysdate, #{dto.create_user}, sysdate,'n'
 			)
 		</when>
 		<otherwise>
 			insert into game
 			(gnum, bggnum, gametitle, gametitle_eng, players, playtime,
-			ages, language, release_year, create_user, theme, confirmed)
+			ages, language, release_year, create_user, theme, confirmed,del)
 			values
 			(seq_game.nextval, #{dto.bggnum}, #{dto.gametitle}, #{dto.gametitle_eng}, #{dto.players},
-			#{dto.playtime}, #{dto.ages}, #{dto.language}, #{dto.release_year}, #{dto.create_user}, #{dto.theme}, 'checking'
+			#{dto.playtime}, #{dto.ages}, #{dto.language}, #{dto.release_year}, #{dto.create_user}, #{dto.theme},
+			'checking','y'
 			)
 		</otherwise>
 	</choose>

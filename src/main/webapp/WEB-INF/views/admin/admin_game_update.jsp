@@ -433,6 +433,7 @@
 						</c:when>
 						<c:when test="${sort eq 'delete'}">
 							<button type="button" id="btnGameAllow">등록하기</button>
+							<button type="button" id="btnGameDelete">삭제하기</button>
 						</c:when>
 					</c:choose>
 				</td>

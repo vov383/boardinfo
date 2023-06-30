@@ -198,7 +198,7 @@ public class GameDAOImpl implements GameDAO {
 		return map;
 	}
 
-	//게임을 삭제한다
+	//게임을 삭제한다(삭제요청으로)
 	public void deleteGame(int gnum, String userid){
 		Map<String, Object> map = new HashMap<>();
 		map.put("gnum",gnum);
