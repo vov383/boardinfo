@@ -220,10 +220,10 @@ public class GatheringDAOImpl implements GatheringDAO {
 		sqlSession.update("gathering.updateLastVisit", map);
 	}
 
-//	@Override
-//	public List<ChatRoomDTO> getMyLastVisit(String user_id) {
-//		return sqlSession.selectList("gathering.getMyChatsLastVisit", user_id);
-//	}
+	@Override
+	public List<ChatRoomDTO> getMyLastVisit(String user_id) {
+		return sqlSession.selectList("gathering.getMyChatsLastVisit", user_id);
+	}
 
 	@Override
 	public List<String> leaveAll(int gathering_id) {

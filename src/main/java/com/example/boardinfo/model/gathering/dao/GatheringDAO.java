@@ -53,6 +53,5 @@ public interface GatheringDAO {
 	public List<AttendeeDTO> getWaitingInfoList(int gatheringId);
 	public List<GatheringDTO> totalSearch(Map<String, Object> map);
 	public int totalSearchCount(Map<String, Object> map);
-
-
+    List<ChatRoomDTO> getMyLastVisit(String user_id);
 }
