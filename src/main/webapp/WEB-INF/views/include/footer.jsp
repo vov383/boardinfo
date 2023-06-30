@@ -10,15 +10,20 @@
       <div class="footerSubLeft"></div>
       <div class="footerSubCenter"></div>
       <div class="footerSubRight">
+        <c:if test="${sessionScope.userid==null && sessionScope.admin_id==null}">
           <button id="adminLoginBtn">관리자 로그인</button>
+        </c:if>
       </div>
     </div>
   </div>
 </footer>
 
 <script>
-  const adminLoginBtn = document.getElementById("adminLoginBtn");
-  adminLoginBtn.addEventListener("click", function () {
-    location.href = "${path}/admin/admin_login.do";
+  $(function (){
+    $("#adminLoginBtn").on("click", function () {
+      const adminLoginBtn = document.getElementById("adminLoginBtn");
+      location.href = "${path}/admin/admin_login.do";
+    });
   });
+
 </script>
