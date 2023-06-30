@@ -239,7 +239,7 @@ document.addEventListener('click', function (event) {
 
             chatList = JSON.parse('${sessionScope.activeChats}');
 
-            var sock = new SockJS('http://localhost:8098/ws-stomp/out');
+            var sock = new SockJS('http://localhost:80/ws-stomp/out');
             var stomp = Stomp.over(sock);
 
             stomp.debug = null;
