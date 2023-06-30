@@ -96,8 +96,17 @@
         <c:forEach var="row" items="${map.list}">
 
             <tr>
+                <td>
+                    <c:choose>
+                        <c:when test="${sort eq 'month'}">
+                            <div class="wrap t_center"><span class="rank">${row.game_rank_month}</span><span class="none">위</span></div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="wrap t_center"><span class="rank">${row.game_rank}</span><span class="none">위</span></div>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
 
-                <td><div class="wrap t_center"><span class="rank">${row.game_rank}</span><span class="none">위</span></div></td>
 
                 <!-- 차트순위 추가 -->
                 <td><div class="wrap">

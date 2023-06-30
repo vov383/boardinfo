@@ -37,6 +37,8 @@
 		<typeAlias type="com.example.boardinfo.model.tboard.dto.TBAttachDTO"
 			alias="tbFileDto"/>
 		<typeAlias type="com.example.boardinfo.model.admin.dto.AdminDTO" alias="adminDto" />
+		<typeAlias type="com.example.boardinfo.model.mypage.dto.MypageDTO" alias="mypageDto" />
+
 	</typeAliases>
 
 	<typeHandlers>

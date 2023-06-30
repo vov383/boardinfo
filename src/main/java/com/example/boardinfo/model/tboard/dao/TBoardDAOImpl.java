@@ -26,11 +26,11 @@ public class TBoardDAOImpl implements TBoardDAO {
 	public List<TBoardDTO> list(TradeSearchDTO sDto) {
 		return sqlSession.selectList("tboard.selectBoardList", sDto);
 	}
+
 	@Override
 	public int insert(TBoardDTO dto) {
 		return sqlSession.insert("tboard.insertBoard", dto);
 	}
-
 
 
 	@Override
@@ -48,7 +48,6 @@ public class TBoardDAOImpl implements TBoardDAO {
 		sqlSession.delete("tboard.deletePost", tb_num);
 	}
 	
-
 
 	@Override
 	public void increaseViewcnt(int tb_num) {
@@ -71,11 +70,7 @@ public class TBoardDAOImpl implements TBoardDAO {
 		return sqlSession.insert("tboard.insertFile", fDto);
 	}
 
-	/*중고거래 list by userid*/
-	@Override
-	public List<TBoardDTO> getTbListByUserid(String userid) {
-		return sqlSession.selectList("tboard.getTbList",userid);
-	}
+	/*mypageDao로 옮김*/
 
 	@Override
 	public List<TBoardDTO> getHomeList(Integer size) {

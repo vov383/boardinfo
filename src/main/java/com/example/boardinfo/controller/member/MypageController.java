@@ -1,6 +1,6 @@
 package com.example.boardinfo.controller.member;
 
-import com.example.boardinfo.model.member.dto.MemberDTO;
+import com.example.boardinfo.model.mypage.dto.MypageDTO;
 import com.example.boardinfo.service.member.MemberService;
 import com.example.boardinfo.service.member.MypageService;
 import org.slf4j.Logger;
@@ -23,24 +23,17 @@ public class MypageController {
     MemberService memberService;
 
     /*마이페이지로 이동*/
-    @GetMapping("goMypage/{userid}")
-    public ModelAndView moveToMyPage(@PathVariable(value="userid") String userid, ModelAndView mav) throws Exception{
-        try {
-            MemberDTO dto = memberService.viewMember(userid);
+    @RequestMapping(value = "goMypage")
+    public ModelAndView moveToMyPage(@RequestParam(value="userid") String userid, ModelAndView mav) {
+            MypageDTO myDto = mypageService.getUserInfo(userid);
             Map<String, Object> map = new HashMap<>();
-            map.put("dto", dto);
+            map.put("myDto", myDto);
 
             mav.setViewName("member/mypage");
-//			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
 
             mav.addObject("map", map);
-//			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
-            return mav;
-        }catch (Exception e){
-            e.printStackTrace();
-            return new ModelAndView("home");
 
-        }
+            return mav;
 
     }
 

@@ -98,6 +98,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where admin_id = #{admin_id}
     </select>
 
+    <delete id="deleteGameAdmin">
+        delete
+        from game
+        where gnum=#{gnum}
+    </delete>
+
+    <delete id="deleteGameMappingTables">
+    <bind name="filter" value="'game_' + filter" />
+        delete
+        from ${filter}
+        where gnum=#{gnum}
+    </delete>
+
+    <delete id="deleteGameEx">
+        delete
+        from expansion
+        where gnum=#{gnum} or exnum=#{gnum}
+    </delete>
+
+    <delete id="deleteGameRe">
+        delete
+        from reimplement
+        where gnum=#{gnum} or renum=#{gnum}
+    </delete>
 </mapper>
 
 

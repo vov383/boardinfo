@@ -63,16 +63,19 @@ public class GameController {
 	public String insert(@ModelAttribute GameDTO dto,HttpSession session) {
 		String userid = (String)session.getAttribute("userid");
 		String admin_id = (String)session.getAttribute("admin_id");
+		String str = "";
 
-		if(userid != null)
+		if(userid != null){
 			dto.setCreate_user(userid);
-		else if(admin_id != null)
+			str = "user";
+		} else if(admin_id != null){
 			dto.setCreate_user(admin_id);
-		else
-			return "home";
+			str = "admin";
+		} else
+			return "redirect:/";
 
-		gameService.gameinsert(dto);
-		return "home";
+		gameService.gameinsert(dto, str);
+		return "redirect:/";
 	}
 
 	//게임정보페이지로 이동
@@ -171,18 +174,21 @@ public class GameController {
 		String userid = (String)session.getAttribute("userid");
 		String admin_id = (String)session.getAttribute("admin_id");
 		String logonid = "";
+		String str = "";
 
-		if(userid != null)
+		if(userid != null){
 			logonid = userid;
-		else if(admin_id != null)
+			str = "user";
+		}else if(admin_id != null){
 			logonid = admin_id;
-		else{
-			return "home";
+			str = "admin";
+		}else{
+			return "redirect:/";
 		}
 		dto.setUpdate_user(logonid);
 
-		gameService.gameupdate(dto);
-		return "home";
+		gameService.gameupdate(dto, str);
+		return "redirect:/";
 	}
 
 	@RequestMapping("delete.do")
@@ -196,11 +202,11 @@ public class GameController {
 		else if(admin_id != null)
 			logonid = admin_id;
 		else{
-			return "home";
+			return "redirect:/";
 		}
 
 		gameService.deleteGame(gnum, logonid);
-		return "home";
+		return "redirect:/";
 	}
 
 	@ResponseBody

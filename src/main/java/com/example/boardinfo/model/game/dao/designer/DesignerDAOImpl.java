@@ -93,4 +93,21 @@ public class DesignerDAOImpl implements DesignerDAO {
 	public void deleteitem(int num) {
 		sqlSession.delete("designer.deleteitem", num);
 	}
+
+	@Override
+	public void update_designer_mapping(int gnum) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("gnum", gnum);
+		int dnum = 0;
+		map.put("dnum",dnum);
+		sqlSession.insert("designer.update_designer_mapping", map);
+	}
+
+	@Override
+	public void update_designer_mapping(int gnum, int dnum) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("gnum", gnum);
+		map.put("dnum",dnum);
+		sqlSession.delete("designer.update_designer_mapping", map);
+	}
 }

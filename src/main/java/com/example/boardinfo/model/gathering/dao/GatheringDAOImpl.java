@@ -177,11 +177,7 @@ public class GatheringDAOImpl implements GatheringDAO {
 		return sqlSession.selectList("gathering.finishList");
 	}
 
-	/*모임 list를 userid로 get*/
-	@Override
-	public List<GatheringDTO> getGaListByUserid(String userid) {
-		return sqlSession.selectList("gathering.gaListByUserid", userid);
-	}
+	/*mypageDao로 옮김*/
 
 	@Override
 	public List<GatheringDTO> getHomeList(Integer size) {
@@ -248,7 +244,6 @@ public class GatheringDAOImpl implements GatheringDAO {
 	public List<AttendeeDTO> getWaitingInfoList(int gathering_id) {
 		return sqlSession.selectList("gathering.waitingInfoList", gathering_id);
 	}
-
 	@Override
 		public List<GatheringDTO> totalSearch (Map < String, Object > map){
 			return sqlSession.selectList("gathering.totalSearch", map);

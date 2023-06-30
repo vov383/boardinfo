@@ -67,4 +67,6 @@ public interface AdminService {
     void denyGame(int gnum, String userid);
 
     void allowGame(GameDTO dto);
+
+    void deleteGameAdmin(int gnum, String admin_id);
 }

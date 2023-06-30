@@ -9,18 +9,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="gameListCount" resultType="int">
 		select 	count(*)
 		from 	game
-		where 	del = 'n' and confirmed = 'allow'
+		where 	del = 'n'
 	</select>
 
 	<select id="gameList" resultType="gameDto">
 		SELECT 	gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, game_rank,
-				rate, weight, bgg_thumbnail, tot, theme
+				rate, weight, bgg_thumbnail, tot, theme, game_rank_month
 		FROM 	(
 				SELECT 	a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.bgg_thumbnail,
-						a.game_rank, a.gamephoto_url, a.rate, a.weight,a.tot, a.theme
+						a.game_rank, a.gamephoto_url, a.rate, a.weight,a.tot, a.theme, a.game_rank_month
 				FROM 	(
 						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,g.theme,
-								g.bgg_thumbnail, g.game_rank, ga.fullname AS gamephoto_url, gr.rate, gr.weight, gr.tot
+								g.bgg_thumbnail, g.game_rank, ga.fullname AS gamephoto_url, gr.rate, gr.weight,
+								gr.tot, g.game_rank_month
 						FROM 	game g
 						LEFT JOIN 	(
 									SELECT 	gnum, fullname
@@ -38,11 +39,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 									GROUP BY 	gnum
 									) gr
 						ON 		g.gnum = gr.gnum
-						WHERE 	g.del = 'n' and g.confirmed = 'allow'
-						ORDER BY 	game_rank
-						) a
-				)
-		WHERE 	game_rank BETWEEN #{start} AND #{end}
+						WHERE 	g.del = 'n'
+						<if test="sort != null and 'week'.equalsIgnoreCase(sort)">
+							ORDER BY 	game_rank
+							) a
+							)
+							WHERE 	game_rank BETWEEN #{start} AND #{end}
+						</if>
+						<if test="sort != null and 'month'.equalsIgnoreCase(sort)">
+							ORDER BY 	game_rank_month
+							) a
+							)
+							WHERE 	game_rank_month BETWEEN #{start} AND #{end}
+						</if>
+
 	</select>
 
 	<select id="gameList_vcnt" resultType="gameDto">
@@ -69,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     		GROUP BY 	gnum
                     		) gr
                 ON 		g.gnum = gr.gnum
-                WHERE 	g.del = 'n'and g.confirmed = 'allow'
+                WHERE 	g.del = 'n'
                 ORDER BY 	game_rank, gnum
         		)
 		WHERE game_rank BETWEEN #{start} AND #{end}
@@ -77,18 +87,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 	<insert id="gameInsert">
-		insert into game
+	<choose>
+		<when test="dept != null and 'admin'.equalsIgnoreCase(dept)">
+			insert into game
 			(gnum, bggnum, gametitle, gametitle_eng, players, playtime,
-			 ages, language, release_year, create_user, theme, confirmed)
-		values
-			(seq_game.nextval, #{bggnum}, #{gametitle}, #{gametitle_eng}, #{players},
-			 #{playtime}, #{ages}, #{language}, #{release_year}, #{create_user}, #{theme}, 'checking')
+			ages, language, release_year, create_user, theme, confirmed, UPDATE_DATE, UPDATE_USER, CREATE_DATE,del
+			)
+			values
+			(seq_game.nextval, #{dto.bggnum}, #{dto.gametitle}, #{dto.gametitle_eng}, #{dto.players},
+			#{dto.playtime}, #{dto.ages}, #{dto.language}, #{dto.release_year}, #{dto.create_user}, #{dto.theme},
+			'allow', sysdate, #{dto.create_user}, sysdate,'n'
+			)
+		</when>
+		<otherwise>
+			insert into game
+			(gnum, bggnum, gametitle, gametitle_eng, players, playtime,
+			ages, language, release_year, create_user, theme, confirmed,del)
+			values
+			(seq_game.nextval, #{dto.bggnum}, #{dto.gametitle}, #{dto.gametitle_eng}, #{dto.players},
+			#{dto.playtime}, #{dto.ages}, #{dto.language}, #{dto.release_year}, #{dto.create_user}, #{dto.theme},
+			'checking','y'
+			)
+		</otherwise>
+	</choose>
+
 	</insert>
 	
 	<update id="increaseViewcnt">
 		update 	game
 		set 	viewcount = viewcount+1, totalviewcount = totalviewcount+1
-		where 	gnum=#{gnum} and confirmed='allow'
+		where 	gnum=#{gnum}
 	</update>
 	
 	<select id="view" resultType="gameDto">
@@ -122,7 +150,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 			where rnum = 1
                 			) ga
         		on 		g.GNUM = ga.GNUM
-				where 	g.gametitle like '%'||#{input}||'%' and g.del = 'n'  and g.confirmed = 'allow'
+				where 	g.gametitle like '%'||#{input}||'%' and g.del = 'n'
 				order by 	case when gametitle like #{input}||'%' then 1 else 2 end, gametitle
 				) a
 		WHERE rn BETWEEN 1 AND 5
@@ -149,7 +177,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				from ${mappingTable} mapping, ${filter} filter
 			</otherwise>
 		</choose>
-		, (select gnum from game where del='n' and confirmed = 'allow') g
+		, (select gnum from game where del='n') g
 		<where>
 			<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
 				mapping.anum = filter.anum and filter.anum=#{num}
@@ -177,14 +205,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<bind name="filterColumn" value="filter+'.'+filter"/>
 	<bind name="mappingTable" value="'game_'+filter"/>
 		SELECT 	gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url,bgg_thumbnail,
-				nameStr, rate, weight, game_rank, rn, tot, theme
+				nameStr, rate, weight, game_rank, tot, theme, game_rank_month, rn
 		FROM 	(
 				SELECT 	a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.bgg_thumbnail,
-						a.gamephoto_url,  a.nameStr, a.rate, a.weight,a.game_rank, rownum rn, a.tot, a.theme
+						a.gamephoto_url,  a.nameStr, a.rate, a.weight,a.game_rank, a.tot, rownum rn,
+						a.theme, a.game_rank_month
 				FROM 	(
 						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
 								g.bgg_thumbnail,g.game_rank, ga.fullname AS gamephoto_url, b.${filter} as nameStr,
-								gr.rate, gr.weight, gr.tot, g.theme
+								gr.rate, gr.weight, gr.tot, g.theme, g.game_rank_month
 						FROM 	game g
 						LEFT JOIN 	(
 									SELECT 	gnum, fullname
@@ -230,11 +259,87 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 							</if>
 									) b
 						on 		g.gnum = b.gnum
-						WHERE 	g.del = 'n' and b.num=#{num} and g.confirmed = 'allow'
-						ORDER BY game_rank
+						WHERE 	g.del = 'n' and b.num=#{num}
+		<if test="sort != null and 'week'.equalsIgnoreCase(sort)">
+			ORDER BY 	game_rank
+			) a
+			)
+			WHERE 	rn BETWEEN #{start} AND #{end}
+		</if>
+		<if test="sort != null and 'month'.equalsIgnoreCase(sort)">
+			ORDER BY 	game_rank_month
+			) a
+			)
+			WHERE 	rn BETWEEN #{start} AND #{end}
+		</if>
+
+	</select>
+
+	<select id="filteredList_newbie" resultType="gameDto">
+		<bind name="filterColumn" value="filter+'.'+filter"/>
+		<bind name="mappingTable" value="'game_'+filter"/>
+		SELECT 	gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url,bgg_thumbnail,
+				nameStr, rate, weight, tot, theme, rn, game_rank
+		FROM 	(
+				SELECT 	a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.bgg_thumbnail,
+						a.gamephoto_url,  a.nameStr, a.rate, a.weight, a.tot,rownum rn, a.rcount, a.game_rank,
+						a.theme
+				FROM 	(
+						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
+								g.bgg_thumbnail, ga.fullname AS gamephoto_url, b.${filter} as nameStr, gr.rate, g.game_rank,
+								gr.weight, gr.tot, g.theme,	ROW_NUMBER() OVER (ORDER BY g.create_date DESC) AS rcount
+						FROM 	game g
+						LEFT JOIN 	(
+									SELECT 	gnum, fullname
+									FROM 	(
+											SELECT 	ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
+													gnum, fullname
+											FROM 	game_attach
+											)
+									WHERE 	rnum = 1
+									) ga
+						ON 		g.gnum = ga.gnum
+						LEFT JOIN 	(
+									SELECT 	gnum, avg(rating) as rate, avg(weight) as weight, count(*) as tot
+									FROM 	game_rating
+									GROUP BY 	gnum
+									) gr
+						ON 		g.gnum = gr.gnum
+						left join 	(
+								<if test="filter != null and 'artist'.equalsIgnoreCase(filter)">
+									select 	gnum, f.${filter}, f.anum num
+									from    ${mappingTable} m, ${filter} f
+									where 	m.anum = f.anum
+								</if>
+								<if test="filter != null and 'gamecategory'.equalsIgnoreCase(filter)">
+									select 	gnum, f.${filter}, f.cnum num
+									from    game_category m, category f
+									where 	m.cnum = f.cnum
+								</if>
+								<if test="filter != null and 'designer'.equalsIgnoreCase(filter)">
+									select 	gnum, f.${filter}, f.dnum num
+									from    ${mappingTable} m, ${filter} f
+									where 	m.dnum = f.dnum
+								</if>
+								<if test="filter != null and 'mechanic'.equalsIgnoreCase(filter)">
+									select 	gnum, f.${filter}, f.mnum num
+									from    ${mappingTable} m, ${filter} f
+									where 	m.mnum = f.mnum
+								</if>
+								<if test="filter != null and 'publisher'.equalsIgnoreCase(filter)">
+									select 	gnum, f.${filter}, f.pnum num
+									from    ${mappingTable} m, ${filter} f
+									where 	m.pnum = f.pnum
+								</if>
+									) b
+						on 		g.gnum = b.gnum
+						WHERE 	g.del = 'n' and b.num=#{num}
+
+						ORDER BY 	rcount
 						) a
 				)
-		WHERE rn BETWEEN #{start} AND #{end}
+		WHERE 	rn BETWEEN #{start} AND #{end}
+
 
 	</select>
 
@@ -242,15 +347,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="filteredList_vcnt" resultType="gameDto">
 	<bind name="filterColumn" value="filter+'.'+filter"/>
 	<bind name="mappingTable" value="'game_'+filter"/>
-		SELECT 	gnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, game_rank, rn,
-				nameStr, rate, weight, tot, BGG_THUMBNAIL, theme
+		SELECT 	gnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, game_rank,
+				nameStr, rate, weight, tot, BGG_THUMBNAIL, theme, rn
 		FROM 	(
-				SELECT 	a.gnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.GAME_RANK,
-						a.gamephoto_url, rownum rn, a.nameStr, a.rate, a.weight, a.tot,a.BGG_THUMBNAIL, a.theme
+				SELECT 	a.gnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.GAME_RANK, a.rcount,
+						a.gamephoto_url, a.nameStr, a.rate, a.weight, a.tot,a.BGG_THUMBNAIL, a.theme, rownum rn
 				FROM 	(
-						SELECT 	g.gnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,
-								ga.fullname AS gamephoto_url, RANK() OVER (ORDER BY g.totalviewcount DESC) AS rscore,
-								b.${filter} as nameStr, gr.rate, gr.weight, gr.tot, g.BGG_THUMBNAIL, g.GAME_RANK, g.theme
+						SELECT 	g.gnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year, g.game_rank,
+								ga.fullname AS gamephoto_url, row_number() over (ORDER BY g.totalviewcount DESC) AS rcount,
+								b.${filter} as nameStr, gr.rate, gr.weight, gr.tot, g.BGG_THUMBNAIL,
+								g.theme
 						FROM 	game g
 						LEFT JOIN 	(
 									SELECT 	gnum, fullname
@@ -296,8 +402,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 							</if>
 									) b
 						on 		g.gnum = b.gnum
-						WHERE 	g.del = 'n' and b.num=#{num} and g.confirmed = 'allow'
-						ORDER BY rscore, game_rank
+						WHERE 	g.del = 'n' and b.num=#{num}
+						ORDER BY rcount, game_rank
 						) a
 				)
 		WHERE rn BETWEEN #{start} AND #{end}
@@ -305,20 +411,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 	<update id="gameupdate">
-		update 	game
-		set 	bggnum=#{bggnum},
-				gametitle=#{gametitle},
-				gametitle_eng=#{gametitle_eng},
-				players=#{players},
-				playtime=#{playtime},
-				ages=#{ages},
-				language=#{language},
-				release_year=#{release_year},
-				update_user=#{update_user},
-				update_date=sysdate,
-				theme=#{theme}
-				confirmed='checking'
-		where gnum=#{gnum}
+	<choose>
+		<when test="dept != null and 'admin'.equalsIgnoreCase(dept)">
+			update 	game
+			set 	bggnum=#{dto.bggnum},
+			gametitle=#{dto.gametitle},
+			gametitle_eng=#{dto.gametitle_eng},
+			players=#{dto.players},
+			playtime=#{dto.playtime},
+			ages=#{dto.ages},
+			language=#{dto.language},
+			release_year=#{dto.release_year},
+			update_user=#{dto.update_user},
+			update_date=sysdate,
+			theme=#{dto.theme}
+			where gnum=#{dto.gnum}
+		</when>
+		<otherwise>
+			update 	game
+			set 	bggnum=#{dto.bggnum},
+			gametitle=#{dto.gametitle},
+			gametitle_eng=#{dto.gametitle_eng},
+			players=#{dto.players},
+			playtime=#{dto.playtime},
+			ages=#{dto.ages},
+			language=#{dto.language},
+			release_year=#{dto.release_year},
+			update_user=#{dto.update_user},
+			update_date=sysdate,
+			theme=#{dto.theme},
+			confirmed='checking'
+			where gnum=#{dto.gnum}
+		</otherwise>
+	</choose>
 	</update>
 
 	<insert id="expansion_insert">
@@ -399,7 +524,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				</if>
 				<if test="origin != null and 'parent'.equalsIgnoreCase(origin)">
 				on 		g.gnum = ${filter}.gnum
-				WHERE 	g.del = 'n' and ${filternum}= #{num} and g.confirmed = 'allow'
+				WHERE 	g.del = 'n' and ${filternum}= #{num}
 				</if>
 				ORDER BY game_rank
 				)
@@ -408,7 +533,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<update id="delete">
 		update game
-		set del = 'y', update_date = sysdate, update_user = #{userid}
+		set del = 'y', update_date = sysdate, update_user = #{userid}, confirmed= 'allow'
 		where gnum=#{gnum}
 	</update>
 
@@ -416,7 +541,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select gametitle
 		from (select gnum, gametitle
 			  from   game
-			  where  del='n' and confirmed = 'allow'
+			  where  del='n'
 			  ) g, expansion e
 		where g.gnum = e.exnum and e.gnum = #{gnum}
 	</select>
@@ -425,7 +550,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select gametitle
 		from (select gnum, gametitle
 			  from   game
-			  where  del='n' and confirmed = 'allow'
+			  where  del='n'
 			  ) g, reimplement r
 		where g.gnum = r.renum and r.gnum = #{gnum}
 	</select>
@@ -435,7 +560,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from    expansion e,
         		(select gnum,GAMETITLE
          		 from   GAME
-         		 where  del = 'n' and GAMETITLE = #{expansion}) g and confirmed = 'allow'
+         		 where  del = 'n' and GAMETITLE = #{expansion}) g
 		where   e.exnum = g.gnum and e.gnum = #{gnum}
 	</select>
 
@@ -444,14 +569,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from    reimplement r,
         		(select gnum,GAMETITLE
          		 from   GAME
-         		 where  del = 'n' and GAMETITLE = #{expansion}) g and confirmed = 'allow'
+         		 where  del = 'n' and GAMETITLE = #{expansion}) g
 		where   r.renum = g.gnum and r.gnum = #{gnum}
 	</select>
 
 	<select id="weeklyList" resultType="gameDto">
 		select GNUM,GAMETITLE,GAMETITLE_ENG,BGG_THUMBNAIL,RELEASE_YEAR, game_rank, bggnum, theme
 		from game
-		where del = 'n' and confirmed = 'allow' and game_rank between 1 and 10
+		where del = 'n' and game_rank between 1 and 10
 		order by game_rank
 	</select>
 
@@ -464,7 +589,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     					SELECT 	GAMETITLE, GNUM, GAMETITLE_ENG, BGG_THUMBNAIL,RELEASE_YEAR,
     					to_char(create_date, 'yyyy-mm-dd') as CREATE_DATE, theme
     					FROM 	GAME
-    					where	del = 'n' and confirmed = 'allow'
+    					where	del = 'n'
   						) GAME
 				) RANKED_GAMES
 		WHERE game_rank BETWEEN 1 AND 10
@@ -497,7 +622,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 									GROUP BY gnum
 									) gr
 						ON g.gnum = gr.gnum
-						WHERE g.del = 'n' and g.confirmed = 'allow'
+						WHERE g.del = 'n'
 						ORDER BY game_rank
 						) a
 
@@ -518,12 +643,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         		                    SELECT  gnum, bggnum, gametitle, gametitle_eng, totalviewcount, release_year, bgg_thumbnail,
         		                            game_rank,theme
         		                    FROM    game
-        		                    WHERE   regexp_like(GAMETITLE, #{gameKeyword},'i') AND del = 'n' and confirmed = 'allow'
+        		                    WHERE   regexp_like(GAMETITLE, #{gameKeyword},'i') AND del = 'n'
         		                    UNION
         		                    SELECT  gnum, bggnum, gametitle, gametitle_eng, totalviewcount, release_year, bgg_thumbnail,
         		                            game_rank,theme
         		                    FROM    game
-        		                    WHERE   regexp_like(GAMETITLE_ENG, #{gameKeyword},'i') AND del = 'n' and confirmed = 'allow'
+        		                    WHERE   regexp_like(GAMETITLE_ENG, #{gameKeyword},'i') AND del = 'n'
         		                ) g
         		        LEFT JOIN   (
         		                    SELECT  gnum, fullname
@@ -566,11 +691,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM    (
 				SELECT  gnum, gametitle
 				FROM    game
-				WHERE   regexp_like(GAMETITLE, #{gameKeyword},'i') AND del = 'n' and confirmed = 'allow'
+				WHERE   regexp_like(GAMETITLE, #{gameKeyword},'i') AND del = 'n'
 				UNION
 				SELECT  gnum, gametitle
 				FROM    game
-				WHERE   regexp_like(GAMETITLE_ENG, #{gameKeyword},'i') AND del = 'n' and confirmed = 'allow'
+				WHERE   regexp_like(GAMETITLE_ENG, #{gameKeyword},'i') AND del = 'n'
 				)
 	</select>
 
@@ -586,7 +711,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 					confirmed = 'deny'
 				</when>
 				<when test="sort != null and 'delete'.equalsIgnoreCase(sort)">
-					del = 'y'
+					del = 'y' and confirmed = 'allow'
 				</when>
 			</choose>
 		</where>
@@ -618,10 +743,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 					confirmed = 'checking'
 				</when>
 				<when test="sort != null and 'deny'.equalsIgnoreCase(sort)">
-					confirmed = 'deny'
+					confirmed = 'deny' and del = 'y'
 				</when>
 				<when test="sort != null and 'delete'.equalsIgnoreCase(sort)">
-					del = 'y'
+					del = 'y' and confirmed = 'allow'
 				</when>
 			</choose>
 		</where>
@@ -639,7 +764,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<update id="denyGame">
 		update game
-		set confirmed='deny', update_date = sysdate, update_user = #{userid}
+		set confirmed='deny', update_date = sysdate, update_user = #{userid}, del='y'
 		where gnum=#{gnum}
 	</update>
 
@@ -653,8 +778,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				ages=#{ages},
 				language=#{language},
 				release_year=#{release_year},
-				update_user=#{update_user},
-				update_date=sysdate,
+				create_user=#{update_user},
+				create_date=sysdate,
 				theme=#{theme},
 				confirmed='allow'
 		where gnum=#{gnum}
@@ -663,7 +788,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="game_list_themeCount" resultType="int">
 		select 	count(*)
 		from 	game
-		where	del = 'n' and confirmed = 'allow' and theme=#{sort}
+		where	del = 'n' and theme=#{sort}
 	</select>
 
 	<select id="game_list_theme" resultType="gameDto">
@@ -692,7 +817,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 									GROUP BY 	gnum
 									) gr
 						ON 		g.gnum = gr.gnum
-						WHERE 	g.del = 'n' and g.confirmed = 'allow' and g.theme=#{sort}
+						WHERE 	g.del = 'n' and g.theme=#{sort}
 						ORDER BY 	game_rank
 						) a
 				)

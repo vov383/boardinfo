@@ -422,8 +422,20 @@
 			<tr>
 
 				<td colspan="2">
-					<button type="button" id="btnGameAllow">등록하기</button>
-					<button type="button" id="btnGameDeny">거부하기</button>
+					<c:choose>
+						<c:when test="${sort eq 'insert'}">
+							<button type="button" id="btnGameAllow">등록하기</button>
+							<button type="button" id="btnGameDeny">거부하기</button>
+						</c:when>
+						<c:when test="${sort eq 'deny'}">
+							<button type="button" id="btnGameAllow">등록하기</button>
+							<button type="button" id="btnGameDelete">삭제하기</button>
+						</c:when>
+						<c:when test="${sort eq 'delete'}">
+							<button type="button" id="btnGameAllow">등록하기</button>
+							<button type="button" id="btnGameDelete">삭제하기</button>
+						</c:when>
+					</c:choose>
 				</td>
 
 			</tr>
@@ -443,6 +455,9 @@
 
 	<form name="denyform" method="post" action="${path}/admin/denyGame.do">
 		<input type="hidden" name="deny_gnum" value="${dto.gnum}">
+	</form>
+	<form name="deleteform" method="post" action="${path}/admin/deleteGame.do">
+		<input type="hidden" name="delete_gnum" value="${dto.gnum}">
 	</form>
 
 
@@ -574,6 +589,10 @@
 		$("#btnGameDeny").click(function(){
 			document.denyform.submit();
 		});
+		//게임 삭제 버튼 클릭
+		$("#btnGameDelete").click(function(){
+			document.deleteform.submit();
+		});
 	});
 
 
@@ -645,7 +664,7 @@
 		if (gamecategoryValue) {
 			selectedCategories = gamecategoryValue.split(",");
 			selectedCategories.forEach(function(category) {
-				$("#selectedCategory").append("<div class='selected-value'>" + category + "</div>");
+				$("#selectedCategory").append("<div class='selected-value cursor_pointer'>" + category + "</div>");
 				$("#tableCategory td").filter(function() {
 					return $(this).text() === category;
 				}).addClass("selected");
@@ -668,7 +687,7 @@
 						selectedCategories.push(newCategory);
 
 						// 선택된 값 표시
-						$("#selectedCategory").append("<div class='selected-value'>" + newCategory + "</div>");
+						$("#selectedCategory").append("<div class='selected-value cursor_pointer'>" + newCategory + "</div>");
 					}
 					updateGameCategoryInput();
 				}
@@ -691,7 +710,7 @@
 		    	selectedCategories.push(selectedcategory);
 
 		      	// 선택된 값 표시
-		  	    $("#selectedCategory").append("<div class='selected-value'>" + selectedcategory + "</div>");
+		  	    $("#selectedCategory").append("<div class='selected-value cursor_pointer'>" + selectedcategory + "</div>");
 
 		      	// 선택된 <td> 태그에 'selected' 클래스 추가하여 클릭 불가능하게 만듦
 		 	    $(this).addClass("selected");
@@ -731,7 +750,7 @@
 		if (mechanicValue) {
 			selectedMechanics = mechanicValue.split(",");
 			selectedMechanics.forEach(function(mechanic) {
-				$("#selectedMechanic").append("<div class='selected-value'>" + mechanic + "</div>");
+				$("#selectedMechanic").append("<div class='selected-value cursor_pointer'>" + mechanic + "</div>");
 				$("#tableMechanic td").filter(function() {
 					return $(this).text() === mechanic;
 				}).addClass("selected");
@@ -753,7 +772,7 @@
 						selectedMechanics.push(newMechanic);
 
 						// 선택된 값 표시
-						$("#selectedMechanic").append("<div class='selected-value'>" + newMechanic + "</div>");
+						$("#selectedMechanic").append("<div class='selected-value cursor_pointer'>" + newMechanic + "</div>");
 					}
 					updateGameMechanicInput();
 				}
@@ -777,7 +796,7 @@
 		    	selectedMechanics.push(selectedMechanic);
 
 		      	// 선택된 값 표시
-		  	    $("#selectedMechanic").append("<div class='selected-value'>" + selectedMechanic + "</div>");
+		  	    $("#selectedMechanic").append("<div class='selected-value cursor_pointer'>" + selectedMechanic + "</div>");
 
 		      	// 선택된 <td> 태그에 'selected' 클래스 추가하여 클릭 불가능하게 만듦
 		 	    $(this).addClass("selected");

@@ -121,54 +121,8 @@
             //마우스로 파일을 드롭할 때 파일이 열리는 기본효과 막음.. 이건 따로 처리 need
             $(".fileDrop").on("drop", function (e) {
                 e.preventDefault();
-                //첫번째 첨부파일
-                var files = e.originalEvent.dataTransfer.files;
-                var file = files[0];
-                //폼 데이터에 첨부파일 추가
-                var formData = new FormData();
-                formData.append("file", file);
-                $.ajax({
-                    url: "${path}/upload/uploadAjax",
-                    data: formData,
-                    dataType: "text",
-                    processData: false,
-                    contentType: false,
-                    type: "post",
-                    success: function (data) {
-                        //data : 업로드한 파일 정보와 Http
-                        let fileInfo = getFileInfo(data);
-                        console.log(fileInfo);
-
-                        let html = "<div><a href='" + fileInfo.getLink + "'>"
-                            + fileInfo.fileName + "</a><br>"
-                            + "<img src='" + fileInfo.getLink + "'>";
-                        html += "<input type='hidden' class='file' value='"
-                            + fileInfo.fullName + "'>";
-                        html += "<a href='#' class='file_del' data-src='"
-                            + this + "'>[삭제]</a></div>";
-                        $("#uploadedList").append(html);
-                    }
-                });
             });
 
-            //첨부파일 삭제
-            //id가 uploadedList인 태그의 class가 file_del인 태그 클릭
-            $("#uploadedList").on("click", ".file_del", function (e) {
-                let that = $(this); //this는 현재 클릭한 태그
-                //data: {fileName: $(this).attr("data-src") },
-                $.ajax({
-                    type: "post",
-                    url: "${path}/upload/deleteFile",
-                    data: "fileName=" + $(this).attr("data-src"),
-                    dataType: "text",
-                    success: function (result) {
-                        if (result == "deleted") {
-                            //화면에서 태그 제거
-                            that.parent("div").remove();
-                        }
-                    }
-                });
-            });
             /*가격에 숫자만 입력되도록 처리*/
             $('#price').on("propertychange keyup paste input", function() {
                 let price = $(this).val();
@@ -200,7 +154,7 @@
 
         });
 
-
+        /*글 쓰기*/
         function insert() {
             // debugger
             let title = $("#title").val().trim();

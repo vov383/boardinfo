@@ -69,10 +69,10 @@ public class GameServiceImpl implements GameService {
 
   @Transactional
   @Override
-  public void gameinsert(GameDTO dto) {
+  public void gameinsert(GameDTO dto, String dept) {
 
     //게임테이블에 insert
-    gameDao.gameinsert(dto);
+    gameDao.gameinsert(dto, dept);
     String userid = dto.getCreate_user();
 
     //카테고리테이블 insert
@@ -380,10 +380,10 @@ public class GameServiceImpl implements GameService {
 
   @Transactional
   @Override
-  public void gameupdate(GameDTO dto) {
+  public void gameupdate(GameDTO dto, String dept) {
 
     //게임테이블에 update
-    gameDao.gameupdate(dto);
+    gameDao.gameupdate(dto, dept);
     int gnum = dto.getGnum();
     String userid = dto.getUpdate_user();
 
@@ -400,9 +400,9 @@ public class GameServiceImpl implements GameService {
         int cnum = categoryDao.check_category(str);
         if (cnum == 0) { //해당 카테고리가 db에 존재하지 않는다면
           categoryDao.insert_category(str,userid);
-          categoryDao.insert_category_mapping();
+          categoryDao.update_category_mapping(gnum);
         }else { //해당 카테고리가 db에 존재하면
-          categoryDao.insert_category_mapping(gnum,cnum);
+          categoryDao.update_category_mapping(gnum,cnum);
         }
       }
     }
@@ -420,9 +420,9 @@ public class GameServiceImpl implements GameService {
         int anum = artistDao.check_artist(str);
         if(anum == 0) { //해당 아티스트가 해당번호의 게임에 없다면
           artistDao.insert_artist(str,userid);
-          artistDao.insert_artist_mapping();
+          artistDao.update_artist_mapping(gnum);
         }else { // db에 존재하는 아티스트라면
-          artistDao.insert_artist_mapping(gnum,anum);
+          artistDao.update_artist_mapping(gnum,anum);
         }
       }
     }
@@ -440,9 +440,9 @@ public class GameServiceImpl implements GameService {
         int mnum = mechanicDao.check_mechanic(str);
         if(mnum == 0){ //해당 메카닉이 db에 존재하지 않는다면
           mechanicDao.insert_mechanic(str,userid);
-          mechanicDao.insert_mechanic_mapping();
+          mechanicDao.update_mechanic_mapping(gnum);
         }else { //해당 메카닉이 db에 존재하면
-          mechanicDao.insert_mechanic_mapping(gnum,mnum);
+          mechanicDao.update_mechanic_mapping(gnum,mnum);
         }
       }
     }
@@ -460,9 +460,9 @@ public class GameServiceImpl implements GameService {
         int pnum = publisherDao.check_publisher(str);
         if(pnum == 0){ //해당 제작자가 db에 존재하지 않는다면
           publisherDao.insert_publisher(str, userid);
-          publisherDao.insert_publisher_mapping();
+          publisherDao.update_publisher_mapping(gnum);
         }else { // 해당 제작자가 db에 존재하면
-          publisherDao.insert_publisher_mapping(gnum,pnum);
+          publisherDao.update_publisher_mapping(gnum,pnum);
         }
       }
     }
@@ -480,9 +480,9 @@ public class GameServiceImpl implements GameService {
         int dnum = designerDao.check_designer(str);
         if(dnum == 0){ //해당 디자이너가 db에 존재하지 않는다면
           designerDao.insert_designer(str, userid);
-          designerDao.insert_designer_mapping();
+          designerDao.update_designer_mapping(gnum);
         }else { //해당 디자이너가 db에 존재하면
-          designerDao.insert_designer_mapping(gnum,dnum);
+          designerDao.update_designer_mapping(gnum,dnum);
         }
 
       }
@@ -759,4 +759,6 @@ public class GameServiceImpl implements GameService {
 
     return map;
   }
+
+
 }

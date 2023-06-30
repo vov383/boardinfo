@@ -464,6 +464,14 @@
                                     ${row.view_count}
                             </div>
                             <div class="dot"></div>
+
+                            <div class="likeCount">
+                                <a href="#" onclick="likeIt(${row.tb_num})">
+                                    <i class="fa-solid fa-heart"></i>
+                                </a>
+                                ${row.good_count}
+                            </div>
+
                             <div class="reCount"><i class="fa-regular fa-comment-dots"></i>${row.re_count}</div>
                             <div class="dot"></div>
                         </div>
