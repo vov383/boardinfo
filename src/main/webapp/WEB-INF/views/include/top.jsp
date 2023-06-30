@@ -220,7 +220,10 @@
 
                             </div>
                             <div class="dropdown-content">
-                                <a href="${path}/mypage/goMypage/${sessionScope.userid}">마이페이지</a>
+                                <form name="mypageForm" method="post" style="display: none">
+                                    <input type="hidden" name="userid" value="${sessionScope.userid}">
+                                </form>
+                                <a href="#" onclick="goMypage()">내활동</a>
                                 <a href="${path}/member/pass_check_u?userid=${sessionScope.userid}">회원정보</a>
                                 <a href="${path}/member/logout.do" class="sign">로그아웃</a>
                             </div>
@@ -229,10 +232,10 @@
                         <div class="toMenu">
                             ${sessionScope.nickname} 님
                             <img src="${path}/images/dropdown.png" width="16px">
-                        </div> 
+                        </div>
                    </div> -->
-                          
-                          
+
+
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -530,6 +533,13 @@
             }
         });
     });
+
+    /*마이페이지로 이동하는 폼*/
+    function goMypage() {
+        document.mypageForm.action = "${path}/mypage/goMypage";
+        document.mypageForm.submit();
+    }
+
 
     // javascript로 만든 드롭다운
     document.addEventListener('click', function (event) {
