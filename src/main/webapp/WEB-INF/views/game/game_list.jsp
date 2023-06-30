@@ -33,18 +33,18 @@
 <main>
 	<div id="contents">
 		<div id="contentsHeader">
-			<h2>게임목록</h2>
+			<h2>게임랭킹</h2>
 		</div>
 		<div id="contentsLocation">
 			<span>홈</span>&gt
-			<span>게임목록</span>&gt
+			<span>게임랭킹</span>&gt
 
 			<c:choose>
 				<c:when test="${map.sort != null and 'week'.equalsIgnoreCase(sort)}">
 					<span>주간 랭킹</span>
 				</c:when>
 				<c:when test="${map.sort != null and 'month'.equalsIgnoreCase(sort)}">
-					<span>월간 랭킹(미완)</span>
+					<span>월간 랭킹</span>
 				</c:when>
 				<c:when test="${map.sort != null and 'newbie'.equalsIgnoreCase(sort)}">
 					<span>신규등록</span>
@@ -65,8 +65,8 @@
 				<li<c:if test="${sort eq 'week'}"> class="selected" </c:if>>
 					<a href="${path}/game/gamerank/week">주간</a>
 				</li>
-				<li<c:if test="${sort eq 'rate'}"> class="selected" </c:if>>
-					<a href="${path}/game/gamerank/rate">평점</a>
+				<li<c:if test="${sort eq 'month'}"> class="selected" </c:if>>
+					<a href="${path}/game/gamerank/month">월간</a>
 				</li>
 				<li<c:if test="${sort eq 'newbie'}"> class="selected" </c:if>>
 					<a href="${path}/game/gamerank/newbie">신규</a>

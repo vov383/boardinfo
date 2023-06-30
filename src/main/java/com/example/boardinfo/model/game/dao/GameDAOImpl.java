@@ -33,10 +33,8 @@ public class GameDAOImpl implements GameDAO {
 		String sort = (String)map.get("sort");
 		switch (sort){
 			case "week":
-				list = sqlSession.selectList("game.gameList", map);
-				break;
 			case "month":
-				list = sqlSession.selectList("game.gameList_month", map);
+				list = sqlSession.selectList("game.gameList", map);
 				break;
 			case "newbie":
 				list = sqlSession.selectList("game.gameList_newbie", map);
@@ -50,8 +48,12 @@ public class GameDAOImpl implements GameDAO {
 
 	//새로운 게임을 등록한다.
 	@Override
-	public void gameinsert(GameDTO dto) {
-		sqlSession.insert("game.gameInsert",dto);
+	public void gameinsert(GameDTO dto, String dept) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("dto",dto);
+		map.put("dept",dept);
+
+		sqlSession.insert("game.gameInsert",map);
 	}
 
 	//조회수를 증가시킨다.
@@ -93,10 +95,8 @@ public class GameDAOImpl implements GameDAO {
 		String sort = (String)map.get("sort");
 		switch (sort){
 			case "week":
-				list = sqlSession.selectList("game.filteredList", map);
-				break;
 			case "month":
-				list = sqlSession.selectList("game.filteredList_month", map);
+				list = sqlSession.selectList("game.filteredList", map);
 				break;
 			case "newbie":
 				list = sqlSession.selectList("game.filteredList_newbie", map);
@@ -111,8 +111,11 @@ public class GameDAOImpl implements GameDAO {
 	}
 
 	//게임정보수정
-	public void gameupdate(GameDTO dto){
-		sqlSession.update("game.gameupdate", dto);
+	public void gameupdate(GameDTO dto, String dept){
+		Map<String, Object> map = new HashMap<>();
+		map.put("dto",dto);
+		map.put("dept",dept);
+		sqlSession.update("game.gameupdate", map);
 	}
 
 	//확장게임의 정보를 삽입한다.(새 게임 등록시)
@@ -195,7 +198,7 @@ public class GameDAOImpl implements GameDAO {
 		return map;
 	}
 
-	//게임을 삭제한다
+	//게임을 삭제한다(삭제요청으로)
 	public void deleteGame(int gnum, String userid){
 		Map<String, Object> map = new HashMap<>();
 		map.put("gnum",gnum);

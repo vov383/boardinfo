@@ -26,16 +26,20 @@
 
 
 
+
 	<property name="url"
 		value="jdbc:log4jdbc:oracle:thin:@192.168.30.213:1521:xe" />
 		<property name="username" value="boardinfo" />
 
 
-<!--
-		<property name="url"
- 			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe" />
-  		<property name="username" value="spring" />
--->
+
+<!--		<property name="url"-->
+<!-- 			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe" />-->
+
+<!--  		<property name="username" value="spring" />-->
+<!--		<property name="username" value="boardinfo" />-->
+
+
 
 
 		<property name="password" value="1234" />
@@ -49,7 +53,7 @@
 		/> <property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl" />
 		<property name="username" value="java" /> <property name="password" value="java1234"
 		/> </bean> -->
-		
+
 	<!-- mongo 관련-->
     <mongo:mongo-client id="mongoClient"
 	host="localhost"
@@ -70,13 +74,13 @@
 		<constructor-arg ref="mongoClient" />
 	    <constructor-arg name="databaseName" value="board-info" />
 	</bean>
-	
-	
+
+
 	<!-- websocket
 	<websocket:handlers>
-	<websocket:mapping handler="chatHandler" path="/chatting" /> 
+	<websocket:mapping handler="chatHandler" path="/chatting" />
 	<websocket:handshake-interceptors>
-  
+
     <bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
     </websocket:handshake-interceptors>
 	<websocket:sockjs />
@@ -96,7 +100,7 @@
 		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
 	</bean>
 
-  
+
 	<!-- 트랜잭션 관련 설정 -->
 	<bean id="transactionManager"
 	class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -114,7 +118,7 @@
 	<task:annotation-driven executor="taskExecutor"
 							scheduler="jobScheduler" />
 
-	
+
 	<!-- 이메일 발송 bean 설정 -->
 	<bean id="mailSender"
 	class="org.springframework.mail.javamail.JavaMailSenderImpl">
@@ -131,8 +135,6 @@
             </props>
         </property>
     </bean>
-
-
 
 </beans>
 

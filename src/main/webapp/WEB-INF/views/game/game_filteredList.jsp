@@ -41,16 +41,16 @@
 
             <c:choose>
                 <c:when test="${map.sort != null and 'week'.equalsIgnoreCase(sort)}">
-                    <span>보드인포 랭킹순</span>
+                    <span>주간 랭킹</span>
+                </c:when>
+                <c:when test="${map.sort != null and 'month'.equalsIgnoreCase(sort)}">
+                    <span>월간 랭킹</span>
                 </c:when>
                 <c:when test="${map.sort != null and 'newbie'.equalsIgnoreCase(sort)}">
-                    <span>신규등록순</span>
-                </c:when>
-                <c:when test="${map.sort != null and 'rate'.equalsIgnoreCase(sort)}">
-                    <span>평점 랭킹순</span>
+                    <span>신규등록</span>
                 </c:when>
                 <c:when test="${map.sort != null and 'vcnt'.equalsIgnoreCase(sort)}">
-                    <span>조회수 랭킹순</span>
+                    <span>조회수 랭킹</span>
                 </c:when>
 
             </c:choose>
@@ -72,8 +72,8 @@
                     <li<c:if test="${sort eq 'week'}"> class="selected" </c:if>>
                         <a href="${path}/game/partrank/week?filter=${map.filter}&num=${map.num}">주간</a>
                     </li>
-                    <li<c:if test="${sort eq 'rate'}"> class="selected" </c:if>>
-                        <a href="${path}/game/partrank/rate?filter=${map.filter}&num=${map.num}">평점</a>
+                    <li<c:if test="${sort eq 'month'}"> class="selected" </c:if>>
+                        <a href="${path}/game/partrank/month?filter=${map.filter}&num=${map.num}">월간</a>
                     </li>
                     <li<c:if test="${sort eq 'newbie'}"> class="selected" </c:if>>
                         <a href="${path}/game/partrank/newbie?filter=${map.filter}&num=${map.num}">신규</a>

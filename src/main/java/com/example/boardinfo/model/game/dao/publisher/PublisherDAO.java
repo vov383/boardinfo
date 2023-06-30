@@ -24,4 +24,7 @@ public interface PublisherDAO {
     List<PublisherDTO> confirmList(Map<String, Object> map);
 
     void deleteitem(int num);
+
+    void update_publisher_mapping(int gnum);
+    void update_publisher_mapping(int gnum, int pnum);
 }

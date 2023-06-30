@@ -71,15 +71,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete>
 
 	<select id="confirmList" resultType="categoryDto">
-		select 	c.cnum, c.gamecategory, c.gamecategory_ko
-		from	category c
-		left join 	(
-					select 	cnum, count(*) count
-					from	game_category
-					group by cnum
-					) gc
-		on		c.cnum = gc.cnum
-		where	gc.count = 0
+		select 	a.*
+		from 	category a
+		left join  game_category ga
+		on      a.cnum = ga.cNUM
+		where   ga.cnum is null
 	</select>
 
 	<delete id="deleteitem">
@@ -109,6 +105,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				)
 		where rn between #{start} and #{end}
 	</select>
+
+	<insert id="update_category_mapping">
+		insert into game_category (gnum, cnum)
+		<choose>
+			<when test="cnum != 0">
+				values (#{gnum},#{cnum})
+			</when>
+			<otherwise>
+				values (#{gnum}, seq_category.nextval)
+			</otherwise>
+		</choose>
+	</insert>
 	
 </mapper>
 

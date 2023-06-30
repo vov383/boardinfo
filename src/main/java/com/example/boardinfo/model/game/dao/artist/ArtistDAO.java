@@ -25,4 +25,7 @@ public interface ArtistDAO {
     List<ArtistDTO> confirmList(Map<String, Object> map);
 
     void deleteitem(int num);
+
+    void update_artist_mapping(int gnum);
+    void update_artist_mapping(int gnum, int anum);
 }

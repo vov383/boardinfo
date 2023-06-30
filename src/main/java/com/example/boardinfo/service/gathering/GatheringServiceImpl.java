@@ -370,9 +370,6 @@ public class GatheringServiceImpl implements GatheringService {
 		return gatheringDao.deleteReply(dto);
 	}
 
-
-
-
 	@Override
 	public List<GatheringDTO> totalSearch(String gameKeyword) {
 		Map<String, Object> map = new HashMap<>();
