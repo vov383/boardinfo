@@ -68,5 +68,5 @@ public interface AdminService {
 
     void allowGame(GameDTO dto);
 
-    void deleteGame(int gnum, String userid);
+    void deleteGameAdmin(int gnum, String admin_id);
 }

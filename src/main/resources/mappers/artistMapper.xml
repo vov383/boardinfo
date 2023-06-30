@@ -110,15 +110,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="confirmList" resultType="artistDto">
-		select 	a.anum, a.artist
-		from	artist a
-		left join 	(
-					select 	anum, count(*) count
-					from	game_artist
-					group by anum
-					) ga
-		on		a.anum = ga.anum
-		where 	ga.count = 0
+		select 	a.*
+		from 	ARTIST a
+		left join  GAME_ARTIST ga
+		on      a.anum = ga.ANUM
+		where   ga.anum is null
 	</select>
 
 	<delete id="deleteitem">

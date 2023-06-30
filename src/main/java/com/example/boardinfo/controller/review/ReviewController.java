@@ -79,7 +79,6 @@ public class ReviewController {
 		page = paging.Paging(page);
 
 		mav.setViewName("review/gameReviewMain");
-
 		/*내가 보는 리스트의 총개수*/
 		int cnt = reviewservice.reviewListCnt(reviewserchDTO);
 		logger.info("카운트가 정확히 찍혀나오는지 : " + cnt);

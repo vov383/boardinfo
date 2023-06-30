@@ -329,9 +329,20 @@ public class AdminServiceImpl implements AdminService {
         gameDao.denyGame(gnum,userid);
     }
 
+    @Transactional
     @Override
-    public void deleteGame(int gnum, String userid) {
-        gameDao.deleteGame(gnum,userid);
+    public void deleteGameAdmin(int gnum, String admin_id) {
+        adminDao.deleteGameAdmin(gnum,admin_id);
+        /*매퍼테이블만 삭제*/
+        adminDao.deleteGameArtist(gnum);
+        adminDao.deleteGameCategory(gnum);
+        adminDao.deleteGameDesigner(gnum);
+        adminDao.deleteGameMechanic(gnum);
+        adminDao.deleteGamePublisher(gnum);
+        /*해당게임 들어있는것 삭제*/
+        adminDao.deleteGameEx(gnum);
+        adminDao.deleteGameRe(gnum);
+
     }
 
     @Transactional
