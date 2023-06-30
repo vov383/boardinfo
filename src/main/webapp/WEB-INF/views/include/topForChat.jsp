@@ -4,18 +4,206 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
+<style>
+
+    .memberArea{
+        display: flex;
+        justify-content: center;
+
+        text-align: center;
+        width: 100%;
+        min-width: 120px;
+        cursor: pointer;
+        position: relative;
+    }
+
+
+    .nav{
+        margin: 0 auto;
+        max-width: 1120px;
+    }
+
+    .menu {
+        margin: 0;
+        max-width: 600px;
+        height: 45px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        list-style: none;
+        padding: 0;
+    }
+
+      .menu li {
+          display: flex;
+          justify-content: center;
+          flex: 0 0 25%;
+          max-width: 25%;
+          height: 100%;
+          line-height: 45px;
+          position: relative;
+      }
+
+      .menu li:hover{
+          cursor: pointer;
+      }
+
+    .menu li a, .memberArea a{
+        display: block;
+        color: black;
+        text-decoration: none;
+    }
+
+    .memberArea a:hover{
+        text-decoration: none;
+    }
+
+    .toMenu{
+          position: relative;
+          font-size: 16px;
+          font-weight: bold;
+          text-decoration: none;
+          color: black;
+      }
+
+      .toMenu > img{
+          top: 35%;
+          left: 100%;
+          position: absolute;
+          margin-left: 4px;
+          -webkit-user-drag: none;
+      }
+
+        .memberArea img{
+            top: 20%;
+        }
+
+
+    .dropdown-content{
+          position: absolute;
+          display: none;
+          top: 100%;
+          width: 100%;
+          background-color: white;
+          box-shadow: 4px 6px 5px 1px rgba(0, 0, 0, 0.1);
+          z-index: 1;
+      }
+
+
+      .dropdown-content a{
+          width: 100%;
+          text-align: center;
+      }
+
+      .dropdown-content a:hover{
+          background-color: #e9e9e9
+      }
+
+
+    .memberArea .dropdown-content{
+        top: calc(100% + 5px);
+        width: 100%;
+        right: 0;
+        min-width: 90px;
+        max-width: 90px;
+        flex-direction: column;
+    }
+
+    .memberArea .dropdown-content a{
+        min-width: 90px;
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    .noticeList{
+        position: absolute;
+        z-index: 100;
+        display: none;
+        flex-direction: column;
+
+        margin-top: 20px;
+        width: 385px;
+        min-height: 100px;
+        right: -40px;
+        background-color: white;
+        box-shadow: 10px 10px 20px 0 rgba(0,0,0,.1);
+        border-radius: 10px;
+    }
+
+    .noticeList::after{
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        right: 44px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: transparent transparent #EDECEC transparent;
+    }
+
+
+    .noticeList > div:first-child{
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        width: 100%;
+        background-color: #EDECEC;
+        padding: 10px 14px;
+    }
+
+    .toast-chat{
+        margin-top: 8px;
+        right: -88px;
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+    }
+
+    .alarmMessages{
+        padding: 5px;
+        background-color: white;
+        width: 220px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        box-shadow: 2px 5px 5px 1px rgba(0,0,0,.1);
+        border-bottom: 1px solid #d9d9d9;
+        border-radius: 6px;
+    }
+
+    .alarmMessages:hover{
+        cursor: pointer;
+    }
+
+
+    .alarmMessages::after{
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        border-width: 8px;
+        border-style: solid;
+        border-color: transparent transparent white transparent;
+    }
+
+
+</style>
+
+
 <div id="header">
 
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <c:set var="path" value="${pageContext.request.contextPath}"/>
 
+
     <div id="header-upper-box">
         <div>
             <div id="header-left">
-                <a href="${path}/" title="보드인포"><img src="${path}/images/boardinfo_logo.png" width="170px"></a>
+                <a href="${path}/" title="보드인포"><img src="${path}/images/logo.png" width="170px"></a>
             </div>
             <div id="header-right">
-                <form name="gameSearch" id="gameSearch" method="get" action="${path}/game/searchAll.do">
+                <form name="gameSearch" id="gameSearch" method="get" action="${path}/search/searchAll.do">
                     <div>
                         <input name="gameKeyword" id="gameKeyword" placeholder="보드게임 찾기" autocomplete="off">
                         <input type="hidden">
@@ -32,13 +220,27 @@
                     <c:when test="${sessionScope.admin_id != null && !sessionScope.admin_id.equals('')}">
                         <a title="채팅" href="${path}/chat/room.do">
                             <div id="chatArea">
-                                <span id="unreadChat"></span><img src="${path}/images/chat.png" id="chatImg" alt="채팅">
+                                <span id="unreadChat">
+                                </span><img src="${path}/images/chat.png" id="chatImg" alt="채팅">
+                                <div class="toast-chat"></div>
+                            </div>
+                            <div id="noticeArea">
+                                <a title="알림" href="#">
+                                    <span id="unreadNotice"></span>
+                                    <img src="${path}/images/notice.png" id="noticeImg" alt="알림">
+                                </a>
+                                <div class="noticeList">
+                                    <div>알림</div>
+                                </div>
                             </div>
                         </a>
                         <!-- admin login 상태 -->
-                        <div class="dropdown">
-                            <div class="dropbtn"><a title="회원" class="sign" id="signIn">관리자 ${sessionScope.nickname}
-                                님<img src="${path}/images/dropdown.png" width="16px"></a></div>
+
+                        <div class="memberArea">
+                            <div class="toMenu">
+                                관리자 ${sessionScope.nickname}님
+                                <img src="${path}/images/dropdown.png" width="16px">
+                            </div>
                             <div class="dropdown-content">
                                 <a href="#">내활동</a>
                                 <a href="${path}/admin/admin_view.do?admin_id=${sessionScope.admin_id}">관리자 정보</a>
@@ -46,23 +248,37 @@
                                 <a id="adminLogoutBtn" class="sign">관리자 로그아웃</a>
                             </div>
                         </div>
+
                     </c:when>
                     <c:otherwise>
-                        <div id="chatArea">
-                            <a title="채팅" href="${path}/chat/room.do">
-                                <span id="unreadChat"></span><img src="${path}/images/chat.png" id="chatImg" alt="채팅">
+                            <div id="chatArea">
+                                <a title="채팅" href="${path}/chat/room.do">
+                                    <span id="unreadChat"></span>
+                                    <img src="${path}/images/chat.png" id="chatImg" alt="채팅">
+                                </a>
+                                <div class="toast-chat"></div>
+                            </div>
+                        <div id="noticeArea">
+                            <a title="알림" href="#">
+                                <span id="unreadNotice"></span>
+                                <img src="${path}/images/notice.png" id="noticeImg" alt="알림">
                             </a>
-                        </div>
-                        <!-- userid로 로그인한 상태 -->
-                        <div class="dropdown">
-                            <div class="dropbtn"><a title="회원" class="sign" id="signIn">${sessionScope.nickname} 님<img
-                                    src="${path}/images/dropdown.png" width="16px"></a></div>
-                            <div class="dropdown-content">
-                                <a href="${path}/member/mypage/seong">마이페이지</a>
-                                <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
-                                <a href="${path}/member/logout.do" class="sign">로그아웃</a>
+                            <div class="noticeList">
+                                <div>알림</div>
                             </div>
                         </div>
+                        <!-- userid로 로그인한 상태 -->
+                   <div class="memberArea">
+                        <div class="toMenu">
+                            ${sessionScope.nickname} 님
+                            <img src="${path}/images/dropdown.png" width="16px">
+                        </div>
+                        <div class="dropdown-content">
+                         <a href="${path}/mypage/goMypage/${sessionScope.userid}">마이페이지</a>
+                         <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
+                         <a href="${path}/member/logout.do" class="sign">로그아웃</a>
+                        </div>
+                   </div>
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -71,49 +287,50 @@
 
     <div class="nav">
         <ul class="menu">
-
             <li>
-                <div class="dropdown">
-                    <a href="${path}/game/gamerank/index" class="toMenu" title="게임정보">게임정보<img
-                            src="${path}/images/dropdown.png" width="34px"></a>
-                    <div class="dropdown-content">
-                        <a href="${path}/game/gamerank/week">게임순위</a>
-                        <a href="#">카테고리</a>
-                        <a href="#">디자이너</a>
-                        <a href="#">출판사</a>
-                    </div>
+                <div class="toMenu" onclick="location.href='${path}/game/gamerank/week'">
+                        게임정보
+                    <img src="${path}/images/dropdown.png" width="16px">
+                </div>
+                <div class="dropdown-content">
+                    <a href="${path}/game/gamerank/week">베스트게임</a>
+                    <a href="${path}/game/gamerank/newbie">최신게임</a>
+                    <a href="${path}/game/categoryList">카테고리</a>
+                    <a href="/game/themeList/-">테마</a>
+                    <c:choose>
+                        <c:when test="${sessionScope.admin_id != null && !sessionScope.admin_id.equals('')}">
+                            <a href="#" onclick="goInsert()">게임등록</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="#" onclick="goInsert()">게임등록신청</a>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </li>
             <li>
-                <div class="dropdown">
-                    <a href="#" class="toMenu" title="커뮤니티">커뮤니티<img src="${path}/images/dropdown.png" width="34px"></a>
-                    <div class="dropdown-content">
-                        <a href="#">게임후기</a>
-                        <a href="#">순위포럼</a>
-                        <a href="#">자유게시판</a>
-                    </div>
+                <div class="toMenu" onclick="location.href='${path}/review/reviewlist.do?freeFlag=A'">
+                    커뮤니티
+                    <img src="${path}/images/dropdown.png" width="16px">
+                </div>
+                <div class="dropdown-content">
+                    <a href="${path}/review/reviewlist.do?freeFlag=A">전체</a>
+                    <a href="${path}/review/reviewlist.do?freeFlag=H">인기글</a>
+                    <a href="${path}/review/reviewlist.do?freeFlag=N">게임포럼</a>
+                    <a href="${path}/review/reviewlist.do?freeFlag=Y">자유게시판</a>
                 </div>
             </li>
             <li>
-                <div class="dropdown">
-                    <a href="#" class="toMenu" title="오프모임">오프모임<img src="${path}/images/dropdown.png" width="34px"></a>
-                    <div class="dropdown-content">
-                        <a href="#">모임모집</a>
-                        <a href="#">모임후기</a>
-                    </div>
+                <div class="toMenu">
+                    <a href="${path}/gathering/list.do" class="toMenu" title="오프모임">
+                    오프모임
+                    </a>
                 </div>
             </li>
             <li>
-                <div class="dropdown">
-                    <a href="${path}/tboard/list.do" class="toMenu" title="중고장터">중고장터
-                        <img src="${path}/images/dropdown.png" width="34px"></a>
-                    <div class="dropdown-content">
-                        <a href="${paht}/tboard/list.do">전체</a>
-                        <a href="${paht}/tboard/list.do?select_category=s">판매</a>
-                        <a href="${paht}/tboard/list.do?select_category=b">구매</a>
-                        <a href="${paht}/tboard/list.do?select_category=n">나눔</a>
-                        <a href="${paht}/tboard/list.do?select_category=f">완료</a>
-                    </div>
+                <div class="toMenu">
+                    <a href="${path}/tboard/list.do" class="toMenu" title="중고장터">
+                        중고장터
+                    </a>
                 </div>
             </li>
         </ul>
@@ -121,26 +338,67 @@
 </div>
 
 <script>
+
+
     function searchAll() {
-        const keyword = $("#gameKeyword").val();
+        var keyword = $("#gameKeyword").val();
         if (keyword !== "") {
             document.gameSearch.submit();
         }
     }
 
 
-    $(document).ready(function () {
+    //검색기능
+    $(document).ready(function(){
 
-        //검색기능
+        var timeOutId;
+
+        $(".menu").on("mouseleave", function(){
+            var $dropdowns = $(this).find(".dropdown-content").is(":visible");
+            timeOutId = setTimeout(function() {
+                $dropdowns.slideUp(300, function() {
+                    $dropdowns.css("display", "none");
+                });
+            }, 100);
+        });
+
+        $(".menu li, .memberArea").on("mouseleave", function() {
+            var $dropdown = $(this).find(".dropdown-content");
+            timeOutId = setTimeout(function() {
+                $dropdown.slideUp(300, function() {
+                    $dropdown.css("display", "none");
+                });
+            }, 100);
+        });
+
+
+        $(".menu li, .memberArea").on("mouseenter", function(){
+            var $dropdown = $(this).find(".dropdown-content");
+            if($dropdown.is(":visible")){
+                clearTimeout(timeOutId);
+            }
+            else{
+                $(this).find(".dropdown-content").slideDown(200, function() {
+                    $(this).css("display", "block");
+                });
+            }
+        });
+
+
+
         //검색창 키입력후
-        $("#gameKeyword").keyup(function () {
-            if (Event.keyCode === '13') { //엔터입력시
+        $("#gameKeyword").keyup(function(event) {
+            if (event.which === 13) { // 엔터 입력시
+                event.preventDefault();
                 searchAll();  //검색하러감
             } else {
-                //자동완성
                 setTimeout(function () {  //딜레이
-
+                //자동완성
                     var input = $("#gameKeyword").val();
+
+                    if (input == "")
+                        $('#gameSearchDiv').empty()
+                    else {
                     $.ajax({
                         type: "get",
                         url: "${path}/game/autoGame.do/" + input,
@@ -156,8 +414,6 @@
                                     var gamephoto_url = item.gamephoto_url;
                                     var bgg_thumbnail = item.bgg_thumbnail;
                                     var bggnum = item.bggnum;
-                                    console.log(gnum);
-                                    console.log(gametitle);
 
                                     //var str => #gameSearchDiv 안에 들어갈 태그 입력
                                     var str = "<div class='searched_top'><div class='imageDiv'>";
@@ -177,7 +433,6 @@
 
                                     gameSearchDiv.append(str);
                                 });
-
                             } else {
                                 gameSearchDiv.hide(); // 값이 없을 경우 숨기기
                             }
@@ -186,10 +441,15 @@
                             console.log("에러..");
                         }
                     });
-                    if (input == "") $('#gameSearchDiv').empty();
+                    }
+                }, 1000) //settimeout 콜백함수로 1초 딜레이 후 검색창 작동
 
-                }, 500) //settimeout 콜백함수로 0.5초 딜레이 후 검색창 작동
+               ;
+
+
+
             }
+
         });
 
         /*관리자 로그아웃 버튼*/
@@ -200,21 +460,17 @@
         });
     });
 
-    // JavaScript to toggle dropdown
-    document.addEventListener('click', function (event) {
-        var dropdown = event.target.closest('.dropdown');
-        if (dropdown) {
-            dropdown.querySelector('.dropdown-content').classList.toggle('show');
-        } else {
-            var dropdowns = document.getElementsByClassName('dropdown-content');
-            for (var i = 0; i < dropdowns.length; i++) {
-                var dropdownContent = dropdowns[i];
-                if (dropdownContent.classList.contains('show')) {
-                    dropdownContent.classList.remove('show');
-                }
+
+    function goInsert() {
+        if("${sessionScope.userid}" == "" && "${sessionScope.admin_id}" == ""){
+            if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
+                location.href= "${path}/member/member_login.do";
+                return;
             }
+        }else{
+            location.href= "${path}/game/write.do";
         }
-    });
+    }
 
 
 </script>

@@ -72,7 +72,7 @@ public class ChatMessageController {
          */
 
         if(type.equals(GatheringAlarmDTO.AlarmType.ACCEPTED)){
-            chatAlarm.setProcess("n");
+            chatAlarm.setProcess("N");
             chatAlarm.setAlarm_id(UUID.randomUUID().toString());
             chatAlarm.setMessage("모임에 가입이 승인되었습니다.");
 

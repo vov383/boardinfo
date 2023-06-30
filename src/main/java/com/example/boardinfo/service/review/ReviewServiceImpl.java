@@ -36,7 +36,6 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override // 덮어쓰기 의미
 	public List<ChoiceGameDTO> gameListOut(reviewSerchDTO reviewserchDTO){
 
-
 		List<ChoiceGameDTO> gameList = reviewDAO.gameListOut(reviewserchDTO);
 		/*System.out.println("vo : " + new Gson().toJson(list));*/
 

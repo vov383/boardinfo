@@ -36,7 +36,7 @@ public class ReviewController {
 	@RequestMapping("reviewlist.do")
 	public ModelAndView revewlist(@ModelAttribute reviewSerchDTO reviewserchDTO,
 								  HttpSession session, PageDTO page,
-								  @RequestParam(name="freeFlag") String freeFlag,
+								  @RequestParam(name="freeFlag", required = false, defaultValue = "A") String freeFlag,
 								  @RequestParam(name="detail", required = false, defaultValue = "A") String detail) {
 
 		ModelAndView mav = new ModelAndView();
@@ -262,6 +262,8 @@ public class ReviewController {
 	// 리뷰 입력 및 수정할 페이지
 	@RequestMapping("reviewInsert.do")
 	public ModelAndView reviewInsert(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session){
+
+		System.out.println("프리플래그" + reviewserchDTO.getFreeFlag());
 
 		String userid = (String) session.getAttribute("userid");
 		ModelAndView mav = new ModelAndView();

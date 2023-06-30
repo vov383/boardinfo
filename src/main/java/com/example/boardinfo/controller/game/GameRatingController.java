@@ -96,7 +96,9 @@ public class GameRatingController {
 
     @ResponseBody
     @RequestMapping("getTopRatings.do")
-    public HashMap<String, List<GameRatingDTO>> getTopRatings(@RequestParam int gnum, HttpSession session){
+    public HashMap<String, List<GameRatingDTO>> getTopRatings(
+            @RequestParam int gnum, HttpSession session
+    ){
         int number = 3; //상위 몇건까지 출력할 것인지
 
         String user_id = (String)session.getAttribute("userid");

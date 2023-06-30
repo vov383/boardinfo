@@ -122,6 +122,8 @@
 			 , G.PLAYTIME
 			 , G.AGES
 			 , G.LANGUAGE
+		     , G.GAME_RANK
+		     , G.GAME_RANK_MONTH
 			 , RELEASE_YEAR
 		FROM REVIEW R
 		   , CHOICE_GAME CG
@@ -348,10 +350,6 @@
 
 
 
-
-
-
-
 	<insert id="reviewBlob" parameterType="hashMap">
 		INSERT INTO REVIEW_IN_TEST (TEST1, BLOB)
 		VALUES(#{test1}
@@ -420,6 +418,7 @@
 			)
 		where rn between 1 and #{size}
 	</select>
+
 
 	<select id="getHotList" resultType="reviewDto">
 		select 	*

@@ -25,10 +25,11 @@
 		<!-- 연결문자열에 log4jdbc가 추가됨 -->
 
 
-		<property name="url"
-			value="jdbc:log4jdbc:oracle:thin:@192.168.30.213:1521:xe" />
-		<property name="username" value="boardinfo" />
 
+
+	<property name="url"
+		value="jdbc:log4jdbc:oracle:thin:@192.168.30.213:1521:xe" />
+		<property name="username" value="boardinfo" />
 
 
 
@@ -37,6 +38,7 @@
 
 <!--  		<property name="username" value="spring" />-->
 <!--		<property name="username" value="boardinfo" />-->
+
 
 
 
