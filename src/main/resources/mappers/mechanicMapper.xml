@@ -70,15 +70,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete>
 
 	<select id="confirmList" resultType="mechanicDto">
-		select 	m.mnum, m.mechanic
-		from	mechanic m
-        left join 	(
-    				select 	mnum, count(*) count
-    				from	game_mechanic
-    				group by mnum
-					) gm
-		on		m.mnum = gm.mnum
-		where 	gm.count = 0
+		select 	a.*
+		from 	mechanic a
+		left join  game_mechanic ga
+		on      a.mnum = ga.mNUM
+		where   ga.mnum is null
 	</select>
 
 	<delete id="deleteitem">

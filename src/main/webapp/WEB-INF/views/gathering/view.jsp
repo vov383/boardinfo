@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
 
 <%@ include file="../include/js/header.jsp" %>
-  <title>${dto.title} - 모임모집</title>
+  <title>${dto.title} - 오프모임</title>
 
     <style>
     .map_wrap {
@@ -300,18 +300,6 @@
             margin-right: 5px;
         }
 
-        footer{
-            font-size: 15px;
-            color: #DFDFDF;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding-left: 200px;
-            height: 190px;
-            background-color: #3D3D43;
-            bottom: 0;
-            clear: both;
-        }
 
         /*여기부터 모달*/
         .popup-wrap{
@@ -463,7 +451,7 @@
                         for(let i=0; i<list.length; i++){
 
                             let addReplySpan = "";
-                            if(list[i].show == 'y'){
+                            if(list[i].show == 'Y'){
                                 if("${sessionScope.userid}" == list[i].creator_id){
                                     addReplySpan =
                                         "<span class='addRe_reply'><img src='${path}/images/reply_arrow.png' width='15px'>" +
@@ -489,7 +477,7 @@
 
                             let text = "";
 
-                            if(list[i].show == 'y'){
+                            if(list[i].show == 'Y'){
                                 text= $("<div>").text(list[i].reply_text);
                             }
 
@@ -778,12 +766,18 @@
 <body>
 <%@include file="../include/top.jsp" %>
 
+<c:if test="${message!=null}">
+    <script>
+        alert("${message}");
+    </script>
+</c:if>
+
 <div id="contents">
     <div id="contentsHeader">
-        <h2>모임모집</h2>
+        <h2>오프모임</h2>
     </div>
     <div id="contentsLocation">
-        홈 &gt 오프모임 &gt 모임모집
+        홈 &gt 오프모임
     </div>
     <div id="contentsMain">
     		<div id="postInfo">
@@ -978,9 +972,11 @@
                     <span>댓글[<span id="countReplies"></span>]</span>
                     <span>이 모임에 대해 궁금한 사항이 있으면 댓글을 달아보세요.</span>
                     <c:if test="${sessionScope.userid==dto.writer_id}">
-                        <button type="button" id="btn-Edit"
-                                onclick='editPost()'>수정
-                        </button>
+                        <c:if test="${dto.status == '모집중'}">
+                            <button type="button" id="btn-Edit"
+                                    onclick='editPost()'>수정
+                            </button>
+                        </c:if>
                         <button type="button" id="btn-Delete"
                                 onclick="deletePost()"> 삭제
                         </button>

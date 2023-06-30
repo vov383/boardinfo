@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>모임모집</title>
+  <title>오프모임</title>
   <%@ include file="../include/js/header.jsp" %>
 
   <style>
@@ -91,6 +91,9 @@
     }
 
     #keywordForm{
+      display: flex;
+      width: 100%;
+      max-width: 500px;
       margin: 0 auto;
     }
 
@@ -100,13 +103,13 @@
       height: 33px;
       margin-right: 5px;
       font-size: 17px;
-      padding-left: 8px;
+      padding-left: 12px;
 
     }
 
     #keywordForm input[type="text"]{
+      flex-grow: 1;
       padding-left: 8px;
-      width: 300px;
       height: 33px;
       margin-right: 5px;
       margin-bottom: 20px;
@@ -169,7 +172,7 @@
 
     .title{
       font-weight: bold;
-      font-size: 17px;
+      font-size: 16px;
       color: black;
       text-decoration: none;
     }
@@ -183,7 +186,6 @@
       margin-left: 7px;
       font-weight: bold;
       color: #C53A32;
-      font-size: 15px;
     }
 
     .detail{
@@ -225,6 +227,7 @@
 
     #paginationArea{
       display: flex;
+      justify-content: left;
       margin: 20px auto 0 auto;
     }
 
@@ -257,19 +260,6 @@
       color: white;
     }
     */
-
-    footer{
-      font-size: 15px;
-      color: #DFDFDF;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding-left: 200px;
-      height: 190px;
-      background-color: #3D3D43;
-      bottom: 0;
-      clear: both;
-    }
 
 
   </style>
@@ -402,10 +392,10 @@
 
 <div id="contents">
   <div id="contentsHeader">
-    <h2>모임모집</h2>
+    <h2>오프모임</h2>
   </div>
   <div id="contentsLocation">
-    홈 &gt 오프모임 &gt 모임모집
+    홈 &gt 오프모임
   </div>
   <div id="contentsMain">
     <div id="filter">

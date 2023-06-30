@@ -4,157 +4,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
-<style>
-
-    .memberArea{
-        display: flex;
-        justify-content: center;
-
-        text-align: center;
-        width: 100%;
-        min-width: 120px;
-        cursor: pointer;
-        position: relative;
-    }
-
-
-    .nav{
-        margin: 0 auto;
-        max-width: 1120px;
-    }
-
-    .menu {
-        margin: 0;
-        max-width: 600px;
-        height: 45px;
-
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        list-style: none;
-        padding: 0;
-    }
-
-      .menu li {
-          display: flex;
-          justify-content: center;
-          flex: 0 0 25%;
-          max-width: 25%;
-          height: 100%;
-          line-height: 45px;
-          position: relative;
-      }
-
-      .menu li:hover{
-          cursor: pointer;
-      }
-
-    .menu li a, .memberArea a{
-        display: block;
-        color: black;
-        text-decoration: none;
-    }
-
-    .memberArea a:hover{
-        text-decoration: none;
-    }
-
-    .toMenu{
-          position: relative;
-          font-size: 16px;
-          font-weight: bold;
-          text-decoration: none;
-          color: black;
-      }
-
-      .toMenu > img{
-          top: 35%;
-          left: 100%;
-          position: absolute;
-          margin-left: 4px;
-          -webkit-user-drag: none;
-      }
-
-        .memberArea img{
-            top: 20%;
-        }
-
-
-    .dropdown-content{
-          position: absolute;
-          display: none;
-          top: 100%;
-          width: 100%;
-          background-color: white;
-          box-shadow: 4px 6px 5px 1px rgba(0, 0, 0, 0.1);
-          z-index: 1;
-      }
-
-
-      .dropdown-content a{
-          width: 100%;
-          text-align: center;
-      }
-
-      .dropdown-content a:hover{
-          background-color: #e9e9e9
-      }
-
-
-    .memberArea .dropdown-content{
-        min-width: 120px;
-        width: 100%;
-        flex-direction: column;
-    }
-
-    .memberArea .dropdown-content a{
-        min-width: 120px;
-        width: 100%;
-        padding: 10px 0;
-    }
-
-
-    .toast-chat{
-        margin-top: 8px;
-        right: -88px;
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-    }
-
-    .alarmMessages{
-        padding: 5px;
-        background-color: white;
-        width: 220px;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        box-shadow: 2px 5px 5px 1px rgba(0,0,0,.1);
-        border-bottom: 1px solid #d9d9d9;
-        border-radius: 6px;
-    }
-
-    .alarmMessages:hover{
-        cursor: pointer;
-    }
-
-
-    .alarmMessages::after{
-        content: "";
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        border-width: 5px;
-        border-style: solid;
-        border-color: transparent transparent white transparent;
-    }
-
-
-</style>
-
-
 <div id="header">
 
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -188,6 +37,15 @@
                                 </span><img src="${path}/images/chat.png" id="chatImg" alt="채팅">
                                 <div class="toast-chat"></div>
                             </div>
+                            <div id="noticeArea">
+                                <a title="알림" href="#">
+                                    <span id="unreadNotice"></span>
+                                    <img src="${path}/images/notice.png" id="noticeImg" alt="알림">
+                                </a>
+                                <div class="noticeList">
+                                    <div>알림</div>
+                                </div>
+                            </div>
                         </a>
                         <!-- admin login 상태 -->
 
@@ -196,7 +54,7 @@
                                 관리자 ${sessionScope.nickname}님
                                 <img src="${path}/images/dropdown.png" width="16px">
                             </div>
-                            <div class="dropdown-content">
+                            <div class="bi-dropdown-content">
                                 <a href="#">내활동</a>
                                 <a href="${path}/admin/admin_view.do?admin_id=${sessionScope.admin_id}">관리자 정보</a>
                                 <a href="${path}/admin/admin_dashboard">관리자 페이지</a>
@@ -213,6 +71,15 @@
                                 </a>
                                 <div class="toast-chat"></div>
                             </div>
+                        <div id="noticeArea">
+                            <a title="알림" href="#">
+                                <span id="unreadNotice"></span>
+                                <img src="${path}/images/notice.png" id="noticeImg" alt="알림">
+                            </a>
+                            <div class="noticeList">
+                                <div>알림</div>
+                            </div>
+                        </div>
                         <!-- userid로 로그인한 상태 -->
 <!--  -->
                         <div class="dropdown">
@@ -233,7 +100,16 @@
                             ${sessionScope.nickname} 님
                             <img src="${path}/images/dropdown.png" width="16px">
                         </div>
+
+                        <div class="bi-dropdown-content">
+                         <a href="${path}/mypage/goMypage/${sessionScope.userid}">마이페이지</a>
+                         <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
+                         <a href="${path}/member/logout.do" class="sign">로그아웃</a>
+                        </div>
+                   </div>
+
                    </div> -->
+
 
 
                     </c:otherwise>
@@ -242,14 +118,14 @@
         </div>
     </div>
 
-    <div class="nav">
+    <div class="bi-nav">
         <ul class="menu">
             <li>
                 <div class="toMenu" onclick="location.href='${path}/game/gamerank/week'">
                         게임정보
                     <img src="${path}/images/dropdown.png" width="16px">
                 </div>
-                <div class="dropdown-content">
+                <div class="bi-dropdown-content">
                     <a href="${path}/game/gamerank/week">베스트게임</a>
                     <a href="${path}/game/gamerank/newbie">최신게임</a>
                     <a href="${path}/game/categoryList">카테고리</a>
@@ -265,13 +141,15 @@
                 </div>
             </li>
             <li>
-                <div class="toMenu">
+                <div class="toMenu" onclick="location.href='${path}/review/reviewlist.do?freeFlag=A'">
                     커뮤니티
                     <img src="${path}/images/dropdown.png" width="16px">
                 </div>
-                <div class="dropdown-content">
-                    <a href="${path}/review/reviewlist.do?freeFlag=N">전체</a>
-                    <a href="${path}/review/reviewlist.do?freeFlag=N">인기글</a>
+
+                <div class="bi-dropdown-content">
+
+                    <a href="${path}/review/reviewlist.do?freeFlag=A">전체</a>
+                    <a href="${path}/review/reviewlist.do?freeFlag=H">인기글</a>
                     <a href="${path}/review/reviewlist.do?freeFlag=N">게임포럼</a>
                     <a href="${path}/review/reviewlist.do?freeFlag=Y">자유게시판</a>
                 </div>
@@ -320,7 +198,7 @@
         var timeOutId;
 
         $(".menu li, .memberArea").on("mouseleave", function() {
-            var $dropdown = $(this).find(".dropdown-content");
+            var $dropdown = $(this).find(".bi-dropdown-content");
             timeOutId = setTimeout(function() {
                 $dropdown.slideUp(300, function() {
                     $dropdown.css("display", "none");
@@ -330,17 +208,40 @@
 
 
         $(".menu li, .memberArea").on("mouseenter", function(){
-            var $dropdown = $(this).find(".dropdown-content");
+            var $dropdown = $(this).find(".bi-dropdown-content");
             if($dropdown.is(":visible")){
                 clearTimeout(timeOutId);
             }
             else{
-                $(this).find(".dropdown-content").slideDown(200, function() {
+                $(this).find(".bi-dropdown-content").slideDown(200, function() {
                     $(this).css("display", "block");
                 });
             }
         });
 
+
+
+        /* javascript로 만든 드롭다운
+document.addEventListener('click', function (event) {
+    //가장 가까운 dropdown클래스를 변수에 이벤트 할당
+    var dropdown = event.target.closest('.dropdown');
+    if (dropdown) {
+        //dropdown이 true면 classList.toggle() show클래스가 없으면 추가 & 있으면 제거
+        dropdown.querySelector('.bi-dropdown-content').classList.toggle('show');
+    } else {
+        //dropdown이 false면
+        var dropdowns = document.getElementsByClassName('bi-dropdown-content');
+        for (var i = 0; i < dropdowns.length; i++) {
+            var dropdownContent = dropdowns[i];
+            //show클래스를 갖고 있으면 제거
+            if (dropdownContent.classList.contains('show')) {
+                dropdownContent.classList.remove('show');
+            }
+        } //for문 end
+    } // if else문 end
+});
+
+*/
 
 
         //관리자버전도 만들어야
@@ -351,7 +252,6 @@
 
             var sock = new SockJS('http://localhost:8098/ws-stomp/out');
             var stomp = Stomp.over(sock);
-            stomp.debug = null;
 
 
             $.ajax({
@@ -371,8 +271,7 @@
 
              stomp.connect({}, function () {
 
-                 //reconnect될 때 너 지금 어딨냐고 물어보는 작업 필요할듯
-
+                 //reconnect될 때 위치파악 작업 필요할듯
                 stomp.subscribe("/sub/alarm/user/" + cur_session, function(msg){
 
                     var alarmDto = JSON.parse(msg.body);
@@ -534,32 +433,34 @@
         });
     });
 
-    /*마이페이지로 이동하는 폼*/
-    function goMypage() {
-        document.mypageForm.action = "${path}/mypage/goMypage";
-        document.mypageForm.submit();
-    }
+//  수진님한테 없는거
+//     /*마이페이지로 이동하는 폼*/
+//     function goMypage() {
+//         document.mypageForm.action = "${path}/mypage/goMypage";
+//         document.mypageForm.submit();
+//     }
 
 
-    // javascript로 만든 드롭다운
-    document.addEventListener('click', function (event) {
-        /*가장 가까운 dropdown클래스를 변수에 이벤트 할당*/
-        var dropdown = event.target.closest('.dropdown');
-        if (dropdown) {
-            /*dropdown이 true면 classList.toggle() show클래스가 없으면 추가 & 있으면 제거*/
-            dropdown.querySelector('.dropdown-content').classList.toggle('show');
-        } else {
-            /*dropdown이 false면*/
-            var dropdowns = document.getElementsByClassName('dropdown-content');
-            for (var i = 0; i < dropdowns.length; i++) {
-                var dropdownContent = dropdowns[i];
-                /*show클래스를 갖고 있으면 제거*/
-                if (dropdownContent.classList.contains('show')) {
-                    dropdownContent.classList.remove('show');
-                }
-            }//for문 end
-        } //if else문 end
-    });
+//     // javascript로 만든 드롭다운
+//     document.addEventListener('click', function (event) {
+//         /*가장 가까운 dropdown클래스를 변수에 이벤트 할당*/
+//         var dropdown = event.target.closest('.dropdown');
+//         if (dropdown) {
+//             /*dropdown이 true면 classList.toggle() show클래스가 없으면 추가 & 있으면 제거*/
+//             dropdown.querySelector('.dropdown-content').classList.toggle('show');
+//         } else {
+//             /*dropdown이 false면*/
+//             var dropdowns = document.getElementsByClassName('dropdown-content');
+//             for (var i = 0; i < dropdowns.length; i++) {
+//                 var dropdownContent = dropdowns[i];
+//                 /*show클래스를 갖고 있으면 제거*/
+//                 if (dropdownContent.classList.contains('show')) {
+//                     dropdownContent.classList.remove('show');
+//                 }
+//             }//for문 end
+//         } //if else문 end
+//     });
+
 
 
 
@@ -599,9 +500,7 @@
             var chatAlarm = $("<span class='alarmMessages'>" + chatMessageDto.nickname + ": "
                 + chatMessageDto.message + "</span>");
             chatAlarm.click(function(){
-
                 location.href = "${path}/chat/room.do?gathering_id=" + msg_gathering_id;
-
             });
 
             $(".toast-chat").append(chatAlarm);

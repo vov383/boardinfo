@@ -7,35 +7,42 @@
 <!-- 세션사용여부 -->
 <link rel="stylesheet" href="${path}/include/css/pagenation.css">
 <style>
+
 	.totalSearchUl ul li {
+		margin-bottom: 10px;
 		width: calc((100% / 2) - 2px);
+		font-weight: bold;
 	}
+
+	.totalSearchUl li:not([class='selected']){
+		font-weight: normal;;
+		background-color: #d9d9d9;
+	}
+
+
+
 </style>
 
 <div id="moduleDiv">
 
 	<div class="totalSearchUl">
 		<ul>
-			<li<c:if test="${sort eq 'like'}"> class="selected" </c:if>>
-				<span class="btnMoreViewReply">좋아요순</span>
+			<li<c:if test="${sort eq 'like'}"> class="selected" </c:if> class="btnMoreViewReply">
+				<span>좋아요순</span>
 			</li>
-			<li<c:if test="${sort eq 'date'}"> class="selected" </c:if>>
-				<span class="btnMoreViewReplyDate">최신등록순</span>
+			<li<c:if test="${sort eq 'date'}"> class="selected" </c:if> class="btnMoreViewReplyDate">
+				<span>최신등록순</span>
 			</li>
 		</ul>
 	</div>
 
 <div style="text-align: right;">
 
-	<span>댓글 수 : (${map.count})개</span>
+	<span>총 평가 수 ${map.count}개</span>
 
 </div>
 
-
-
-
-
-<c:forEach var="row" items="${map.list}">
+	<c:forEach var="row" items="${map.list}">
 
 		<c:set var="participant1" value="${row.participant1}" />
 		<c:set var="participant2" value="${row.participant2}" />
@@ -95,14 +102,15 @@
 			<c:set var="badPeople" value="${badPeople}5↑, " />
 		</c:if>
 
-	<div class="topReview">
+	<div class="topReview" data-writer="${row.userid}">
 	<span class="reviewStar">
 		<span> ${row.rating} </span>
         <img src="${path}/images/game/yellow_star.png" width="90px" height="85px" style="vertical-align: middle">
 	</span>
 	<div>
-		<div> ${row.userid} &nbsp;&nbsp;&nbsp;&nbsp; ${row.create_date}</div>
+		<div> ${row.nickname} &nbsp;&nbsp;&nbsp;&nbsp; ${row.create_date}</div>
 			<div>${row.rating_comment}</div>
+
 		<div>
 			<div class="reviewDetail">
 				<span>난이도&nbsp; ${row.weight}</span>
@@ -165,6 +173,7 @@
 </div>
 
 <script>
+
 	function list(page) {
 		$.ajax({
 			type: "GET",
@@ -229,7 +238,6 @@
 			});
 		});
 	});
-
 
 
 </script>

@@ -99,7 +99,7 @@
 			AND R.CATEGORY in (${boardDivision})
 		</if>
 		/*--현재 편의상 조회수 2개이상, 댓글 1개이상, 좋아요 1개이상으로 구성*/
-		<if test="freeFlag != null and 'H'.equals(freeFlag)">
+		<if test='freeFlag != null and "H".equals(freeFlag)'>
 			AND
 			r.views > 2 and
 			(SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM) > 1 and
@@ -122,6 +122,8 @@
 			 , G.PLAYTIME
 			 , G.AGES
 			 , G.LANGUAGE
+		     , G.GAME_RANK
+		     , G.GAME_RANK_MONTH
 			 , RELEASE_YEAR
 		FROM REVIEW R
 		   , CHOICE_GAME CG
@@ -348,10 +350,6 @@
 
 
 
-
-
-
-
 	<insert id="reviewBlob" parameterType="hashMap">
 		INSERT INTO REVIEW_IN_TEST (TEST1, BLOB)
 		VALUES(#{test1}
@@ -420,6 +418,7 @@
 			)
 		where rn between 1 and #{size}
 	</select>
+
 
 	<select id="getHotList" resultType="reviewDto">
 		select 	*

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
+import java.awt.image.ImageProducer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,4 +99,58 @@ public class AdminDAOImpl implements AdminDAO{
         return sqlSession.selectList("admin.gameRatinglist", userid);
     }
 
+    @Override
+    public void deleteGameAdmin(int gnum, String admin_id) {
+        sqlSession.delete("admin.deleteGameAdmin", gnum);
+    }
+
+    @Override
+    public void deleteGameArtist(int gnum) {
+        Map<String,Object> map=new HashMap<>();
+        map.put("gnum", gnum);
+        map.put("filter", "artist");
+        sqlSession.delete("admin.deleteGameMappingTables", map);
+    }
+
+    @Override
+    public void deleteGameCategory(int gnum) {
+        Map<String,Object> map=new HashMap<>();
+        map.put("gnum", gnum);
+        map.put("filter", "category");
+        sqlSession.delete("admin.deleteGameMappingTables", map);
+    }
+
+    @Override
+    public void deleteGameDesigner(int gnum) {
+        Map<String,Object> map=new HashMap<>();
+        map.put("gnum", gnum);
+        map.put("filter", "designer");
+        sqlSession.delete("admin.deleteGameMappingTables", map);
+    }
+
+    @Override
+    public void deleteGameMechanic(int gnum) {
+        Map<String,Object> map=new HashMap<>();
+        map.put("gnum", gnum);
+        map.put("filter", "mechanic");
+        sqlSession.delete("admin.deleteGameMappingTables", map);
+    }
+
+    @Override
+    public void deleteGamePublisher(int gnum) {
+        Map<String,Object> map=new HashMap<>();
+        map.put("gnum", gnum);
+        map.put("filter", "publisher");
+        sqlSession.delete("admin.deleteGameMappingTables", map);
+    }
+
+    @Override
+    public void deleteGameEx(int gnum) {
+        sqlSession.delete("admin.deleteGameEx", gnum);
+    }
+
+    @Override
+    public void deleteGameRe(int gnum) {
+        sqlSession.delete("admin.deleteGameRe", gnum);
+    }
 }

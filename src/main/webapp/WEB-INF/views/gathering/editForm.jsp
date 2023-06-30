@@ -6,7 +6,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>글수정 - 모임모집</title>
+  <title>글수정 - 오프모임</title>
 
   <%@ include file="../include/js/header.jsp" %>
 
@@ -378,10 +378,10 @@
 
 <div id="contents">
   <div id="contentsHeader">
-    <h2>모임모집</h2>
+    <h2>오프모임</h2>
   </div>
   <div id="contentsLocation">
-    홈 &gt 오프모임 &gt 모임모집
+    홈 &gt 오프모임
   </div>
   <div id="contentsMain">
     <form name="gatheringEditForm" method="post" action="${path}/gathering/update.do">
