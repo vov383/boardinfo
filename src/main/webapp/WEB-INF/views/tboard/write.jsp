@@ -20,7 +20,8 @@
 
     </script>
 
-    <style type="text/css">
+    <style>
+
         .fileDrop {
             width: 100%;
             height: 100px;
@@ -68,20 +69,12 @@
             word-break: break-all;
         }
 
-        #postInfo {
-            text-align: right;
-            padding-bottom: 5px;
-        }
 
         #postInfo > span {
             padding: 0 10px;
             border-right: 1px solid black;
         }
 
-        #postUpper {
-            display: flex;
-            border-top: 2px solid black;
-        }
 
         #postUpper > div:first-of-type {
             padding: 30px 0;
@@ -104,6 +97,8 @@
             padding: 0 10px;
             margin-right: 6px;
         }
+
+
     </style>
     <script>
 

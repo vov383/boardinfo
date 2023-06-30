@@ -196,6 +196,8 @@
             width: 42px;
             height: 42px;
             margin-bottom: 3px;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
 

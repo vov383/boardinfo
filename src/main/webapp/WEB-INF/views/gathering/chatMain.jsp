@@ -219,6 +219,8 @@
         width: 42px;
         height: 42px;
         margin: 8px 0 3px 0;
+        border-radius: 50%;
+        object-fit: cover;
     }
 
     #msgArea{
