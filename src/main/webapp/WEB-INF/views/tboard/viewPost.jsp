@@ -15,6 +15,13 @@
     <%@ include file="../include/js/header.jsp" %>
 
     <style>
+
+        #contentsMain{
+            border-top: 2px solid black;
+
+        }
+
+
         .map_wrap {
             position: relative;
         }
@@ -66,10 +73,15 @@
         }
 
 
+        section {
+            width: 100%;
+        }
+
 
         #contentsMain * li {
             list-style-type: none;
         }
+
         .listAndEdit{
             display: flex;
             flex-direction: row;
@@ -88,7 +100,6 @@
             flex-direction: column;
             box-sizing: border-box;
             /*position: relative;*/
-            width: 1000px;
             height: auto;
             /*background: #E5E5E5;*/
         }
@@ -132,20 +143,18 @@
         .titleSection {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
             box-sizing: border-box;
 
             position: relative;
-            width: 1000px;
             height: auto;
         }
 
         .profileAndNickName{
+            justify-content: right;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
             padding: 5px;
         }
+
         .profileAndNickName .left {
             display: flex;
             align-items: center;
@@ -153,15 +162,14 @@
         }
 
         .profile .userImg {
-            flex: 0 0 32px;
-            width: 32px;
-            height: 32px;
+            flex: 0 0 26px;
             margin-right: 5px;
             /*background-color: var(--default-background-color);*/
             background-position: center;
             background-size: cover;
             border-radius: 50%;
         }
+
 
         .profileAndNickName .nickName {
             position: relative;
@@ -212,7 +220,6 @@
             flex-direction: column;
             box-sizing: border-box;
             position: relative;
-            width: 1000px;
             height: auto;
 
         }
@@ -264,7 +271,6 @@
         #replyList {
             box-sizing: border-box;
             position: relative;
-            width: 1000px;
             height: auto;
 
             /*background: #E5E5E5;*/
@@ -830,33 +836,8 @@
         </div>
         <div id="contentsMain">
 
-        <div class="listAndEdit">
-            <div class="left">
-                <div class="button"><a href="${path}/tboard/list.do">목록</a></div>
-            </div>
-            <div class="dot"></div>
-            <div class="right">
-                <div class="button"><a class="btnChange">수정|삭제</a></div>
-            </div>
-        </div>
-
-            <section class="imgSection" id="imgSection">
-
-            </section>
             <section class="titleSection">
-                <div class="profileAndNickName">
-                    <div class="left">
-                        <div class="userImg"><a class="userProfile"><img src="${path}/images/trade/defaultProfile.png"
-                                                                         alt="유저 프로필 사진"></a></div>
-                        <div class="dot"></div>
-                        <div class="nickName"><a class="userNickName">${map.dto.nickname}(${map.dto.create_user})</a></div>
-                        <div class="dot"></div>
-                        <div class="dateTime"><i class="fa-regular fa-timer"></i>
-                            ${map.dto.create_date}
-                        </div>
-                        <div class="dot"></div>
-                    </div>
-                </div>
+
                 <div class="categoryAndTitle">
                     <div class="category">
                         <c:choose>
@@ -875,16 +856,34 @@
                         </c:choose>
                     </div>
                     <div class="title">${map.dto.title}</div>
+                    <div class="price">
+                        ${map.dto.price}<div class="dot"></div><span>원</span>
+                    </div>
+
                 </div>
-                <div class="price">
-                    ${map.dto.price}<div class="dot"></div><span>원</span>
+
+                <div class="profileAndNickName">
+                    <div class="left">
+                        <div class="userImg"><a class="userProfile"><img src="${path}/images/trade/defaultProfile.png"
+                                                                         alt="유저 프로필 사진"></a></div>
+                        <div class="dot"></div>
+                        <div class="nickName"><a class="userNickName">${map.dto.nickname}(${map.dto.create_user})</a></div>
+                        <div class="dot"></div>
+                        <div class="dateTime"><i class="fa-regular fa-timer"></i>
+                            ${map.dto.create_date}
+                        </div>
+                        <div class="dot"></div>
+                    </div>
                 </div>
+
             </section>
 
             <section class="descriptionSection">
                 <div id="description" name="description">
                     ${map.dto.description}
                 </div>
+                <section class="imgSection" id="imgSection">
+                </section>
                 <c:choose>
                     <c:when test='${map.dto.address1 != null || !map.dto.address1.equals("")}'>
                         <div class="placeContainer">
@@ -1039,7 +1038,19 @@
                 </button>
                 <div class="moreOtherItem"></div>
             </section>
-            <section class="replySection">
+
+                <div class="listAndEdit">
+                    <div class="left">
+                        <div class="button"><a href="${path}/tboard/list.do">목록</a></div>
+                    </div>
+                    <div class="dot"></div>
+                    <div class="right">
+                        <div class="button"><a class="btnChange">수정|삭제</a></div>
+                    </div>
+                </div>
+
+
+                <section class="replySection">
                 <div id="replyList"></div>
 
                 <div class="replyContainer">
