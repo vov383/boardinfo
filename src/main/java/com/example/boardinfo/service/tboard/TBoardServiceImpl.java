@@ -35,7 +35,7 @@ public class TBoardServiceImpl implements TBoardService {
 	public Map<String, Object> list(TradeSearchDTO sDto) {
 
 		int count = tboardDao.countArticle(sDto);
-		Pager pager = new Pager(count, sDto.getCurPage(), 9);
+		Pager pager = new Pager(count, sDto.getCurPage(), 12);
 		sDto.setStart(pager.getPageBegin());
 		sDto.setEnd(pager.getPageEnd());
 

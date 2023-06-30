@@ -568,9 +568,11 @@
       </div>
       </div>
       <div id="postMain">
+        <!--
         <div>
           <button type="button" id="btn-attachGame">게임첨부</button>
         </div>
+        -->
         <textarea id="gathering_content" name="gathering_content" placeholder="모임을 자유롭게 소개해보세요."></textarea>
         <script>
         CKEDITOR.replace("gathering_content",{

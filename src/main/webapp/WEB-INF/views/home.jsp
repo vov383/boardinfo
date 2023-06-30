@@ -9,13 +9,13 @@
 <head>
     <meta charset="utf-8">
     <title>BOARDINFO</title>
-    <%@ include file="include/js/header.jsp" %>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js"
             charset="utf-8"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-    
+    <%@ include file="include/js/header.jsp" %>
+
     <style>
 
         #main_lower{
@@ -123,9 +123,6 @@
             margin-bottom: 50px;
         }
 
-        footer button{
-            color: black;
-        }
 
     </style>
 
@@ -155,8 +152,12 @@
                         let hotList = $("#hotList");
                         let str = "";
                         for(var i=0; i<list.length; i++){
+                            let category = list[i].category;
+                            if(category == '자유게시판') category = '자유';
+                            else if(category == '게임후기') category = '후기';
+
                             let reply = list[i].recnt == 0 ? "" : list[i].recnt;
-                            str += "<div><span class='cbadge'>"+list[i].category+"</span>" +
+                            str += "<div><span class='cbadge'>"+category+"</span>" +
                                 "<a href='${path}/review/reviewdetail.do?reviewDetailKey=" + list[i].regNum + "'>"+list[i].title
                                 +"</a><span class='reply'>"+reply+"</span></div>";
                         }
@@ -184,7 +185,10 @@
 
                         for(var i=0; i<list.length; i++){
                             let reply = list[i].recnt == 0 ? "" : list[i].recnt;
-                            str += "<div><span class='cbadge'>"+list[i].category+"</span>" +
+                            let category = list[i].category;
+                            if(category == '자유게시판') category = '자유';
+                            else if(category == '게임후기') category = '후기';
+                            str += "<div><span class='cbadge'>"+category+"</span>" +
                                 "<a href='${path}/review/reviewdetail.do?reviewDetailKey=" + list[i].regNum + "'>"+list[i].title
                                 +"</a><span class='reply'>"+reply+"</span></div>";
                         }

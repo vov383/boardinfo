@@ -91,6 +91,9 @@
     }
 
     #keywordForm{
+      display: flex;
+      width: 100%;
+      max-width: 500px;
       margin: 0 auto;
     }
 
@@ -105,8 +108,8 @@
     }
 
     #keywordForm input[type="text"]{
+      flex-grow: 1;
       padding-left: 8px;
-      width: 300px;
       height: 33px;
       margin-right: 5px;
       margin-bottom: 20px;

@@ -4,193 +4,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
-<style>
-
-    .memberArea{
-        display: flex;
-        justify-content: center;
-
-        text-align: center;
-        width: 100%;
-        min-width: 120px;
-        cursor: pointer;
-        position: relative;
-    }
-
-
-    .nav{
-        margin: 0 auto;
-        max-width: 1120px;
-    }
-
-    .menu {
-        margin: 0;
-        max-width: 600px;
-        height: 45px;
-
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        list-style: none;
-        padding: 0;
-    }
-
-      .menu li {
-          display: flex;
-          justify-content: center;
-          flex: 0 0 25%;
-          max-width: 25%;
-          height: 100%;
-          line-height: 45px;
-          position: relative;
-      }
-
-      .menu li:hover{
-          cursor: pointer;
-      }
-
-    .menu li a, .memberArea a{
-        display: block;
-        color: black;
-        text-decoration: none;
-    }
-
-    .memberArea a:hover{
-        text-decoration: none;
-    }
-
-    .toMenu{
-          position: relative;
-          font-size: 16px;
-          font-weight: bold;
-          text-decoration: none;
-          color: black;
-      }
-
-      .toMenu > img{
-          top: 35%;
-          left: 100%;
-          position: absolute;
-          margin-left: 4px;
-          -webkit-user-drag: none;
-      }
-
-        .memberArea img{
-            top: 20%;
-        }
-
-
-    .bi-dropdown-content{
-          position: absolute;
-          display: none;
-          top: 100%;
-          width: 100%;
-          background-color: white;
-          box-shadow: 4px 6px 5px 1px rgba(0, 0, 0, 0.1);
-          z-index: 1;
-      }
-
-
-      .bi-dropdown-content a{
-          width: 100%;
-          text-align: center;
-      }
-
-      .bi-dropdown-content a:hover{
-          background-color: #e9e9e9
-      }
-
-
-    .memberArea .bi-dropdown-content{
-        top: calc(100% + 5px);
-        width: 100%;
-        right: 0;
-        min-width: 90px;
-        max-width: 90px;
-        flex-direction: column;
-    }
-
-    .memberArea .bi-dropdown-content a{
-        min-width: 90px;
-        width: 100%;
-        padding: 10px 0;
-    }
-
-    .noticeList{
-        position: absolute;
-        z-index: 100;
-        display: none;
-        flex-direction: column;
-
-        margin-top: 20px;
-        width: 385px;
-        min-height: 100px;
-        right: -40px;
-        background-color: white;
-        box-shadow: 10px 10px 20px 0 rgba(0,0,0,.1);
-        border-radius: 10px;
-    }
-
-    .noticeList::after{
-        content: "";
-        position: absolute;
-        bottom: 100%;
-        right: 44px;
-        border-width: 8px;
-        border-style: solid;
-        border-color: transparent transparent #EDECEC transparent;
-    }
-
-
-    .noticeList > div:first-child{
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
-        width: 100%;
-        background-color: #EDECEC;
-        padding: 10px 14px;
-    }
-
-    .toast-chat{
-        margin-top: 8px;
-        right: -88px;
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-    }
-
-    .alarmMessages{
-        padding: 5px;
-        background-color: white;
-        width: 220px;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        box-shadow: 2px 5px 5px 1px rgba(0,0,0,.1);
-        border-bottom: 1px solid #d9d9d9;
-        border-radius: 6px;
-    }
-
-    .alarmMessages:hover{
-        cursor: pointer;
-    }
-
-
-    .alarmMessages::after{
-        content: "";
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        border-width: 8px;
-        border-style: solid;
-        border-color: transparent transparent white transparent;
-    }
-
-
-</style>
-
-
 <div id="header">
 
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -285,7 +98,7 @@
         </div>
     </div>
 
-    <div class="nav">
+    <div class="bi-nav">
         <ul class="menu">
             <li>
                 <div class="toMenu" onclick="location.href='${path}/game/gamerank/week'">
@@ -386,6 +199,29 @@
 
 
 
+        /* javascript로 만든 드롭다운
+document.addEventListener('click', function (event) {
+    //가장 가까운 dropdown클래스를 변수에 이벤트 할당
+    var dropdown = event.target.closest('.dropdown');
+    if (dropdown) {
+        //dropdown이 true면 classList.toggle() show클래스가 없으면 추가 & 있으면 제거
+        dropdown.querySelector('.bi-dropdown-content').classList.toggle('show');
+    } else {
+        //dropdown이 false면
+        var dropdowns = document.getElementsByClassName('bi-dropdown-content');
+        for (var i = 0; i < dropdowns.length; i++) {
+            var dropdownContent = dropdowns[i];
+            //show클래스를 갖고 있으면 제거
+            if (dropdownContent.classList.contains('show')) {
+                dropdownContent.classList.remove('show');
+            }
+        } //for문 end
+    } // if else문 end
+});
+
+*/
+
+
         //관리자버전도 만들어야
         if(cur_session !=""){
 
@@ -394,7 +230,6 @@
 
             var sock = new SockJS('http://localhost:8098/ws-stomp/out');
             var stomp = Stomp.over(sock);
-            stomp.debug = null;
 
 
             $.ajax({
@@ -414,8 +249,7 @@
 
              stomp.connect({}, function () {
 
-                 //reconnect될 때 너 지금 어딨냐고 물어보는 작업 필요할듯
-
+                 //reconnect될 때 위치파악 작업 필요할듯
                 stomp.subscribe("/sub/alarm/user/" + cur_session, function(msg){
 
                     var alarmDto = JSON.parse(msg.body);
@@ -576,31 +410,6 @@
             }
         });
     });
-
-
-    /* javascript로 만든 드롭다운
-    document.addEventListener('click', function (event) {
-        //가장 가까운 dropdown클래스를 변수에 이벤트 할당
-        var dropdown = event.target.closest('.dropdown');
-        if (dropdown) {
-            //dropdown이 true면 classList.toggle() show클래스가 없으면 추가 & 있으면 제거
-            dropdown.querySelector('.bi-dropdown-content').classList.toggle('show');
-        } else {
-            //dropdown이 false면
-            var dropdowns = document.getElementsByClassName('bi-dropdown-content');
-            for (var i = 0; i < dropdowns.length; i++) {
-                var dropdownContent = dropdowns[i];
-                //show클래스를 갖고 있으면 제거
-                if (dropdownContent.classList.contains('show')) {
-                    dropdownContent.classList.remove('show');
-                }
-            } //for문 end
-        } // if else문 end
-    });
-
-    */
-
-
 
 
 

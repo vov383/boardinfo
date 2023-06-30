@@ -23,8 +23,37 @@
 pageEncoding="UTF-8"%>
   <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script type="text/javascript">
 
+
+
+	<style>
+		#container{
+			align-items: center;
+			max-width: 600px;
+			margin: auto auto;
+		}
+
+		#imgArea{
+			display: flex;
+			justify-content: center;
+		}
+
+		#container img{
+			cursor: pointer;
+			margin-bottom: 30px;
+		}
+
+
+		#container form[name='form1'] {
+			text-align: left;
+		}
+
+	</style>
+
+
+
+
+	<script type="text/javascript">
 
 $(document).ready(function(){
 	 
@@ -176,8 +205,24 @@ function login_check() {
 </script>
 </head>
 <body>
-	<div class="container">
+
+<%@include file="../include/top.jsp" %>
+
+<div id="contents">
+
+	<div id="contentsHeader">
 		<h2>로그인</h2>
+	</div>
+	<div id="contentsLocation">
+		홈 &gt 로그인
+	</div>
+
+
+	<div id="contentsMain">
+	<div id="container">
+		<a id="imgArea" href="${path}/" title="보드인포">
+			<img src="${path}/images/logo.png" width="400px">
+		</a>
 		<form method="post" name="form1" id="form1">
 			<div class="form-group">
 				<label for="userid">ID: </label> <input type="text"
@@ -209,13 +254,16 @@ function login_check() {
 		</form>
 		
 		<div class="dropdown-divider"></div>
-	
-		<a class="dropdown-item" href="${path}/">메인으로</a> 
+
+		<a class="dropdown-item" href="${path}/">메인으로</a>
 		<a class="dropdown-item" href="${path}/member/member_join.do">회원가입</a> 
 		<a class="dropdown-item" href="${path}/member/findidmove.do">아이디 찾기</a>
 		<a class="dropdown-item" href="${path}/member/findpwmove.do">비밀번호 찾기</a>
 		</div>
-	
+	</div>
+
+	</div>
+<%@include file="../include/footer.jsp" %>
 
 </body>
 </html>

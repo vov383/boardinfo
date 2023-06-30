@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
 
 <%@ include file="../include/js/header.jsp" %>
-  <title>${dto.title} - 모임모집</title>
+  <title>${dto.title} - 오프모임</title>
 
     <style>
     .map_wrap {
@@ -451,7 +451,7 @@
                         for(let i=0; i<list.length; i++){
 
                             let addReplySpan = "";
-                            if(list[i].show == 'y'){
+                            if(list[i].show == 'Y'){
                                 if("${sessionScope.userid}" == list[i].creator_id){
                                     addReplySpan =
                                         "<span class='addRe_reply'><img src='${path}/images/reply_arrow.png' width='15px'>" +
@@ -477,7 +477,7 @@
 
                             let text = "";
 
-                            if(list[i].show == 'y'){
+                            if(list[i].show == 'Y'){
                                 text= $("<div>").text(list[i].reply_text);
                             }
 
@@ -774,10 +774,10 @@
 
 <div id="contents">
     <div id="contentsHeader">
-        <h2>모임모집</h2>
+        <h2>오프모임</h2>
     </div>
     <div id="contentsLocation">
-        홈 &gt 오프모임 &gt 모임모집
+        홈 &gt 오프모임
     </div>
     <div id="contentsMain">
     		<div id="postInfo">
