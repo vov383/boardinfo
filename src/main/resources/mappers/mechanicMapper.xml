@@ -85,6 +85,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		delete from mechanic where mnum=#{num}
 	</delete>
 
+	<insert id="update_mechanic_mapping">
+		insert into game_mechanic (gnum, mnum)
+		<choose>
+			<when test="mnum != 0">
+				values (#{gnum},#{mnum})
+			</when>
+			<otherwise>
+				values (#{gnum}, seq_mechanic.nextval)
+			</otherwise>
+		</choose>
+	</insert>
+
 </mapper>
 
 

@@ -125,6 +125,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		delete from artist where anum=#{num}
 	</delete>
 
+	<insert id="update_artist_mapping">
+		insert into game_artist (gnum, anum)
+		<choose>
+			<when test="anum != 0">
+				values (#{gnum},#{anum})
+			</when>
+			<otherwise>
+				values (#{gnum}, seq_artist.nextval)
+			</otherwise>
+		</choose>
+	</insert>
+
 </mapper>
 
 

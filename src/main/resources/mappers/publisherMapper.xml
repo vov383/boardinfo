@@ -124,6 +124,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deleteitem">
 		delete from publisher where pnum=#{num}
 	</delete>
+
+	<insert id="update_publisher_mapping">
+		insert into game_publisher (gnum, pnum)
+		<choose>
+			<when test="pnum != 0">
+				values (#{gnum},#{pnum})
+			</when>
+			<otherwise>
+				values (#{gnum}, seq_publisher.nextval)
+			</otherwise>
+		</choose>
+	</insert>
 	
 </mapper>
 

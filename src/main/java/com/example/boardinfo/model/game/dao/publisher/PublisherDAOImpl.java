@@ -91,4 +91,21 @@ public class PublisherDAOImpl implements PublisherDAO {
 	public void deleteitem(int num) {
 		sqlSession.delete("publisher.deleteitem", num);
 	}
+
+	@Override
+	public void update_publisher_mapping(int gnum) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("gnum", gnum);
+		int pnum = 0;
+		map.put("pnum",pnum);
+		sqlSession.insert("publisher.update_publisher_mapping", map);
+	}
+
+	@Override
+	public void update_publisher_mapping(int gnum, int pnum) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("gnum", gnum);
+		map.put("pnum",pnum);
+		sqlSession.delete("publisher.update_publisher_mapping", map);
+	}
 }

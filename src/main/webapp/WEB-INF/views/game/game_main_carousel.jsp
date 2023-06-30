@@ -199,8 +199,21 @@
                                             <div class="thumb-wrapper">
                                                 <a href="${path}/game/view.do?gnum=${row.gnum}">
                                                 <div class="img-box">
-                                                    <img src="${row.bgg_thumbnail}" class="img-responsive"
-                                                         alt="">
+                                                    <c:choose>
+                                                        <c:when test="${row.gamephoto_url != null}">
+                                                            <img src="${path}/resources/uploaded_game${row.gamephoto_url}" class="img-responsive"  onerror="this.src='${path}/images/game/no-image-icon.png'">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <c:choose>
+                                                                <c:when test="${row.bgg_thumbnail != null}">
+                                                                    <img class="img_photo" src="${row.bgg_thumbnail}" class="img-responsive" onerror="this.src='${path}/images/game/no-image-icon.png'">
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <img src="${path}/images/game/no-image-icon.png" class="img-responsive">
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </div>
                                                 <div class="thumb-content row">
                                                     <div class="col-sm-2 col-sm-offset-1"><h3>${row.game_rank}</h3></div>
@@ -272,8 +285,21 @@
                                                             <div class="thumb-wrapper">
                                                                 <a href="${path}/game/view.do?gnum=${row.gnum}">
                                                                 <div class="img-box">
-                                                                    <img src="${row.bgg_thumbnail}" class="img-responsive"
-                                                                         alt="">
+                                                                    <c:choose>
+                                                                        <c:when test="${row.gamephoto_url != null}">
+                                                                            <img src="${path}/resources/uploaded_game${row.gamephoto_url}" class="img-responsive"  onerror="this.src='${path}/images/game/no-image-icon.png'">
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <c:choose>
+                                                                                <c:when test="${row.bgg_thumbnail != null}">
+                                                                                    <img class="img_photo" src="${row.bgg_thumbnail}" class="img-responsive" onerror="this.src='${path}/images/game/no-image-icon.png'">
+                                                                                </c:when>
+                                                                                <c:otherwise>
+                                                                                    <img src="${path}/images/game/no-image-icon.png" class="img-responsive">
+                                                                                </c:otherwise>
+                                                                            </c:choose>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
                                                                 </div>
                                                                 <div class="thumb-content row">
                                                                     <div class="col-sm-2 col-sm-offset-1"><h3>${row.game_rank}</h3></div>

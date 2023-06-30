@@ -23,4 +23,7 @@ public interface MechanicDAO {
     List<MechanicDTO> confirmList(Map<String, Object> map);
 
     void deleteitem(int num);
+
+    void update_mechanic_mapping(int gnum);
+    void update_mechanic_mapping(int gnum, int mnum);
 }
