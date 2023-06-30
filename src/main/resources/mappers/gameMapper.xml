@@ -793,10 +793,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="game_list_theme" resultType="gameDto">
 		SELECT 	gnum, bggnum, GAMETITLE, GAMETITLE_ENG, TOTALVIEWCOUNT, RELEASE_YEAR, gamephoto_url, game_rank,
-				rate, weight, bgg_thumbnail, tot, theme
+				rate, weight, bgg_thumbnail, tot, theme, rn
 		FROM 	(
 				SELECT 	a.gnum, a.bggnum, a.gametitle, a.gametitle_eng, a.totalviewcount, a.release_year, a.bgg_thumbnail,
-						a.game_rank, a.gamephoto_url, a.rate, a.weight,a.tot, a.theme
+						a.game_rank, a.gamephoto_url, a.rate, a.weight,a.tot, a.theme, rownum rn
 				FROM 	(
 						SELECT 	g.gnum, g.bggnum, g.gametitle, g.gametitle_eng, g.totalviewcount, g.release_year,g.theme,
 								g.bgg_thumbnail, g.game_rank, ga.fullname AS gamephoto_url, gr.rate, gr.weight, gr.tot
@@ -821,7 +821,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 						ORDER BY 	game_rank
 						) a
 				)
-		WHERE 	game_rank BETWEEN #{start} AND #{end}
+		WHERE 	rn BETWEEN #{start} AND #{end}
 	</select>
 
 </mapper>

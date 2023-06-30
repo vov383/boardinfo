@@ -33,10 +33,11 @@
 <main>
 	<div id="contents">
 		<div id="contentsHeader">
-			<h2>장르목록</h2>
+			<h2>게임정보</h2>
 		</div>
 		<div id="contentsLocation">
 			<span>홈</span>&gt
+			<span>게임정보</span>&gt
 			<span>장르목록</span>&gt
 
 			<c:choose>
@@ -44,12 +45,19 @@
 					<span>카테고리</span>
 				</c:when>
 				<c:when test="${filter != null and 'theme'.equalsIgnoreCase(filter)}">
-					<span>테마</span>
+					<span>테마</span>&gt
+					<c:if test="${sort eq '-'}">미정</c:if>
+					<c:if test="${sort eq '가족게임'}">가족게임</c:if>
+					<c:if test="${sort eq '어린이게임'}">어린이게임</c:if>
+					<c:if test="${sort eq '전쟁게임'}">전쟁게임</c:if>
+					<c:if test="${sort eq '전략게임'}">전략게임</c:if>
+					<c:if test="${sort eq '추상게임'}">추상게임</c:if>
+					<c:if test="${sort eq '컬렉터블게임'}">컬렉터블게임</c:if>
+					<c:if test="${sort eq '테마게임'}">테마게임</c:if>
+					<c:if test="${sort eq '파티게임'}">파티게임</c:if>
 				</c:when>
 			</c:choose>
-			<span>(${map.count})개</span>
 
-			<span class="hover_span" onclick="goInsert()" style="float: right">게임등록</span>
 
 		</div>
 		<div id="contentsMain">
