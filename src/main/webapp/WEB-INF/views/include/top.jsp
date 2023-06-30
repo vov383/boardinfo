@@ -80,7 +80,7 @@
         }
 
 
-    .dropdown-content{
+    .bi-dropdown-content{
           position: absolute;
           display: none;
           top: 100%;
@@ -91,17 +91,17 @@
       }
 
 
-      .dropdown-content a{
+      .bi-dropdown-content a{
           width: 100%;
           text-align: center;
       }
 
-      .dropdown-content a:hover{
+      .bi-dropdown-content a:hover{
           background-color: #e9e9e9
       }
 
 
-    .memberArea .dropdown-content{
+    .memberArea .bi-dropdown-content{
         top: calc(100% + 5px);
         width: 100%;
         right: 0;
@@ -110,7 +110,7 @@
         flex-direction: column;
     }
 
-    .memberArea .dropdown-content a{
+    .memberArea .bi-dropdown-content a{
         min-width: 90px;
         width: 100%;
         padding: 10px 0;
@@ -241,7 +241,7 @@
                                 관리자 ${sessionScope.nickname}님
                                 <img src="${path}/images/dropdown.png" width="16px">
                             </div>
-                            <div class="dropdown-content">
+                            <div class="bi-dropdown-content">
                                 <a href="#">내활동</a>
                                 <a href="${path}/admin/admin_view.do?admin_id=${sessionScope.admin_id}">관리자 정보</a>
                                 <a href="${path}/admin/admin_dashboard">관리자 페이지</a>
@@ -273,7 +273,7 @@
                             ${sessionScope.nickname} 님
                             <img src="${path}/images/dropdown.png" width="16px">
                         </div>
-                        <div class="dropdown-content">
+                        <div class="bi-dropdown-content">
                          <a href="${path}/mypage/goMypage/${sessionScope.userid}">마이페이지</a>
                          <a href="${path}/member/member_view.do?userid=${sessionScope.userid}">회원정보</a>
                          <a href="${path}/member/logout.do" class="sign">로그아웃</a>
@@ -292,7 +292,7 @@
                         게임정보
                     <img src="${path}/images/dropdown.png" width="16px">
                 </div>
-                <div class="dropdown-content">
+                <div class="bi-dropdown-content">
                     <a href="${path}/game/gamerank/week">베스트게임</a>
                     <a href="${path}/game/gamerank/newbie">최신게임</a>
                     <a href="${path}/game/categoryList">카테고리</a>
@@ -312,7 +312,7 @@
                     커뮤니티
                     <img src="${path}/images/dropdown.png" width="16px">
                 </div>
-                <div class="dropdown-content">
+                <div class="bi-dropdown-content">
                     <a href="${path}/review/reviewlist.do?freeFlag=A">전체</a>
                     <a href="${path}/review/reviewlist.do?freeFlag=H">인기글</a>
                     <a href="${path}/review/reviewlist.do?freeFlag=N">게임포럼</a>
@@ -363,7 +363,7 @@
         var timeOutId;
 
         $(".menu li, .memberArea").on("mouseleave", function() {
-            var $dropdown = $(this).find(".dropdown-content");
+            var $dropdown = $(this).find(".bi-dropdown-content");
             timeOutId = setTimeout(function() {
                 $dropdown.slideUp(300, function() {
                     $dropdown.css("display", "none");
@@ -373,12 +373,12 @@
 
 
         $(".menu li, .memberArea").on("mouseenter", function(){
-            var $dropdown = $(this).find(".dropdown-content");
+            var $dropdown = $(this).find(".bi-dropdown-content");
             if($dropdown.is(":visible")){
                 clearTimeout(timeOutId);
             }
             else{
-                $(this).find(".dropdown-content").slideDown(200, function() {
+                $(this).find(".bi-dropdown-content").slideDown(200, function() {
                     $(this).css("display", "block");
                 });
             }
@@ -577,16 +577,17 @@
         });
     });
 
+
     /* javascript로 만든 드롭다운
     document.addEventListener('click', function (event) {
         //가장 가까운 dropdown클래스를 변수에 이벤트 할당
         var dropdown = event.target.closest('.dropdown');
         if (dropdown) {
             //dropdown이 true면 classList.toggle() show클래스가 없으면 추가 & 있으면 제거
-            dropdown.querySelector('.dropdown-content').classList.toggle('show');
+            dropdown.querySelector('.bi-dropdown-content').classList.toggle('show');
         } else {
             //dropdown이 false면
-            var dropdowns = document.getElementsByClassName('dropdown-content');
+            var dropdowns = document.getElementsByClassName('bi-dropdown-content');
             for (var i = 0; i < dropdowns.length; i++) {
                 var dropdownContent = dropdowns[i];
                 //show클래스를 갖고 있으면 제거
