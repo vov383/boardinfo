@@ -331,6 +331,22 @@ public class AdminServiceImpl implements AdminService {
 
     @Transactional
     @Override
+    public void deleteGameAdmin(int gnum, String admin_id) {
+        adminDao.deleteGameAdmin(gnum,admin_id);
+        /*매퍼테이블만 삭제*/
+        adminDao.deleteGameArtist(gnum);
+        adminDao.deleteGameCategory(gnum);
+        adminDao.deleteGameDesigner(gnum);
+        adminDao.deleteGameMechanic(gnum);
+        adminDao.deleteGamePublisher(gnum);
+        /*해당게임 들어있는것 삭제*/
+        adminDao.deleteGameEx(gnum);
+        adminDao.deleteGameRe(gnum);
+
+    }
+
+    @Transactional
+    @Override
     public void allowGame(GameDTO dto) {
 
             //게임테이블에 update

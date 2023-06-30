@@ -6,7 +6,6 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -96,7 +95,9 @@ public class GameRatingController {
 
     @ResponseBody
     @RequestMapping("getTopRatings.do")
-    public HashMap<String, List<GameRatingDTO>> getTopRatings(@RequestParam int gnum, HttpSession session){
+    public HashMap<String, List<GameRatingDTO>> getTopRatings(
+            @RequestParam int gnum, HttpSession session
+    ){
         int number = 3; //상위 몇건까지 출력할 것인지
 
         String user_id = (String)session.getAttribute("userid");

@@ -26,4 +26,7 @@ public interface CategoryDAO {
     int game_list_categoryCount();
 
   List<CategoryDTO> game_list_category(Map<String, Object> map);
+
+    void update_category_mapping(int gnum);
+  void update_category_mapping(int gnum, int cnum);
 }

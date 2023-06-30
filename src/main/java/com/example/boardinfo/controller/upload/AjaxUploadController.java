@@ -127,9 +127,12 @@ public class AjaxUploadController {
 		//기타종류 원본파일(이미지면 썸네일 삭제)
 		new File(uploadPath + fileName.replace(
 				'/', File.pathSeparatorChar)).delete();
-		
+
+
 		//레코드 삭제 기능 추가
+
 		//tboardService.deleteFile(fileName);
+
 		gameService.deleteFile(fileName);
 		
 		return new ResponseEntity<String>("deleted", HttpStatus.OK);

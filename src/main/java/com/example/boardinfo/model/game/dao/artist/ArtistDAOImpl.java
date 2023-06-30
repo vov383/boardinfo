@@ -95,4 +95,21 @@ public class ArtistDAOImpl implements ArtistDAO {
 	public void deleteitem(int num) {
 		sqlSession.delete("artist.deleteitem", num);
 	}
+
+	@Override
+	public void update_artist_mapping(int gnum) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("gnum", gnum);
+		int anum = 0;
+		map.put("anum",anum);
+		sqlSession.insert("artist.update_artist_mapping", map);
+	}
+
+	@Override
+	public void update_artist_mapping(int gnum, int anum) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("gnum", gnum);
+		map.put("anum",anum);
+		sqlSession.delete("artist.update_artist_mapping", map);
+	}
 }

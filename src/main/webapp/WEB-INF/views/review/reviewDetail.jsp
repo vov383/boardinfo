@@ -17,163 +17,94 @@
 
     <style>
 
-        @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 100;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.otf) format('opentype');}
-
-        @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 300;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype');}
-
-        @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 400;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype');}
-
-        @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 500;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.otf) format('opentype');}
-
-        @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 700;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.otf) format('opentype');}
-
-        @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 900;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');}
-
-        * {
-            font-family: 'Noto Sans KR', sans-serif;
-            font-size: 15px;
-        }
-
-        html, body{
-            margin: 0 0;
-            padding: 0 0;
-            min-height: 100%;
-        }
-
-        div, input, span{
-            box-sizing: border-box;
-        }
-
-        #header-upper-box > div{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 77px;
-            flex-basis: 1120px;
-            max-width: 1120px;
-        }
-
-        form[name="gameSearch"] > div:first-of-type{
-            background-color: white;
-            position: relative;
-            width: 320px;
-            height: 34px;
-            padding: 2px 10px;
-            border: 2px black solid;
-            border-radius: 20px;
-        }
-
-        form[name="gameSearch"] img{
-            width: 20px;
-            position: absolute;
-            top: 5px;
-            right: 12px;
-            margin: 0;
-            -webkit-user-drag: none;
-        }
-
-        #header-right input:first-of-type{
-            width: 270px;
-            height: 25px;
-            padding-left: 20px;
-            border: none;
-            font-size: 16px;
-            background-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .menu li {
-            display: inline-block;
-            flex: 0 0 25%;
-            max-width: 25%;
-            height: 100%;
-            line-height: 45px;
-        }
-
-        .toMenu > img{
-            margin-left: -4px;
-            -webkit-user-drag: none;
-        }
-
-        #contents{
-            display: flex;
-            flex-direction: column;
-            margin: auto;
-            max-width: 1120px;
-            min-height: 100%;
-            padding: 129px 0 0 0;
-            font-size: 16px;
-        }
-
-        #contentsHeader{
-            margin: 0;
-            padding-top: 32px;
-            padding-bottom: 5px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        #contentsHeader h2{
-            font-size: 1.9em;
-            margin-top: 0;
-            margin-bottom: 5px;
-        }
-
-        #contentsLocation{
-            margin-bottom: 30px;
-        }
 
         #contentsMain{
+            margin-top: 10px;
             border-top: 2px solid black;
-            margin-bottom: 80px;
-            flex-grow: 1;
-            min-height: 420px;
         }
 
-        #postUpper > div:first-of-type{
-            padding: 30px 0;
+
+        #postDetail{
+            float: right;
+            margin-bottom: 10px;
         }
 
-        #postUpper > div:nth-of-type(2){
-            padding: 30px 0 30px 0;
-            flex-grow: 1;
+        #postDetail span{
+            margin-left: 20px;
+        }
+
+
+        #choiceGameList{
             display: flex;
-            justify-content: space-between;
-            flex-direction: column;
+            margin-bottom: 20px;
         }
 
-        .labelAndItem > span:first-of-type{
-            width: 90px;
-            text-align: right;
-            margin-right: 25px;
+        .choiceGameItem{
+            padding: 20px 10px;
+            box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            margin-right: 10px;
         }
 
-        .labelAndItem input{
-            padding-left: 8px;
+        .choiceGameItem > div:first-of-type{
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 4px;
         }
 
-        .labelAndItem input[type="date"]{
-            width: 190px;
-        }
-
-        .labelAndItem input[type="number"]{
-            width:100px;
-            margin-right: 5px;
-        }
-
-
-        input[name="question"]{
-            width: 100%;
-        }
-
-        #postMain > div:last-of-type{
+        .choiceGameItem > div{
             text-align: center;
         }
 
-        #postMain ul{
-            list-style-position: inside;
-            margin: 0;
-            padding: 20px 10px 30px 10px;
+
+        .category{
+            color: #1432B1;
+            padding: 0 14px;
+            margin-right: 10px;
+            border-right: 2px solid #d9d9d9;
+        }
+
+        #buttonSet{
+            text-align: right;
+        }
+
+        h1{
+            font-size: 1.2em;
+        }
+
+        #likeItArea{
+            display: flex;
+            justify-content: center;
+        }
+
+        #likeItDiv{
+            text-align: center;
+            cursor: pointer;
+            padding: 15px 10px;
+            border: 1px solid black;
+            border-radius: 10px;
+        }
+
+        #replyArea{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #d9d9d9;
+            border-bottom: 1px solid #d9d9d9;
+            padding: 12px 0 10px 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        table{
+            width: 100%;
+        }
+
+        textarea{
+            width: 100%;
+            min-height: 80px;
+            resize: none;
         }
 
         button[id*="btn-"]{
@@ -183,25 +114,10 @@
             font-size: 16px;
             font-weight: bold;
             border-radius: 0;
-        }
 
-        footer{
-            font-size: 15px;
-            color: #DFDFDF;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 190px;
-            background-color: #3D3D43;
-            bottom: 0;
-            clear: both;
-        }
+            border: 1px solid black;
+            background-color: white;
 
-
-        footer > div{
-            width: 100%;
-            max-width: 1120px;
         }
 
 
@@ -229,12 +145,14 @@
 
         // 댓글
         function btnReply(){
-            if(confirm('저장하시겠습니까?')){
+            //if(confirm('저장하시겠습니까?')){
             $("#reviewReplyKey").val($('input[name=regNumHidden]').val());
             document.formreviewreply.submit();
-            }else{
+
+        /*}else{
                 return;
             }
+         */
         }
 
         // 댓글 수정
@@ -382,85 +300,97 @@
                     </script>
 --%>
             <c:forEach items="${list}" var="vo">
-
-                <input type="hidden" name="regNumHidden" value="${vo.regNum}">
-
-                    <button type="button" onclick="btnList()">목록</button>
-                <c:if test="${userid eq vo.createUser || adminid ne null}">
-                    <button type="button" onclick ="reviewDel('${vo.regNum}')">삭제</button>
-                    <button type="button" onclick ="reviewEdit('${vo.regNum}')">수정</button>
-                </c:if>
-                <%--신고하기, 좋아요--%>
-                <c:if test="${userid ne vo.createUser}">
-<%--                    <button type="button" onclick ="waring('${vo.regNum}')">&#9940;	신고하기</button>--%>
-                    <button type="button" onclick="good('${vo.regNum}')"> &#x1f495 좋아요 </button>
-                </c:if>
-
-            <h1>${vo.title}</h1>
-            <table>
-                <tr>
-                    <td>작성자 : </td>
-                    <td>${vo.nickName}</td>
-                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                    <td>작성일 : </td>
-                    <td>${vo.createDate}</td>
-                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                    <td>&#128366;</td> <%--조회수--%>
-                    <td>${vo.views}</td>
-                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                    <td>&#x1f495</td> <%--좋아요--%>
-                    <td>${vo.good}</td>
-                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                </tr>
-
-                <tr>
-                    <td>게임</td>
-                    <td colspan="11">
-                        <c:forEach items="${gameList}" var="gl" varStatus="status">
-                            <c:if test="${status.index > 0}">, </c:if>${gl.gametitle}
-                        </c:forEach>
-                    </td>
-
-                </tr>
-            </table>
+                <h1>
+                    <span class="category">${vo.category}</span>
+                        ${vo.title}
+                </h1>
+            <div id="postDetail">
+                <div>
+                    <span>${vo.nickName}</span>
+                    <span>조회 ${vo.views}</span>
+                    <span>
+                        <img src="${path}/images/game/pink_heart.png" width="15px">
+                            ${vo.good}
+                    </span>
+                    <span>${vo.createDate}</span>
+                </div>
+            </div>
                 <br>
-                <table <%--border="1"--%>>
-                <tr>
-                    <td>리뷰</td>
-                </tr>
+                <div>
+
+                </div>
+                    <c:if test="${gameList.size() > 0}">
+                    <div id="choiceGameList">
+                        <c:forEach items="${gameList}" var="gl" varStatus="status">
+                            <div class="choiceGameItem" onclick="location.href='${path}/game/view.do?gnum=${gl.gnum}'">
+                                <div>
+                                        ${gl.gametitle} <c:if test="${gl.RELEASE_YEAR!=null && gl.RELEASE_YEAR>0}">(${gl.RELEASE_YEAR})</c:if>
+                                </div>
+                                <div>
+                                    주간순위:
+                                    <c:choose>
+                                        <c:when test="${gl.game_rank!=null && gl.game_rank > 0}">
+                                                ${gl.game_rank}
+                                        </c:when>
+                                        <c:otherwise>
+                                            -
+                                        </c:otherwise>
+                                    </c:choose>
+                                    /
+                                    월간순위:
+                                    <c:choose>
+                                        <c:when test="${gl.game_rank_month!=null && gl.game_rank_month > 0}">
+                                            ${gl.game_rank_month}
+                                        </c:when>
+                                        <c:otherwise>
+                                            -
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                                <div>
+                                    인원: ${gl.PLAYERS} / 시간: ${gl.PLAYTIME}
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                    </c:if>
                 <tr>
                     <td><pre>${vo.reviewDetail}</pre></td>
                 </tr>
             </table>
 
+                <!--신고하기, 좋아요-->
+                <c:if test="${userid ne vo.createUser}">
+                    <%--                    <button type="button" onclick ="waring('${vo.regNum}')">&#9940;	신고하기</button>--%>
+                    <div id="likeItArea">
+                        <div onclick="good('${vo.regNum}')" id="likeItDiv">
+                            <img src="${path}/images/game/pink_heart.png" width="15px">
+                            좋아요
+                        </div>
+                    </div>
+                </c:if>
+
+                <%--댓글 보여주기--%>
+                <div id="replyArea">
+                    <div>댓글</div>
+
+                    <div id="buttonSet">
+                        <input type="hidden" name="regNumHidden" value="${vo.regNum}">
+                        <button type="button" onclick="btnList()" id="btn-list">목록</button>
+
+                        <c:if test="${userid eq vo.createUser || adminid ne null}">
+                            <button id="btn-delete" type="button" onclick ="reviewDel('${vo.regNum}')">삭제</button>
+                            <button id="btn-edit" type="button" onclick ="reviewEdit('${vo.regNum}')">수정</button>
+                        </c:if>
+                    </div>
+                </div>
+
             </c:forEach>
         </form>
 
 
-        <%--댓글 입력--%>
-        <form name="formreviewreply" method="post" action="${path}/review/reviewreplysave.do">
-            <input type="hidden" name="regNum" id="reviewReplyKey">
-            <input type="hidden" name="freeFlag" value="${freeFlag}">
-
-            <p>Comment 작성</p>
-            <hr/> <%--구분선--%>
-            <p>
-                <textarea name = "commentDetail" id="reviewReplyInsert" rows = "5" cols = "80"></textarea>
-                <button type="button" onclick="btnReply()">댓글 저장</button>
-            </p>
-        </form>
-
-
-        <%--댓글 보여주기--%>
-        <br><br>
-        <h1>Comment</h1>
-        <hr/> <%--구분선--%>
-
         <c:forEach items="${commentList}" var="vo">
-
-
-            <table style="table-layout:fixed;" width="700" <%--border="1"--%>>
-
+            <table style="table-layout:fixed;">
                     <%--댓글 답글 나누기, topReplyRegNum == null이면 댓글--%>
 
                 <c:if test="${null eq vo.topReplyRegNum}">
@@ -570,7 +500,7 @@
 
 
                     </c:if>
-
+                </tr>
 
                         <%--답글 입력창 보이기--%>
                     <c:if test="${null eq vo.topReplyRegNum}">
@@ -597,7 +527,16 @@
 
         </c:forEach>
 
-        <br>
+        <%--댓글 입력--%>
+        <form name="formreviewreply" method="post" action="${path}/review/reviewreplysave.do">
+            <input type="hidden" name="regNum" id="reviewReplyKey">
+            <input type="hidden" name="freeFlag" value="${freeFlag}">
+            <div>
+                <textarea name = "commentDetail" id="reviewReplyInsert" rows = "5" cols = "80"></textarea>
+                <button type="button" onclick="btnReply()">댓글 저장</button>
+            </div>
+        </form>
+
 
 
     </div>

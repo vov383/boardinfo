@@ -204,7 +204,7 @@ function check() {
         <ul class="sideNav1">
           <li class="sub1"><a href="${path}/member/pass_check_u?userid=${sessionScope.userid}" title="개인정보변경">개인정보변경</a></li>
           <li class="sub3"><a href="${path}/member/pass_check_p?userid=${sessionScope.userid}" title="비밀번호변경">비밀번호변경</a></li>
-          <li class="sub5"><a href="" title="회원탈퇴">회원탈퇴</a></li>
+          <li class="sub5"><a href="${path}/member/pass_check_d?userid=${sessionScope.userid}" title="회원탈퇴">회원탈퇴</a></li>
         </ul>
       </div>
     </div>

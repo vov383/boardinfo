@@ -10,6 +10,8 @@ import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public interface GatheringService {
@@ -43,8 +45,8 @@ public interface GatheringService {
 	public int deleteReply(GatheringReplyDTO dto);
     public List<AttendeeDTO> getAttendeeList(Integer gathering_id);
 
-	List<GatheringDTO> totalSearch(String gameKeyword);
-    Map<String, Object> totalSearchMore(Map<String, Object> map);
+	public List<GatheringDTO> totalSearch(String gameKeyword);
+    public Map<String, Object> totalSearchMore(Map<String, Object> map);
 
-
+    public void updateViewCount(int gatheringId, Cookie cookie, HttpServletResponse response);
 }

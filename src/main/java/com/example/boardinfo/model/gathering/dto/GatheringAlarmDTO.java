@@ -10,6 +10,7 @@ public class GatheringAlarmDTO {
 
     public String alarm_id;
     private String user_id; //받는 사람
+    private String trigger_user_id;
     private String message; //메시지 내용
     private GatheringAlarmDTO.AlarmType type; //알람 타입
     private Date create_date; //메시지 보낸 날짜
@@ -113,17 +114,27 @@ public class GatheringAlarmDTO {
         this.existingUnread = existingUnread;
     }
 
+    public String getTrigger_user_id() {
+        return trigger_user_id;
+    }
+
+    public void setTrigger_user_id(String trigger_user_id) {
+        this.trigger_user_id = trigger_user_id;
+    }
+
     @Override
     public String toString() {
         return "GatheringAlarmDTO{" +
-                "alarm_id=" + alarm_id +
+                "alarm_id='" + alarm_id + '\'' +
                 ", user_id='" + user_id + '\'' +
+                ", trigger_user_id='" + trigger_user_id + '\'' +
                 ", message='" + message + '\'' +
                 ", type=" + type +
                 ", create_date=" + create_date +
                 ", formattedDate='" + formattedDate + '\'' +
                 ", gathering_id=" + gathering_id +
                 ", read='" + read + '\'' +
+                ", existingUnread=" + existingUnread +
                 ", process='" + process + '\'' +
                 '}';
     }

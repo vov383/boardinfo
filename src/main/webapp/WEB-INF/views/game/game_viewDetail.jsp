@@ -31,8 +31,8 @@
         }
 
         .img_photo{
-            width: 260px;
-            height: 260px;
+            width: 240px;
+            height: 240px;
             border: 1px solid black;
         }
 
@@ -49,30 +49,30 @@
         }
 
         #titleArea h2{
-            font-size: 24px;
+            font-size: 22px;
             margin: 0 2px 0 0;
             padding: 0;
         }
 
         #titleArea h3{
-            font-size: 20px;
+            font-size: 16px;
             margin: 0 10px 0 0;
             padding: 0;
         }
 
         #titleArea span:first-of-type{
-            font-size: 20px;
+            font-size: 16px;
             margin-right: 15px;
         }
 
         #titleArea span:nth-of-type(2){
-            font-size: 16px;
+            font-size: 14px;
         }
 
         #upperRightSide > div:first-of-type{
             display: flex;
             flex-direction: column;
-            height: 260px;
+            min-height: 240px;
             justify-content: space-between;
 
             text-align: left;
@@ -83,7 +83,7 @@
         }
 
         #upperRightSide > div> div:nth-of-type(2) span{
-            font-size: 17px;
+            font-size: 15px;
         }
 
         .goTo{
@@ -101,7 +101,7 @@
         }
 
         .labelAndContent span{
-            font-size: 17px;
+            font-size: 14px;
         }
 
         .labelAndContent > span:first-of-type{
@@ -125,7 +125,7 @@
         }
 
         #ratingArea > span{
-            font-size: 17px;
+            font-size: 15px;
             width: 100px;
             text-align: left;
         }
@@ -138,13 +138,13 @@
         }
 
         .f_star, .e_star{
-            width: 56px;
+            width: 52px;
             -webkit-user-drag: none;
         }
 
         .h_star{
             -webkit-user-drag: none;
-            width: 28px;
+            width: 26px;
         }
 
         .b_star{
@@ -162,11 +162,10 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            border-top: 1px solid #D9D9D9;
         }
 
         .smallTitle{
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             margin-bottom: 20px;
         }
@@ -211,14 +210,11 @@
 
         #graphBigArea li{
             font-weight: bold;
-            font-size: 17px;
+            font-size: 15px;
             padding: 10px 0 10px 5px;
             cursor: pointer;
         }
 
-        #graphBigArea li:hover{
-            background-color: rgba(0,0,0,.1);
-        }
 
         #graphBigArea > div:last-of-type{
             flex-grow: 1;
@@ -244,9 +240,6 @@
             cursor: pointer;
         }
 
-        .before:hover, .next:hover, .hover_span:hover {
-            background-color: rgba(0,0,0,.1);
-        }
 
         .before, .next {
             padding: 65px 25px;
@@ -280,15 +273,15 @@
         .slide-box p {
             text-align: left;
             margin: 0;
-            font-size: 20px;
+            font-size: 18px;
         }
 
         .slide-box p span{
-            font-size: 20px;
+            font-size: 18px;
         }
 
         .slide-box p strong{
-            font-size: 32px;
+            font-size: 26px;
         }
 
         #topReviewList{
@@ -354,7 +347,7 @@
         }
 
         .reviewDetail > span{
-            font-size: 14px;
+            font-size: 13px;
             padding: 0 10px;
             border-right: 1px solid black;
         }
@@ -379,6 +372,10 @@
         .likeItDiv > img{
             -webkit-user-drag: none;
             margin-right: 5px;
+        }
+
+        .btnMoreViewReply{
+            cursor: pointer;
         }
 
 
@@ -542,7 +539,7 @@
         #bigFrame > div:last-of-type > button{
             width: 140px;
             height: 45px;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         #submitBtn{
@@ -700,8 +697,9 @@
                             <img src="${path}/images/game/empty_star.png" class="e_star">
                         </span>
                             </div>
+                            <!--
                             <span class="hover_span">컬렉션 추가</span>
-
+                            -->
                             <span class="hover_span" id="btnGameUpdate">게임정보수정</span>
                             <form name="updateViewForm" method="post" action="${path}/game/updateView.do">
                                 <input type="hidden" name="gnum" value="${map.dto.gnum}">
@@ -851,13 +849,9 @@
 
                 <div id="topReviewList">
                     <div id="moreViewDiv" style="text-align: right;">
-                        <span class="btnMoreViewReply hover_span">더보기</span>
+                        <span class="btnMoreViewReply">더보기</span>
                     </div>
                 </div>
-
-
-
-
 
             </div>
 
@@ -1038,6 +1032,7 @@
     $(function() {
 
 
+
         /*게임리뷰 좋아요 상위 3개 불러오기*/
         $.ajax({
             type: "get",
@@ -1046,7 +1041,6 @@
                 "gnum": "${map.dto.gnum}"
             },
             success: function(result){
-
                 list = result.list;
 
                 for(let i=0; i<list.length; i++){
@@ -1124,13 +1118,13 @@
                     $("#topReviewList").append(topReview);
                 }
 
-                $(".likeItDiv").mouseover(function(){
+                $("#topReviewList").on("mouseover", ".likeItDiv", function() {
                     if($(this).data("like") == 'n'){
                         $(this).find("img").prop("src", "${path}/images/game/pink_heart.png");
                     }
                 });
 
-                $(".likeItDiv").mouseout(function(){
+                $("#topReviewList").on("mouseout", ".likeItDiv", function() {
                     if($(this).data("like") == 'n'){
                         $(this).find("img").prop("src", "${path}/images/game/empty_heart.png");
                     }
@@ -1173,9 +1167,9 @@
 
 
 
-        //댓글 최신순 클릭시
+        /*
+        댓글 최신순 클릭시
         $(".btnMoreViewReplyDate").click(function(){
-
             $('#topReviewList').empty();
             $.ajax({
                 type: "GET",
@@ -1195,6 +1189,8 @@
                 }
             });
         });
+        */
+
         //댓글 더보기 클릭시 or 베스트순 정렬시
         $(".btnMoreViewReply").click(function(){
 

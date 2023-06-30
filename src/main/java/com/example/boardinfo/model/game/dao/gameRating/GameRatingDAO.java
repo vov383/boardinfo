@@ -24,7 +24,6 @@ public interface GameRatingDAO {
     //gnum에 해당하는 평점난이도 가져오기
     Map<String, Object> getRateWeight(int gnum);
 
-    List<GameRatingDTO> getRateListbyUserid(String userid);
 
     int getMoreRatingsCount(Map<String, Object> map);
     List<GameDTO> getMoreRatings(Map<String, Object> map);

@@ -154,11 +154,9 @@ public class GameRatingDAOImpl implements GameRatingDAO  {
 
 		return statisticMap;
 	}
-	/*user가 평가한 게임 목록 가져오기*/
-	@Override
-	public List<GameRatingDTO> getRateListbyUserid(String userid) {
-		return session.selectList("rateListbyUserid", userid);
-	}
+
+	/*mypageDao로 옮김*/
+
 
 	@Override
 	public int getMoreRatingsCount(Map<String, Object> map) {

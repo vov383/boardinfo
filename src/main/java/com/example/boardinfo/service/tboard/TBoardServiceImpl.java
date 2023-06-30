@@ -35,12 +35,11 @@ public class TBoardServiceImpl implements TBoardService {
 	public Map<String, Object> list(TradeSearchDTO sDto) {
 
 		int count = tboardDao.countArticle(sDto);
-		Pager pager = new Pager(count, sDto.getCurPage(), 9);
+		Pager pager = new Pager(count, sDto.getCurPage(), 12);
 		sDto.setStart(pager.getPageBegin());
 		sDto.setEnd(pager.getPageEnd());
 
 		List<TBoardDTO> list = tboardDao.list(sDto);
-//		logger.info("@@@list 값 : @@@@@@@@ : "+list);
 		Map<String, Object> map = new HashMap<>();
 		sDto.setKeyword(sDto.getKeyword().substring(1, sDto.getKeyword().length()-1));/*keyword에서 맨앞%, 맨뒤% 제거*/
 		map.put("count", count);
@@ -141,14 +140,6 @@ public class TBoardServiceImpl implements TBoardService {
 	@Override
 	public List<TBoardDTO> getHomeList(Integer size) {
 		List<TBoardDTO> list = tboardDao.getHomeList(size);
-
-		for(TBoardDTO item : list){
-			if(item.getCategory().equals("s")) item.setCategory("판매");
-			else if(item.getCategory().equals("b")) item.setCategory("구매");
-			else if(item.getCategory().equals("n")) item.setCategory("나눔");
-			else item.setCategory("완료");
-		}
-
 		return list;
 
 	}

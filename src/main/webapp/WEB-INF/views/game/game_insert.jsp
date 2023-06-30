@@ -23,6 +23,11 @@
 		margin-right: 50px;
 		text-align: center;
 	}
+
+	tr:last-of-type > td:last-of-type{
+		text-align: center;
+	}
+
 </style>
 
 <body>

@@ -1,290 +1,422 @@
 @charset "UTF-8";
 
-    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 100;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.otf) format('opentype');}
+@font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 100;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.otf) format('opentype');}
 
-    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 300;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype');}
+@font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 300;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype');}
 
-    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 400;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype');}
+@font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 400;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype');}
 
-    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 500;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.otf) format('opentype');}
+@font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 500;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.otf) format('opentype');}
 
-    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 700;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.otf) format('opentype');}
+@font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 700;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.otf) format('opentype');}
 
-    @font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 900;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');}
+@font-face {font-family: 'Noto Sans KR';font-style: normal;font-weight: 900;src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff2) format('woff2'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff) format('woff'),url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');}
 
-    * {
-      font-family: 'Noto Sans KR', sans-serif;
-      font-size: 15px;
-    }
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+}
 
-    html, body{
-      margin: 0 0;
-      padding: 0 0;
-      min-height: 100%;
-    }
+html, body{
+    margin: 0 0;
+    padding: 0 0;
+    min-height: 100%;
+}
 
-    div, input, span{
-      box-sizing: border-box;
-    }
+div, input, span{
+    box-sizing: border-box;
+}
 
-    #header{
-      width: 100%;
-      margin: 0 auto;
-      position: fixed;
-      left: 0;
-      top: 0;
-      background-color: white;
-      z-index: 450;
-      border-bottom: 1px solid #D9D9D9;
-    }
+#header{
+    width: 100%;
+    margin: 0 auto;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: white;
+    z-index: 450;
+    box-shadow: 0 4px 8px -4px rgba(0, 0, 0, 0.2);
 
-    #header-upper-box{
-      background-color: #FFC61A;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 77px;
-    }
+}
 
-    #header-upper-box > div{
-	 display: flex;
-     justify-content: space-between;
-     align-items: center;
-     height: 77px;
-     flex-basis: 1120px;
-     max-width: 1120px;
-    }
+#header-upper-box{
+    background-color: #FFC61A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 77px;
+}
 
-    #header-left{
-      display: flex;
-      align-items: center;
-    }
+#header-upper-box > div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 77px;
+    flex-basis: 1120px;
+    max-width: 1120px;
+}
 
-    #header-right {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 15px;
-    }
+#header-left{
+    display: flex;
+    align-items: center;
+}
 
-    #header-left a{
-        display: flex;
-        align-items: center;
-    }
+#header-right {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+}
 
-    form[name="gameSearch"] > div:first-of-type{
-      background-color: white;
-      position: relative;
-      width: 320px;
-      height: 34px;
-      padding: 2px 10px;
-      border: 2px black solid;
-      border-radius: 20px;
-    }
-
-    form[name="gameSearch"] #searchimg{
-      width: 20px;
-      position: absolute;
-      top: 5px;
-      right: 12px;
-      margin: 0;
-      -webkit-user-drag: none;
-    }
-
-    #header-right input:first-of-type{
-      width: 270px;
-      height: 25px;
-      padding-left: 20px;
-      border: none;
-      font-size: 16px;
-      background-color: rgba(255, 255, 255, 0.5);
-    }
-
-    .sign{
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: bold;
-      color: black;
-    }
-
-    #signIn{
-      margin: 0 30px;
-    }
-
-    #chatArea{
-        margin-left: 35px;
-        position: relative;
-    }
+#header-left a{
+    display: flex;
+}
 
 
+form[name="gameSearch"] > div:first-of-type{
+    background-color: white;
+    position: relative;
+    width: 320px;
+    height: 34px;
+    border: 2px #ececec solid;
+    border-radius: 20px;
+}
 
-    #chatImg{
-        width: 28px;
-    }
+form[name="gameSearch"] #searchimg{
+    width: 20px;
+    position: absolute;
+    top: 5px;
+    right: 12px;
+    opacity: 0.3;
+    margin: 0;
+    -webkit-user-drag: none;
+}
 
-    #chatImg:hover{
-        cursor: pointer;
-    }
+#header-right input:first-of-type{
+    width: 314px;
+    height: 30px;
+    padding: 2px 40px 2px 15px;
+    border-radius: 20px;
+    border: none;
+    font-size: 16px;
+}
+
+.sign{
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: bold;
+    color: black;
+}
+
+#signIn{
+    margin: 0 30px;
+}
 
 
-    #unreadChat{
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        background-color: red;
-        border-radius: 50px;
-        color: white;
-        font-size: 13px;
-        opacity: 0;
-    }
+.bi-nav{
+    margin: 0 auto;
+    max-width: 1120px;
+}
 
-    .nav{
-      margin: 0 auto;
-      max-width: 1120px;
-      display: flex;
-    }
+.menu {
+    margin: 0;
+    max-width: 600px;
+    height: 45px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+}
 
-    .menu {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 45px;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+.menu li {
+    display: flex;
+    justify-content: center;
+    flex: 0 0 25%;
+    max-width: 25%;
+    height: 100%;
+    line-height: 45px;
+    position: relative;
+}
 
-    .menu li {
-      display: inline-block;
-      flex: 0 0 25%;
-      max-width: 25%;
-      height: 100%;
-      line-height: 45px;
-    }
+.menu li:hover{
+    cursor: pointer;
+}
 
-    .toMenu{
-      display: flex;
-      align-items: center;
-      font-size: 16px;
-      font-weight: bold;
-      text-decoration: none;
-      color: black;
-      margin-right: 20px;
-    }
 
-    .toMenu > img{
-      margin-left: -4px;
-      -webkit-user-drag: none;
-    }
+.menu li a, .memberArea a{
+    display: block;
+    color: black;
+    text-decoration: none;
+}
 
-    #contents{
-      display: flex;
-      flex-direction: column;
-      margin: auto;
-      max-width: 1120px;
-      min-height: 100%;
-      padding: 129px 0 0 0;
-      font-size: 16px;
-    }
+.memberArea a:hover{
+    text-decoration: none;
+}
 
-    #contentsHeader{
-      margin: 0;
-      padding-top: 32px;
-      padding-bottom: 5px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+.toMenu{
+    position: relative;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: black;
+}
 
-    #contentsHeader h2{
-      font-size: 1.9em;
-      margin-top: 0;
-      margin-bottom: 5px;
-    }
+.toMenu > img{
+    top: 35%;
+    left: 100%;
+    position: absolute;
+    margin-left: 4px;
+    -webkit-user-drag: none;
+}
 
-    #contentsLocation{
-      margin-bottom: 30px;
-    }
+.memberArea{
+    display: flex;
+    justify-content: center;
 
-    #contentsMain{
-      margin-bottom: 80px;
-      flex-grow: 1;
-      min-height: 420px;
-    }
+    text-align: center;
+    width: 100%;
+    min-width: 120px;
+    cursor: pointer;
+    position: relative;
+    padding: 5px 0;
+}
 
-    #footer{
-        /*position: absolute;*/
-        width: 100%;
-        height: 172px;
+.bi-dropdown-content{
+    position: absolute;
+    display: none;
+    top: 100%;
+    width: 100%;
+    background-color: white;
+    box-shadow: 4px 6px 5px 1px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
 
-        background: #3D3D43;
-        bottom: 0;
-    }
-    /*여기부터 검색창 관련 css*/
-    /*top 검색창 검색결과 전체 감싸는 div*/
-    #gameSearchDiv{
-        margin-top: 6px;
-        background-color: white;
-        overflow-y: auto;
-    }
-    /*top 검색창 검색결과 개별 감싸는 div*/
-    .searched_top {
-        height: 55px;
-        padding: 2px;
-        border-bottom: 1px dotted;
-        clear: both;
-    }
 
-    .imageDiv {
-        width: 50px;
-        float: left;
+.bi-dropdown-content a{
+    width: 100%;
+    text-align: center;
+}
 
-    }
-    .titleDiv > a {
-        height: 50px;
-        margin: 5px 0px;
-        word-break: break-word;
-    }
+.bi-dropdown-content a:hover{
+    background-color: #e9e9e9
+}
 
-    .titleDiv {
-        width: 220px;
-        float: right;
-    }
 
-    .imageDiv > img {
+.memberArea .bi-dropdown-content{
+    top: calc(100% + 5px);
+    width: 100%;
+    right: 0;
+    min-width: 90px;
+    max-width: 90px;
+    flex-direction: column;
+}
+
+.memberArea .bi-dropdown-content a{
+    min-width: 90px;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.noticeList{
+    position: absolute;
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+
+    margin-top: 20px;
+    width: 385px;
+    min-height: 100px;
+    right: -40px;
+    background-color: white;
+    box-shadow: 10px 10px 20px 0 rgba(0,0,0,.1);
+    border-radius: 10px;
+}
+
+.noticeList::after{
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    right: 44px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent transparent #EDECEC transparent;
+}
+
+
+.noticeList > div:first-child{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    width: 100%;
+    background-color: #EDECEC;
+    padding: 10px 14px;
+}
+
+.toast-chat{
+    margin-top: 8px;
+    right: -88px;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+}
+
+.alarmMessages{
+    padding: 5px;
+    background-color: white;
+    width: 220px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    box-shadow: 2px 5px 5px 1px rgba(0,0,0,.1);
+    border-bottom: 1px solid #d9d9d9;
+    border-radius: 6px;
+}
+
+.alarmMessages:hover{
+    cursor: pointer;
+}
+
+
+.alarmMessages::after{
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
+}
+
+
+#chatArea, #noticeArea{
+    margin-left: 35px;
+    position: relative;
+}
+
+#noticeArea{
+    margin-right: 30px;
+}
+
+#chatArea a, #noticeArea a{
+    display: flex;
+    align-items: center;
+}
+
+#chatImg, #noticeImg{
+    width: 25px;
+}
+
+#chatImg:hover, #noticeImg:hover{
+    cursor: pointer;
+}
+
+#unreadChat, #unreadNotice{
+    position: absolute;
+    top:0;
+    width: 6px;
+    height: 6px;
+    background-color: red;
+    border-radius: 50px;
+    color: white;
+    font-size: 13px;
+    opacity: 0;
+}
+
+
+#contents{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    max-width: 1120px;
+    min-height: 100%;
+    padding: 129px 0 0 0;
+    font-size: 16px;
+}
+
+#contentsHeader{
+    margin: 0;
+    padding-top: 20px;
+    padding-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#contentsHeader h2{
+    font-size: 1.7em;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+#contentsLocation{
+    margin-bottom: 20px;
+}
+
+#contentsMain{
+    margin-bottom: 80px;
+    flex-grow: 1;
+    min-height: 420px;
+}
+
+/*여기부터 검색창 관련 css*/
+/*top 검색창 검색결과 전체 감싸는 div*/
+#gameSearchDiv{
+    margin-top: 6px;
+    background-color: white;
+    overflow-y: auto;
+}
+/*top 검색창 검색결과 개별 감싸는 div*/
+.searched_top {
+    height: 55px;
+    padding: 2px;
+    border-bottom: 1px dotted;
+    clear: both;
+}
+
+.imageDiv {
+    width: 50px;
+    float: left;
+
+}
+.titleDiv > a {
+    height: 50px;
+    margin: 5px 0px;
+    word-break: break-word;
+}
+
+.titleDiv {
+    width: 220px;
+    float: right;
+}
+
+.imageDiv > img {
     width: 50px;
     height: 50px;
     position: inherit;
     vertical-align: top;
-    }
+}
 
-    /*menuBar dropdown*/
-    .dropdown {
-        position: relative;
-        display: inline-block;
-    }
+#paginationArea{
+    justify-content: center;
+}
 
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f9f9f9;
-        border: #eee4e4;
-        min-width: 88.89px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-    }
+footer{
+    font-size: 15px;
+    height: 190px;
+    background-color: #d9d9d9;
+    bottom: 0;
+    clear: both;
+    text-align: right;
+}
 
-    .dropdown:hover .dropdown-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
+#footer{
+    padding-top: 50px;
+    margin: 0 auto;
+    max-width: 1120px;
+}
 
-    .dropdown:hover .dropdown-content a {
-        align-self: center;
-        text-decoration: none;
-        font-size: 15px;
-        font-weight: bold;
-        color: black;
-    }
-
+#adminLoginBtn{
+    border-radius: 4px;
+}

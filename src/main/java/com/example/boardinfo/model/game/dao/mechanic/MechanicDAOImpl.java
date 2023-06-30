@@ -85,4 +85,21 @@ public class MechanicDAOImpl implements MechanicDAO {
   public void deleteitem(int num) {
     sqlSession.delete("mechanic.deleteitem", num);
   }
+
+  @Override
+  public void update_mechanic_mapping(int gnum) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("gnum", gnum);
+    int mnum = 0;
+    map.put("mnum",mnum);
+    sqlSession.insert("mechanic.update_mechanic_mapping", map);
+  }
+
+  @Override
+  public void update_mechanic_mapping(int gnum, int mnum) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("gnum", gnum);
+    map.put("mnum",mnum);
+    sqlSession.delete("mechanic.update_mechanic_mapping", map);
+  }
 }

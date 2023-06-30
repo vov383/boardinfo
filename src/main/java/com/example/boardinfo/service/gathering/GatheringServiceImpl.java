@@ -9,21 +9,20 @@ import java.util.*;
 
 
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
 
 import com.example.boardinfo.model.gathering.dao.GatheringAlarmDAO;
-import com.example.boardinfo.model.gathering.dto.GatheringAlarmDTO;
+import com.example.boardinfo.model.gathering.dao.GatheringDAO;
 import com.example.boardinfo.model.gathering.dto.*;
 import com.example.boardinfo.service.chat.ChatService;
 
 import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
 import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
-import com.example.boardinfo.model.member.dao.MemberDAO;
-import com.example.boardinfo.service.game.GameServiceImpl;
 import com.example.boardinfo.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import com.example.boardinfo.model.gathering.dao.GatheringDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -142,7 +140,6 @@ public class GatheringServiceImpl implements GatheringService {
 
 	@Override
 	public GatheringDTO simpleView(int gathering_id) {
-		gatheringDao.updateViewCount(gathering_id);
 		GatheringDTO dto = gatheringDao.view(gathering_id);
 
 		if (dto != null) {
@@ -374,6 +371,7 @@ public class GatheringServiceImpl implements GatheringService {
 		return gatheringDao.deleteReply(dto);
 	}
 
+
 	@Override
 	public List<GatheringDTO> totalSearch(String gameKeyword) {
 		Map<String, Object> map = new HashMap<>();
@@ -420,4 +418,17 @@ public class GatheringServiceImpl implements GatheringService {
 		return map;
 	}
 
+	@Override
+	public void updateViewCount(int gathering_id, Cookie cookie, HttpServletResponse response) {
+		if(cookie!=null) {
+			String gatheringViewCookie = cookie.getValue();
+			if(gatheringViewCookie.indexOf("["+gathering_id+"]")==-1) {
+				response.addCookie(new Cookie("gatheringView", gatheringViewCookie + "_["+gathering_id+"]"));
+				gatheringDao.updateViewCount(gathering_id);
+			}
+		}
+		else {
+			response.addCookie(new Cookie("gatheringView", "["+gathering_id+"]"));
+		}
+	}
 }

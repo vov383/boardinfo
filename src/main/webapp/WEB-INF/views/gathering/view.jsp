@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
 
 <%@ include file="../include/js/header.jsp" %>
-  <title>${dto.title} - 모임모집</title>
+  <title>${dto.title} - 오프모임</title>
 
     <style>
     .map_wrap {
@@ -174,6 +174,7 @@
             flex-wrap: wrap;
         }
 
+
         #attendeeList a{
             color: black;
             text-decoration: none;
@@ -187,9 +188,13 @@
             margin-right: 7px;
         }
 
+        .attendee span{
+            font-size: 13px;
+        }
+
         .attendee img{
-            width: 45px;
-            height: 45px;
+            width: 42px;
+            height: 42px;
             margin-bottom: 3px;
         }
 
@@ -295,18 +300,6 @@
             margin-right: 5px;
         }
 
-        footer{
-            font-size: 15px;
-            color: #DFDFDF;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding-left: 200px;
-            height: 190px;
-            background-color: #3D3D43;
-            bottom: 0;
-            clear: both;
-        }
 
         /*여기부터 모달*/
         .popup-wrap{
@@ -458,7 +451,7 @@
                         for(let i=0; i<list.length; i++){
 
                             let addReplySpan = "";
-                            if(list[i].show == 'y'){
+                            if(list[i].show == 'Y'){
                                 if("${sessionScope.userid}" == list[i].creator_id){
                                     addReplySpan =
                                         "<span class='addRe_reply'><img src='${path}/images/reply_arrow.png' width='15px'>" +
@@ -484,7 +477,7 @@
 
                             let text = "";
 
-                            if(list[i].show == 'y'){
+                            if(list[i].show == 'Y'){
                                 text= $("<div>").text(list[i].reply_text);
                             }
 
@@ -773,12 +766,18 @@
 <body>
 <%@include file="../include/top.jsp" %>
 
+<c:if test="${message!=null}">
+    <script>
+        alert("${message}");
+    </script>
+</c:if>
+
 <div id="contents">
     <div id="contentsHeader">
-        <h2>모임모집</h2>
+        <h2>오프모임</h2>
     </div>
     <div id="contentsLocation">
-        홈 &gt 오프모임 &gt 모임모집
+        홈 &gt 오프모임
     </div>
     <div id="contentsMain">
     		<div id="postInfo">
@@ -923,10 +922,10 @@
                         	</c:choose>
 
                         </li>
-                        <li>${dto.attendee_count}/${dto.maxPeople}명 참가중 <c:if test="${waitCount}>0">, ${waitCount}명 대기중</c:if>
+                        <li>${dto.attendee_count}/${dto.maxPeople}명 참가중<c:if test="${waitCount>0}"> (대기 ${waitCount}명)</c:if>
                             <div id="attendeeList">
                                 <c:forEach var="attendee" items="${dto.attendeeDTOList}">
-                                    <a href="${path}/member/mypage/goMypage/${attendee.user_id}">
+                                    <a href="${path}/mypage/goMypage/${attendee.user_id}">
                                     <div class="attendee">
                                         <img src="${path}/images/${attendee.profile}">
                                         <span>${attendee.nickname}</span>
@@ -973,9 +972,11 @@
                     <span>댓글[<span id="countReplies"></span>]</span>
                     <span>이 모임에 대해 궁금한 사항이 있으면 댓글을 달아보세요.</span>
                     <c:if test="${sessionScope.userid==dto.writer_id}">
-                        <button type="button" id="btn-Edit"
-                                onclick='editPost()'>수정
-                        </button>
+                        <c:if test="${dto.status == '모집중'}">
+                            <button type="button" id="btn-Edit"
+                                    onclick='editPost()'>수정
+                            </button>
+                        </c:if>
                         <button type="button" id="btn-Delete"
                                 onclick="deletePost()"> 삭제
                         </button>
@@ -1007,7 +1008,7 @@
     <div class="popup-wrap">
         <div class="popup">
             <div class="popup-body">
-                <div>이 모임은 허가제 모입입니다.<br>
+                <div>이 모임은 허가제 모임입니다.<br>
                     다음 질문에 답한 뒤 모임장의 승인을 받아야 참석할 수 있습니다.</div>
                 <div>[질문]&nbsp;${dto.question}</div>
                 <input name="answer">
