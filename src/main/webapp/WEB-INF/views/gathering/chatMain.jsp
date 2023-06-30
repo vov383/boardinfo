@@ -524,7 +524,7 @@
 
 
 
-    var sock = new SockJS('http://localhost:8098/ws-stomp/in');
+    var sock = new SockJS('http://localhost:80/ws-stomp/in');
 
     var stomp = Stomp.over(sock);
     stomp.debug = null;

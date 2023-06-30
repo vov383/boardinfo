@@ -51,8 +51,6 @@ pageEncoding="UTF-8"%>
 	</style>
 
 
-
-
 	<script type="text/javascript">
 
 $(document).ready(function(){

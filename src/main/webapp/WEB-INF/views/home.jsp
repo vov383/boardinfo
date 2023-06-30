@@ -8,12 +8,12 @@
 
 <head>
     <meta charset="utf-8">
-    <title>BOARDINFO</title>
+    <title>중고장터</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js"
             charset="utf-8"></script>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <%@ include file="include/js/header.jsp" %>
 
     <style>
@@ -88,10 +88,16 @@
 
         .list > div{
             padding: 3px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .list > div > div{
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+
 
         .list a{
             text-decoration: none;
@@ -112,6 +118,8 @@
         }
 
         .reply{
+            min-width: 10px;
+
             margin-left: 10px;
             color: #C53A32;
             font-size: 0.8em;
@@ -157,9 +165,9 @@
                             else if(category == '게임후기') category = '후기';
 
                             let reply = list[i].recnt == 0 ? "" : list[i].recnt;
-                            str += "<div><span class='cbadge'>"+category+"</span>" +
-                                "<a href='${path}/review/reviewdetail.do?reviewDetailKey=" + list[i].regNum + "'>"+list[i].title
-                                +"</a><span class='reply'>"+reply+"</span></div>";
+                            str += "<div><div><span class='cbadge'>"+category+"</span>" +
+                                "<a href='${path}/review/reviewdetail.do?reviewDetailKey=" + list[i].regNum + "'>"
+                                +list[i].title +"</a></div><span class='reply'>"+reply+"</span></div>";
                         }
                         hotList.append(str);
                     }
