@@ -15,6 +15,11 @@
 
         .container{
             margin-top: 20px;
+            max-width: 900px;
+        }
+
+        .container > form > div:last-of-type{
+            text-align: center;
         }
 
         .form-group{
@@ -31,9 +36,6 @@
             min-width: 100px;
         }
 
-        .form-group input[type='button']{
-            margin-left: 5px;
-        }
 
     </style>
 
@@ -286,17 +288,22 @@ function check() {
         <div class="form-group">
             <span>휴대폰</span><input class="form-control" placeholder="-빼고 입력하세요." name="hp"
             id="hp" type="tel" maxlength='12' onkeyup="login_check()">
-        <div align="right">
-        <input type="button" class="btn btn-lg btn-success btn-block"
-        onclick="check()" value="확인" name="btnJoin" id="btnJoin">
         </div>
-        </div>
+
+            <div>
+                <input type="button" class="btn btn-lg btn-success btn-block"
+                       onclick="check()" value="확인" name="btnJoin" id="btnJoin">
+            </div>
+
 
         </form>
 
         </div>
     </div>
 </div>
+
+<%@include file="../include/footer.jsp" %>
+
 
 </body>
 </html>

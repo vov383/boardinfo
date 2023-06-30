@@ -15,6 +15,37 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <title>관리자 계정 생성</title>
+
+
+  <style>
+
+
+    .container{
+      margin-top: 20px;
+      max-width: 900px;
+    }
+
+    .container > form > div:last-of-type{
+      text-align: center;
+    }
+
+    .form-group{
+      display: flex;
+      margin-bottom: 10px;
+    }
+
+    .form-group span{
+      min-width: 100px;
+    }
+
+    .form-group button{
+      margin-left: 5px;
+      min-width: 100px;
+    }
+
+  </style>
+
+
   <%@ include file="../include/js/header.jsp" %>
   <script type="text/javascript">
     var isIdChecked = false;  // 아이디 중복 확인 여부를 체크하는 변수
@@ -209,52 +240,80 @@
   </script>
 </head>
 <body>
-<div class="container">
-  <div align="center">
-    <h2>관리자 id 생성</h2>
-    <a href="${path}/"><img alt="로고" src="../resources/uploaded_image/boardinfo_logo.png"></a>
-  </div>
-  <form name="form1" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-      프로필 <input class="form-control" name="profile_img" id="profile" type="file">
-    </div>
-    <div class="form-group">
-      이름 <input class="form-control" placeholder="이름" name="name"
-                id="name" type="text" onkeyup="login_check()">
-    </div>
-    <div class="form-group" >
-      아이디 <input class="form-control" placeholder="아이디" name="admin_id" id="admin_id" type="text"maxlength='15' onkeyup="duplication_check()">
-      <div align="right">
-        <button type="button" class="btn btn-dark button" id="btnIdCheck" >중복확인</button>
-      </div>
-      <div class="form-group">
-        닉네임 <input class="form-control" placeholder="닉네임" name="nickname"
-                   id="nickname" type="text" maxlength="12" onkeyup="duplication_check2()">
-        <div align="right">
-          <button type="button" class="btn btn-dark button" id="btnNickCheck" >중복확인</button>
-        </div>
-      </div>
-    </div>
-    <div class="form-group">
-      비밀번호 <input class="form-control" placeholder="비밀번호" name="passwd" id="passwd" type="password" onkeyup="login_check()">
-      <div class="form-group">
-        비밀번호 확인 <input class="form-control" placeholder="비밀번호 확인" name="passwd2" id="passwd2" type="password" >
-      </div>
-    </div>
-    <div class="form-group">
-      이메일 <input class="form-control" placeholder="이메일" name="email"
-                 id="email" type="text" onkeyup="login_check()">
-    </div>
-    <div class="form-group">
-      휴대폰 <input class="form-control" placeholder="-빼고 입력하세요." name="hp" id="hp" type="tel" maxlength='12' onkeyup="login_check()">
-    </div>
-    <div align="right">
-      <input type="button" class="btn btn-lg btn-success btn-block"
-             onclick="check()" value="확인" name="btnJoin" id="btnJoin">
-    </div>
-  </form>
 
+
+<%@include file="../include/top.jsp" %>
+
+<div id="contents">
+  <div id="contentsHeader">
+    <h2>관리자 등록</h2>
+  </div>
+  <div id="contentsLocation">
+    홈 &gt 관리자 등록
+  </div>
+  <div id="contentsMain">
+
+    <div class="container">
+      <form name="form1" method="post" enctype="multipart/form-data">
+
+        <div class="form-group">
+          <span>프로필</span> <input class="form-control" name="profile_img" id="profile" type="file">
+        </div>
+
+        <div class="form-group">
+          <span>이름</span> <input class="form-control" placeholder="이름" name="name"
+                                 id="name" type="text" onkeyup="login_check()">
+        </div>
+
+        <div class="form-group" >
+          <span>아이디</span> <input class="form-control" placeholder="아이디" name="admin_id"
+                                  id="admin_id" type="text"maxlength='15' onkeyup="duplication_check()">
+          <div align="right">
+            <button type="button" class="btn btn-dark button" id="btnIdCheck" >중복확인</button>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <span>닉네임</span><input class="form-control" placeholder="닉네임" name="nickname"
+                                 id="nickname" type="text" maxlength="12" onkeyup="duplication_check2()">
+          <div align="right">
+            <button type="button" class="btn btn-dark button" id="btnNickCheck" >중복확인</button>
+          </div>
+        </div>
+
+
+          <div class="form-group">
+            <span>비밀번호</span><input class="form-control" placeholder="비밀번호" name="passwd"
+                                    id="passwd" type="password" onkeyup="login_check()">
+          </div>
+
+          <div class="form-group">
+            <span>비밀번호 확인</span><input class="form-control" placeholder="비밀번호 확인" name="passwd2"
+                                       id="passwd2" type="password" >
+          </div>
+
+
+          <div class="form-group">
+            <span>이메일 확인</span><input class="form-control" placeholder="이메일" name="email"
+                                      id="email" type="text" onkeyup="login_check()">
+          </div>
+
+          <div class="form-group">
+            <span>휴대폰</span><input class="form-control" placeholder="-빼고 입력하세요." name="hp"
+                                   id="hp" type="tel" maxlength='12' onkeyup="login_check()">
+          </div>
+
+          <div>
+            <input type="button" class="btn btn-lg btn-success btn-block"
+                   onclick="check()" value="확인" name="btnJoin" id="btnJoin">
+          </div>
+
+      </form>
+    </div>
+  </div>
 </div>
+
 
 </body>
 </html>
