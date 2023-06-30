@@ -199,6 +199,9 @@ a:hover {
 </style>
 
 <script type="text/javascript">
+var isIdChecked = false;  // 아이디 중복 확인 여부를 체크하는 변수
+var isNickChecked = false;// 닉네임 중복 확인 여부를 체크하는 변수
+
 var oldNickName;
 $(document).ready(function () {
 	oldNickName= $("#nickname").val();
@@ -257,6 +260,12 @@ function check() {
 		$("#name").focus();
 		return;
 	}
+	// 닉네임 중복확인
+	if (!isNickChecked) {
+	    alert("닉네임 중복 확인을 해주세요.");
+	    $("#nickname").focus();
+	    return;
+	}
 	
 	//이메일 체크
 	var email = $("#email").val();
@@ -295,7 +304,7 @@ function check() {
 	<%@include file="../include/top.jsp"%>
 
 	<div id="contents">
-		<h1 style="font-size: 50px;">비밀번호 변경</h1>
+		<h1 style="font-size: 50px;">개인정보 변경</h1>
 		<div id="contentsMain">
 			<div id="change">
 				<div>
