@@ -9,7 +9,9 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!--
     <link rel="stylesheet" href="${path}/include/css/trade/viewPost.css">
+    -->
     <%@ include file="../include/js/header.jsp" %>
 
     <style>
@@ -53,25 +55,6 @@
             word-break: break-all;
         }
 
-        #postInfo {
-            text-align: right;
-            padding-bottom: 5px;
-        }
-
-        #postInfo > span {
-            padding: 0 10px;
-            border-right: 1px solid black;
-        }
-
-        #postUpper {
-            display: flex;
-            border-top: 2px solid black;
-        }
-
-        #postUpper > div:first-of-type {
-            padding: 30px 0;
-        }
-
         #map {
             width: 400px;
             height: 280px;
@@ -82,13 +65,324 @@
             position: relative;
         }
 
-        .status {
-            width: 85px;
-            border: 1px solid black;
-            border-radius: 10px;
-            padding: 0 10px;
-            margin-right: 6px;
+
+
+        #contentsMain * li {
+            list-style-type: none;
         }
+        .listAndEdit{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+        .button{
+            font-size: .9em;
+            padding: 8px 10px;
+            white-space: nowrap;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            height: 100%;
+        }
+        .imgSection {
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            /*position: relative;*/
+            width: 1000px;
+            height: auto;
+            /*background: #E5E5E5;*/
+        }
+
+
+        .imgController {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .imgCarousel {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            position: relative;
+            width: 400vw;
+            left: 40px;
+            top: 0px;
+            overflow: hidden;
+            transition: transform 0.5s;
+        }
+
+        .innerImg {
+            width: 100vw;
+        }
+
+        .moveImgLeft {
+            align-items: center;
+            padding: 0px;
+            gap: 10px;
+        }
+        .moveImgRight{
+            align-items: center;
+            padding: 0px;
+            gap: 10px;
+        }
+        .imgSlideNav{
+            align-items: center;
+        }
+
+        .titleSection {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            box-sizing: border-box;
+
+            position: relative;
+            width: 1000px;
+            height: auto;
+        }
+
+        .profileAndNickName{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px;
+        }
+        .profileAndNickName .left {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .profile .userImg {
+            flex: 0 0 32px;
+            width: 32px;
+            height: 32px;
+            margin-right: 5px;
+            /*background-color: var(--default-background-color);*/
+            background-position: center;
+            background-size: cover;
+            border-radius: 50%;
+        }
+
+        .profileAndNickName .nickName {
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .dot {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 100%;
+        }
+
+        .categoryAndTitle {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .categoryAndTitle .category {
+            font-size: .9em;
+            padding: 8px 10px;
+            white-space: nowrap;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            height: 100%;
+        }
+
+        .categoryAndTitle .category span {
+            padding: 10px 0px;
+            white-space: nowrap;
+        }
+        .categoryAndTitle .title h1 {
+            display: inline;
+            /*color: var(--default-font-color);*/
+            word-break: break-word;
+        }
+        .price {
+            display: flex;
+            color : #ff8a3d;
+        }
+        .descriptionSection {
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            position: relative;
+            width: 1000px;
+            height: auto;
+
+        }
+
+        #description {
+
+        }
+
+        .descriptionSub {
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        #meeting_place {
+
+        }
+
+        .descriptionSub ul {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgb(85, 196, 115);
+        }
+
+        .viewCount svg {
+            width: 12px;
+            height: 12px;
+            margin-right: 4px;
+        }
+
+        .fa-comment-dots:before, .fa-commenting:before {
+            content: "\f4ad";
+            margin-right: 4px;
+        }
+        .otherItemList {
+            box-sizing: border-box;
+            position: relative;
+            height: auto;
+        }
+
+        .otherItemContainer {
+
+        }
+
+        .replySection {
+
+        }
+
+        #replyList {
+            box-sizing: border-box;
+            position: relative;
+            width: 1000px;
+            height: auto;
+
+            /*background: #E5E5E5;*/
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+        }
+
+        .reply {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            gap: 3px;
+            align-items: baseline;
+        }
+
+        .replyUpper {
+            display: flex;
+        }
+        .replyUpper .userInfo {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            font-size : .9em;
+            white-space: nowrap;
+            margin-bottom: 5px;
+        }
+        .userInfo > div {
+            padding-right: 4px;
+        }
+        .replyUpper .userProfile {
+            flex: 0 0 32px;
+            width: 32px;
+            height: 32px;
+            margin-right: 3px;
+            /*background-color: var(--default-background-color);*/
+            background-position: center;
+            background-size: cover;
+            border-radius: 50%;
+        }
+
+        /*댓글 목록 안에 댓글 내용*/
+        .reply .replyContent {
+            flex: .9;
+            margin-left: 32px;
+        }
+
+        .replySub {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .replyContainer {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .contentContainer {
+            display: flex;
+            flex-direction: column;
+            margin-top: 3px;
+            border-radius: 8px;
+        }
+
+        .replyInput {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+        }
+
+
+        .replyInput textarea {/*background: #E5E5E5;*/
+            flex: 1;
+            width: 100%;
+            height: 90px;
+            font-size: 1em;
+            /*color: var(--default-font-color);*/
+            resize: none;
+            background-color: #f3f7fb;
+        }
+        form[name=newReplyForm] .replyContent {
+
+        }
+
+        form[name=newReplyForm] .submit {
+            flex: .2;
+            font-size: .8em;
+            height: 60px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reply form textarea[name=content] {
+            flex: 1;
+            width: 100%;
+            height: 90px;
+            font-size: 1em;
+            /*color: var(--default-font-color);*/
+            resize: none;
+            background-color: #f3f7fb;
+
+        }
+
+        /*케러셀 이미지 사이즈 조정*/
+        .carousel-item {
+            height: 50vh; /* Adjust the desired height using viewport height */
+            width: 100%; /* Take up the full width of the container */
+        }
+        .carousel-item img {
+            max-height: 100%; /* Maintain aspect ratio and fill the carousel item */
+            width: auto; /* Let the width adjust based on the image aspect ratio */
+        }
+
+
     </style>
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -524,13 +818,18 @@
 </head>
 <body>
 <header>
+
     <%@include file="../include/top.jsp" %>
-</header>
-<div id="contents">
-    <main>
+
+    <div id="contents">
         <div id="contentsHeader">
-            <h2>게시물 보기</h2>
+            <h2>중고장터</h2>
         </div>
+        <div id="contentsLocation">
+            홈 &gt 중고장터
+        </div>
+        <div id="contentsMain">
+
         <div class="listAndEdit">
             <div class="left">
                 <div class="button"><a href="${path}/tboard/list.do">목록</a></div>
@@ -540,7 +839,7 @@
                 <div class="button"><a class="btnChange">수정|삭제</a></div>
             </div>
         </div>
-        <div id="contentsMain">
+
             <section class="imgSection" id="imgSection">
 
             </section>
@@ -803,7 +1102,7 @@
             </div>
         </div>
     </main>
-</div>
+    </div>
 
 <footer>
     <%@ include file="../include/footer.jsp" %>

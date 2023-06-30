@@ -8,195 +8,210 @@
   <%@ include file="../include/js/header.jsp" %>
 
   <style>
-#change {
-	float: left;
-	width: 180px;
-	border: 1px solid #D9D9D9;
-	border-radius: 18px;
-	margin-right: 30px;
-	margin-top: 52px;
-}
 
-#change h3 {
-	margin: 0 0 10px 0;
-	padding: 0;
-}
+	  #contentsMain{
+		  display: flex;
+	  }
 
-#change>div {
-	padding: 13px 20px;
-	border-bottom: 1px solid #D9D9D9;
-}
+	#change {
+		margin-top: 50px;
+		float: left;
+		height: 150px;
+		width: 180px;
+		border: 1px solid #D9D9D9;
+		border-radius: 18px;
+		margin-right: 30px;
+	}
 
-#change ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
+	#change h3 {
+		margin: 0 0 10px 0;
+		padding: 0;
+	}
 
-#change li {
-	margin-bottom: 4px;
-}
+	#change>div {
+		padding: 13px 20px;
+		border-bottom: 1px solid #D9D9D9;
+	}
 
-#change div:last-of-type {
-	border-bottom: none;
-}
+	#change ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
 
-#change div:last-of-type>div {
-	display: flex;
-	flex-direction: column;
-	margin-top: 10px;
-	padding: 0;
-	align-items: center;
-}
+	#change li {
+		margin-bottom: 4px;
+	}
 
-#change div:last-of-type>div {
-	display: flex;
-	flex-direction: row;
-	justify-content: end;
-	width: 100%;
-}
+	#change div:last-of-type {
+		border-bottom: none;
+	}
 
-a {
-	text-decoration-line: none;
-	color: black;
-}
+	#change div:last-of-type>div {
+		display: flex;
+		flex-direction: column;
+		margin-top: 10px;
+		padding: 0;
+		align-items: center;
+	}
 
-a:hover {
-	color: blue;
-}
+	#change div:last-of-type>div {
+		display: flex;
+		flex-direction: row;
+		justify-content: end;
+		width: 100%;
+	}
 
-#passwordConfirmationForm {
-	margin: 0 auto;
-	width: 800px;
-	padding: 20px;
-	border: 1px solid #D9D9D9;
-	border-radius: 18px;
-	text-align: center;
-	margin-top: 52px;
-}
+	a {
+		text-decoration-line: none;
+		color: black;
+	}
 
-#passwordConfirmationForm h3 {
-	margin: 0 0 10px 0;
-	padding: 0;
-}
+	a:hover {
+		text-decoration: underline;
+	}
 
-#passwordConfirmationForm form {
-	margin-top: 10px;
-}
+	#passwordConfirmationForm {
+		width: 100%;
+		padding: 30px;
+		border: 1px solid #D9D9D9;
+		border-radius: 18px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
 
-#passwordConfirmationForm label {
-	display: block;
-	margin-bottom: 5px;
-}
+	#passwordConfirmationForm h3 {
+		margin: 0 0 10px 0;
+		padding: 0;
+		text-align: center;
+	}
 
-#passwordConfirmationForm input[type="password"] {
-	width: 100%;
-	padding: 5px;
-	border: 1px solid #D9D9D9;
-	border-radius: 5px;
-	margin-bottom: 10px;
-}
+	#passwordConfirmationForm form {
+		margin-top: 10px;
+		min-width: 400px;
+	}
 
-#passwordConfirmationForm input[type="button"] {
-	padding: 8px 16px;
-	background-color: #4CAF50;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-}
+	#passwordConfirmationForm  tr:not(#passwordConfirmationForm tr:last-of-type) > td:first-of-type {
+		max-width: 100px;
+		text-align: right;
+	}
 
-#passwordConfirmationForm input[type="button"]:hover {
-	background-color: #45a049;
-}
+	#passwordConfirmationForm tr > td:nth-of-type(2) > input{
+		width: 100%;
+		height: 32px;
+	}
 
-  #passwordConfirmationForm div {
-    display: flex;
-    align-items: center;
-  }
-#passwordConfirmationForm {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+	#passwordConfirmationForm input[type="password"] {
+		width: 100%;
+		padding: 5px;
+		border: 1px solid #D9D9D9;
+		border-radius: 5px;
+		margin-bottom: 10px;
+	}
 
-  .input-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
 
-  .input-container label {
-    width: 150px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+	  #passwordConfirmationForm div {
+		display: flex;
+	  }
+	#passwordConfirmationForm {
+		display: flex;
+		flex-direction: column;
+	  }
 
-  #passwordConfirmationForm input[type="password"] {
-    width: 100%;
-    box-sizing: border-box;
-  }
+	  .input-container {
+		display: flex;
+		  justify-content: center;
+		margin-bottom: 10px;
+	  }
 
-  .center {
-    display: flex;
-    justify-content: center;
-  }
-  
-    #passwordConfirmationForm table {
-    width: 100%;
-    table-layout: fixed;
-  }
-  
-  #passwordConfirmationForm td {
-    padding: 10px;
-  }
-  
-  #passwordConfirmationForm input[type="text"],
-  #passwordConfirmationForm input[type="password"],
-  #passwordConfirmationForm input[type="file"] {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 5px;
-    border: 1px solid #D9D9D9;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
-  
-  #passwordConfirmationForm input[type="button"],
-  #passwordConfirmationForm button[type="button"] {
-    width: auto;
-    padding: 8px 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  #passwordConfirmationForm .input-container label {
-    width: 150px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-    #passwordConfirmationForm .input-container {
-    position: relative;
-    display: flex;
-    margin-bottom: 10px;
-  }
-  
-  #passwordConfirmationForm .input-container input[type="text"],
-  #passwordConfirmationForm .input-container input[type="password"]{
-   width: calc(100% - 200px);
-    padding: 5px;
-    border: 1px solid #D9D9D9;
-    border-radius: 5px;
-  }
-  
- 
-</style>
+	  .input-container label {
+		width: 150px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	  }
+
+	  #passwordConfirmationForm input[type="password"] {
+		width: 100%;
+		box-sizing: border-box;
+	  }
+
+	  .center {
+		display: flex;
+		justify-content: center;
+	  }
+
+		#passwordConfirmationForm table {
+		width: 100%;
+		table-layout: fixed;
+	  }
+
+	  #passwordConfirmationForm td {
+		padding: 10px;
+	  }
+
+	  #passwordConfirmationForm tr:last-of-type > td{
+		  padding-bottom: 0;
+	  }
+
+	  #passwordConfirmationForm input[type="text"],
+	  #passwordConfirmationForm input[type="password"],
+	  #passwordConfirmationForm input[type="file"] {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 5px;
+		border: 1px solid #D9D9D9;
+		border-radius: 5px;
+		margin-bottom: 10px;
+	  }
+
+	  #passwordConfirmationForm input[type="button"],
+	  #btnNickCheck{
+		width: auto;
+		padding: 6px 16px;
+		background-color: #1432B1;
+		color: white;
+		border: none;
+		border-radius: 5px;
+	  }
+
+	  #passwordConfirmationForm .input-container label {
+		width: 150px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	  }
+
+		#passwordConfirmationForm .input-container {
+		position: relative;
+		display: flex;
+		margin-bottom: 10px;
+	  }
+
+	  #passwordConfirmationForm .input-container input[type="text"],
+	  #passwordConfirmationForm .input-container input[type="password"]{
+	   width: calc(100% - 200px);
+		padding: 5px;
+		border: 1px solid #D9D9D9;
+		border-radius: 5px;
+	  }
+
+	  #toMain{
+		  margin-left: 5px;
+
+		  width: auto;
+		  padding: 6px 16px;
+		  border-radius: 5px;
+
+		  background-color: white;
+		  border: 1px solid black;
+		  color: black;
+	  }
+
+
+
+  </style>
 
 <script type="text/javascript">
 var isIdChecked = false;  // 아이디 중복 확인 여부를 체크하는 변수
@@ -301,15 +316,20 @@ function check() {
 <body>
 
 
-	<%@include file="../include/top.jsp"%>
+<%@include file="../include/top.jsp" %>
 
-	<div id="contents">
-		<h1 style="font-size: 50px;">개인정보 변경</h1>
-		<div id="contentsMain">
+<div id="contents">
+	<div id="contentsHeader">
+		<h2>마이페이지</h2>
+	</div>
+	<div id="contentsLocation">
+		홈 &gt 마이페이지 &gt 회원정보
+	</div>
+	<div id="contentsMain">
 			<div id="change">
 				<div>
 					<div>
-						<label for="showAvailable">내 정보 관리</label>
+						<label>회원정보</label>
 					</div>
 				</div>
 				<div>
@@ -327,7 +347,7 @@ function check() {
 				</div>
 			</div>
 			<div id="passwordConfirmationForm">
-				<h3 style="font-size: 16px;">회원 정보 수정</h3>
+				<h3 style="font-size: 20px;">회원 정보 수정</h3>
 				<form name="form1" method="post" enctype="multipart/form-data">
 					<table style="width: 100%" class="input-container">
 						<tr>
@@ -340,7 +360,8 @@ function check() {
 						</tr>
 						<tr>
 							<td>아이디</td>
-							<td><input value="${dto.userid}" id="userid" name="userid"
+							<td><span>${dto.userid}</span>
+								<input type="hidden" value="${dto.userid}" id="userid" name="userid"
 								readonly></td>
 						</tr>
 						<tr>
@@ -366,10 +387,8 @@ function check() {
 						<tr>
 							<td colspan="3" align="center"><input type="button"
 								value="수정하기" name="btnUpdate" id="btnUpdate" onclick="check()">
-								<a href="${path}/"><button type="button">메인으로</button></a></td>
+								<a href="${path}/"><button type="button" id="toMain">메인으로</button></a></td>
 						</tr>
-
-
 
 					</table>
 				</form>
@@ -379,11 +398,7 @@ function check() {
 	</div>
 
 
-
-
-
 	<%@include file="../include/footer.jsp" %>
-
 
 </body>
 </html>

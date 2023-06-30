@@ -242,6 +242,8 @@ document.addEventListener('click', function (event) {
             var sock = new SockJS('http://localhost:8098/ws-stomp/out');
             var stomp = Stomp.over(sock);
 
+            stomp.debug = null;
+
 
             $.ajax({
                 type: "get",
