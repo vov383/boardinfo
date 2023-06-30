@@ -67,6 +67,8 @@
         from member m
         where userid = #{uesrid}
     </select>
+
+
     <select id="gaListByUserid" resultType="gatheringDTO">
         select gathering_id,
                m.userid,
@@ -131,6 +133,10 @@
           and R.CREATE_USER = #{userid} /*검색*/ /*디테일 진입*/
         ORDER BY CREATEDATE DESC
     </select>
+
+
+
+
     <!-- game_rating 테이블과 game 테이블을 join 해서 r.gnum 으로 g.gametitle과 g.bgg_thumbnail 컬럼값 가져옴
 그리고 game_rating_like 테이블의 count를 r.userid 로 가져옴 -->
     <select id="rateListbyUserid" resultType="gameRatingDTO">
