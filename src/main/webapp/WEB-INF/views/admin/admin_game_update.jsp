@@ -21,6 +21,10 @@
 			margin-right: 50px;
 			text-align: center;
 		}
+		.deleteGame{
+			color: #C53A32;
+			cursor: pointer;
+		}
 	</style>
 </head>
 
@@ -486,7 +490,7 @@
 				return;
 			}
 			//gametitle 정규식
-			var exp_gametitle = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"\s]{1,}$/;
+			var exp_gametitle = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
 
 			if(!exp_gametitle.test(gametitle)){
 				alert("잘못 입력했습니다.");
@@ -502,7 +506,7 @@
 				return;
 			}
 			//gametitle_eng 정규식
-			var exp_gametitle_eng = /^[a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"\s]{1,}$/;
+			var exp_gametitle_eng = /^[a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
 
 			if(!exp_gametitle_eng.test(gametitle_eng)){
 				alert("잘못 입력했습니다.");
@@ -518,7 +522,7 @@
 				return;
 			}
 			//players 정규식
-			var exp_players = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"\s]{1,}$/;
+			var exp_players = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
 
 			if(!exp_players.test(players)){
 				alert("잘못 입력했습니다.");
@@ -534,7 +538,7 @@
 				return;
 			}
 			//playtime 정규식
-			var exp_playtime = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"\s]{1,}$/;
+			var exp_playtime = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
 
 			if(!exp_playtime.test(playtime)){
 				alert("잘못 입력했습니다.");
@@ -550,7 +554,7 @@
 				return;
 			}
 			//ages 정규식
-			var exp_ages = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"\s]{1,}$/;
+			var exp_ages = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
 
 			if(!exp_ages.test(ages)){
 				alert("잘못 입력했습니다.");
@@ -574,7 +578,7 @@
 				return;
 			}
 			//language 정규식
-			var exp_language = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"\s]{1,}$/;
+			var exp_language = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
 
 			if(!exp_language.test(ages)){
 				alert("잘못 입력했습니다.");
