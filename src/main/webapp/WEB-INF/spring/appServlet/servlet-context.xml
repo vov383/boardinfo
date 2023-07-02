@@ -82,6 +82,17 @@
 		 <mapping path="/gathering/addAttendee.do"/>
 		 <mapping path="/gathering/add.do"/>
 		 <mapping path="/gathering/edit/**"/>
+
+		 <mapping path="/game/insert.do"/>
+		 <mapping path="/game/write.do"/>
+		 <mapping path="/game/updateView.do"/>
+		 <mapping path="/game/update.do"/>
+		 <mapping path="/game/delete.do"/>
+		 <mapping path="/game/parseAjax/*"/>
+		 <mapping path="/game/getExReAjax/*"/>
+		 <mapping path="/game/autoArtist.do/*"/>
+		 <mapping path="/game/autoPublisher.do/*"/>
+		 <mapping path="/game/autoDesigner.do/*"/>
 		 <beans:ref bean="loginInterceptor"/>
 	 </interceptor>
 	
