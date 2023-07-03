@@ -1,7 +1,5 @@
 package com.example.boardinfo.model.tboard.dto;
 
-import java.util.Arrays;
-
 public class TBoardDTO {
 
 	private String tb_num;/*pk 게시물번호*/
@@ -36,6 +34,24 @@ public class TBoardDTO {
 	private int good_count;/*좋아요 수*/
 	private String[] files;
 	private String tb_thumbnail;/*리스트에서 썸네일로 쓰려고 db에 미포함*/
+	private String gnum;
+	private String profile;
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+
+	public String getGnum() {
+		return gnum;
+	}
+
+	public void setGnum(String gnum) {
+		this.gnum = gnum;
+	}
 	//getter, setter
 
 	public String getTb_num() {
@@ -214,31 +230,5 @@ public class TBoardDTO {
 		this.tb_thumbnail = tb_thumbnail;
 	}
 
-	@Override
-	public String toString() {
-		return "TBoardDTO{" +
-				"tb_num='" + tb_num + '\'' +
-				", category='" + category + '\'' +
-				", title='" + title + '\'' +
-				", price='" + price + '\'' +
-				", description='" + description + '\'' +
-				", view_count=" + view_count +
-				", re_count=" + re_count +
-				", del='" + del + '\'' +
-				", create_user='" + create_user + '\'' +
-				", nickname='" + nickname + '\'' +
-				", create_date='" + create_date + '\'' +
-				", update_user='" + update_user + '\'' +
-				", update_date='" + update_date + '\'' +
-				", address1='" + address1 + '\'' +
-				", address2='" + address2 + '\'' +
-				", address3='" + address3 + '\'' +
-				", place_name='" + place_name + '\'' +
-				", lat='" + lat + '\'' +
-				", lng='" + lng + '\'' +
-				", interestCount=" + good_count +
-				", files=" + Arrays.toString(files) +
-				", first_img='" + tb_thumbnail + '\'' +
-				'}';
-	}
+
 }

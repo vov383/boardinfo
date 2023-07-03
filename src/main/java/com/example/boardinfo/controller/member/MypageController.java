@@ -5,7 +5,10 @@ import com.example.boardinfo.service.member.MemberService;
 import com.example.boardinfo.service.member.MypageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
@@ -24,8 +27,9 @@ public class MypageController {
 
     /*마이페이지로 이동*/
     @RequestMapping(value = "goMypage")
-    public ModelAndView moveToMyPage(@RequestParam(value="userid") String userid, ModelAndView mav) {
-            MypageDTO myDto = mypageService.getUserInfo(userid);
+    public ModelAndView moveToMyPage(@RequestParam(value="sessionUserid") String SessionUserid, ModelAndView mav) {
+        String userid = SessionUserid;
+        MypageDTO myDto = mypageService.getUserInfo(userid);
             Map<String, Object> map = new HashMap<>();
             map.put("myDto", myDto);
 
@@ -38,15 +42,18 @@ public class MypageController {
     }
 
     /* ajax로 유저의 postList를 get하는 */
-    @RequestMapping("getPostList")
+    @RequestMapping("getPostList.do")
     @ResponseBody
-    public Map<String, Object> getList(
+    public ModelAndView getList(
             @RequestParam String userid) {
         logger.info("@@@ userid 잘 넘어오니 : " + userid + "@@@");
         Map<String, Object> map = mypageService.getPostList(userid);
-
         logger.info("@@@ map 잘 넘어오니 : " + map + "@@@");
-        return map;
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("member/loadAllPost");
+        mav.addObject("map", map);
+
+        return mav;
     }
 
     /*컬렉션 아마도*/

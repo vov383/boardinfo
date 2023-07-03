@@ -32,12 +32,27 @@ public class TBCommentController {
 	@ResponseBody
 	public Map<String, Object> getList(
 			@RequestParam int tb_num){
-//		logger.info("tb_num 잘 넘어오니 : "+tb_num);
 		List<TBCommentDTO> re_list = tbcommentService.getCommentList(tb_num);
 		Map<String, Object> map = new HashMap<>();
 		map.put("re_list", re_list);
-//		logger.info("list가 리턴되기 전까지 잘 나오는지 체크 :"+re_list.toString());
 		return map;
+	}
+
+	@RequestMapping("loginCheck")
+	@ResponseBody
+	public Map<String, Object> loginCheck(HttpSession session){
+		boolean logined = false;
+		String userid = (String)session.getAttribute("userid");
+		String admin_id = (String)session.getAttribute("admin_id");
+		Map<String, Object> response = new HashMap<>();
+		if(userid == null && admin_id == null){
+			response.put("message", "로그인 후 이용하세요.");
+			response.put("status", "failure");
+			return response;
+		}else{
+			response.put("status", "success");
+			return response;
+		}
 	}
 
 	@RequestMapping("insertReply.do")
@@ -54,8 +69,6 @@ public class TBCommentController {
 		re_dto.setCreate_user(create_user);
 
 		boolean result = tbcommentService.insertReply(re_dto);
-		logger.info("댓글입력 테스트" + re_dto.toString());
-
 
 		return result;
 
@@ -64,16 +77,32 @@ public class TBCommentController {
 	@RequestMapping("changeReply.do")
 	@ResponseBody
 	public Map<String, Object> changeReply(
-			@RequestParam int reply_reg_num
-	){
+			@RequestParam int reply_reg_num, HttpSession session){
 
-		String content = tbcommentService.getReplyContent(reply_reg_num);
-		Map<String, Object> map = new HashMap<>();
-			map.put("reply_reg_num", reply_reg_num);
-		map.put("content", content);
-		return map;
+		Map<String, Object> response = new HashMap<>();
+		String userid = (String)session.getAttribute("userid");
+		if(userid == null){
+			response.put("status", "failure");
+			response.put("message", "로그인 후 이용해주세요");
+			return response;
+		}else{
+			/*userid가 null이 아니면*/
+			TBCommentDTO reDto = tbcommentService.getReplyContent(reply_reg_num, session);
+
+			/*댓글 creater와 session의 userid 가 일치했으면 reDto 값을 받아왔음, 아니면 null 값을 받아옴*/
+			if(reDto != null){
+				response.put("status", "success");
+				response.put("message", "댓글 내용을 수정해주세요");
+				response.put("reDto", reDto);
+				return response;
+			}else{
+				response.put("status", "failure");
+				response.put("message", "본인이 작성한 댓글만 수정할 수 있습니다.");
+				return response;
+			}
+		}
+
 	}
-
 
 	@RequestMapping("editReply.do")
 	@ResponseBody
