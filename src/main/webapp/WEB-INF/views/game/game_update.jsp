@@ -76,7 +76,7 @@
 				<td>
 					<input name="gametitle" id="gametitle" class="input_game" value="${dto.gametitle}" maxlength="100">
 					<div>
-						<label for="gametitle">콤마(,)를 제외한 게임명을 입력해주세요</label>
+						<label for="gametitle">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -88,7 +88,7 @@
 				<td>
 					<input name="gametitle_eng" id="gametitle_eng" class="input_game" value="${dto.gametitle_eng}" maxlength="100">
 					<div>
-						<label for="gametitle_eng">콤마(,)를 제외한 게임의 영문명을 입력해주세요</label>
+						<label for="gametitle_eng">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -118,7 +118,7 @@
 					<input type="hidden" name="designer" id="designer" value="${dto.designer}">
 					<input id="inputDesigner" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputDesigner">디자이너명을 입력하세요</label>
+						<label for="inputDesigner">디자이너명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="designerSuggestions"></div>
@@ -200,7 +200,7 @@
 					<input type="hidden" name="artist" id="artist" value="${dto.artist}">
 					<input id="inputArtist" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputArtist">아티스트명을 입력하세요</label>
+						<label for="inputArtist">아티스트명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="artistSuggestions"></div>
@@ -280,7 +280,7 @@
 					<input type="hidden" name="publisher" id="publisher" value="${dto.publisher}">
 					<input id="inputPublisher" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputPublisher">제작사명을 입력하세요</label>
+						<label for="inputPublisher">제작사명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="publisherSuggestions"></div>
@@ -294,7 +294,7 @@
 				<td>
 					<input name="players" id="players" class="input_game" value="${dto.players}" maxlength="20">
 					<div>
-						<label for="players">게임의 권장 플레이 인원을 입력하세요</label>
+						<label for="players">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -306,7 +306,7 @@
 				<td>
 					<input name="playtime" id="playtime" class="input_game" value="${dto.playtime}" maxlength="20">
 					<div>
-						<label for="playtime">게임의 플레이 시간을 입력하세요</label>
+						<label for="playtime">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -317,7 +317,7 @@
 				<td>사용연령</td>
 				<td><input name="ages" id="ages" class="input_game" value="${dto.ages}" maxlength="20">
 					<div>
-						<label for="ages">게임의 사용 연령을 입력하세요</label>
+						<label for="ages">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -328,7 +328,7 @@
 				<td>발매년도</td>
 				<td><input type="number" name="release_year" id="release_year" class="input_game" value="${dto.release_year}" oninput='numberInput(this, 4)'>
 					<div>
-						<label for="release_year">게임의 발매년도를 입력하세요</label>
+						<label for="release_year">4자리 숫자로 입력</label>
 					</div>
 				</td>
 
@@ -340,7 +340,7 @@
 				<td>
 					<input name="language" id="language" class="input_game" value="${dto.language}" maxlength="20">
 					<div>
-						<label for="language">게임의 사용 언어를 입력하세요</label>
+						<label for="language">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -355,7 +355,7 @@
 					<input type="hidden" name="expansion" id="expansion" value="${dto.expansion}">
 					<input id="inputEx" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputEx">게임의 원본 게임명을 입력하세요</label>
+						<label for="inputEx">게임의 원본 게임명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="exSuggestions"></div>
@@ -372,7 +372,7 @@
 					<input type="hidden" name="reimplement" id="reimplement" value="${dto.reimplement}">
 					<input id="inputRe" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputRe">게임의 원본 게임명을 입력하세요</label>
+						<label for="inputRe">게임의 원본 게임명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="reSuggestions"></div>
@@ -1121,7 +1121,7 @@
 		if (expansionValue) {
 			selectedExs = expansionValue.split(",");
 			selectedExs.forEach(function(expansion) {
-				$("#selectedEx").append("<div class='selected'>" + expansion
+				$("#selectedEx").append("<div class='selected-value'>" + expansion
 						+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 			});
 		}
@@ -1199,7 +1199,7 @@
 		if (reimplementValue) {
 			selectedRes = reimplementValue.split(",");
 			selectedRes.forEach(function(reimplement) {
-				$("#selectedRe").append("<div class='selected'>" + reimplement
+				$("#selectedRe").append("<div class='selected-value'>" + reimplement
 						+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 			});
 		}
@@ -1215,8 +1215,8 @@
 			var selectedRe = $(this).text();
 			console.log(selectedRe);
 			selectedRes.push(selectedRe);
-			$("#selectedRe").append("<div class='selected-value'>" + selectedRe
-					+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
+			$("#selectedRe").append("<div class='selected-value cursor_pointer'>" + selectedRe
+					+ "</div>");
 			console.log("배열"+selectedRes);
 			$("#inputRe").val("");
 			$("#reSuggestions").empty().hide();
