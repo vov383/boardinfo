@@ -334,6 +334,7 @@
 			 , RC.TOP_REPLY_REG_NUM 			AS TOPREPLYREGNUM
 			 , RC.COMMENT_DETAIL 			AS COMMENTDETAIL
 			 , M.NICKNAME					AS NICKNAME
+			 , AD.NICKNAME					AS ANICKNAME
 			 , RC.DEL 						AS DEL
 			 , RC.CREATE_USER				AS CREATEUSER
 			 , RC.CREATE_DATE				AS CREATEDATE
@@ -341,10 +342,12 @@
 			 , RC.UPDATE_DATE				AS UPDATEDATE
 		FROM REPLY_COMMENTS RC
 		   , MEMBER M
+		   , ADMIN AD
 		WHERE 1 = 1
 			AND RC.REG_NUM = #{reviewDetailKey}
 -- 			AND RC.DEL = 'N'
 			AND RC.CREATE_USER = M.USERID(+)
+			AND RC.CREATE_USER = AD.ADMIN_ID(+)
 		/*답글 진입*/
 		<if test="topReplyRegNum != '' and topReplyRegNum != null">
 			AND ((RC.TOP_REPLY_REG_NUM = #{topReplyRegNum})

@@ -12,7 +12,8 @@ public class ReplyCommentsDTO {
 	private String createDate;		// 등록 일자
 	private String updateUser;		// 수정자
 	private String updateDate;		// 수정 일자
-	private String nickname;		// 닉네임
+	private String nickname;		// 회원 닉네임
+	private String anickname;		// Admin 닉네임
 	private String freeFlag;		//
 
 
@@ -94,6 +95,14 @@ public class ReplyCommentsDTO {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public String getAnickname() {
+		return anickname;
+	}
+
+	public void setAnickname(String anickname) {
+		this.anickname = anickname;
 	}
 
 	public String getFreeFlag() {
