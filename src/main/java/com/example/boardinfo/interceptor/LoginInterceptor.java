@@ -13,7 +13,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter{
 			throws Exception {
 		HttpSession session=request.getSession();
 		//세션이 없으면
-		if(session.getAttribute("userid")==null) {
+		if(session.getAttribute("userid")==null && session.getAttribute("admin_id")==null) {
 			if(isAjaxRequest(request)){
 				response.sendError(999);
 				return false;
