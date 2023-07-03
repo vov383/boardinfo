@@ -33,8 +33,15 @@ public interface TBoardService {
 
     Map<String, Object> totalSearchMore(Map<String, Object> map);
 
-    /*좋아요*/
-    int goodCreate(TradeSearchDTO sDto, HttpSession session);
+    /*중고거래 좋아요 체크*/
+    boolean checkLike(String goodkey);
 
-    int goodDelete(TradeSearchDTO sDto, HttpSession session);
+    long checkUpdateTime(HttpSession sessoin, int tb_num);
+
+    /*좋아요*/
+    Map<String, String> addLike(HttpSession session, int tb_num);
+
+
+    /*중고거래 좋아요 삭제*/
+    boolean deleteLike(HttpSession session, int tb_num);
 }

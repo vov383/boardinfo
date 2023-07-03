@@ -59,30 +59,30 @@ COMMENT ON COLUMN REPLY_COMMENTS.UPDATE_USER        IS '수정자';
 COMMENT ON COLUMN REPLY_COMMENTS.UPDATE_DATE        IS '수정 일자';
 
 -- 선택된 게임 테이블 SQL
-CREATE TABLE CHOICE_GAME                                        -- 선택된 게임 테이블
+CREATE TABLE CHOICE_GAME
 (
-    CHOICE_REG_NUM     NUMBER       DEFAULT 0       NOT NULL
+    CHOICE_REG_NUM NUMBER       DEFAULT 0       NOT NULL
         CONSTRAINT CHOICE_REG_NUM_PK
-            PRIMARY KEY,                                        -- 선택된 게임 테이블 PK
-    GNUM              NUMBER NOT NULL,                          -- 게임 테이블 PK
-    REVIEWREGNUM      NUMBER NOT NULL,                          -- 게임 테이블 PK
-    DEL               VARCHAR2(10) DEFAULT 'N',                 -- 삭제 여부 (기본값 : N)
-    CREATE_USER       VARCHAR2(100)                NOT NULL,    -- 작성자
-    CREATE_DATE       DATE         DEFAULT SYSDATE NOT NULL,    -- 작성 일자
-    UPDATE_USER       VARCHAR2(100),                            -- 수정자
-    UPDATE_DATE       DATE                                      -- 수정 일자
-);
+            PRIMARY KEY,
+    GNUM           NUMBER,
+    REVIEWREGNUM   NUMBER                       NOT NULL,
+    DEL            VARCHAR2(10) DEFAULT 'N',
+    CREATE_USER    VARCHAR2(100)                NOT NULL,
+    CREATE_DATE    DATE         DEFAULT SYSDATE NOT NULL,
+    UPDATE_USER    VARCHAR2(100),
+    UPDATE_DATE    DATE
+)
+;
 
 COMMENT ON TABLE CHOICE_GAME IS '선택된 게임 테이블';
 COMMENT ON COLUMN CHOICE_GAME.CHOICE_REG_NUM IS '선택된 게임 테이블의 PK';
-COMMENT ON COLUMN CHOICE_GAME.GNUM           IS '게임 테이블 PK';
-COMMENT ON COLUMN CHOICE_GAME.REVIEWREGNUM   IS '리뷰 테이블 PK';
-COMMENT ON COLUMN CHOICE_GAME.DEL            IS '삭제 여부';
-COMMENT ON COLUMN CHOICE_GAME.CREATE_USER    IS '작성자';
-COMMENT ON COLUMN CHOICE_GAME.CREATE_DATE    IS '작성 일자';
-COMMENT ON COLUMN CHOICE_GAME.UPDATE_USER    IS '수정자';
-COMMENT ON COLUMN CHOICE_GAME.UPDATE_DATE    IS '수정 일자';
-
+COMMENT ON COLUMN CHOICE_GAME.GNUM IS '게임 테이블 PK';
+COMMENT ON COLUMN CHOICE_GAME.REVIEWREGNUM IS '리뷰 테이블 PK';
+COMMENT ON COLUMN CHOICE_GAME.DEL IS '삭제 여부';
+COMMENT ON COLUMN CHOICE_GAME.CREATE_USER IS '작성자';
+COMMENT ON COLUMN CHOICE_GAME.CREATE_DATE IS '작성 일자';
+COMMENT ON COLUMN CHOICE_GAME.UPDATE_USER IS '수정자';
+COMMENT ON COLUMN CHOICE_GAME.UPDATE_DATE IS '수정 일자';
 
 
 -- 리뷰 좋아요 테이블

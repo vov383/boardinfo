@@ -15,6 +15,26 @@
     <%@ include file="../include/js/header.jsp" %>
 
     <style>
+        a {
+            color: #41464b;
+            text-decoration: none;
+        }
+        button {
+            font-size: .9em;
+            padding: 8px 10px;
+            white-space: nowrap;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 8px;
+            height: 100%;
+
+        }
+        #contentsMain{
+            border-top: 2px solid black;
+
+        }
+
+
         .map_wrap {
             position: relative;
         }
@@ -66,10 +86,15 @@
         }
 
 
+        section {
+            width: 100%;
+        }
+
 
         #contentsMain * li {
             list-style-type: none;
         }
+
         .listAndEdit{
             display: flex;
             flex-direction: row;
@@ -88,7 +113,6 @@
             flex-direction: column;
             box-sizing: border-box;
             /*position: relative;*/
-            width: 1000px;
             height: auto;
             /*background: #E5E5E5;*/
         }
@@ -132,20 +156,18 @@
         .titleSection {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
             box-sizing: border-box;
 
             position: relative;
-            width: 1000px;
             height: auto;
         }
 
         .profileAndNickName{
+            justify-content: right;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
             padding: 5px;
         }
+
         .profileAndNickName .left {
             display: flex;
             align-items: center;
@@ -153,15 +175,14 @@
         }
 
         .profile .userImg {
-            flex: 0 0 32px;
-            width: 32px;
-            height: 32px;
+            flex: 0 0 26px;
             margin-right: 5px;
             /*background-color: var(--default-background-color);*/
             background-position: center;
             background-size: cover;
             border-radius: 50%;
         }
+
 
         .profileAndNickName .nickName {
             position: relative;
@@ -212,7 +233,6 @@
             flex-direction: column;
             box-sizing: border-box;
             position: relative;
-            width: 1000px;
             height: auto;
 
         }
@@ -264,7 +284,6 @@
         #replyList {
             box-sizing: border-box;
             position: relative;
-            width: 1000px;
             height: auto;
 
             /*background: #E5E5E5;*/
@@ -372,6 +391,7 @@
 
         }
 
+
         /*케러셀 이미지 사이즈 조정*/
         .carousel-item {
             height: 50vh; /* Adjust the desired height using viewport height */
@@ -382,6 +402,10 @@
             width: auto; /* Let the width adjust based on the image aspect ratio */
         }
 
+        /*이미지 없다는 메시지*/
+        .noImgMsg {
+            height: 15vh;
+        }
 
     </style>
     <!-- Option 1: Bootstrap Bundle with Popper -->
@@ -390,10 +414,15 @@
             crossorigin="anonymous"></script>
     <script src="${path}/include/js/jquery-3.6.3.min.js"></script>
     <script type="text/javascript">
-        $(function () {
 
+        $(function () {
             /* 댓글 목록 출력 */
             getReplies();
+
+            /*좋아요 체크*/
+            var likeChecked = false;
+
+            checkLikeStatus();
 
             /*
             댓글 쓰기
@@ -434,8 +463,10 @@
                 let reply_reg_num = form.find('input[name="reply_reg_num"]').val();
                 content = content.trim();
                 if (content == "") {
+                    alert("댓글 내용을 작성하세요");
                     return;
                 }
+                // changeReply()
                 /*
                 여기 ajax request 보내면 바로 error로 직행. editReply.do 에서 400에러.. data로 보낼 queryString에 있던 오타때문
                 queryString 지워버리고 data를 키밸류 쌍으로 보냄
@@ -494,6 +525,12 @@
                     });
                 }
             });
+            /*댓글 수정 취소 버튼*/
+            $(document).on("click", ".btnCancel", function () {
+                let form = $(this).closest("form");
+                let reply_reg_num = form.find('input[name="reply_reg_num"]').val();
+                changeReply(reply_reg_num);
+            });
 
             /* 분문 수정버튼 */
             $(".btnChange").on("click", function () {
@@ -501,11 +538,8 @@
                 location.href = "${path}/tboard/change.do?tb_num=" + tb_num;
             });
             /* 로그인버튼 */
-            $("#btnMoveLogin").on("click", function () {
+            $("#btnMoveLogin").on("click", function() {
                 location.href = "${path}/member/member_login.do?message=nologin";
-            });
-            $(".imgSection").on("load", function () {
-
             });
 
         });
@@ -517,30 +551,37 @@
             $.ajax({
                 url: "${path}/tboard/getAttach",
                 method: "get",
-                data: {"tb_num" : tb_num},
+                data: {"tb_num": tb_num},
                 dataType: "json",
                 success: function (result) {
                     /*이미지 경로는 result에 ArrayList로 담겨있음.*/
 
                     /*이미지 경로에서 '/_s' 를 모두 '/' 로 replace*/
-                    var originalFullName = result.map(function(fullName) {
+                    var originalFullName = result.map(function (fullName) {
                         return fullName.replace('/s_', '/');
                     });
+
+                    /*상품 이미지가 없는 경우*/
+                    if(originalFullName.length === 0){
+                        var imgSection = document.getElementById('imgSection');
+                        imgSection.innerHTML = '<div class="noImgMsg h4">첨부된 이미지가 없습니다.<div>'
+                        return;
+                    }
 
                     /*부스트스랩 캐러셀 인디케이터 html 태그를 동적으로 생성*/
 
                     var indicatorsHtml = '';
-                    originalFullName.forEach(function(fullName, index) {
+                    originalFullName.forEach(function (fullName, index) {
                         var isActive = (index === 0) ? 'active' : '';
                         indicatorsHtml += '<button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="' + index + '" class="' + isActive + '" aria-current="true" aria-label="Slide ' + (index + 1) + '"></button>\n';
                     });
 
                     /*부트스트랩 아이템 태그 생성*/
                     var itemsHtml = '';
-                    originalFullName.forEach(function(fullName, index) {
+                    originalFullName.forEach(function (fullName, index) {
                         var isActive = (index === 0) ? 'active' : '';
                         itemsHtml += '<div class="carousel-item ' + isActive + '">\n';
-                        itemsHtml += '  <img src="'+'${path}/resources/uploaded_image' + fullName + '" class="d-block w-100" alt="...">\n';
+                        itemsHtml += '  <img src="' + '${path}/resources/uploaded_image' + fullName + '" class="d-block w-100" alt="...">\n';
                         itemsHtml += '</div>\n';
                     });
 
@@ -570,14 +611,14 @@
                     /*이미지 경로는 result에 ArrayList로 담겨있음.*/
 
                     /*이미지 경로에서 '/_s' 를 모두 '/' 로 replace*/
-                    var originalFullName = result.map(function(fullName) {
+                    var originalFullName = result.map(function (fullName) {
                         return fullName.replace('/s_', '/');
                     });
 
                     /*부스트스랩 캐러셀 인디케이터 html 태그를 동적으로 생성*/
                     /*부트스트랩 아이템 태그 생성*/
                     var itemsHtml = '';
-                    originalFullName.forEach(function(fullName, index) {
+                    originalFullName.forEach(function (fullName, index) {
                         var isActive = (index === 0) ? 'active' : '';
                         itemsHtml += '<div class="carousel-item ' + isActive + '">\n';
                         itemsHtml += '  <img src="' + '${path}/resources/uploaded_image' + fullName + '" class="d-block w-80" alt="...">\n';
@@ -585,7 +626,7 @@
                     });
 
                 },
-                error: function(xhr, status, error){
+                error: function (xhr, status, error) {
                     alert("이미지 목록 가져오기 실패");
                 }
             }); //이미지 목록 ajax End
@@ -608,139 +649,180 @@
 
                         for (let i = 0; i < re_list.length; i++) {
                             let reply = $("<div>").addClass("reply").attr("id", re_list[i].reply_reg_num);
+                            let delCheck = re_list[i].del;
+                            if (delCheck === 'Y') {
+                                //댓글 상단
+                                let replyUpperDiv = $('<div>').addClass('replyUpper');
+                                //댓글 본문
+                                let replyContent = $('<div>').addClass('replyContent').text('삭제된 댓글입니다.');
 
-                            let replyUpperDiv = $('<div>').addClass('replyUpper');
+                                //댓글 하단
+                                let replySubDiv = $('<div>').addClass('replySub');
 
-                            let userInfoDiv = $("<div>").addClass("userInfo");
-                            let userProfileDiv = $("<div>").addClass("userProfile");
-                            let userNickNameDiv = $("<div>").addClass("userNickName");
-                            let userIdDiv = $("<div>").addClass("create_user").attr("id", re_list[i].create_user).text(re_list[i].create_user);
+                                //대댓글 들여쓰기
+                                if (re_list[i].depth > 0) {
+                                    reply.addClass("childReply");
+                                    let childReplyImg = $("<img>").attr("src='${path}/images/re_reply.png'");
+                                    replyUpperDiv.append(childReplyImg);
 
-                            //기본 프로필 이미지 추가(추후 member에 프사 가져오는 방식으로 변경
-                            let userProfileImg = $("<img>").attr({
-                                src: "${path}/images/trade/defaultProfile.png",
-                                width: "15px"
-                            });
-                            userProfileDiv.append(userProfileImg);
+                                    replyUpperDiv.css("padding-left", (re_list[i].depth * 18) + "px");
+                                    replyContent.css("padding-left", (re_list[i].depth * 18) + "px");
+                                    replySubDiv.css("padding-left", (re_list[i].depth * 18) + "px");
 
-                            let date = new Date(re_list[i].create_date);
-                            let formattedDate = new Date(date + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '');
-                            //3240 * 10000 milliseconds === 9h
+                                }
 
-                            let createDateDiv = $("<div>").addClass("create_date").text(formattedDate);
-
-                            //userInfoDiv 완성시킴
-                            userInfoDiv.append(userProfileDiv);
-                            userInfoDiv.append(userNickNameDiv);
-                            userInfoDiv.append(userIdDiv);
-                            userInfoDiv.append(createDateDiv);
-
-                            //댓글 본문
-                            let replyContent = $('<div>').addClass('replyContent').text(re_list[i].content);
-
-                            //댓글 하단
-                            let replySubDiv = $('<div>').addClass('replySub');
-                            let leftDiv = $('<div>').addClass('left');
-                            let leftButtonDiv = $('<div>').addClass('button');
-
-                            //jquery에서 attr()과 prop()의 결과는 같은데 attr() 로 href=''를 정의하는 것이 일반적이라고 하네요.
-                            //attribute는 속성, property는 상태라서 그런듯?
-                            let childInsertLink = $('<a>').addClass('insertChildReply').attr("href", "javascript:showChildCommentForm(" + re_list[i].reply_reg_num + ")");
-
-                            <%--let childReplyImg = $("<img>").attr({--%>
-                            <%--    src: "${path}/images/reply_arrow.png",--%>
-                            <%--    width: "15px"--%>
-                            <%--});--%>
-                            childInsertLink.html('<i class="fa-solid fa-reply"></i>대댓글');
-                            leftButtonDiv.append(childInsertLink);
-                            leftDiv.append(leftButtonDiv);
-
-                            let rightDiv = $('<div>').addClass('right');
-                            let rightButtonDiv = $('<div>').addClass('button');
-
-                            let replyChangeLink = $('<a>').addClass('changeReply').prop("href", "javascript:changeReply(" + re_list[i].reply_reg_num + ")");
-
-                            /*let replyChangeBtn = $("<a>").attr({
-                                src: "${path}/images/trade/changeBtn.png",
-                                width: "30px"
-                            });*/
-                            replyChangeLink.html('<i class="fa-regular fa-comment-dots"></i>수정|삭제');
-                            rightButtonDiv.append(replyChangeLink);
-                            rightDiv.append(rightButtonDiv);
-
-                            replySubDiv.append(leftDiv);
-                            replySubDiv.append(rightDiv);
-
-                            //대댓글 들여쓰기
-                            if (re_list[i].depth > 0) {
-                                reply.addClass("childReply");
-                                childReplyImg = $("<img>").attr("src='${path}/images/re_reply.png'");
-                                replyUpperDiv.append(childReplyImg);
-                                replyUpperDiv.append(userInfoDiv);
-
-                                replyUpperDiv.css("padding-left", (re_list[i].depth * 18) + "px");
-                                replyContent.css("padding-left", (re_list[i].depth * 18) + "px");
-                                replySubDiv.css("padding-left", (re_list[i].depth * 18) + "px");
-
+                                reply.append(replyUpperDiv);
+                                reply.append(replyContent);
+                                reply.append(replySubDiv);
                             } else {
-                                replyUpperDiv.append(userInfoDiv);
-                            }
+                                //일반 댓글
+                                let replyUpperDiv = $('<div>').addClass('replyUpper');
 
-                            reply.append(replyUpperDiv);
-                            reply.append(replyContent);
-                            reply.append(replySubDiv);
+                                let userInfoDiv = $("<div>").addClass("userInfo");
+                                let userProfileDiv = $("<div>").addClass("userProfile");
+                                let userNickNameDiv = $("<div>").addClass("userNickName");
+                                let userIdDiv = $("<div>").addClass("create_user").attr("id", re_list[i].create_user).text(re_list[i].create_user);
 
+                                //기본 프로필 이미지 추가(추후 member에 프사 가져오는 방식으로 변경
+                                let userProfileImg = $("<img>").attr({
+                                    src: "${path}/uploaded_image${map.re_list.profile}",
+                                    width: "15px",
+                                    class: "profile"
+                                });
+                                userProfileDiv.append(userProfileImg);
+
+                                let date = new Date(re_list[i].create_date);
+                                let formattedDate = new Date(date + 3240 * 10000).toISOString().replace('T', ' ').replace(/\..*/, '');
+                                //3240 * 10000 milliseconds === 9h
+
+                                let createDateDiv = $("<div>").addClass("create_date").text(formattedDate);
+
+                                //userInfoDiv 완성시킴
+                                userInfoDiv.append(userProfileDiv);
+                                userInfoDiv.append(userNickNameDiv);
+                                userInfoDiv.append(userIdDiv);
+                                userInfoDiv.append(createDateDiv);
+
+                                //댓글 본문
+                                let replyContent = $('<div>').addClass('replyContent');
+                                replyContent.text(re_list[i].content);
+                                //댓글 내용에 index id 부여
+                                replyContent.attr("id", re_list[i].reply_reg_num + "_replyContent");
+
+                                //댓글 하단
+                                let replySubDiv = $('<div>').addClass('replySub');
+                                let leftDiv = $('<div>').addClass('left');
+                                let leftButtonDiv = $('<div>').addClass('button');
+
+                                //jquery에서 attr()과 prop()의 결과는 같은데 attr() 로 href=''를 정의하는 것이 일반적이라고 하네요.
+                                //attribute는 속성, property는 상태라서 그런듯?
+                                let childInsertLink = $('<a>').addClass('insertChildReply').attr("href", "javascript:showChildCommentForm(" + re_list[i].reply_reg_num + ")");
+
+                                childInsertLink.html('<i class="fa-solid fa-reply"></i>대댓글');
+                                leftButtonDiv.append(childInsertLink);
+                                leftDiv.append(leftButtonDiv);
+
+                                let rightDiv = $('<div>').addClass('right');
+                                let rightButtonDiv = $('<div>').addClass('button');
+
+                                let replyChangeLink = $('<a>').addClass('changeReply').prop("href", "javascript:changeReply(" + re_list[i].reply_reg_num + ")");
+
+                                replyChangeLink.html('<i class="fa-regular fa-comment-dots"></i>수정|삭제');
+                                rightButtonDiv.append(replyChangeLink);
+                                rightDiv.append(rightButtonDiv);
+                                replySubDiv.append(leftDiv);
+                                replySubDiv.append(rightDiv);
+
+                                //대댓글 들여쓰기
+                                if (re_list[i].depth > 0) {
+                                    reply.addClass("childReply");
+                                    childReplyImg = $("<img>").attr("src='${path}/images/re_reply.png'");
+                                    replyUpperDiv.append(childReplyImg);
+                                    replyUpperDiv.append(userInfoDiv);
+
+                                    replyUpperDiv.css("padding-left", (re_list[i].depth * 18) + "px");
+                                    replyContent.css("padding-left", (re_list[i].depth * 18) + "px");
+                                    replySubDiv.css("padding-left", (re_list[i].depth * 18) + "px");
+
+                                } else {
+                                    replyUpperDiv.append(userInfoDiv);
+                                }
+
+                                reply.append(replyUpperDiv);
+                                reply.append(replyContent);
+                                reply.append(replySubDiv);
+
+                            }//delCheck if else End
+                            /*댓글 목록에 reply 추가*/
                             replyList.append(reply);
-                        }
+                        }//for문 end
 
                     }//리스트를 뷰에 추가하는 건 끝
+                    /*댓글 개수*/
                     $("#countReplies").text(re_list.length == null ? 0 : re_list.length);
 
                 }, error: function () {
                     $("#countReplies").text(0);
                 }
             });//ajax 끝
+
         }
 
-        // Initialize the flag variable
+        // 대댓글 form이 보이는지 여부를 체크할 변수
         let childCommentFormVisible = false;
 
-        // Show or hide the child comment form based on its visibility
+        // 대댓글 폼 펼치고 접는 함수
         function showChildCommentForm(reply_reg_num) {
             let childCommentForm = $("form.childCommentForm");
 
             if (childCommentFormVisible) {
                 childCommentForm.remove();
+                //id선택자의 후손 선택자의 css를 조작
+                alert("대댓글 입력을 취소했습니다.");
                 childCommentFormVisible = false;
             } else {
-                childCommentFormVisible = true;
+                $.ajax({
+                    type: "get",
+                    url: "${path}/tbComment/loginCheck",
+                    success: function(response){
+                        if(response.status === "success"){
+                            let newChildCommentForm = $("<form>")
+                                .addClass("childCommentForm")
+                                .attr({
+                                    name: "childCommentForm",
+                                    action: "${path}/tbComment/InsertReply.do"
+                                });
 
-                let newChildCommentForm = $("<form>")
-                    .addClass("childCommentForm")
-                    .attr({
-                        name: "childCommentForm",
-                        action: "${path}/tbComment/InsertReply.do"
-                    });
+                            let textArea = $("<textarea>").attr({
+                                name: "content",
+                            });
 
-                let textArea = $("<textarea>").attr({
-                    name: "content",
+                            let input = $("<input>").attr({
+                                type: "hidden",
+                                name: "mother_reply",
+                                value: reply_reg_num
+                            });
+
+                            let button = $("<button>")
+                                .attr({
+                                    type: "button",
+                                    class: "btnCommentInsert"
+                                }).text("대댓글 등록");
+
+                            newChildCommentForm.append(textArea, input, button);
+
+                            $("#" + reply_reg_num).append(newChildCommentForm);
+                            childCommentFormVisible = true;
+                        }else{
+                            alert(response.message);
+                            childCommentFormVisible = true;
+                        }
+                    },
+                    error: function(response){
+                        alert("ajax 실패");
+                        childCommentFormVisible = true;
+                    }
                 });
-
-                let input = $("<input>").attr({
-                    type: "hidden",
-                    name: "mother_reply",
-                    value: reply_reg_num
-                });
-
-                let button = $("<button>")
-                    .attr({
-                        type: "button",
-                        class: "btnCommentInsert"
-                    }).text("댓글쓰기");
-
-                newChildCommentForm.append(textArea, input, button);
-
-                $("#" + reply_reg_num).append(newChildCommentForm);
             }
 
         }
@@ -749,11 +831,10 @@
         let replyChangeFormVisible = false;
 
         function changeReply(reply_reg_num) {
-
             if (replyChangeFormVisible) {
                 $(".replyChangeForm").remove();
                 //id선택자의 후손 선택자의 css를 조작
-                $("#" + reply_reg_num + ".replyContent").css({
+                $("#" + reply_reg_num + "_replyContent").css({
                     display: "block"
                 });
                 alert("댓글 수정을 취소했습니다.");
@@ -761,9 +842,6 @@
                 return;
             } else {
                 replyChangeFormVisible = true;
-                $("#" + reply_reg_num + ".replyContent").css({
-                    display: "none"
-                });
 
                 //여기에서 ajax 요청이 실패가 나면서 form이 안 만들어짐
                 //changeReply.do 에서 400 에러 -> 대부분 ajax syntax에러
@@ -774,46 +852,135 @@
                         "reply_reg_num": reply_reg_num
                     },
                     success: function (result) {
+                        /*ajax get요청에 대한 결과가 성공이면*/
+                        if (result.status === "success") {
+                            let reply_reg_num = result.reDto.reply_reg_num;
+                            let content = result.reDto.content;
+                            let replyChangeForm = $("<form>").addClass("replyChangeForm").attr({
+                                name: "replyChangeForm"
+                            });
 
-                        let reply_reg_num = result.reply_reg_num;
-                        let content = result.content;
-                        let replyChangeForm = $("<form>").addClass("replyChangeForm").attr({
-                            name: "replyChangeForm"
-                        });
+                            replyChangeForm.attr({
+                                name: "replyChangeForm"
+                            });
+                            let input = $("<input>").attr({
+                                type: "hidden",
+                                name: "reply_reg_num"
+                            }).val(reply_reg_num);
 
-                        replyChangeForm.attr({
-                            name: "replyChangeForm"
-                        });
-                        let input = $("<input>").attr({
-                            type: "hidden",
-                            name: "reply_reg_num"
-                        }).val(reply_reg_num);
-                        let textArea = $("<textarea>").attr({
-                            name: "content",
-                        }).val(content);
-                        let editButton = $("<button>")
-                            .attr({
+                            let textArea = $("<textarea>").attr({
+                                name: "content",
+                            }).val(content);
+                            let editButton = $("<button>")
+                                .attr({
+                                    type: "button",
+                                    class: "btnReplyEdit"
+                                }).text("수정완료");
+                            let deleteButton = $("<button>").attr({
                                 type: "button",
-                                class: "btnReplyEdit"
-                            }).text("수정완료");
-                        let deleteButton = $("<button>").attr({
-                            type: "button",
-                            class: "btnReplyDelete"
-                        }).text("삭제");
+                                class: "btnReplyDelete"
+                            }).text("삭제");
+                            let cancelButton = $("<button>").attr({
+                                type: "button",
+                                class: "btnCancel"
+                            }).text("취소");
+                            /*만든 form 내부 요소들 한번에 append*/
+                            replyChangeForm.append(input, textArea, editButton, deleteButton, cancelButton);
 
-                        replyChangeForm.append(input, textArea, editButton, deleteButton);
+                            //여기서 form을 추가하면 textArea의 value인 content 가 사라지는 에러 발생
+                            //jquery로 값을 할당할 때는 .attr()에 value : 로 할당하는 것이 아니라 .val()을 사용한다.
+                            $("#" + reply_reg_num).append(replyChangeForm);
 
-                        //여기서 form을 추가하면 textArea의 value인 content 가 사라지는 에러 발생
-                        //jquery로 값을 할당할 때는 .attr()에 value : 로 할당하는 것이 아니라 .val()을 사용한다.
-                        $("#" + reply_reg_num).append(replyChangeForm);
+                            /*기존 댓글 내용 부분은 안 보이게*/
+                            $("#" + reply_reg_num + "_replyContent").css({
+                                display: "none"
+                            });
+
+                        }//result.status가 success일 경우 End
+                        else{
+                            //result.status가 failure일 경우
+                            replyChangeFormVisible = false;
+                            alert(result.message);
+                        }
                     },
+                    /*ajax get요청 자체가 실패한 경우*/
                     error: function () {
                         replyChangeFormVisible = false;
                         alert("실패!");
                     }
-                });
-            }
+                });//ajax End
+
+            } // 대댓글 form visible if else End
+
+        } //changeReply() End
+
+        /*좋아요 체크하는 함수*/
+        function checkLikeStatus() {
+            let likeItBtn = document.getElementById("likeItBtn");
+            let tb_num = ${map.dto.tb_num};
+            $.ajax({
+                type: "get",
+                url: "${path}/tboard/likeCheck.do",
+                data: {
+                    "tb_num" : tb_num
+                },
+                success: function(result){
+                    if(result === "unchecked"){
+                        likeChecked = false;
+                        likeItBtn.innerHTML = '<i class="fa-regular fa-heart" style="color: #eb0a0a;"></i>';
+                    }else if(result === "checked"){
+                        likeChecked = true;
+                        likeItBtn.innerHTML = '<i class="fa-solid fa-heart" style="color: #eb0a0a;"></i>';
+                    }
+                },
+                error: function(result){
+                    alert("ajax 에러");
+                }
+            });
         }
+
+        /*좋아요 함수*/
+        function likeIt(tb_num) {
+            let likeItBtn = document.getElementById("likeItBtn");
+            let goodCountSpan = document.getElementById("good_count_container");
+            /*좋아요 수*/
+            let goodCount = parseInt(goodCountSpan.innerText);
+
+            $.ajax({
+                type: "get",
+                url : "${path}/tboard/addLike.do",
+                data: {
+                    "tb_num" : tb_num
+                },
+                success : function(response){
+                    if(response.status === "fail") {
+                        alert(response.message);
+                    }else if(response.status === "likeCheck"){
+                        likeChecked = true;
+
+                        likeItBtn.innerHTML = '<i class="fa-solid fa-heart" style="color: #eb0a0a;"></i>';
+                        /*좋아요 수 +1*/
+                        goodCount = goodCount + 1;
+                        goodCountSpan.innerText = goodCount;
+
+
+                    }else if(response.status === "likeDelete"){
+                        likeChecked = false;
+                        likeItBtn.innerHTML = '<i class="fa-regular fa-heart" style="color: #eb0a0a;"></i>';
+                        /*좋아요 수 -1*/
+                        goodCount = goodCount - 1;
+
+                        goodCountSpan.innerText = goodCount;
+                    }
+                    checkLikeStatus(); /*좋아요 상태 체크*/
+                },
+                error : function(response){
+                    alert(response.message);
+                }
+            });//ajax End
+
+        }//좋아요 함수 end
+
     </script>
 </head>
 <body>
@@ -826,37 +993,12 @@
             <h2>중고장터</h2>
         </div>
         <div id="contentsLocation">
-            홈 &gt 중고장터
+            홈 &gt 중고장터 &gt ${map.dto.title}
         </div>
         <div id="contentsMain">
 
-        <div class="listAndEdit">
-            <div class="left">
-                <div class="button"><a href="${path}/tboard/list.do">목록</a></div>
-            </div>
-            <div class="dot"></div>
-            <div class="right">
-                <div class="button"><a class="btnChange">수정|삭제</a></div>
-            </div>
-        </div>
-
-            <section class="imgSection" id="imgSection">
-
-            </section>
             <section class="titleSection">
-                <div class="profileAndNickName">
-                    <div class="left">
-                        <div class="userImg"><a class="userProfile"><img src="${path}/images/trade/defaultProfile.png"
-                                                                         alt="유저 프로필 사진"></a></div>
-                        <div class="dot"></div>
-                        <div class="nickName"><a class="userNickName">${map.dto.nickname}(${map.dto.create_user})</a></div>
-                        <div class="dot"></div>
-                        <div class="dateTime"><i class="fa-regular fa-timer"></i>
-                            ${map.dto.create_date}
-                        </div>
-                        <div class="dot"></div>
-                    </div>
-                </div>
+
                 <div class="categoryAndTitle">
                     <div class="category">
                         <c:choose>
@@ -875,18 +1017,36 @@
                         </c:choose>
                     </div>
                     <div class="title">${map.dto.title}</div>
+                    <div class="price">
+                        ${map.dto.price}<div class="dot"></div><span>원</span>
+                    </div>
+
                 </div>
-                <div class="price">
-                    ${map.dto.price}<div class="dot"></div><span>원</span>
+
+                <div class="profileAndNickName">
+                    <div class="left">
+                        <div class="userImg"><a class="userProfile"><img src="${path}/resources/uploaded_image${map.dto.profile}"></a></div>
+                        <div class="dot"></div>
+                        <div class="nickName"><a class="userNickName">${map.dto.nickname}(${map.dto.create_user})</a></div>
+                        <div class="dot"></div>
+                        <div class="dateTime"><i class="fa-regular fa-timer"></i>
+                            ${map.dto.create_date}
+                        </div>
+                        <div class="dot"></div>
+                    </div>
                 </div>
+
             </section>
 
             <section class="descriptionSection">
                 <div id="description" name="description">
                     ${map.dto.description}
                 </div>
+                <section class="imgSection" id="imgSection">
+                </section>
+                <%--주소 정보가 있을 때와 없을 때--%>
                 <c:choose>
-                    <c:when test='${map.dto.address1 != null || !map.dto.address1.equals("")}'>
+                    <c:when test='${map.dto.address1 ne null}'>
                         <div class="placeContainer">
                             <div id="placeUpper">
                                 <div>
@@ -902,7 +1062,6 @@
                                 <script type="text/javascript"
                                         src="//dapi.kakao.com/v2/maps/sdk.js?appkey=aaa4a3ee6e039439424a544717323d1a&libraries=services"></script>
                                 <script>
-
                                     var mapContainer = document.getElementById('map'); // 지도를 표시할 div
 
                                     var mapOption =
@@ -993,8 +1152,9 @@
                                 </script>
                                 <div class="addressContainer">
                                     <ul>
-                                        <li>장소:&nbsp;&nbsp;${map.dto.address1} ${map.dto.address2} ${map.dto.address3}</li>
-                                        <li>value="${map.dto.place_name}"</li>
+                                        <li>
+                                            장소:&nbsp;&nbsp;${map.dto.address1} ${map.dto.address2} ${map.dto.address3}</li>
+                                        <li>${map.dto.place_name}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -1009,16 +1169,18 @@
 
                 <div id="descriptionSub">
                     <div class="interestCount">
-                        <a href="#">
+                        <a id="likeItBtn" href="#" onclick="likeIt(${map.dto.tb_num})">
                             <%-- fontawsome 하트 모양 --%>
-                            <i class="fa-solid fa-heart"></i>
-                            좋아요 수 자리
+                            <i class="fa-regular fa-heart" style="color: #eb0a0a;"></i>
                         </a>
+                        <span id="good_count_container">
+                            ${map.dto.good_count}
+                        </span>
                     </div>
 
                     <div class="viewCount">
                         <%-- fontawsome 눈 모양 --%>
-                        <i class="fa-solid fa-eye"></i>
+                        <%--<i class="fa-solid fa-eye"></i>--%>
                         ${map.dto.view_count}
                     </div>
                     <%-- fontawsome 댓글 모양 --%>
@@ -1039,7 +1201,19 @@
                 </button>
                 <div class="moreOtherItem"></div>
             </section>
-            <section class="replySection">
+
+                <div class="listAndEdit">
+                    <div class="left">
+                        <div class="button"><a href="${path}/tboard/list.do">목록</a></div>
+                    </div>
+                    <div class="dot"></div>
+                    <div class="right">
+                        <div class="button"><a class="btnChange">수정|삭제</a></div>
+                    </div>
+                </div>
+
+
+                <section class="replySection">
                 <div id="replyList"></div>
 
                 <div class="replyContainer">
@@ -1059,37 +1233,6 @@
                 </div>
 
             </section>
-
-            <%--<div class="reply" id="${re_dto.reply_reg_num}">
-                <div class="replyUpper">
-                    <div class="userInfo">
-                        <div class="userProfile">
-                            <img src="" alt="">
-                        </div>
-                    </div>
-                    <div class="userNickName"></div>
-                    <div class="create_date"></div>
-                </div>
-                <div class="replyMain">
-                    <div class="replyContent"></div>
-                </div>
-                <div class="replySub">
-                    <div class="left">
-                        <div class="button">
-                            <a href="">
-                                <img src="" alt="">
-                            </a>
-                        </div>
-                    </div>
-                    <div class="right">
-                        <div class="button">
-                            <a href="">
-                                <img src="" alt="">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>--%>
 
             <div class="listAndEdit">
                 <div class="left">

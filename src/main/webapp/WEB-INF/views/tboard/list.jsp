@@ -254,11 +254,15 @@
             $("#btnWrite").on("click", function () {
                 location.href = "${path}/tboard/write.do";
             });
-
+            /*카테고리 버튼*/
             $(".category").on("click", function () {
                 let category = $(this).text();
                 let searchForm = $("form[name='searchForm']");
-                searchForm.find("select[name='category']").val(category);
+                if(category == '전체'){
+                    searchForm.find("input[name='category']").val('all');
+                }else{
+                    searchForm.find("input[name='category']").val(category);
+                }
                 searchForm.submit();
             });
         });
@@ -293,39 +297,39 @@
         <div class="categories">
             <c:choose>
             <c:when test="${map.sDto.category eq 'all'}">
-                <div title="전체" class="category selected"> 전체</div>
-                <div title="판매" class="category"> 판매</div>
-                <div title="구매" class="category"> 구매</div>
-                <div title="나눔" class="category"> 나눔</div>
-                <div title="완료" class="category"> 완료</div>
+                <div title="전체" class="category selected">전체</div>
+                <div title="판매" class="category">판매</div>
+                <div title="구매" class="category">구매</div>
+                <div title="나눔" class="category">나눔</div>
+                <div title="완료" class="category">완료</div>
             </c:when>
             <c:when test="${map.sDto.category eq '판매'}">
-                <div title="전체" class="category"> 전체</div>
-                <div title="판매" class="category selected"> 판매</div>
-                <div title="구매" class="category"> 구매</div>
-                <div title="나눔" class="category"> 나눔</div>
-                <div title="완료" class="category"> 완료</div>
+                <div title="전체" class="category">전체</div>
+                <div title="판매" class="category selected">판매</div>
+                <div title="구매" class="category">구매</div>
+                <div title="나눔" class="category">나눔</div>
+                <div title="완료" class="category">완료</div>
             </c:when>
             <c:when test="${map.sDto.category eq '구매'}">
-                <div title="전체" class="category"> 전체</div>
-                <div title="판매" class="category"> 판매</div>
-                <div title="구매" class="category selected"> 구매</div>
-                <div title="나눔" class="category"> 나눔</div>
-                <div title="완료" class="category"> 완료</div>
+                <div title="전체" class="category">전체</div>
+                <div title="판매" class="category">판매</div>
+                <div title="구매" class="category selected">구매</div>
+                <div title="나눔" class="category">나눔</div>
+                <div title="완료" class="category">완료</div>
             </c:when>
             <c:when test="${map.sDto.category eq '나눔'}">
-                <div title="전체" class="category"> 전체</div>
-                <div title="판매" class="category"> 판매</div>
-                <div title="구매" class="category"> 구매</div>
-                <div title="나눔" class="category selected"> 나눔</div>
-                <div title="완료" class="category"> 완료</div>
+                <div title="전체" class="category">전체</div>
+                <div title="판매" class="category">판매</div>
+                <div title="구매" class="category">구매</div>
+                <div title="나눔" class="category selected">나눔</div>
+                <div title="완료" class="category">완료</div>
             </c:when>
             <c:otherwise>
-                <div title="전체" class="category"> 전체</div>
-                <div title="판매" class="category"> 판매</div>
-                <div title="구매" class="category"> 구매</div>
-                <div title="나눔" class="category"> 나눔</div>
-                <div title="완료" class="category selected"> 완료</div>
+                <div title="전체" class="category">전체</div>
+                <div title="판매" class="category">판매</div>
+                <div title="구매" class="category">구매</div>
+                <div title="나눔" class="category">나눔</div>
+                <div title="완료" class="category selected">완료</div>
             </c:otherwise>
             </c:choose>
         </div>

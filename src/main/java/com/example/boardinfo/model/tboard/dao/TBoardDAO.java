@@ -36,8 +36,11 @@ public interface TBoardDAO {
 
     int totalSearchCount(Map<String, Object> map);
 
-	int goodCreate(TradeSearchDTO sDto);
 
-	int goodDelete(TradeSearchDTO sDto);
+    int addLike(Map<String, Object> map);
+
+	int deleteLike(String goodkey);
+
+    int checkLike(String goodkey);
 }
 

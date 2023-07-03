@@ -16,7 +16,7 @@ public interface TBCommentDAO {
 
 	void replyOrderUpdate(int parent_reply, int innerOrder);
 
-	String getReplyContent(int replyRegNum);
+	TBCommentDTO getReplyContent(int reply_reg_num);
 
 	int editReply(TBCommentDTO re_dto);
 

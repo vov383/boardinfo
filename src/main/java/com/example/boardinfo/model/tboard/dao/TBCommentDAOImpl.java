@@ -67,9 +67,8 @@ public class TBCommentDAOImpl implements TBCommentDAO {
     }
 
     @Override
-    public String getReplyContent(int reply_reg_num) {
+    public TBCommentDTO getReplyContent(int reply_reg_num) {
         return sqlSession.selectOne("tbComment.getReplyContent", reply_reg_num);
-
     }
 
     @Override

@@ -32,6 +32,8 @@
 					SELECT R.REG_NUM AS REGNUM
 						 , M.USERID
 						 , M.NICKNAME
+						 , AD.ADMIN_ID AS ADMINID
+						 , AD.NICKNAME AS ANICKNAME
 						 , R.CATEGORY
 						 , R.VIEWS
 						 , R.TITLE
@@ -46,7 +48,9 @@
 						 , TO_CHAR(R.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE
 					  FROM REVIEW R
                          , MEMBER M
+						 , ADMIN AD
 					 WHERE R.CREATE_USER = M.USERID(+)
+					   AND R.CREATE_USER = AD.ADMIN_ID(+)
 					   AND R.DEL = 'N'
 					<!--검색-->
 					<if test="searchTitle != '' and searchTitle != null">
@@ -82,9 +86,11 @@
 	<select id="reviewListCnt" parameterType="hashMap" resultType="int">
 		SELECT count(1)
 		FROM REVIEW R
-		   , MEMBER M
+		, MEMBER M
+		, ADMIN AD
 		WHERE R.CREATE_USER = M.USERID(+)
-		  AND R.DEL = 'N'
+		AND R.CREATE_USER = AD.ADMIN_ID(+)
+		AND R.DEL = 'N'
 		/*검색*/
 		<if test="searchTitle != '' and searchTitle != null">
 			AND (R.TITLE LIKE '%'||#{searchTitle}||'%'
@@ -328,6 +334,7 @@
 			 , RC.TOP_REPLY_REG_NUM 			AS TOPREPLYREGNUM
 			 , RC.COMMENT_DETAIL 			AS COMMENTDETAIL
 			 , M.NICKNAME					AS NICKNAME
+			 , AD.NICKNAME					AS ANICKNAME
 			 , RC.DEL 						AS DEL
 			 , RC.CREATE_USER				AS CREATEUSER
 			 , RC.CREATE_DATE				AS CREATEDATE
@@ -335,10 +342,12 @@
 			 , RC.UPDATE_DATE				AS UPDATEDATE
 		FROM REPLY_COMMENTS RC
 		   , MEMBER M
+		   , ADMIN AD
 		WHERE 1 = 1
 			AND RC.REG_NUM = #{reviewDetailKey}
 -- 			AND RC.DEL = 'N'
 			AND RC.CREATE_USER = M.USERID(+)
+			AND RC.CREATE_USER = AD.ADMIN_ID(+)
 		/*답글 진입*/
 		<if test="topReplyRegNum != '' and topReplyRegNum != null">
 			AND ((RC.TOP_REPLY_REG_NUM = #{topReplyRegNum})

@@ -161,7 +161,7 @@ public class ReviewController {
 		ModelAndView mav = new ModelAndView();
 
 		/*userid가 null이면 로그인 페이지로 이동*/
-		if (null == userid){
+		if (null == userid && null == adminid){
 			mav.setViewName("member/login");
 
 			/*userid가 null이 아니면 좋아요 적용*/
@@ -173,6 +173,9 @@ public class ReviewController {
 
 			/*댓글 출력*/
 			mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+
+			/*게임 목록 출력*/
+			mav.addObject("gameList", reviewservice.gameListOut(reviewserchDTO));
 		}
 
 		return mav;
@@ -183,10 +186,12 @@ public class ReviewController {
 	public ModelAndView reviewReply(@ModelAttribute ReplyCommentsDTO replyCommentsDTO, HttpSession session) {
 
 		String userid = (String) session.getAttribute("userid");
-		ModelAndView mav = new ModelAndView();
+		String adminid = (String) session.getAttribute("admin_id");
+
+			ModelAndView mav = new ModelAndView();
 
 		/*userid가 null이면 로그인 페이지로 이동*/
-		if (null == userid){
+		if (null == userid && null == adminid){
 			mav.setViewName("member/login");
 
 			/*userid가 null이 아니면 댓글 입력 페이지 이동*/
@@ -226,10 +231,11 @@ public class ReviewController {
 //		System.out.println("1");
 
 		String userid = (String) session.getAttribute("userid");
+		String adminid = (String) session.getAttribute("admin_id");
 		ModelAndView mav = new ModelAndView();
 
 		/*userid가 null이면 로그인 페이지로 이동*/
-		if (null == userid){
+		if (null == userid && null == adminid){
 			mav.setViewName("member/login");
 
 		/*userid가 null이 아니면 답글 입력 페이지 이동*/
@@ -266,10 +272,12 @@ public class ReviewController {
 		System.out.println("프리플래그" + reviewserchDTO.getFreeFlag());
 
 		String userid = (String) session.getAttribute("userid");
+		String adminid = (String) session.getAttribute("admin_id");
+
 		ModelAndView mav = new ModelAndView();
 
 		/*userid가 null이면 로그인 페이지로 이동*/
-		if (null == userid){
+		if (null == userid && null == adminid){
 			mav.setViewName("member/login");
 
 			/*userid가 null이 아니면 답글 입력 페이지 이동*/
@@ -314,6 +322,9 @@ public class ReviewController {
 		/*댓글 출력*/
 		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
 
+		/*게임 목록 출력*/
+		mav.addObject("gameList", reviewservice.gameListOut(reviewserchDTO));
+
 		return mav;
 
 	}
@@ -340,6 +351,9 @@ public class ReviewController {
 
 		/*댓글 출력*/
 		mav.addObject("commentList", reviewservice.reviewReplyOut(reviewserchDTO));
+
+		/*게임 목록 출력*/
+		mav.addObject("gameList", reviewservice.gameListOut(reviewserchDTO));
 
 		return mav;
 
@@ -423,9 +437,9 @@ public class ReviewController {
 
 	// 삭제 후 페이지
 	@RequestMapping("reviewdelsave.do")
-	public String reviewDelSave(@ModelAttribute reviewSerchDTO reviewserchDTO){
+	public String reviewDelSave(@ModelAttribute reviewSerchDTO reviewserchDTO, HttpSession session){
 
-		reviewservice.reviewDel(reviewserchDTO);
+		reviewservice.reviewDel(reviewserchDTO, session);
 
 		return "redirect:/review/reviewlist.do?freeFlag="+reviewserchDTO.getFreeFlag();
 
