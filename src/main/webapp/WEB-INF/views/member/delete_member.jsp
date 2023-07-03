@@ -8,155 +8,156 @@
   <%@ include file="../include/js/header.jsp" %>
 
   <style>
+
 #change {
-      float: left;
-      width: 180px;
-      border: 1px solid #D9D9D9;
-      border-radius: 18px;
-      margin-right: 30px;
-      margin-top: 52px;
-    }
+	float: left;
+	width: 180px;
+	border: 1px solid #D9D9D9;
+	border-radius: 18px;
+	margin-right: 30px;
+	margin-top: 52px;
+}
 
-    #change h3 {
-      margin: 0 0 10px 0;
-      padding: 0;
-    }
+#change h3 {
+	margin: 0 0 10px 0;
+	padding: 0;
+}
 
-    #change>div {
-      padding: 13px 20px;
-      border-bottom: 1px solid #D9D9D9;
-    }
+#change>div {
+	padding: 13px 20px;
+	border-bottom: 1px solid #D9D9D9;
+}
 
-    #change ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
+#change ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
 
-    #change li {
-      margin-bottom: 4px;
-    }
+#change li {
+	margin-bottom: 4px;
+}
 
-    #change div:last-of-type {
-      border-bottom: none;
-    }
+#change div:last-of-type {
+	border-bottom: none;
+}
 
-    #change div:last-of-type>div {
-      display: flex;
-      flex-direction: column;
-      margin-top: 10px;
-      padding: 0;
-      align-items: center;
-    }
+#change div:last-of-type>div {
+	display: flex;
+	flex-direction: column;
+	margin-top: 10px;
+	padding: 0;
+	align-items: center;
+}
 
-    #change div:last-of-type>div {
-      display: flex;
-      flex-direction: row;
-      justify-content: end;
-      width: 100%;
-    }
+#change div:last-of-type>div {
+	display: flex;
+	flex-direction: row;
+	justify-content: end;
+	width: 100%;
+}
 
-    a {
-      text-decoration-line: none;
-      color: black;
-    }
+a {
+	text-decoration-line: none;
+	color: black;
+}
 
-    a:hover {
-      color: blue;
-    }
+a:hover {
+	color: blue;
+}
 
-    #passwordConfirmationForm {
-      margin: 0 auto;
-      width: 800px;
-      padding: 20px;
-      padding-right: 80px;
-      border: 1px solid #D9D9D9;
-      border-radius: 18px;
-      text-align: center;
-      margin-top: 52px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+#passwordConfirmationForm {
+	margin: 0 auto;
+	width: 800px;
+	padding: 20px;
+	padding-right: 80px;
+	border: 1px solid #D9D9D9;
+	border-radius: 18px;
+	text-align: center;
+	margin-top: 52px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
 
-    #passwordConfirmationForm h3 {
-      margin: 0 0 10px 0;
-      padding: 0;
-    }
+#passwordConfirmationForm h3 {
+	margin: 0 0 10px 0;
+	padding: 0;
+}
 
-    #passwordConfirmationForm form {
-      margin-top: 10px;
-    }
+#passwordConfirmationForm form {
+	margin-top: 10px;
+}
 
-    #passwordConfirmationForm label {
-      display: block;
-      margin-bottom: 5px;
-    }
+#passwordConfirmationForm label {
+	display: block;
+	margin-bottom: 5px;
+}
 
-    #passwordConfirmationForm input[type="password"] {
-      width: 100%;
-      padding: 5px;
-      border: 1px solid #D9D9D9;
-      border-radius: 5px;
-      margin-bottom: 10px;
-    }
+#passwordConfirmationForm input[type="password"] {
+	width: 100%;
+	padding: 5px;
+	border: 1px solid #D9D9D9;
+	border-radius: 5px;
+	margin-bottom: 10px;
+}
 
-    #passwordConfirmationForm input[type="button"] {
-      padding: 8px 16px;
-      background-color: #ff0000;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+#passwordConfirmationForm input[type="button"] {
+	padding: 8px 16px;
+	background-color: #ff0000;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
 
-    #passwordConfirmationForm input[type="button"]:hover {
-      background-color: #45a049;
-    }
+#passwordConfirmationForm input[type="button"]:hover {
+	background-color: #45a049;
+}
 
-    .input-container {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-    }
+.input-container {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+}
 
-    .input-container label {
-      width: 150px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+.input-container label {
+	width: 150px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 
-    .center {
-      display: flex;
-      justify-content: center;
-    }
+.center {
+	display: flex;
+	justify-content: center;
+}
 
-    .caution {
-      font-size: 12px;
-      line-height: 200%;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
+.caution {
+	font-size: 12px;
+	line-height: 200%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
 
-    .num1 {
-      border: 1px;
-      border-style: solid;
-      width: 100%;
-      border-color: black white black;
-    }
+.num1 {
+	border: 1px;
+	border-style: solid;
+	width: 100%;
+	border-color: black white black;
+}
 
-    .num2 {
-      border: 1px;
-      border-style: solid;
-      width: 100%;
-      border-color: white white black;
-    }
+.num2 {
+	border: 1px;
+	border-style: solid;
+	width: 100%;
+	border-color: white white black;
+}
 
-    span {
-      font-size: 16px;
-    }
+span {
+	font-size: 16px;
+}
 </style>
 
 <script type="text/javascript">
@@ -211,8 +212,11 @@ span{
 <%@include file="../include/top.jsp" %>
 
 	<div id="contents">
-	<h1 style="font-size: 50px;">회원탈퇴</h1>
-  <div id="contentsMain">
+		<div id="contentsHeader">
+			<h2>마이페이지</h2>
+		</div>
+		<div id="contentsLocation">홈 &gt 마이페이지 &gt 회원탈퇴</div>
+		<div id="contentsMain">
     <div id="change">
       <div>
         <div>

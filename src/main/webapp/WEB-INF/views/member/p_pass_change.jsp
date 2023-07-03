@@ -99,7 +99,7 @@ a:hover {
 
 #passwordConfirmationForm input[type="button"] {
 	padding: 8px 16px;
-	background-color: #4CAF50;
+	background-color: #1432B1;
 	color: white;
 	border: none;
 	border-radius: 5px;
@@ -157,16 +157,39 @@ function check() {
 			$("#current_pw").focus();
 			return;
 		}
+		if (current_pw == "") {
+			alert("비밀번호는 필수 입력입니다.");
+			$("#current_pw").focus();
+			return;
+		}
 		if (passwd == "") {
 			alert("비밀번호는 필수 입력입니다.");
 			$("#new_pw").focus();
 			return;
 		}
+		if (passwd2 == "") {
+			alert("비밀번호는 필수 입력입니다.");
+			$("#new_pw2").focus();
+			return;
+		}
 		//비밀번호 정규식
+		var exp1 = /^[a-zA-Z0-9]{8,15}$/;
+		if (!exp1.test(current_pw)) {
+			alert("비밀번호는 영문 숫자 조합으로 8자 이상 입력하세요.");
+			$("#current_pw").focus();
+			return;
+		}
 		var exp2 = /^[a-zA-Z0-9]{8,15}$/;
 		if (!exp2.test(passwd)) {
 			alert("비밀번호는 영문 숫자 조합으로 8자 이상 입력하세요.");
 			$("#new_pw").focus();
+			return;
+		}
+		//비밀번호 정규식
+		var exp3 = /^[a-zA-Z0-9]{8,15}$/;
+		if (!exp3.test(passwd2)) {
+			alert("비밀번호는 영문 숫자 조합으로 8자 이상 입력하세요.");
+			$("#new_pw2").focus();
 			return;
 		}
 		if (passwd != passwd2) {
@@ -192,8 +215,13 @@ function check() {
 <%@include file="../include/top.jsp" %>
 
 	<div id="contents">
-	<h1 style="font-size: 50px;">비밀번호 변경</h1>
-  <div id="contentsMain">
+	<div id="contentsHeader">
+		<h2>마이페이지</h2>
+	</div>
+	<div id="contentsLocation">
+		홈 &gt 마이페이지 &gt 비밀번호변경
+	</div>
+		<div id="contentsMain">
     <div id="change">
       <div>
         <div>
