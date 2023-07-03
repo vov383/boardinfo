@@ -87,14 +87,19 @@ public class TBoardDAOImpl implements TBoardDAO {
 		return sqlSession.selectOne("tboard.totalSearchCount", map);
 	}
 
-	/*중고거래 좋아요*/
+	/*좋아요*/
 	@Override
-	public int goodCreate(TradeSearchDTO sDto) {
-		return sqlSession.insert("tboard.goodCreate", sDto);
+	public int addLike(Map<String, Object> map) {
+		return sqlSession.insert("tboard.addLike", map);
 	}
 
 	@Override
-	public int goodDelete(TradeSearchDTO sDto) {
-		return sqlSession.delete("tboard.goodDelete", sDto);
+	public int deleteLike(String goodkey) {
+		return sqlSession.delete("tboard.deleteLike", goodkey);
+	}
+
+	@Override
+	public int checkLike(String goodkey) {
+		return sqlSession.selectOne("tboard.checkLike", goodkey);
 	}
 }

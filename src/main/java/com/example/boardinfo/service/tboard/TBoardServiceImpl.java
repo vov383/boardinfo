@@ -174,26 +174,110 @@ public class TBoardServiceImpl implements TBoardService {
 		return map;
 	}
 
-
-	/*중고거래 좋아요*/
-	@Transactional
+	/*중고거래 좋아요 추가*/
 	@Override
-	public int goodCreate(TradeSearchDTO sDto, HttpSession session){
+	public Map<String, String> addLike(HttpSession session, int tb_num) {
+		Map<String, String> response = new HashMap<>();
 		String userid = (String) session.getAttribute("userid");
-		String tb_num = sDto.getTb_num();
-		/*좋아요 KEY는 USERID + TB_NUM*/
-		String goodkey = userid+tb_num;
-		sDto.setGoodkey(goodkey);
-		sDto.setCreate_user(userid);
-		return tboardDao.goodCreate(sDto);
+		String goodkey = userid + tb_num;
+		
+		/*세션에 userid 가 없으면 일단 바로 response 리턴*/
+		if (session.getAttribute("userid") == null) {
+			response.put("status", "fail");
+			response.put("message", "로그인 후 이용하세요");
+			return response;
+		} else {/*userid 있으면*/
+			/*updateTime 구하는 함수*/
+			long checkTime = checkUpdateTime(session, tb_num);
+
+			/*updateTime 5초가 안지났으면*/
+			if (checkTime < 5 * 1000) {
+				response.put("status", "fail");
+				response.put("message", "좋아요 버튼은 5초에 한번만 클릭할 수 있습니다. 잠시 후에 다시 사용하세요");
+				return response;
+			}
+
+			/*해당 글에 이미 좋아요가 있는지 여부 체크*/
+			boolean checked = checkLike(goodkey);
+
+			if (!checked) {
+				/*기존에 안 누른 사람이니까 좋아요 추가 로직*/
+				//좋아요 증가 처리
+
+				Map<String, Object> map = new HashMap<>();
+				map.put("userid", userid);
+				map.put("tb_num", tb_num);
+				map.put("goodkey", goodkey);
+				/*결과가 1이면 true, 0아니면 false*/
+				boolean result = (tboardDao.addLike(map) == 1) ? true : false;
+				if(result){
+					//조회수 올린 시간 저장
+					session.setAttribute("update_time_" + tb_num, System.currentTimeMillis());
+
+					response.put("status", "likeCheck");
+					response.put("message", "좋아요 등록 성공");
+					return response;
+
+
+				}else{
+					response.put("status", "fail");
+					response.put("message", "좋아요 등록 실패");
+					return response;
+				}
+
+			} else {
+				/*기존 좋아요에 있으니까 삭제로직*/
+				boolean result = deleteLike(session, tb_num);
+				if(result){
+					response.put("status", "likeDelete");
+					response.put("message", "좋아요 취소 성공");
+					return response;
+				}else{
+					response.put("status", "fail");
+					response.put("message", "좋아요 취소 실패");
+					return response;
+				}
+			}
+		}
+	}
+
+	/*중고거래 좋아요 체크*/
+	@Override
+	public boolean checkLike(String goodkey){
+		boolean result = false;
+		int checked = tboardDao.checkLike(goodkey);
+		if(checked==1){
+			return result = true;
+		}else{
+			return result;
+		}
 
 	}
+	/*좋아요 세션 시간 체크*/
 	@Override
-	public int goodDelete(TradeSearchDTO sDto, HttpSession session) {
-		String userid = (String) session.getAttribute("userid");
-		sDto.setCreate_user(userid);
-		return tboardDao.goodDelete(sDto);
+	public long checkUpdateTime(HttpSession session, int tb_num) {
+		long update_time = 0;
+		//최근에 좋아요 누른 시간
+		update_time = (long) session.getAttribute("update_time_" + tb_num);
+
+		long current_time = System.currentTimeMillis();
+
+		return (current_time - update_time); /*밀리세컨 단위. 하면 초단위 * 1000 한 값*/
+	}
+	/*중고거래 좋아요 삭제*/
+	@Override
+	public boolean deleteLike(HttpSession session, int tb_num) {
+		/*기존에 누른 사람이니까 좋아요 취소 로직*/
+		/*결과가 1이면 true, 0아니면 false*/
+		boolean result = false;
+		String goodkey = (String) session.getAttribute("userid") + tb_num;
+
+		int deleted = tboardDao.deleteLike(goodkey);
+		if(deleted == 1){
+			session.setAttribute("update_time_"+tb_num, System.currentTimeMillis());
+			return result = true;
+		}
+		return result;
 	}
 
-	
 }
