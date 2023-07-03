@@ -306,7 +306,7 @@
                 </h1>
             <div id="postDetail">
                 <div>
-                    <span>${vo.nickName}</span>
+                    <span>${vo.nickName}${vo.anickname}</span>
                     <span>조회 ${vo.views}</span>
                     <span>
                         <img src="${path}/images/game/pink_heart.png" width="15px">
@@ -395,7 +395,7 @@
 
                 <c:if test="${null eq vo.topReplyRegNum}">
                 <tr>
-                    <td><b>${vo.nickname}</b></td>
+                    <td><b>${vo.nickname}${vo.anickname}</b></td>
                     <td>${vo.createDate}</td>
                     <td style="display: none">${vo.replyRegNum}</td>
                     <td style="display: none">${vo.del}</td>
@@ -449,7 +449,7 @@
                         <%--댓글 답글 나누기, topReplyRegNum != null이 아니면 답글--%>
                     <c:if test="${null ne vo.topReplyRegNum}">
                 <tr>
-                    <td style="padding-left:50px"><b>└ ${vo.nickname}</b></td>
+                    <td style="padding-left:50px"><b>└ ${vo.nickname}${vo.anickname}</b></td>
                     <td>${vo.createDate}</td>
                     <td style="display: none">${vo.replyRegNum}</td>
 

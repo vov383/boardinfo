@@ -32,6 +32,8 @@
 					SELECT R.REG_NUM AS REGNUM
 						 , M.USERID
 						 , M.NICKNAME
+						 , AD.ADMIN_ID AS ADMINID
+						 , AD.NICKNAME AS ANICKNAME
 						 , R.CATEGORY
 						 , R.VIEWS
 						 , R.TITLE
@@ -46,7 +48,9 @@
 						 , TO_CHAR(R.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE
 					  FROM REVIEW R
                          , MEMBER M
+						 , ADMIN AD
 					 WHERE R.CREATE_USER = M.USERID(+)
+					   AND R.CREATE_USER = AD.ADMIN_ID(+)
 					   AND R.DEL = 'N'
 					<!--검색-->
 					<if test="searchTitle != '' and searchTitle != null">
@@ -82,9 +86,11 @@
 	<select id="reviewListCnt" parameterType="hashMap" resultType="int">
 		SELECT count(1)
 		FROM REVIEW R
-		   , MEMBER M
+		, MEMBER M
+		, ADMIN AD
 		WHERE R.CREATE_USER = M.USERID(+)
-		  AND R.DEL = 'N'
+		AND R.CREATE_USER = AD.ADMIN_ID(+)
+		AND R.DEL = 'N'
 		/*검색*/
 		<if test="searchTitle != '' and searchTitle != null">
 			AND (R.TITLE LIKE '%'||#{searchTitle}||'%'
