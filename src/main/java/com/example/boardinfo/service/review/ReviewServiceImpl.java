@@ -55,7 +55,15 @@ public class ReviewServiceImpl implements ReviewService {
 	public void reviewCreate(ReviewDTO reviewDTO, HttpSession session){
 
 		String userid = (String) session.getAttribute("userid");
-		reviewDTO.setCreateUser(userid);
+		String adminid = (String) session.getAttribute("admin_id");
+
+		if (userid != null){
+			reviewDTO.setCreateUser(userid);		}
+
+		if (adminid != null){
+			reviewDTO.setCreateUser(adminid);
+		}
+
 
 /*
 		System.out.println("testtesttesttesttesttesttesttesttesttest");
@@ -91,8 +99,18 @@ public class ReviewServiceImpl implements ReviewService {
 	/*리뷰 수정*/
 	@Transactional
 	@Override
-	public void reviewUpdate(ReviewDTO reviewDTO){
+	public void reviewUpdate(ReviewDTO reviewDTO, HttpSession session){
 
+		String userid = (String) session.getAttribute("userid");
+		String adminid = (String) session.getAttribute("admin_id");
+
+		if (userid != null){
+			reviewDTO.setCreateUser(userid);
+		}
+
+		if (adminid != null){
+			reviewDTO.setCreateUser(adminid);
+		}
 
 		/*System.out.println("reviewUpdate : " + new Gson().toJson(reviewDTO));*/
 		reviewDAO.reviewUpdate(reviewDTO);
@@ -101,7 +119,19 @@ public class ReviewServiceImpl implements ReviewService {
 	/*리뷰 삭제*/
 	@Transactional
 	@Override
-	public void reviewDel(reviewSerchDTO reviewserchDTO){
+	public void reviewDel(reviewSerchDTO reviewserchDTO, HttpSession session){
+
+		String userid = (String) session.getAttribute("userid");
+		String adminid = (String) session.getAttribute("admin_id");
+
+		if (userid != null){
+			reviewserchDTO.setCreateUser(userid);
+		}
+
+		if (adminid != null){
+			reviewserchDTO.setCreateUser(adminid);
+		}
+
 
 		/*System.out.println("testestestestestestestest");
 		System.out.println("testestestestestestestest");
@@ -129,7 +159,16 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public void reviewGoodCreate(reviewSerchDTO reviewserchDTO, HttpSession session){
 		String userid = (String) session.getAttribute("userid");
-		reviewserchDTO.setCreateUser(userid);
+		String adminid = (String) session.getAttribute("admin_id");
+
+		if (userid != null){
+			reviewserchDTO.setCreateUser(userid);
+		}
+
+		if (adminid != null){
+			reviewserchDTO.setCreateUser(adminid);
+		}
+
 		reviewDAO.reviewGoodCreate(reviewserchDTO);
 
 	}
@@ -138,18 +177,38 @@ public class ReviewServiceImpl implements ReviewService {
 	@Transactional
 	@Override
 	public void reviewReply(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
+
 		String userid = (String) session.getAttribute("userid");
-		replyCommentsDTO.setCreateUser(userid);
+		String adminid = (String) session.getAttribute("admin_id");
+
+		if (userid != null){
+			replyCommentsDTO.setCreateUser(userid);
+		}
+
+		if (adminid != null){
+			replyCommentsDTO.setCreateUser(adminid);
+		}
+
+
 		reviewDAO.reviewReply(replyCommentsDTO);
 
 	}
 
-	/*리뷰 댓글 입력*/
+	/*리뷰 댓글 수정*/
 	@Transactional
 	@Override
 	public void reviewReplyUpdate(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
 		String userid = (String) session.getAttribute("userid");
-		replyCommentsDTO.setCreateUser(userid);
+		String adminid = (String) session.getAttribute("admin_id");
+
+		if (userid != null){
+			replyCommentsDTO.setCreateUser(userid);
+		}
+
+		if (adminid != null){
+			replyCommentsDTO.setCreateUser(adminid);
+		}
+
 		reviewDAO.reviewReplyUpdate(replyCommentsDTO);
 
 	}
@@ -158,8 +217,18 @@ public class ReviewServiceImpl implements ReviewService {
 	@Transactional
 	@Override
 	public void reviewReplyDel(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
+
 		String userid = (String) session.getAttribute("userid");
-		replyCommentsDTO.setCreateUser(userid);
+		String adminid = (String) session.getAttribute("admin_id");
+
+		if (userid != null){
+			replyCommentsDTO.setCreateUser(userid);
+		}
+
+		if (adminid != null){
+			replyCommentsDTO.setCreateUser(adminid);
+		}
+
 		reviewDAO.reviewReplyDel(replyCommentsDTO);
 
 	}
@@ -179,9 +248,18 @@ public class ReviewServiceImpl implements ReviewService {
 	@Transactional
 	@Override
 	public void topreplyinsetsave(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
+
 		String userid = (String) session.getAttribute("userid");
-		replyCommentsDTO.setCreateUser(userid);
-//		reviewDAO.topreplyinsetsave(replyCommentsDTO);
+		String adminid = (String) session.getAttribute("admin_id");
+
+		if (userid != null){
+			replyCommentsDTO.setCreateUser(userid);
+		}
+
+		if (adminid != null){
+			replyCommentsDTO.setCreateUser(adminid);
+		}
+
 		reviewDAO.reviewReply(replyCommentsDTO);
 
 	}

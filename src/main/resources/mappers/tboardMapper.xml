@@ -245,7 +245,7 @@
         select  tb_num, create_date, title, category, address1, address2, view_count, price,re_count
         from    (
         </if>
-                select  tb_num, create_date, title, category, address1, address2, view_count, price,
+                select  tb_num, to_char(create_date, 'yyyy-mm-dd') as create_date, title, category, address1, address2, view_count, price,
                         (select count(*)
                         from    tb_comments c
                         where   c.tb_num = t.tb_num and del='N'
@@ -263,11 +263,19 @@
         </if>
     </select>
 
+    <select id="totalSearchCount" resultType="int">
+        select  count(*)
+        from    t_board t
+        where   regexp_like(title, #{gameKeyword},'i') AND t.del = 'N'
+    </select>
+
+
     <!--좋아요 체크-->
     <select id="checkLike" resultType="int">
         select count(GOODKEY) from TRADEGOOD
         where GOODKEY = #{goodkey}
     </select>
+
 
     <!--좋아요 C-->
     <insert id="addLike">

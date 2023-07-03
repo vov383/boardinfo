@@ -26,10 +26,10 @@ public interface ReviewService {
     void reviewCreate(ReviewDTO reviewDTO, HttpSession session);
 
     /*리뷰 수정*/
-    void reviewUpdate(ReviewDTO reviewDTO);
+    void reviewUpdate(ReviewDTO reviewDTO, HttpSession session);
 
     /*리뷰 삭제*/
-    void reviewDel(reviewSerchDTO reviewserchDTO);
+    void reviewDel(reviewSerchDTO reviewserchDTO, HttpSession session);
 
     /*신고하기*/
     void reviewDetailwaringCreate(reviewSerchDTO reviewserchDTO, HttpSession session);

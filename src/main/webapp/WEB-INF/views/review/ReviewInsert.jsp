@@ -248,10 +248,10 @@
                 <option value="질문" <c:if test='${"질문" eq vo.category}'>selected</c:if>>질문</option>
               </c:when>
               <c:otherwise>
-                <option value="자유게시판" <c:if test='${"자유게시판" eq vo.category}'>selected</c:if>>게임포럼 > 게임후기</option>
-                <option value="게임후기" <c:if test='${"게임후기" eq vo.category}'>selected</c:if>>게임포럼 > 노하우</option>
-                <option value="노하우" <c:if test='${"노하우" eq vo.category}'>selected</c:if>>게임포럼 > 질문</option>
-                <option value="질문" <c:if test='${"질문" eq vo.category}'>selected</c:if>>자유게시판</option>
+                <option value="게임후기" <c:if test='${"게임후기" eq vo.category}'>selected</c:if>>게임포럼 > 게임후기</option>
+                <option value="노하우" <c:if test='${"노하우" eq vo.category}'>selected</c:if>>게임포럼 > 노하우</option>
+                <option value="질문" <c:if test='${"질문" eq vo.category}'>selected</c:if>>게임포럼 > 질문</option>
+                <option value="자유게시판" <c:if test='${"자유게시판" eq vo.category}'>selected</c:if>>자유게시판</option>
               </c:otherwise>
             </c:choose>
           </select>
@@ -309,10 +309,10 @@
               <option value="질문" <c:if test='${"질문" eq vo.category}'>selected</c:if>>질문</option>
             </c:when>
             <c:otherwise>
-              <option value="자유게시판" <c:if test='${"자유게시판" eq vo.category}'>selected</c:if>>게임포럼 > 게임후기</option>
-              <option value="게임후기" <c:if test='${"게임후기" eq vo.category}'>selected</c:if>>게임포럼 > 노하우</option>
-              <option value="노하우" <c:if test='${"노하우" eq vo.category}'>selected</c:if>>게임포럼 > 질문</option>
-              <option value="질문" <c:if test='${"질문" eq vo.category}'>selected</c:if>>자유게시판</option>
+              <option value="게임후기" <c:if test='${"게임후기" eq vo.category}'>selected</c:if>>게임포럼 > 게임후기</option>
+              <option value="노하우" <c:if test='${"노하우" eq vo.category}'>selected</c:if>>게임포럼 > 노하우</option>
+              <option value="질문" <c:if test='${"질문" eq vo.category}'>selected</c:if>>게임포럼 > 질문</option>
+              <option value="자유게시판" <c:if test='${"자유게시판" eq vo.category}'>selected</c:if>>자유게시판</option>
             </c:otherwise>
           </c:choose>
         </select>
