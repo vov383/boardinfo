@@ -100,7 +100,7 @@
 				<td>
 					<input name="gametitle" id="gametitle" class="input_game" value="${dto.gametitle}" maxlength="100">
 					<div>
-						<label for="gametitle">콤마(,)를 제외한 게임명을 입력해주세요</label>
+						<label for="gametitle">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -112,7 +112,7 @@
 				<td>
 					<input name="gametitle_eng" id="gametitle_eng" class="input_game" value="${dto.gametitle_eng}" maxlength="100">
 					<div>
-						<label for="gametitle_eng">콤마(,)를 제외한 게임의 영문명을 입력해주세요</label>
+						<label for="gametitle_eng">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -142,7 +142,7 @@
 					<input type="hidden" name="designer" id="designer" value="${dto.designer}">
 					<input id="inputDesigner" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputDesigner">디자이너명을 입력하세요</label>
+						<label for="inputDesigner">디자이너명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="designerSuggestions"></div>
@@ -224,7 +224,7 @@
 					<input type="hidden" name="artist" id="artist" value="${dto.artist}">
 					<input id="inputArtist" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputArtist">아티스트명을 입력하세요</label>
+						<label for="inputArtist">아티스트명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="artistSuggestions"></div>
@@ -304,7 +304,7 @@
 					<input type="hidden" name="publisher" id="publisher" value="${dto.publisher}">
 					<input id="inputPublisher" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputPublisher">제작사명을 입력하세요</label>
+						<label for="inputPublisher">제작사명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="publisherSuggestions"></div>
@@ -318,7 +318,7 @@
 				<td>
 					<input name="players" id="players" class="input_game" value="${dto.players}" maxlength="20">
 					<div>
-						<label for="players">게임의 권장 플레이 인원을 입력하세요</label>
+						<label for="players">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -330,7 +330,7 @@
 				<td>
 					<input name="playtime" id="playtime" class="input_game" value="${dto.playtime}" maxlength="20">
 					<div>
-						<label for="playtime">게임의 플레이 시간을 입력하세요</label>
+						<label for="playtime">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -341,7 +341,7 @@
 				<td>사용연령</td>
 				<td><input name="ages" id="ages" class="input_game" value="${dto.ages}" maxlength="20">
 					<div>
-						<label for="ages">게임의 사용 연령을 입력하세요</label>
+						<label for="ages">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -352,7 +352,7 @@
 				<td>발매년도</td>
 				<td><input type="number" name="release_year" id="release_year" class="input_game" value="${dto.release_year}" oninput='numberInput(this, 4)'>
 					<div>
-						<label for="release_year">게임의 발매년도를 입력하세요</label>
+						<label for="release_year">4자리 숫자로 입력</label>
 					</div>
 				</td>
 
@@ -364,7 +364,7 @@
 				<td>
 					<input name="language" id="language" class="input_game" value="${dto.language}" maxlength="20">
 					<div>
-						<label for="language">게임의 사용 언어를 입력하세요</label>
+						<label for="language">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -379,7 +379,7 @@
 					<input type="hidden" name="expansion" id="expansion" value="${dto.expansion}">
 					<input id="inputEx" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputEx">게임의 원본 게임명을 입력하세요</label>
+						<label for="inputEx">게임의 원본 게임명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="exSuggestions"></div>
@@ -396,7 +396,7 @@
 					<input type="hidden" name="reimplement" id="reimplement" value="${dto.reimplement}">
 					<input id="inputRe" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputRe">게임의 원본 게임명을 입력하세요</label>
+						<label for="inputRe">게임의 원본 게임명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="reSuggestions"></div>
@@ -668,7 +668,8 @@
 		if (gamecategoryValue) {
 			selectedCategories = gamecategoryValue.split(",");
 			selectedCategories.forEach(function(category) {
-				$("#selectedCategory").append("<div class='selected-value cursor_pointer'>" + category + "</div>");
+				$("#selectedCategory").append("<div class='selected-value'>" + category
+						+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 				$("#tableCategory td").filter(function() {
 					return $(this).text() === category;
 				}).addClass("selected");
@@ -691,7 +692,8 @@
 						selectedCategories.push(newCategory);
 
 						// 선택된 값 표시
-						$("#selectedCategory").append("<div class='selected-value cursor_pointer'>" + newCategory + "</div>");
+						$("#selectedCategory").append("<div class='selected-value'>" + newCategory
+								+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 					}
 					updateGameCategoryInput();
 				}
@@ -714,7 +716,8 @@
 		    	selectedCategories.push(selectedcategory);
 
 		      	// 선택된 값 표시
-		  	    $("#selectedCategory").append("<div class='selected-value cursor_pointer'>" + selectedcategory + "</div>");
+		  	    $("#selectedCategory").append("<div class='selected-value'>" + selectedcategory
+						+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 
 		      	// 선택된 <td> 태그에 'selected' 클래스 추가하여 클릭 불가능하게 만듦
 		 	    $(this).addClass("selected");
@@ -723,9 +726,9 @@
 		});
 		  
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedCategory").on("click", ".selected-value", function() {
+		$("#selectedCategory").on("click", ".deleteGame", function() {
 			
-			var value = $(this).text();
+			var value = $(this).closest(".selected-value").text();
 			var filter = "category"
 
 		    // 선택된 값 db에 존재할 경우 삭제되도록 처리
@@ -740,7 +743,7 @@
 			});
 
 			// 선택된 값 표시가 삭제되도록 처리
-			$(this).remove();
+			$(this).closest(".selected-value").remove();
 
 		    updateGameCategoryInput();
 		  });
@@ -754,7 +757,8 @@
 		if (mechanicValue) {
 			selectedMechanics = mechanicValue.split(",");
 			selectedMechanics.forEach(function(mechanic) {
-				$("#selectedMechanic").append("<div class='selected-value cursor_pointer'>" + mechanic + "</div>");
+				$("#selectedMechanic").append("<div class='selected-value'>" + mechanic
+						+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 				$("#tableMechanic td").filter(function() {
 					return $(this).text() === mechanic;
 				}).addClass("selected");
@@ -776,7 +780,8 @@
 						selectedMechanics.push(newMechanic);
 
 						// 선택된 값 표시
-						$("#selectedMechanic").append("<div class='selected-value cursor_pointer'>" + newMechanic + "</div>");
+						$("#selectedMechanic").append("<div class='selected-value'>" + newMechanic
+								+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 					}
 					updateGameMechanicInput();
 				}
@@ -800,7 +805,8 @@
 		    	selectedMechanics.push(selectedMechanic);
 
 		      	// 선택된 값 표시
-		  	    $("#selectedMechanic").append("<div class='selected-value cursor_pointer'>" + selectedMechanic + "</div>");
+		  	    $("#selectedMechanic").append("<div class='selected-value'>" + selectedMechanic
+						+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 
 		      	// 선택된 <td> 태그에 'selected' 클래스 추가하여 클릭 불가능하게 만듦
 		 	    $(this).addClass("selected");
@@ -811,9 +817,9 @@
 		});
 		  
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedMechanic").on("click", ".selected-value", function() {
+		$("#selectedMechanic").on("click", ".deleteGame", function() {
 			
-			var value = $(this).text();
+			var value = $(this).closest(".selected-value").text();
 
 		    // 선택된 값 배열에서 해당 값을 제거
 		    selectedMechanics = selectedMechanics.filter(function(selected) {
@@ -821,7 +827,7 @@
 		    });
 
 		    // 선택된 값 표시가 삭제되도록 처리
-		    $(this).remove();
+			$(this).closest(".selected-value").remove();
 		    
 		    updateGameMechanicInput()
 		  });
@@ -865,7 +871,8 @@
 		if (artistValue) {
 			selectedArtists = artistValue.split(",");
 			selectedArtists.forEach(function(artist) {
-				$("#selectedArtist").append("<div class='selected cursor_pointer'>" + artist + "</div>");
+				$("#selectedArtist").append("<div class='selected-value'>" + artist
+						+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 			});
 		}
 
@@ -884,7 +891,8 @@
 						selectedArtists.push(newArtist);
 
 						// 선택된 값 표시
-						$("#selectedArtist").append("<div class='selected-value'>" + newArtist + "</div>");
+						$("#selectedArtist").append("<div class='selected-value'>" + newArtist
+								+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 					}
 					updateArtistInput();
 				}
@@ -896,7 +904,8 @@
 		$('#artistSuggestions').on('click', '.searched', function() {
 			var selectedArtist = $(this).text();
 			selectedArtists.push(selectedArtist);
-			$("#selectedArtist").append("<div class='selected cursor_pointer'>" + selectedArtist + "</div>");
+			$("#selectedArtist").append("<div class='selected-value'>" + selectedArtist
+					+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 			console.log("배열"+selectedArtists);
 			$("#inputArtist").val("");
 			$("#artistSuggestions").empty().hide();
@@ -905,9 +914,9 @@
 		});
 
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedArtist").on("click", ".selected", function() {
+		$("#selectedArtist").on("click", ".deleteGame", function() {
 
-			var value = $(this).text();
+			var value = $(this).closest(".selected-value").text();
 
 			// 선택된 값 배열에서 해당 값을 제거
 			selectedArtists = selectedArtists.filter(function(selected) {
@@ -915,7 +924,7 @@
 			});
 
 			// 선택된 값 표시가 삭제되도록 처리
-			$(this).remove();
+			$(this).closest(".selected-value").remove();
 
 			updateArtistInput();
 			console.log("인풋"+$("#artist").val());
@@ -956,7 +965,8 @@
 		if (designerValue) {
 			selectedDesigners = designerValue.split(",");
 			selectedDesigners.forEach(function(designer) {
-				$("#selectedDesigner").append("<div class='selected cursor_pointer'>" + designer + "</div>");
+				$("#selectedDesigner").append("<div class='selected-value'>" + designer
+						+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 			});
 		}
 
@@ -975,7 +985,8 @@
 						selectedDesigners.push(newDesigner);
 
 						// 선택된 값 표시
-						$("#selectedDesigner").append("<div class='selected-value'>" + newDesigner + "</div>");
+						$("#selectedDesigner").append("<div class='selected-value'>" + newDesigner
+								+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 					}
 					updateDesignerInput();
 				}
@@ -987,7 +998,8 @@
 		$('#designerSuggestions').on('click', '.searched', function() {
 			var selectedDesigner = $(this).text();
 			selectedDesigners.push(selectedDesigner);
-			$("#selectedDesigner").append("<div class='selected cursor_pointer'>" + selectedDesigner + "</div>");
+			$("#selectedDesigner").append("<div class='selected-value'>" + selectedDesigner
+					+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 			console.log("배열"+selectedDesigners);
 			$("#inputDesigner").val("");
 			$("#designerSuggestions").empty().hide();
@@ -996,9 +1008,9 @@
 		});
 
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedDesigner").on("click", ".selected", function() {
+		$("#selectedDesigner").on("click", ".deleteGame", function() {
 
-			var value = $(this).text();
+			var value = $(this).closest(".selected-value").text();
 
 			// 선택된 값 배열에서 해당 값을 제거
 			selectedDesigners = selectedDesigners.filter(function(selected) {
@@ -1006,7 +1018,7 @@
 			});
 
 			// 선택된 값 표시가 삭제되도록 처리
-			$(this).remove();
+			$(this).closest(".selected-value").remove();
 
 			updateDesignerInput();
 			console.log("인풋"+$("#designer").val());
@@ -1047,7 +1059,8 @@
 		if (publisherValue) {
 			selectedPublishers = publisherValue.split(",");
 			selectedPublishers.forEach(function(publisher) {
-				$("#selectedPublisher").append("<div class='selected cursor_pointer'>" + publisher + "</div>");
+				$("#selectedPublisher").append("<div class='selected-value'>" + publisher
+						+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 			});
 		}
 
@@ -1066,7 +1079,8 @@
 						selectedPublishers.push(newPublisher);
 
 						// 선택된 값 표시
-						$("#selectedPublisher").append("<div class='selected-value'>" + newPublisher + "</div>");
+						$("#selectedPublisher").append("<div class='selected-value'>" + newPublisher
+								+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 					}
 					updatePublisherInput();
 				}
@@ -1078,7 +1092,8 @@
 		$('#publisherSuggestions').on('click', '.searched', function() {
 			var selectedPublisher = $(this).text();
 			selectedPublishers.push(selectedPublisher);
-			$("#selectedPublisher").append("<div class='selected cursor_pointer'>" + selectedPublisher + "</div>");
+			$("#selectedPublisher").append("<div class='selected-value'>" + selectedPublisher
+					+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 			console.log("배열"+selectedPublishers);
 			$("#inputPublisher").val("");
 			$("#publisherSuggestions").empty().hide();
@@ -1087,9 +1102,9 @@
 		});
 
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedPublisher").on("click", ".selected", function() {
+		$("#selectedPublisher").on("click", ".deleteGame", function() {
 
-			var value = $(this).text();
+			var value = $(this).closest(".selected-value").text();
 
 			// 선택된 값 배열에서 해당 값을 제거
 			selectedPublishers = selectedPublishers.filter(function(selected) {
@@ -1097,7 +1112,7 @@
 			});
 
 			// 선택된 값 표시가 삭제되도록 처리
-			$(this).remove();
+			$(this).closest(".selected-value").remove();
 
 			updatePublisherInput();
 			console.log("인풋"+$("#publisher").val());
@@ -1146,7 +1161,8 @@
 		if (expansionValue) {
 			selectedExs = expansionValue.split(",");
 			selectedExs.forEach(function(expansion) {
-				$("#selectedEx").append("<div class='selected cursor_pointer'>" + expansion + "</div>");
+				$("#selectedEx").append("<div class='selected-value'>" + expansion
+						+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 			});
 		}
 
@@ -1161,7 +1177,8 @@
 			var selectedEx = $(this).text();
 			console.log(selectedEx);
 			selectedExs.push(selectedEx);
-			$("#selectedEx").append("<div class='selected-value cursor_pointer'>" + selectedEx + "</div>");
+			$("#selectedEx").append("<div class='selected-value'>" + selectedEx
+					+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 			console.log("배열"+selectedExs);
 			$("#inputEx").val("");
 			$("#exSuggestions").empty().hide();
@@ -1170,9 +1187,9 @@
 		});
 
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedEx").on("click", ".selected-value", function() {
+		$("#selectedEx").on("click", ".deleteGame", function() {
 
-			var value = $(this).text();
+			var value = $(this).closest(".selected-value").text();
 
 			// 선택된 값 배열에서 해당 값을 제거
 			selectedExs = selectedExs.filter(function(selected) {
@@ -1180,7 +1197,7 @@
 			});
 
 			// 선택된 값 표시가 삭제되도록 처리
-			$(this).remove();
+			$(this).closest(".selected-value").remove();
 
 			updateExInput();
 			console.log("인풋"+$("#expansion").val());
@@ -1222,7 +1239,8 @@
 		if (reimplementValue) {
 			selectedRes = reimplementValue.split(",");
 			selectedRes.forEach(function(reimplement) {
-				$("#selectedRe").append("<div class='selected cursor_pointer'>" + reimplement + "</div>");
+				$("#selectedRe").append("<div class='selected-value'>" + reimplement
+						+ "<span class='deleteGame'>&nbsp;x</span></div></div>");
 			});
 		}
 
@@ -1246,9 +1264,9 @@
 		});
 
 		// 선택된 값 클릭 이벤트 처리
-		$("#selectedRe").on("click", ".selected-value", function() {
+		$("#selectedRe").on("click", ".deleteGame", function() {
 
-			var value = $(this).text();
+			var value = $(this).closest(".selected-value").text();
 
 			// 선택된 값 배열에서 해당 값을 제거
 			selectedRes = selectedRes.filter(function(selected) {
@@ -1256,7 +1274,7 @@
 			});
 
 			// 선택된 값 표시가 삭제되도록 처리
-			$(this).remove();
+			$(this).closest(".selected-value").remove();
 
 			updateReInput();
 			console.log("인풋"+$("#reimplement").val());

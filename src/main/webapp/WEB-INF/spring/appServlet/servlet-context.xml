@@ -93,6 +93,15 @@
 		 <mapping path="/game/autoArtist.do/*"/>
 		 <mapping path="/game/autoPublisher.do/*"/>
 		 <mapping path="/game/autoDesigner.do/*"/>
+
+		 <mapping path="/admin/confirmList/*"/>
+		 <mapping path="/admin/deleteitem/*"/>
+		 <mapping path="/admin/updateGame/*"/>
+		 <mapping path="/admin/denyGame/*"/>
+		 <mapping path="/admin/allowGame/*"/>
+		 <mapping path="/admin/deleteGame/*"/>
+
+
 		 <beans:ref bean="loginInterceptor"/>
 	 </interceptor>
 	

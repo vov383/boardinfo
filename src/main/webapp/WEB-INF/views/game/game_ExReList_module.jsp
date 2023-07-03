@@ -124,7 +124,7 @@
                         }
                         tableRow += '</td>';
                         tableRow += '<td><a href="${path}/game/view.do?gnum=' + row.gnum + '">' + row.gametitle + '<br>(' + row.gametitle_eng + ')</a></td>';
-                        tableRow += '<td>' + row.category + '</td>';
+                        tableRow += '<td>' + row.theme + '</td>';
                         if (row.rate != null && row.rate != "") {
 
                             tableRow += '<td><strong>'+ rate +'</strong>(' + row.tot + ')</td>';

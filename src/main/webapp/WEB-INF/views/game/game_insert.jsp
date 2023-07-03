@@ -96,7 +96,7 @@
 				<td>
 					<input name="gametitle" id="gametitle" class="input_game" maxlength="100">
 					<div>
-						<label for="gametitle">콤마(,)를 제외한 게임명을 입력해주세요</label>
+						<label for="gametitle">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -108,7 +108,7 @@
 				<td>
 					<input name="gametitle_eng" id="gametitle_eng" class="input_game" maxlength="100">
 					<div>
-						<label for="gametitle_eng">콤마(,)를 제외한 게임의 영문명을 입력해주세요</label>
+						<label for="gametitle_eng">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -126,7 +126,7 @@
 					<input type="hidden" name="designer" id="designer">
 					<input id="inputDesigner" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputDesigner">디자이너명을 입력하세요</label>
+						<label for="inputDesigner">디자이너명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="designerSuggestions"></div>
@@ -208,7 +208,7 @@
 					<input type="hidden" name="artist" id="artist">
 					<input id="inputArtist" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputArtist">아티스트명을 입력하세요</label>
+						<label for="inputArtist">아티스트명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="artistSuggestions"></div>
@@ -289,7 +289,7 @@
 					<input type="hidden" name="publisher" id="publisher">
 					<input id="inputPublisher" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputPublisher">제작사명을 입력하세요</label>
+						<label for="inputPublisher">제작사명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="publisherSuggestions"></div>
@@ -303,7 +303,7 @@
 				<td>
 					<input name="players" id="players" class="input_game" maxlength="20">
 					<div>
-						<label for="players">게임의 권장 플레이 인원을 입력하세요</label>
+						<label for="players">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -315,7 +315,7 @@
 				<td>
 					<input name="playtime" id="playtime" class="input_game" maxlength="20">
 					<div>
-						<label for="playtime">게임의 플레이 시간을 입력하세요</label>
+						<label for="playtime">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -327,7 +327,7 @@
 				<td>
 					<input name="ages" id="ages" class="input_game" maxlength="20">
 					<div>
-						<label for="ages">게임의 사용 연령을 입력하세요</label>
+						<label for="ages">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -339,7 +339,7 @@
 				<td>
 					<input type="number" name="release_year" id="release_year" class="input_game" oninput='numberInput(this, 4)'>
 					<div>
-						<label for="release_year">게임의 발매년도를 입력하세요</label>
+						<label for="release_year">4자리 숫자로 입력</label>
 					</div>
 				</td>
 
@@ -351,7 +351,7 @@
 				<td>
 					<input name="language" id="language" class="input_game" maxlength="20">
 					<div>
-						<label for="language">게임의 사용 언어를 입력하세요</label>
+						<label for="language">특수문자(, &lt; &gt; $) 제외</label>
 					</div>
 				</td>
 
@@ -366,7 +366,7 @@
 					<input type="hidden" name="expansion" id="expansion">
 					<input id="inputEx" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputEx">게임의 원본 게임명을 입력하세요</label>
+						<label for="inputEx">게임의 원본 게임명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="exSuggestions"></div>
@@ -383,7 +383,7 @@
 					<input type="hidden" name="reimplement" id="reimplement">
 					<input id="inputRe" class="input_game" autocomplete="off">
 					<div>
-						<label for="inputRe">게임의 원본 게임명을 입력하세요</label>
+						<label for="inputRe">게임의 원본 게임명을 검색후 선택하세요</label>
 					</div>
 
 					<div id="reSuggestions"></div>
@@ -708,7 +708,9 @@
 
 		    // 선택된 값 표시가 삭제되도록 처리
 			$(this).closest(".selected-value").remove();
-		    
+			// 다시 테이블에서 클릭 가능하게 만듦
+			$("#tableCategory td:contains(" + value + ")").removeClass("selected");
+
 		    updateGameCategoryInput();
 		  });
 		
