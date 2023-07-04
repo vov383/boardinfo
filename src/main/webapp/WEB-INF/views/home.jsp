@@ -18,6 +18,7 @@
             charset="utf-8"></script>
     <%@ include file="include/js/header.jsp" %>
 
+
     <style>
 
         #main_lower{

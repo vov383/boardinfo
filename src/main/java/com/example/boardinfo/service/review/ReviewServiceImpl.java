@@ -1,9 +1,12 @@
 package com.example.boardinfo.service.review;
 
+import com.example.boardinfo.controller.game.GameController;
 import com.example.boardinfo.model.review.dao.ReviewDAO;
 import com.example.boardinfo.model.review.dto.*;
 
 import com.example.boardinfo.util.Pager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,8 @@ import java.util.Map;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
+	private static final Logger logger=
+			LoggerFactory.getLogger(ReviewServiceImpl.class);
 
 	@Inject
     ReviewDAO reviewDAO;
@@ -178,6 +183,7 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public void reviewReply(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
 
+
 		String userid = (String) session.getAttribute("userid");
 		String adminid = (String) session.getAttribute("admin_id");
 
@@ -188,6 +194,7 @@ public class ReviewServiceImpl implements ReviewService {
 		if (adminid != null){
 			replyCommentsDTO.setCreateUser(adminid);
 		}
+
 
 
 		reviewDAO.reviewReply(replyCommentsDTO);
