@@ -1,8 +1,10 @@
 package com.example.boardinfo.model.mypage.dao;
 
+import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.mypage.dto.MypageDTO;
+import com.example.boardinfo.model.mypage.dto.MypageGameDTO;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.tboard.dto.TBoardDTO;
 
@@ -22,4 +24,26 @@ public interface MypageDAO {
 
     /*중고거래 list by userid*/
     List<TBoardDTO> getTbListByUserid(String userid);
+
+    List<Object> getTabbedList(String userid, String str);
+
+    List<GameDTO> gameInfoTabbed(String userid);
+
+    List<GameRatingDTO> gameRatingTabbed(String userid);
+
+    List<ReviewDTO> reviewTabbed(String userid);
+
+    List<TBoardDTO> tradeTabbed(String userid);
+
+    List<MypageGameDTO> gameInfoMore(String userid);
+
+    List<GameRatingDTO> gameRatingMore(String userid);
+
+    List<ReviewDTO> reviewMore(String userid);
+
+    List<TBoardDTO> tradeMore(String userid);
+
+    List<MypageDTO> gatheringTabbed(String userid);
+
+    List<MypageDTO> gatheringMore(String userid);
 }

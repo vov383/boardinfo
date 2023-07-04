@@ -1,15 +1,19 @@
 package com.example.boardinfo.model.mypage.dao;
 
+import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.mypage.dto.MypageDTO;
+import com.example.boardinfo.model.mypage.dto.MypageGameDTO;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.tboard.dto.TBoardDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class MypageDAOImpl implements MypageDAO{
@@ -43,6 +47,60 @@ public class MypageDAOImpl implements MypageDAO{
         return sqlSession.selectList("mypage.getTbList",userid);
 
     }
+
+    @Override
+    public List<Object> getTabbedList(String userid, String str) {
+        Map<String, String> map = new HashMap<>();
+        map.put("userid", userid);
+        map.put("tableName", str);
+        return sqlSession.selectList("mypage.getTabbedList", map);
+    }
+
+    @Override
+    public List<GameDTO> gameInfoTabbed(String userid) {
+        return sqlSession.selectList("mypage.giTabbed", userid);
+    }
+    @Override
+    public List<MypageGameDTO> gameInfoMore(String userid) {
+        return sqlSession.selectList("mypage.giMore", userid);
+    }
+    @Override
+    public List<GameRatingDTO> gameRatingTabbed(String userid) {
+        return sqlSession.selectList("mypage.grTabbed", userid);
+    }
+    @Override
+    public List<GameRatingDTO> gameRatingMore(String userid) {
+        return sqlSession.selectList("mypage.grMore", userid);
+    }
+
+    @Override
+    public List<ReviewDTO> reviewTabbed(String userid) {
+        return sqlSession.selectList("mypage.rvTabbed", userid);
+    }
+    @Override
+    public List<ReviewDTO> reviewMore(String userid) {
+        return sqlSession.selectList("mypage.rvMore", userid);
+    }
+    @Override
+    public List<MypageDTO> gatheringTabbed(String userid) {
+        return sqlSession.selectList("mypage.gaTabbed", userid);
+    }
+
+    @Override
+    public List<MypageDTO> gatheringMore(String userid) {
+        return sqlSession.selectList("mypage.gaMore", userid);
+    }
+    @Override
+    public List<TBoardDTO> tradeTabbed(String userid) {
+        return sqlSession.selectList("mypage.trTabbed", userid);
+    }
+
+    @Override
+    public List<TBoardDTO> tradeMore(String userid) {
+        return sqlSession.selectList("mypage.trMore", userid);
+    }
+
+
 
 
 }
