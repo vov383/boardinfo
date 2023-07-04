@@ -236,7 +236,14 @@
                                         WHERE rnum = 1) ga ON g.gnum = ga.gnum
                     WHERE CREATE_USER = #{userid}
                     order by CREATE_DATE desc) a)
-        where rn between 1 and 12
+        where rn between #{start} and #{end}
+    </select>
+
+    <!--유저가 작성한 게임인포 게시판 페이징용 카운트-->
+    <select id="countGetGiList" resultType="int">
+        select  count(*)
+        from    game
+        where   create_user = #{userid}
     </select>
 
     <!--유저가 작성한 게임인포 게시판 전체보기-->

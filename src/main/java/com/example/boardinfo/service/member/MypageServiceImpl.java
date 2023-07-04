@@ -13,6 +13,7 @@ import com.example.boardinfo.model.review.dao.ReviewDAO;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.tboard.dao.TBoardDAO;
 import com.example.boardinfo.model.tboard.dto.TBoardDTO;
+import com.example.boardinfo.util.Pager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -94,8 +95,34 @@ public class MypageServiceImpl implements MypageService {
 //    }
 
     @Override
-    public List<GameDTO> getGiList(String userid) {
-        return mypageDao.gameInfoTabbed(userid);
+    public Map<String, Object> getGiList(String userid, int curPage) {
+        int count = mypageDao.countgetGiList(userid);
+
+        Pager pager = new Pager(count, curPage, 10);
+        int start = pager.getPageBegin();
+        int end = pager.getPageEnd();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("userid", userid);
+        map.put("start",start);
+        map.put("end",end);
+
+        List<MypageGameDTO> list = mypageDao.gameInfoTabbed(map);
+        for (MypageGameDTO dto :
+                list) {
+            logger.info("리스트가 안넘어오냐 : " + dto.getGametitle());
+        }
+
+
+
+
+
+        map.put("count",count);
+        map.put("giList",list);
+        map.put("pager",pager);
+
+        return map;
+
     }
 
     @Override

@@ -22,14 +22,12 @@
 
     <%@ include file="../include/js/header.jsp" %>
     <style>
-        .card-body {
-            height: 40vh; /* 개별적인 카드body에 일괄적으로 높이 적용 */
-        }
         .card-img-top {
             /*object-fit은 이미지 크기가 줄면 바깥부터 잘려서 표현됨*/
             /*object-fit: cover;*/
             height: 200px; /* 썸네일 이미지에 일괄적인 높이 적용 */
             width: 80%; /* 섬네일 이미지 컨테이너의 너비 100% 적용 */
+            margin: auto; /*가운데 정렬*/
         }
     </style>
 </head>
@@ -133,53 +131,64 @@
                 </div>
 
             </div>
-            <div class="myPage-contents-left">
-                <%--ajax로 받아온 데이터를 출력할 영역--%>
-<%--                <%@ include file="loadAllPost.jsp" %>--%>
-                <%--게시판 별로 리스트를 여기에 출력--%>
-                <div class="postListWrapper" id="postListWrapper"></div>
-                <div class="tabbedListWrapper" id="tabbedListWrapper"></div>
-            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="myPage-contents-left">
+                        <%--ajax로 받아온 데이터를 출력할 영역--%>
+<%--                        <%@ include file="loadAllPost.jsp" %>--%>
+                        <%--게시판 별로 리스트를 여기에 출력--%>
+                        <div class="postListWrapper" id="postListWrapper"></div>
+                        <div class="tabbedListWrapper" id="tabbedListWrapper"></div>
 
-            <div class="myPage-contents-right">
-                <%--유저 정보 부트스트랩 카드--%>
-                <div class="userInfo">
-                    <input type="hidden" id="userid" name="userid" value="${map.myDto.userid}">
-                    <div class="card" style="width: 18rem;">
-                        <img src="${path}/resources/uploaded_image/${map.myDto.profile}" class="card-img-top"
-                             alt="유저 프로필">
-                        <div class="card-body">
-                            <h5 class="card-title">${map.myDto.nickname}(${map.myDto.userid})</h5>
-                            <p class="card-text">가입 일자 <span>${map.myDto.join_date}</span>일</p>
-                        </div>
-                        <%--작성 글 정보 부트스트랩 리스트 그룹으로 표현--%>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <p class="card-text" id="">작성한 글<span id="totCount">${map.myDto.totCount}</span>개</p>
-                            </li>
-                            <li class="list-group-item">
-                                <p class="card-text">작성 댓글
-                                    <input type="hidden" name="gCount">
-                                    <span id="totReCount">${map.myDto.reTotCount}</span>개</p>
-                            </li>
-                            <li class="list-group-item">
-                                <p class="card-text">좋아요 누른 글<span id="totLikeCount">${map.myDto.likeTotCount}</span>개</p>
-                            </li>
-                        </ul>
-                        <div class="card-body">
-                        </div>
                     </div>
-                    <div class="userImg"></div>
-                    <div class="userNickname"></div>
-                    <div class="user-post-count"></div>
-                    <div class="user-reply-count"></div>
-                    <div class="user-info-btn">
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-primary" type="button">내 정보 보기</button>
+
+
+
+
+                </div>
+
+                <div class="col-md-3">
+                <div class="myPage-contents-right">
+                    <%--유저 정보 부트스트랩 카드--%>
+                    <div class="userInfo">
+                        <input type="hidden" id="userid" name="userid" value="${map.myDto.userid}">
+                        <div class="card" style="width: 18rem;">
+                            <img src="${path}/resources/uploaded_image/${map.myDto.profile}" class="card-img-top"
+                                 alt="유저 프로필">
+                            <div class="card-body">
+                                <h5 class="card-title">${map.myDto.nickname}(${map.myDto.userid})</h5>
+                                <p class="card-text">가입 일자 <span>${map.myDto.join_date}</span>일</p>
+                            </div>
+                            <%--작성 글 정보 부트스트랩 리스트 그룹으로 표현--%>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <p class="card-text" id="">작성한 글<span id="totCount">${map.myDto.totCount}</span>개</p>
+                                </li>
+                                <li class="list-group-item">
+                                    <p class="card-text">작성 댓글
+                                        <input type="hidden" name="gCount">
+                                        <span id="totReCount">${map.myDto.reTotCount}</span>개</p>
+                                </li>
+                                <li class="list-group-item">
+                                    <p class="card-text">좋아요 누른 글<span id="totLikeCount">${map.myDto.likeTotCount}</span>개</p>
+                                </li>
+                            </ul>
+                            <div class="card-body">
+                            </div>
+                        </div>
+                        <div class="userImg"></div>
+                        <div class="userNickname"></div>
+                        <div class="user-post-count"></div>
+                        <div class="user-reply-count"></div>
+                        <div class="user-info-btn">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" type="button">내 정보 보기</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                </div>
+        </div>
         </div>
 
 
@@ -238,6 +247,7 @@
             }
         });/*ajax 끝*/
     }/*getPostList() 끝*/
+
 
     /*게시판의 카테고리 별로 가져오는 함수*/
     function listTap(str, element) {
