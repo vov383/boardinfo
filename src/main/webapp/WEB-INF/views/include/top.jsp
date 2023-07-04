@@ -26,6 +26,7 @@
                 </form>
                 <c:choose>
                     <c:when test="${sessionScope.userid == null && sessionScope.admin_id == null}">
+                        <input type="hidden" name="sessionUserid" value="''">
                         <!-- 로그인하지 않은 상태 -->
                         <a href="${path}/member/member_login.do" title="로그인" class="sign" id="signIn">로그인</a>
                         <a href="${path}/member/member_join.do" title="회원가입" class="sign" id="signUp">회원가입</a>
@@ -91,7 +92,7 @@
                         <div class="bi-dropdown-content">
                          <a href="#" onclick="goMypage()">내활동</a>
                             <form name="mypageForm" method="post" style="display: none">
-                                <input type="hidden" name="userid" value="${sessionScope.userid}">
+                                <input type="hidden" id="sessionUserid" name="sessionUserid" value="${sessionScope.userid}">
                             </form>
                          <a href="${path}/member/pass_check_u?userid=${sessionScope.userid}">회원정보</a>
                          <a href="${path}/member/logout.do" class="sign">로그아웃</a>

@@ -1,0 +1,104 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: dbtjr
+  Date: 2023-07-04
+  Time: 오후 12:04
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+<c:set var="path" value="${pageContext.request.contextPath}"/>
+<%@ page session="true" %>
+
+<div id="tabbedPost">
+    <div id="listContainer">
+        <p class="h3">중고 장터</p>
+        <div class="tableDiv">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>썸네일</th>
+                    <th>
+                        카테고리, 제목<br>
+                        댓글</i><span class="dot"></span>
+                        <i class="fa-regular fa-comment-dots"></i>
+                        <span class="dot"></span>
+                        , 조회수<span class="dot"></span>
+                        <i class="fa-solid fa-eye"></i>
+                        <span class="dot"></span>
+                        , 좋아요<span class="dot"></span><i class="fa-solid fa-heart"></i>
+                    </th>
+                    <th>가격</th>
+                    <th>
+                        장소<span class="dot"></span>
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span class="dot"></span>
+                    </th>
+                    <th>작성일<span class="dot"></span><i class="fa-regular fa-clock"></i></th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${trList}" var="trRow">
+                    <tr>
+                        <td>
+                            <c:choose>
+                                <c:when test="${trRow.tb_thumbnail ne null}">
+                                    <img src="${path}/resources/upload${trRow.tb_thumbnail}" class="" style="width: 40px;">
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="${path}/images/no-image-svgrepo-com.svg" class=""
+                                         style="width: 40px; opacity: 20%;">
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td>
+                            <span class="category">${trRow.category}</span>
+                            <span class="dot"></span>
+                            <c:choose>
+                                <c:when test="${fn:length(trRow.title) >= 15}">
+                                    ${fn:substring(trRow.title, 0, 14)}...
+                                </c:when>
+                                <c:otherwise>
+                                    ${trRow.title}
+                                    <span class="dot"></span>
+                                </c:otherwise>
+                            </c:choose>
+                            <br>
+                            <i class="fa-regular fa-comment-dots"></i><span class="dot"></span>
+                            <span class="reCount">${trRow.re_count}</span><span class="dot"></span>
+
+                            <i class="fa-solid fa-eye"></i><span class="dot"></span>
+                            <span class="viewCount">${trRow.view_count}</span><span class="dot"></span>
+
+                            <i class="fa-solid fa-heart"></i><span class="dot"></span>
+                            <span class="goodCount">${trRow.good_count}</span>
+                        </td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${trRow.category eq '나눔'}">
+                                    <span class="price">무료나눔</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="price">${trRow.price} 원</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td>
+                            <i class="fa-solid fa-location-dot"></i><span class="dot"></span>
+                            <span class="address">${trRow.address1} ${trRow.address2}</span>
+                        </td>
+                        <td>
+                            <i class="fa-regular fa-clock"></i>&nbsp;
+                            <span class="dateSpan">${trRow.create_date}</span>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

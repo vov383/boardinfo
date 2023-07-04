@@ -2,11 +2,13 @@ package com.example.boardinfo.service.member;
 
 import com.example.boardinfo.controller.tboard.TBCommentController;
 import com.example.boardinfo.model.game.dao.gameRating.GameRatingDAO;
+import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.model.gathering.dao.GatheringDAO;
 import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.mypage.dao.MypageDAO;
 import com.example.boardinfo.model.mypage.dto.MypageDTO;
+import com.example.boardinfo.model.mypage.dto.MypageGameDTO;
 import com.example.boardinfo.model.review.dao.ReviewDAO;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.tboard.dao.TBoardDAO;
@@ -70,6 +72,79 @@ public class MypageServiceImpl implements MypageService {
         map.put("tbList", tbList);
         return map;
     }
+
+//    @Override
+//    public List<Object> getTabbedList(String userid, String str) {
+//        List<Object> dataList = null;
+//        switch (str){
+//            case "game":
+//                dataList = mypageDao.gameInfoTabbed(userid);
+//                break;
+//            case "game_rating":
+//                dataList = mypageDao.gameRatingTabbed(userid);
+//                break;
+//            case "review":
+//                dataList = mypageDao.reviewTabbed(userid);
+//                break;
+//            case "trade":
+//                dataList = mypageDao.tradeTabbed(userid);
+//                break;
+//        }
+//        return dataList;
+//    }
+
+    @Override
+    public List<GameDTO> getGiList(String userid) {
+        return mypageDao.gameInfoTabbed(userid);
+    }
+
+    @Override
+    public List<MypageGameDTO> getGiMore(String userid) {
+        return mypageDao.gameInfoMore(userid);
+    }
+
+    @Override
+    public List<GameRatingDTO> getGrList(String userid) {
+        return mypageDao.gameRatingTabbed(userid);
+    }
+
+    @Override
+    public List<GameRatingDTO> getGrMore(String userid) {
+        return mypageDao.gameRatingMore(userid);
+    }
+
+    @Override
+    public List<ReviewDTO> getRvList(String userid) {
+        return mypageDao.reviewTabbed(userid);
+    }
+
+    @Override
+    public List<ReviewDTO> getRvMore(String userid) {
+        return mypageDao.reviewMore(userid);
+    }
+
+
+    @Override
+    public List<MypageDTO> getGaList(String userid) {
+        return mypageDao.gatheringTabbed(userid);
+    }
+    @Override
+    public List<MypageDTO> getGaMore(String userid) {
+        return mypageDao.gatheringMore(userid);
+    }
+
+
+
+    @Override
+    public List<TBoardDTO> getTrList(String userid) {
+        return mypageDao.tradeTabbed(userid);
+    }
+
+    @Override
+    public List<TBoardDTO> getTrMore(String userid) {
+        return mypageDao.tradeMore(userid);
+    }
+
 
 
 }

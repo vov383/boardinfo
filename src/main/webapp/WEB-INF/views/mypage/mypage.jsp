@@ -21,14 +21,28 @@
             crossorigin="anonymous"></script>
 
     <%@ include file="../include/js/header.jsp" %>
+    <style>
+        .card-body {
+            height: 40vh; /* 개별적인 카드body에 일괄적으로 높이 적용 */
+        }
+        .card-img-top {
+            /*object-fit은 이미지 크기가 줄면 바깥부터 잘려서 표현됨*/
+            /*object-fit: cover;*/
+            height: 200px; /* 썸네일 이미지에 일괄적인 높이 적용 */
+            width: 80%; /* 섬네일 이미지 컨테이너의 너비 100% 적용 */
+        }
+    </style>
 </head>
 <body>
 <header>
     <%@include file="../include/top.jsp" %>
 </header>
 <div id="contents">
-    <div class="contentUpper">
+    <div id="contentsHeader">
         <h2>마이 페이지</h2>
+    </div>
+    <div id="contentsLocation">
+        홈&gt 마이페이지
     </div>
     <main class="container text-center">
         <%--마이페이지 컨텐츠--%>
@@ -65,9 +79,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="#">내가 좋아요 누른 항목</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="${path}/member/collection">컬렉션</a>
-                                </li>
+
                             </ul>
                         </div>
                     </div>
@@ -99,20 +111,23 @@
                 </div>
                 <div>
                     <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                            <a class="post-category nav-link active" aria-current="page" href="#">전체</a>
+                        <li class="nav-item" id="listAll">
+                            <a class="post-category nav-link active" aria-current="page" href="#" onclick="getPostList()">전체</a>
                         </li>
                         <li class="nav-item">
-                            <a class="post-category nav-link" aria-current="page" href="#">게임</a>
+                            <a class="post-category nav-link" aria-current="page" href="#" onclick="listTap('game', this)">게임등록</a>
                         </li>
                         <li class="nav-item">
-                            <a class="post-category nav-link" href="#">리뷰</a>
+                            <a class="post-category nav-link" href="#" onclick="listTap('game_rating', this)">게임평가</a>
                         </li>
                         <li class="nav-item">
-                            <a class="post-category nav-link" href="#">모임</a>
+                            <a class="post-category nav-link" href="#" onclick="listTap('review', this)">커뮤니티</a>
                         </li>
                         <li class="nav-item">
-                            <a class="post-category nav-link">중고거래</a>
+                            <a class="post-category nav-link" href="#" onclick="listTap('gathering', this)">오프모임</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="post-category nav-link" onclick="listTap('trade', this)">중고장터</a>
                         </li>
                     </ul>
                 </div>
@@ -123,6 +138,7 @@
 <%--                <%@ include file="loadAllPost.jsp" %>--%>
                 <%--게시판 별로 리스트를 여기에 출력--%>
                 <div class="postListWrapper" id="postListWrapper"></div>
+                <div class="tabbedListWrapper" id="tabbedListWrapper"></div>
             </div>
 
             <div class="myPage-contents-right">
@@ -202,11 +218,17 @@
             },
             /*data는 map에 들어있는 grList, rvList, gaList, tbList*/
             success: function (data) {
-                console.log("@@@@@결과확인@@@@" + data);
+
+                // 클릭한 탭 이외의 클래스 nav-item nav-link 에서 active를 지운다.
+                $('.nav-item .nav-link').removeClass("active");
+
+                // #listAll 에 active 클래스를 더한다.
+                $("#listAll").addClass("active");
+
                 var html = jQuery('<div>').html(data);
                 var contents = html.find("div#allPost").html();
                 /*post가 성공적으로 로드되면, 출력할 div에 출력한다.*/
-                $("#postListWrapper").html(contents);
+                $("#tabbedListWrapper").html(contents);
             },
             error: function(jqXHR, textStatus, errorThrown){
                 alert("Error Ajax load");
@@ -218,11 +240,80 @@
     }/*getPostList() 끝*/
 
     /*게시판의 카테고리 별로 가져오는 함수*/
-    function getPostCategoryList() {
+    function listTap(str, element) {
+        /*jquery로 onclick에 매개변수로 this를 보내면 element를 jquery로 할당*/
+        var thisTab = $(element);
+
+        var tabLists = ["game", "giMore", "game_rating", "grMore",  "review", "rvMore", "gathering", "gaMore", "trade", "trMore", "loardAll"];
+        var userid = document.getElementById("userid").value;
+        let url= "";
+        switch (str){
+            case tabLists[0]:
+                url = "${path}/mypage/getGiList";
+                break;
+            case tabLists[1]:
+                url = "${path}/mypage/getGiMore";
+                break;
+            case tabLists[2]:
+                url = "${path}/mypage/getGrList";
+                break;
+            case tabLists[3]:
+                url = "${path}/mypage/getGrMore";
+                break;
+            case tabLists[4]:
+                url = "${path}/mypage/getRvList";
+                break;
+            case tabLists[5]:
+                url = "${path}/mypage/getRvMore";
+                break;
+            case tabLists[6]:
+                url = "${path}/mypage/getGaList";
+                break;
+            case tabLists[7]:
+                url = "${path}/mypage/getGaMore";
+                break;
+            case tabLists[8]:
+                url = "${path}/mypage/getTrList";
+                break;
+            case tabLists[9]:
+                url = "${path}/mypage/getTrMore";
+                break;
+            case tabLists[10]:
+                url = "${path}/mypage/getPostList.do";
+                break;
+        }
+        /*위에 설정한 url에 맞는 ajax 요청 보냄*/
+        $.ajax({
+            type : "get",
+            url : url,
+            data : {
+                "userid" : userid,
+            },
+            success : function(response){
+                $("#postListWrapper").remove();
+
+                /*thisTab에 기존 클래스를 지우고 active 클래스를 활성화*/
+                removeOtherActive(thisTab);
+
+                var html = jQuery('<div>').html(response);
+                var contents = html.find("div#tabbedPost").html();
+                /*post가 성공적으로 로드되면, 출력할 div에 출력한다.*/
+                $("#tabbedListWrapper").html(contents);
+
+            }
+        });
 
     }
 
+    /*네브 탭에서 active를 옮기는 용도의 함수*/
+    function removeOtherActive(element) {
+        // 클릭한 탭 이외의 클래스 nav-item nav-link 에서 active를 지운다.
+        $('.nav-item .nav-link').removeClass("active");
 
+        // this 에 active 클래스를 더한다.
+        $(element).addClass("active");
+
+    }
 
 
 </script>

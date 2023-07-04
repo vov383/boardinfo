@@ -1,15 +1,16 @@
 package com.example.boardinfo.controller.member;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
+import com.example.boardinfo.model.member.dto.MemberDTO;
+import com.example.boardinfo.service.chat.ChatService;
+import com.example.boardinfo.service.member.MemberService;
+import com.google.gson.Gson;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -17,21 +18,11 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.example.boardinfo.service.chat.ChatService;
-import com.google.gson.Gson;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-
-import org.springframework.web.bind.annotation.*;
-
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.example.boardinfo.model.member.dto.MemberDTO;
-import com.example.boardinfo.service.member.MemberService;
+import java.io.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 @Controller
 @RequestMapping("member/*")
@@ -226,7 +217,7 @@ public class MemberController {
 			return "member/pass_check_u";
 		}
 	}
-
+	
 	//회원 비밀번호 변경 페이지 비밀번호 체크
 	@RequestMapping("pass_check2.do/{userid}")
 	public String checkPw2(MemberDTO dto, Model model ,@PathVariable("userid") String userid) {
@@ -452,7 +443,7 @@ public class MemberController {
 			Map<String, Object> map = new HashMap<>();
 			map.put("dto", dto);
 
-			mav.setViewName("member/mypage");
+			mav.setViewName("mypage/mypage");
 //			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
 
 			mav.addObject("map", map);

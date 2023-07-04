@@ -12,7 +12,9 @@
     -->
 
     <style>
-
+        a {
+            text-decoration: none;
+        }
         .dot {
             position: relative;
             display: flex;
@@ -408,7 +410,7 @@
                                     <img src='${path}/resources/uploaded_image${row.tb_thumbnail}'>
                                 </c:when>
                                 <c:otherwise>
-                                    <img src="${path}/images/no-image-svgrepo-com.svg" alt="" width="20%">
+                                    <img src="${path}/images/no-image-svgrepo-com.svg" style="opacity: 20%;" width="20%">
                                 </c:otherwise>
 
                             </c:choose>
@@ -506,7 +508,7 @@
                 <c:when test="${num == map.pager.curPage}">
                     <!-- 현재 페이지인 경우 onclick 없음 -->
                     <div class="pageItem">
-                        <div id="curPage" style="color:red;">${num}</div>
+                        <div id="curPage">${num}</div>
                     </div>
                 </c:when>
                 <c:otherwise>
