@@ -111,6 +111,18 @@ $(function(){
 	$("#btnLogin").click(function(){
 		var userid=$("#userid").val();
 		var passwd=$("#passwd").val();
+		
+		var exp1 = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
+		if(!exp1.test(userid)){
+			alert("잘못 입력했습니다.");
+			$("#userid").focus();
+			return;
+		}
+		if(!exp1.test(passwd)){
+			alert("잘못 입력했습니다.");
+			$("#passwd").focus();
+			return;
+		}
 		if(userid==""){
 			alert("아이디를 입력하세요.");
 			$("#userid").focus();

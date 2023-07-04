@@ -61,8 +61,14 @@ public class ReviewServiceImpl implements ReviewService {
 
 		String userid = (String) session.getAttribute("userid");
 		String adminid = (String) session.getAttribute("admin_id");
-		reviewDTO.setCreateUser(userid);
-		reviewDTO.setCreateUser(adminid);
+
+		if (userid != null){
+			reviewDTO.setCreateUser(userid);		}
+
+		if (adminid != null){
+			reviewDTO.setCreateUser(adminid);
+		}
+
 
 /*
 		System.out.println("testtesttesttesttesttesttesttesttesttest");
@@ -102,9 +108,14 @@ public class ReviewServiceImpl implements ReviewService {
 
 		String userid = (String) session.getAttribute("userid");
 		String adminid = (String) session.getAttribute("admin_id");
-		reviewDTO.setCreateUser(userid);
-		reviewDTO.setCreateUser(adminid);
 
+		if (userid != null){
+			reviewDTO.setCreateUser(userid);
+		}
+
+		if (adminid != null){
+			reviewDTO.setCreateUser(adminid);
+		}
 
 		/*System.out.println("reviewUpdate : " + new Gson().toJson(reviewDTO));*/
 		reviewDAO.reviewUpdate(reviewDTO);
@@ -117,8 +128,15 @@ public class ReviewServiceImpl implements ReviewService {
 
 		String userid = (String) session.getAttribute("userid");
 		String adminid = (String) session.getAttribute("admin_id");
-		reviewserchDTO.setCreateUser(userid);
-		reviewserchDTO.setCreateUser(adminid);
+
+		if (userid != null){
+			reviewserchDTO.setCreateUser(userid);
+		}
+
+		if (adminid != null){
+			reviewserchDTO.setCreateUser(adminid);
+		}
+
 
 		/*System.out.println("testestestestestestestest");
 		System.out.println("testestestestestestestest");
@@ -147,8 +165,15 @@ public class ReviewServiceImpl implements ReviewService {
 	public void reviewGoodCreate(reviewSerchDTO reviewserchDTO, HttpSession session){
 		String userid = (String) session.getAttribute("userid");
 		String adminid = (String) session.getAttribute("admin_id");
-		reviewserchDTO.setCreateUser(userid);
-		reviewserchDTO.setCreateUser(adminid);
+
+		if (userid != null){
+			reviewserchDTO.setCreateUser(userid);
+		}
+
+		if (adminid != null){
+			reviewserchDTO.setCreateUser(adminid);
+		}
+
 		reviewDAO.reviewGoodCreate(reviewserchDTO);
 
 	}
@@ -158,10 +183,18 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public void reviewReply(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
 
-		String userid = (String)session.getAttribute("userid");
-		String adminid = (String)session.getAttribute("admin_id");
-		replyCommentsDTO.setCreateUser(userid);
-		replyCommentsDTO.setCreateUser(adminid);
+
+		String userid = (String) session.getAttribute("userid");
+		String adminid = (String) session.getAttribute("admin_id");
+
+		if (userid != null){
+			replyCommentsDTO.setCreateUser(userid);
+		}
+
+		if (adminid != null){
+			replyCommentsDTO.setCreateUser(adminid);
+		}
+
 
 
 		reviewDAO.reviewReply(replyCommentsDTO);
@@ -174,8 +207,14 @@ public class ReviewServiceImpl implements ReviewService {
 	public void reviewReplyUpdate(ReplyCommentsDTO replyCommentsDTO, HttpSession session){
 		String userid = (String) session.getAttribute("userid");
 		String adminid = (String) session.getAttribute("admin_id");
-		replyCommentsDTO.setCreateUser(userid);
-		replyCommentsDTO.setCreateUser(adminid);
+
+		if (userid != null){
+			replyCommentsDTO.setCreateUser(userid);
+		}
+
+		if (adminid != null){
+			replyCommentsDTO.setCreateUser(adminid);
+		}
 
 		reviewDAO.reviewReplyUpdate(replyCommentsDTO);
 
@@ -188,8 +227,14 @@ public class ReviewServiceImpl implements ReviewService {
 
 		String userid = (String) session.getAttribute("userid");
 		String adminid = (String) session.getAttribute("admin_id");
-		replyCommentsDTO.setCreateUser(userid);
-		replyCommentsDTO.setCreateUser(adminid);
+
+		if (userid != null){
+			replyCommentsDTO.setCreateUser(userid);
+		}
+
+		if (adminid != null){
+			replyCommentsDTO.setCreateUser(adminid);
+		}
 
 		reviewDAO.reviewReplyDel(replyCommentsDTO);
 
@@ -213,8 +258,14 @@ public class ReviewServiceImpl implements ReviewService {
 
 		String userid = (String) session.getAttribute("userid");
 		String adminid = (String) session.getAttribute("admin_id");
-		replyCommentsDTO.setCreateUser(userid);
-		replyCommentsDTO.setCreateUser(adminid);
+
+		if (userid != null){
+			replyCommentsDTO.setCreateUser(userid);
+		}
+
+		if (adminid != null){
+			replyCommentsDTO.setCreateUser(adminid);
+		}
 
 		reviewDAO.reviewReply(replyCommentsDTO);
 
