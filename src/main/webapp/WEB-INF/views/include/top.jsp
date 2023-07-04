@@ -16,7 +16,7 @@
                 <a href="${path}/" title="보드인포"><img src="${path}/images/logo.png" width="170px"></a>
             </div>
             <div id="header-right">
-                <form name="gameSearch" id="gameSearch" method="get" action="${path}/search/searchAll.do">
+                <form name="gameSearch" id="gameSearch" method="get" action="${path}/search/searchAll.do" onsubmit="return false">
                     <div>
                         <input name="gameKeyword" id="gameKeyword" placeholder="보드게임 찾기" autocomplete="off">
                         <input type="hidden">
@@ -173,12 +173,18 @@
     let cur_session = '${sessionScope.userid}';
     const unreadChatSpan = $("#unreadChat");
 
-
     function searchAll() {
         var keyword = $("#gameKeyword").val();
-        if (keyword !== "") {
+
+        var exp_gametitle = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
+
+        if(!exp_gametitle.test(keyword) || keyword == "" || keyword == null){
+            alert("검색어로 빈칸 , < , > , $ 등의 특수문자를 사용할 수 없습니다.");
+            $("#gameKeyword").focus();
+            return;
+        }else
             document.gameSearch.submit();
-        }
+
     }
 
 
@@ -416,6 +422,8 @@ document.addEventListener('click', function (event) {
             }
 
         });
+
+
 
         /*관리자 로그아웃 버튼*/
         $("#adminLogoutBtn").on("click", function () {

@@ -4,7 +4,6 @@ import com.example.boardinfo.controller.game.GameController;
 import com.example.boardinfo.service.game.GameService;
 import com.example.boardinfo.service.gathering.GatheringService;
 import com.example.boardinfo.service.review.ReviewService;
-import com.example.boardinfo.service.sample.SampleService;
 import com.example.boardinfo.service.tboard.TBoardService;
 import com.example.boardinfo.util.GameUtils;
 import org.slf4j.Logger;
