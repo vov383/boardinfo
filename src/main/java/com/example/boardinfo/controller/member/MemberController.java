@@ -159,7 +159,7 @@ public class MemberController {
 			Gson gson = new Gson();
 			session.setAttribute("activeChats", gson.toJson(activeChats));
 
-			mav.setViewName("home");
+			mav.setViewName("redirect:/");
 
 		} else {
 			mav.setViewName("member/login");//뷰이름

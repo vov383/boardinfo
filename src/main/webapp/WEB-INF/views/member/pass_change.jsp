@@ -75,6 +75,11 @@ body {
 				$("#new_pw").focus();
 				return;
 			}
+			if(!exp2.test(new_pw2)){
+				alert("비밀번호는 영문 숫자 조합으로 8자 이상 입력하세요.");
+				$("#new_pw2").focus();
+				return;
+			}
 			if(new_pw != new_pw2){
 				alert("비밀번호 불일치");
 				$("#new_pw2").focus();

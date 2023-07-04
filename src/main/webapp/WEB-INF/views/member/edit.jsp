@@ -231,6 +231,12 @@ $(function() {
         $("#nickname").focus();
         return;
       }
+      var exp_nick = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,15}$/;
+  		if(!exp_nick.test(nickname)){
+  		alert("잘못 입력했습니다.");
+  		$("#nickname").focus();
+  		return;
+  		}
       $.ajax({
         url: "${path}/member/check_nick.do",
         type: "POST",
@@ -329,7 +335,7 @@ function check() {
 			<div id="change">
 				<div>
 					<div>
-						<label>회원정보</label>
+						<label>내 정보 관리</label>
 					</div>
 				</div>
 				<div>
