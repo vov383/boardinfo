@@ -62,11 +62,14 @@ public class MypageController {
 
     @RequestMapping("getGiList")
     @ResponseBody
-    public ModelAndView getGiList(@RequestParam String userid){
+    public ModelAndView getGiList(@RequestParam String userid, @RequestParam String str,
+                                  @RequestParam(required = false, defaultValue = "1") int curPage){
         ModelAndView mav = new ModelAndView();
-        List<GameDTO> giList = mypageService.getGiList(userid);
+        Map<String, Object> map = mypageService.getGiList(userid, curPage);
         mav.setViewName("mypage/giTabbed");
-        mav.addObject("giList", giList);
+        logger.info("str값 넘어와서 돌아갈수 있나" + str);
+        mav.addObject("str",str);
+        mav.addObject("map", map);
         return mav;
     }
 

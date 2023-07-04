@@ -9,6 +9,7 @@ import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.model.tboard.dto.TBoardDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MypageDAO {
     MypageDTO getUserInfo(String userid);
@@ -27,7 +28,7 @@ public interface MypageDAO {
 
     List<Object> getTabbedList(String userid, String str);
 
-    List<GameDTO> gameInfoTabbed(String userid);
+    List<MypageGameDTO> gameInfoTabbed(Map<String, Object> map);
 
     List<GameRatingDTO> gameRatingTabbed(String userid);
 
@@ -46,4 +47,6 @@ public interface MypageDAO {
     List<MypageDTO> gatheringTabbed(String userid);
 
     List<MypageDTO> gatheringMore(String userid);
+
+    int countgetGiList(String userid);
 }

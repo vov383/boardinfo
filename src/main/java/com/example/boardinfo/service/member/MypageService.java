@@ -18,7 +18,7 @@ public interface MypageService {
 
 //    List<Object> getTabbedList(String uesrid, String str);
 
-    List<GameDTO> getGiList(String userid);
+    Map<String, Object> getGiList(String userid, int curPage);
 
     List<MypageGameDTO> getGiMore(String userid);
 

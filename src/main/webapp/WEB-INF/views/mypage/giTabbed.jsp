@@ -13,6 +13,7 @@
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 <%@ page session="true" %>
 
+
 <div id="tabbedPost">
   <div id="listContainer">
     <p class="h3">게임 등록 신청</p>
@@ -31,8 +32,10 @@
           </th>
         </tr>
         </thead>
+
+
         <tbody>
-        <c:forEach items="${giList}" var="giRow">
+        <c:forEach items="${map.giList}" var="giRow">
           <tr>
             <td>
                 ${giRow.confirmed}<br>
@@ -82,10 +85,11 @@
             </td>
           </tr>
           <input type="hidden" name="gnum" value="${giRow.gnum}">
-          <input type="hidden" name="create_user" value="${giRow.create_user}">
+          <input type="hidden" id="create_user" name="create_user" value="${giRow.create_user}">
         </c:forEach>
         </tbody>
       </table>
     </div>
   </div>
 </div>
+

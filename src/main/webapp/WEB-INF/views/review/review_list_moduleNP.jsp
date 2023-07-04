@@ -189,7 +189,7 @@
                         <c:forEach var="row" items="${reviewMap.list2}">
                             <tr>
 
-                                <td><div class="wrap t_center"><span class="rank">${row.category}</span></div></td>
+                                <td><div class="wrap t_center">${row.category}</div></td>
 
                                 <td><div class="wrap t_center">
                                     <div class="ellipsis rank03">

@@ -57,8 +57,11 @@ public class MypageDAOImpl implements MypageDAO{
     }
 
     @Override
-    public List<GameDTO> gameInfoTabbed(String userid) {
-        return sqlSession.selectList("mypage.giTabbed", userid);
+    public int countgetGiList(String userid) {return sqlSession.selectOne("mypage.countGetGiList", userid);}
+
+    @Override
+    public List<MypageGameDTO> gameInfoTabbed(Map<String, Object> map) {
+        return sqlSession.selectList("mypage.giTabbed", map);
     }
     @Override
     public List<MypageGameDTO> gameInfoMore(String userid) {
