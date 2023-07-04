@@ -1188,7 +1188,7 @@
                     </div>
                     <div class="columnFlex">
                         <span>코멘트 (선택)</span>
-                        <textarea name="rating_comment"></textarea>
+                        <textarea name="rating_comment" id="rating_comment"></textarea>
                     </div>
 
                     <div>
@@ -1436,47 +1436,6 @@
     });
 
 
-    <%--캐러셀관련--%>
-
-    $('.slide-1').on('click', function() {
-        $('.slide-container').css('transform', 'translateX(0%)');
-    });
-
-    $('.slide-2').on('click', function() {
-        $('.slide-container').css('transform', 'translateX(-33.333%');
-    });
-
-    $('.slide-3').on('click', function() {
-        $('.slide-container').css('transform', 'translateX(-66.666%');
-    });
-
-    var item = 1;
-
-    $('.next_div').on('click', function(){
-        if (item == 1) {
-            $('.slide-container').css('transform', 'translateX(-33.333%');
-            item += 1;
-        }
-        else if (item == 2){
-            $('.slide-container').css('transform', 'translateX(-66.666%');
-            item += 1;
-        }else if (item == 3){
-            $('.slide-container').css('transform', 'translateX(0%)');
-            item = 1;
-        }
-    })
-
-    $('.before_div').on('click', function(){
-        if (item == 3) {
-            $('.slide-container').css('transform', 'translateX(-33.333%');
-            item -= 1;
-        }
-        else if (item == 2){
-            $('.slide-container').css('transform', 'translateX(0%)');
-            item -= 1;
-        }
-
-    })
 
     /*모달관련*/
     $(function(){
@@ -1908,6 +1867,13 @@
         $("input[name='rating]").val(star);
         if(star == null || star == '' || isNaN(star) || star < 0.5){
             alert("평가를 제출하려면 반드시 별점을 입력해야 합니다. 다시 시도해주세요.");
+            return;
+        }
+
+        var rating_comment = $("#rating_comment").val();
+        var exp_comment = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]*$/;
+        if(!exp_comment.test(rating_comment)){
+            alert("빈칸 , < , > , $ 등의 특수문자를 사용할 수 없습니다.");
             return;
         }
 

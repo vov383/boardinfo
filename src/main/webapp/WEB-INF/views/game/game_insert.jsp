@@ -656,7 +656,9 @@
 		//새로운 카테고리명을 추가
 		$("#btnAddCategory").click(function(){
 			var newCategory = prompt("추가할 카테고리명을 적어주세요.");
-			if(newCategory != null){
+			var exp_category = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
+
+			if(newCategory != null && newCategory != "" && exp_category.test(newCategory)){
 				var check = confirm(newCategory+" 맞습니까?");
 				if(check == true){
 					if (selectedCategories.indexOf(newCategory) === -1) {
@@ -668,6 +670,9 @@
 					}
 					updateGameCategoryInput();
 				}
+			}else{
+				alert("빈칸 , < , > , $ 등의 특수문자를 사용할 수 없습니다.");
+				return;
 			}
 
 		});
@@ -726,7 +731,9 @@
 		//새로운 메카닉명을 추가
 		$("#btnAddMechanic").click(function(){
 			var newMechanic = prompt("추가할 메카닉명을 적어주세요.");
-			if(newMechanic != null){
+			var exp_mechanic = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
+
+			if(newMechanic != null && newMechanic != "" && exp_mechanic.test(newMechanic)){
 				var check = confirm(newMechanic+" 맞습니까?");
 				if(check == true){
 					if (selectedMechanics.indexOf(newMechanic) === -1) {
@@ -738,8 +745,10 @@
 					}
 					updateGameMechanicInput();
 				}
+			}else{
+				alert("빈칸 , < , > , $ 등의 특수문자를 사용할 수 없습니다.");
+				return;
 			}
-
 		});
 
 		// 테이블 셀 클릭 이벤트 처리
@@ -823,7 +832,9 @@
 		//새로운 아티스트명을 추가
 		$("#btnAddArtist").click(function(){
 			var newArtist = prompt("추가할 아티스트명을 적어주세요.");
-			if(newArtist != null){
+			var exp_artist = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
+
+			if(newArtist != null && newArtist != "" && exp_artist.test(newArtist)){
 				var check = confirm(newArtist+" 맞습니까?");
 				if(check == true){
 					if (selectedArtists.indexOf(newArtist) === -1) {
@@ -835,8 +846,10 @@
 					}
 					updateArtistInput();
 				}
+			}else{
+				alert("빈칸 , < , > , $ 등의 특수문자를 사용할 수 없습니다.");
+				return;
 			}
-
 		});
 
 		//아티스트 검색값 클릭시 배열에 추가
@@ -907,7 +920,9 @@
 		//새로운 디자이너명을 추가
 		$("#btnAddDesigner").click(function(){
 			var newDesigner = prompt("추가할 디자이너명을 적어주세요.");
-			if(newDesigner != null){
+			var exp_designer = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
+
+			if(newDesigner != null && newDesigner != "" && exp_designer.test(newDesigner)){
 				var check = confirm(newDesigner+" 맞습니까?");
 				if(check == true){
 					if (selectedDesigners.indexOf(newDesigner) === -1) {
@@ -919,6 +934,9 @@
 					}
 					updateDesignerInput();
 				}
+			}else{
+				alert("빈칸 , < , > , $ 등의 특수문자를 사용할 수 없습니다.");
+				return;
 			}
 
 		});
@@ -991,7 +1009,9 @@
 		//새로운 퍼블리셔명을 추가
 		$("#btnAddPublisher").click(function(){
 			var newPublisher = prompt("추가할 퍼블리셔명을 적어주세요.");
-			if(newPublisher != null){
+			var exp_publisher = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
+
+			if(newPublisher != null && newArtist != "" && exp_artist.test(newArtist)){
 				var check = confirm(newPublisher+" 맞습니까?");
 				if(check == true){
 					if (selectedPublishers.indexOf(newPublisher) === -1) {
@@ -1003,6 +1023,9 @@
 					}
 					updatePublisherInput();
 				}
+			}else{
+				alert("빈칸 , < , > , $ 등의 특수문자를 사용할 수 없습니다.");
+				return;
 			}
 
 		});
