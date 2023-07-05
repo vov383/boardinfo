@@ -42,7 +42,10 @@ public class WebSocketConfigIn implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-stomp/in").addInterceptors(new HttpSessionHandshakeInterceptor())
+        registry.addEndpoint("/ws-stomp-in").addInterceptors(new HttpSessionHandshakeInterceptor())
+                .setAllowedOrigins("*").withSockJS().setHeartbeatTime(10000);
+
+        registry.addEndpoint("/ws-stomp-out")
                 .setAllowedOrigins("*").withSockJS().setHeartbeatTime(10000);
     }
 
@@ -54,9 +57,9 @@ public class WebSocketConfigIn implements WebSocketMessageBrokerConfigurer {
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
                 StompHeaderAccessor accessor =
                         MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-                
 
                 if(StompCommand.CONNECT.equals(accessor.getCommand())){
+
                     if (accessor.containsNativeHeader("inChatRoom")) {
                         String user_id = accessor.getFirstNativeHeader("user_id");
                         Integer gathering_id = Integer.parseInt(accessor.getFirstNativeHeader("inChatRoom"));
@@ -72,7 +75,7 @@ public class WebSocketConfigIn implements WebSocketMessageBrokerConfigurer {
                     if(alarm!=null){
                         alarm.setMessage(sessionId);
                         messagingTemplate.convertAndSend("/sub/alarm/user/" +
-                                    alarm.getUser_id(), alarm);
+                                    alarm.getReceiver_id(), alarm);
                     }
                 }
 

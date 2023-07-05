@@ -18,11 +18,11 @@ public interface GatheringDAO {
 	public void updateViewCount(int gathering_id);
 	public void replyOrderUpdate(int parent_reply, int inner_order);
 	public int addReply(GatheringReplyDTO dto);
-	public List<GatheringReplyDTO> getReplies(int gatheringId);
+	public List<GatheringReplyDTO> getReplies(int gathering_id);
 	public int getTargetReplyOrder(GatheringReplyDTO dto);
 	public GatheringReplyDTO getReply(Integer motherReply);
 
-    int countList(boolean showAvailable, String[] address1List,
+    public int countList(boolean showAvailable, String[] address1List,
                   LocalDate from, LocalDate to,
                   String option, String keyword);
 
@@ -31,27 +31,27 @@ public interface GatheringDAO {
 	public AttendeeType checkIfAttendee(int gathering_id, String user_id);
 	public GatheringDTO getAttendInfo(int gathering_id);
     public int withdrawAttendee(int gatheringId, String user_id);
-	public Map<String, String> getWriterAndShow(int gathering_id);
-	public int cancelApplication(int gatheringId, String userId);
+	public int cancelApplication(int gathering_id, String user_id);
 	public List<Map<String, String>> getIdAndNicknames(int gathering_id);
 	public void finishChat();
     public List<Integer> finishList();
-
-	/*mypageDao로 옮김*/
-
 	public List<GatheringDTO> getHomeList(Integer size);
     public String getReplyWriter(int reply_id);
 	public int updateReply(GatheringReplyDTO dto);
 	public int deleteReply(GatheringReplyDTO dto);
 	public List<ChatRoomDTO> getAttendingGatheringList(String user_id);
 	public List<Integer> getMyActiveChats(String user_id);
-
 	public void updateLastVisit(int gatheringId, String user_id, LocalDateTime date);
-//	public List<ChatRoomDTO> getMyLastVisit(String user_id);
 	public List<String> leaveAll(int gathering_id);
 	public List<AttendeeDTO> getAttendeeInfoList(int gathering_id);
-	public List<AttendeeDTO> getWaitingInfoList(int gatheringId);
+	public List<AttendeeDTO> getWaitingInfoList(int gathering_id);
 	public List<GatheringDTO> totalSearch(Map<String, Object> map);
 	public int totalSearchCount(Map<String, Object> map);
-    List<ChatRoomDTO> getMyLastVisit(String user_id);
+    public List<ChatRoomDTO> getMyLastVisit(String user_id);
+	public List<ChatRoomDTO> getMyLastVisitExceptRoom(String user_id, List<Integer> focusedRooms);
+	public int acceptApply(int gathering_id, int attendee_id);
+	public AttendeeDTO getAttendeeInfo(int attendee_id);
+    public String getWriter(int gatheringId);
+	public int throwAttendee(int attendee_id, int gathering_id);
+    public int rejectApply(int gathering_id, int attendee_id);
 }

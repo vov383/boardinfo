@@ -106,6 +106,11 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.getNickname(user_id);
 	}
 
+	@Override
+	public String getProfile(String user_id) {
+		return memberDao.getProfile(user_id);
+	}
+
 	public String get_searchId(String name, String hp) {
 		String result = memberDao.get_searchId(name, hp);
 	    

@@ -27,7 +27,5 @@ public interface MemberService {
 	String get_PwCheck(String userid, String email);
 	void pass_change(Map<String, Object> map, MemberDTO dto, HttpSession session);
 	String getCurrentPassword(String userid);
-
-		
-
+    String getProfile(String userId);
 }

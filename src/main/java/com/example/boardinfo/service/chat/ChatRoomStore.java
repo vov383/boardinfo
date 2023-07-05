@@ -52,14 +52,13 @@ public class ChatRoomStore {
 
             try {
                 ChatRoom room = findRoomWithSession(session_id);
+
                 if(room!=null) {
                     Integer gathering_id = room.getGathering_id();
 
                     String user_id = room.getUserIdBySession(session_id);
                     room.removeUser(session_id);
-
                     gatheringDAO.updateLastVisit(gathering_id, user_id, LocalDateTime.now());
-
 
                     if(room.getAllSessions() == null) {
                         map.remove(gathering_id);
@@ -67,9 +66,10 @@ public class ChatRoomStore {
 
                     result.setType(GatheringAlarmDTO.AlarmType.BLUR);
                     result.setGathering_id(gathering_id);
-                    result.setUser_id(user_id);
+                    result.setReceiver_id(user_id);
                     return result;
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

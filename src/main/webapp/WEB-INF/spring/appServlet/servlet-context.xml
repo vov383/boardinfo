@@ -71,20 +71,32 @@
 	-->
 	
 	<beans:bean class="com.example.boardinfo.interceptor.LoginInterceptor" id="loginInterceptor"> </beans:bean>
+	<beans:bean class="com.example.boardinfo.interceptor.AlarmInterceptor" id="alarmInterceptor"> </beans:bean>
 	<!-- 인터셉터 호출을 위한 url mapping -->
 
+
 	<interceptors>
-	 <interceptor>
-	  <mapping path="/member/delete.do"/>
-	  <mapping path="/member/update.do"/>
-	  <mapping path="/member/member_list.do"/>
-		 <mapping path="/gathering/addReply.do"/>
-		 <mapping path="/gathering/addAttendee.do"/>
-		 <mapping path="/gathering/add.do"/>
-		 <mapping path="/gathering/edit/**"/>
-		 <beans:ref bean="loginInterceptor"/>
-	 </interceptor>
-	
+		<interceptor>
+			<mapping path="/**"/>
+			<exclude-mapping path="/ws-stomp-in/**" />
+			<exclude-mapping path="/ws-stomp-out/**" />
+			<exclude-mapping path="/include/**" />
+			<exclude-mapping path="/images/**" />
+			<exclude-mapping path="/ckeditor/**" />
+			<beans:ref bean="alarmInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/member/delete.do"/>
+			<mapping path="/member/update.do"/>
+			<mapping path="/member/member_list.do"/>
+			<mapping path="/gathering/addReply.do"/>
+			<mapping path="/gathering/addAttendee.do"/>
+			<mapping path="/gathering/add.do"/>
+			<mapping path="/gathering/edit/**"/>
+			<beans:ref bean="loginInterceptor"/>
+		</interceptor>
 	</interceptors>
+
+
 	
 </beans:beans>

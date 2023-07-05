@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -122,6 +123,10 @@
             font-size: 16px;
         }
 
+        #profileArea .attendee_count, .waiting_count{
+            font-size: 16px;
+        }
+
         #profileArea > div:last-of-type{
             display: flex;
             flex-direction: row;
@@ -198,6 +203,10 @@
             margin-bottom: 3px;
             border-radius: 50%;
             object-fit: cover;
+        }
+
+        .waiting{
+            display: flex;
         }
 
 
@@ -323,30 +332,116 @@
             box-shadow: 5px 10px 10px 1px rgba(0,0,0,.3);
         }
 
-        .popup-body{
-            max-width: 480px;
-            min-height: 200px;
+        #applyPopup .popup-body{
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             padding: 20px;
             background-color:#ffffff;
         }
 
-        .popup div{
+        #applyPopup .popup-body{
+            max-width: 480px;
+            min-height: 200px;
+            justify-content: space-between;
+        }
+
+        #applyPopup .popup div{
             font-size: 16px;
         }
 
-        .popup-body > div:last-of-type{
+        #applyPopup .popup-body > div:last-of-type{
             display: flex;
             flex-direction: row;
             justify-content: center;
         }
 
-        .popup-body button:first-of-type{
+        #applyPopup .popup-body button:first-of-type{
             margin-right: 10px;
         }
 
+        #attendingPopup .popup-body{
+            display: flex;
+            flex-direction: column;
+            padding: 30px 50px;
+            background-color:#ffffff;
+            align-items: center;
+        }
+
+        #attendingPopup .popup-body > div{
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+
+        #attendingPopup .popup-body > button{
+            margin-top: 20px;
+            width: 80px;
+        }
+
+        #attendingPopup h2 {
+            margin: 0 0 10px 0;
+            padding: 0;
+            text-align: center;
+        }
+
+
+        #attendingList, #waitingList{
+            display: flex;
+            flex-direction: column;
+        }
+
+        #waitingArea, #attendingArea{
+            height: 100%;
+        }
+
+        #waitingArea{
+            padding-left: 20px;
+            border-left: 1px solid black;
+        }
+
+        #waitingArea > div:first-of-type{
+            width: 100%;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .attendingItem{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .attendingItem:last-of-type{
+            margin-bottom: 0;
+        }
+
+        #attendingPopup img{
+            width: 50px;
+        }
+
+        #waitingArea .attendingItem > div:first-of-type{
+            width: 200px;
+        }
+
+        #attendingList .attendingItem button, .acceptBtn, .rejectBtn{
+            width: 47px;
+            height: 22px;
+            border-radius: 10px;
+            color: white;
+            border: 0;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        #attendingList .attendingItem button, .acceptBtn{
+            background-color: #C53A32;
+        }
+
+        .rejectBtn{
+            background-color: #1432B1;
+            margin-left: 5px;
+        }
 
 
     </style>
@@ -372,7 +467,7 @@
 
                 if("${dto.attendSystem}"=='p') {
                     document.body.style.overflowY = "hidden";
-                    $(".popup-wrap").css('display','flex').hide().fadeIn();
+                    $("#applyPopup").css('display','flex').hide().fadeIn();
                     return;
                 }
 
@@ -622,21 +717,32 @@
         }
 
         function submitApplication(){
-            $.ajax({
-                type: "get",
-                url : "${path}/gathering/addAttendee.do",
-                data : {
-                    "answer": $("input[name='answer']").val(),
-                    "gathering_id": "${dto.gathering_id}"
-                },
-                success: function(result){
-                    alert(result.message);
-                    location.reload();
-                },
-                error: function(e){
-                    alert("에러가 발생했습니다.");
-                }
-            });
+
+            $("input[name='answer']").val($("input[name='answer']").val().trim());
+            let answer = $("input[name='answer']").val();
+            if(answer == ""){
+                alert("모임장의 질문에 대한 답변을 입력해주세요.");
+            }
+
+            else{
+                $.ajax({
+                    type: "get",
+                    url : "${path}/gathering/addAttendee.do",
+                    data : {
+                        "answer": $("input[name='answer']").val(),
+                        "gathering_id": "${dto.gathering_id}"
+                    },
+                    success: function(result){
+                        alert(result.message);
+                        location.reload();
+                    },
+                    error: function(e){
+                        alert("에러가 발생했습니다.");
+                    }
+                });
+
+            }
+
         }
 
 
@@ -756,6 +862,176 @@
                     }
                 });
             }
+
+        }
+
+
+        function showAttendingList(){
+            document.body.style.overflowY = "hidden";
+            $("#attendingPopup").css('display','flex').hide().fadeIn();
+            return;
+        }
+
+
+
+
+        function accept(event){
+
+            let $button = $(event.currentTarget);
+
+            if(confirm('이 회원의 모임참여를 승인하겠습니까?')){
+
+                let attendee_id = $button.closest(".attendingItem").data("attendee_id");
+
+                $.ajax({
+                    type: "get",
+                    url : "${path}/gathering/acceptApply.do",
+                    data : {
+                        "gathering_id": '${dto.gathering_id}',
+                        "attendee_id": attendee_id,
+                    },
+                    success: function(result){
+                        let message = result.message;
+
+                        if(!message && message!=""){
+                            alert(message);
+                        }
+
+                        if(result.attendeeDTOList){
+                            makeList(result.attendeeDTOList, result.waitingDTOList);
+                        }
+                    },
+                    error: function(){
+                        alert("에러가 발생했습니다.");
+                    }
+                });
+            }
+        }
+
+
+        function reject(event){
+
+            let $button = $(event.currentTarget);
+
+            if(confirm('이 회원의 참여신청을 거절하시겠습니까?')){
+
+                let attendee_id = $button.closest(".attendingItem").data("attendee_id");
+
+                $.ajax({
+                    type: "get",
+                    url : "${path}/gathering/rejectApply.do",
+                    data : {
+                        "gathering_id": '${dto.gathering_id}',
+                        "attendee_id": attendee_id,
+                    },
+                    success: function(result){
+                        let message = result.message;
+
+                        if(!message && message!=""){
+                            alert(message);
+                        }
+
+                        if(result.attendeeDTOList){
+                            makeList(result.attendeeDTOList, result.waitingDTOList);
+                        }
+                    },
+                    error: function(){
+                        alert("에러가 발생했습니다.");
+                    }
+                });
+            }
+
+
+        }
+
+
+
+        function throwAttendee(event){
+
+            let $button = $(event.currentTarget);
+
+            if(confirm('이 회원을 모임에서 탈퇴시키겠습니까?')){
+
+                let attendee_id = $button.closest(".attendingItem").data("attendee_id");
+
+                $.ajax({
+                    type: "get",
+                    url : "${path}/gathering/throwAttendee.do",
+                    data : {
+                        "gathering_id": '${dto.gathering_id}',
+                        "attendee_id": attendee_id,
+                    },
+                    success: function(result){
+                        let message = result.message;
+
+                        if(!message && message!=""){
+                            alert(message);
+                        }
+
+                        if(result.attendeeDTOList){
+                            makeList(result.attendeeDTOList, result.waitingDTOList);
+                        }
+                    },
+                    error: function(){
+                        alert("에러가 발생했습니다.");
+                    }
+                });
+            }
+        }
+
+
+
+        function makeList(attendeeDTOList, waitingDTOList){
+
+            $attendeeList = $("<div>").prop("id", "attendeeList");
+            $attendingList = $("<div>").prop("id", "attendingList");
+            $waitingList = $("<div>").prop("id", "waitingList");
+
+
+            for(let i=0; i<attendeeDTOList.length; i++){
+
+                $attendingItem = $("<div>").addClass('attendingItem')
+                    .data("attendee_id", attendeeDTOList[i].attendee_id);;
+                $link = $("<a>").prop("href", "${path}/mypage/goMypage/" + attendeeDTOList[i].user_id);
+                $attendee = "<div class='attendee'><img src='${path}/images/" +
+                    attendeeDTOList[i].profile + "'><span>" + attendeeDTOList[i].nickname + "</span></div>";
+
+                $throwBtn = "";
+                if(attendeeDTOList[i].user_id != '${sessionScope.userid}'){
+                    $throwBtn = "<button type='button' onclick='throwAttendee(event)'>강퇴</button>";
+                }
+
+                $link.append($attendee);
+                $attendingItem.append($link, $throwBtn);
+                $attendingList.append($attendingItem);
+                $attendeeList.append($link.clone());
+            }
+
+            for(let i=0; i<waitingDTOList.length; i++){
+                $attendingItem = $("<div></div>").addClass('attendingItem')
+                    .data("attendee_id", waitingDTOList[i].attendee_id);
+                $link = $("<a>").prop("href", "${path}/mypage/goMypage/" + waitingDTOList[i].user_id);
+                $attendee = "<div class='attendee'><img src='${path}/images/" +
+                    waitingDTOList[i].profile + "'><span>" + waitingDTOList[i].nickname + "</span></div>";
+
+                $answer = "<div>" + waitingDTOList[i].answer + "</div>";
+
+                $acceptBtn = "<button type='button' class='acceptBtn' onclick='accept(event)'>승인</button>";
+                $rejectBtn = "<button type='button' class='rejectBtn' onclick='reject(event)'>반려</button>";
+
+                $link.append($attendee);
+                $attendingItem.append($link, $answer, $acceptBtn, $rejectBtn);
+                $waitingList.append($attendingItem);
+            }
+
+
+            $("#attendeeListWrapper").html($attendeeList);
+            $("#attendingListWrapper").html($attendingList);
+            $("#waitingListWrapper").html($waitingList);
+            $(".attendee_count").text(attendeeDTOList.length);
+            $(".waiting_count").text(waitingDTOList.length);
+
+
 
         }
 
@@ -924,16 +1200,23 @@
                         	</c:choose>
 
                         </li>
-                        <li>${dto.attendee_count}/${dto.maxPeople}명 참가중<c:if test="${waitCount>0}"> (대기 ${waitCount}명)</c:if>
-                            <div id="attendeeList">
-                                <c:forEach var="attendee" items="${dto.attendeeDTOList}">
-                                    <a href="${path}/mypage/goMypage/${attendee.user_id}">
-                                    <div class="attendee">
-                                        <img src="${path}/images/${attendee.profile}">
-                                        <span>${attendee.nickname}</span>
-                                    </div>
-                                    </a>
-                                </c:forEach>
+                        <li><span class="attendee_count">${dto.attendee_count}</span>/${dto.maxPeople}명 참가중
+                            <c:if test="${waitCount>0}">(대기 <span class="waiting_count">${waitCount}</span>명)
+                            </c:if>
+                            <c:if test="${dto.writer_id == sessionScope.userid}">
+                                <button type="button" onclick="showAttendingList()">참가자 관리</button>
+                            </c:if>
+                            <div id="attendeeListWrapper">
+                                <div id="attendeeList">
+                                    <c:forEach var="attendee" items="${dto.attendeeDTOList}">
+                                        <a href="${path}/mypage/goMypage/${attendee.user_id}">
+                                        <div class="attendee">
+                                            <img src="${path}/images/${attendee.profile}">
+                                            <span>${attendee.nickname}</span>
+                                        </div>
+                                        </a>
+                                    </c:forEach>
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -1007,7 +1290,7 @@
     </div>
 
 
-    <div class="popup-wrap">
+    <div class="popup-wrap" id="applyPopup">
         <div class="popup">
             <div class="popup-body">
                 <div>이 모임은 허가제 모임입니다.<br>
@@ -1023,7 +1306,61 @@
     </div>
 
 
-</div>
+    <div class="popup-wrap" id="attendingPopup">
+        <div class="popup">
+            <div class="popup-body">
+                <div>
+                    <div id="attendingArea">
+                        <h2>참가자 (<span class="attendee_count">${dto.attendee_count}</span>/${dto.maxPeople})</h2>
+                        <div id="attendingListWrapper">
+                            <div id="attendingList">
+                            <c:forEach var="attendee" items="${dto.attendeeDTOList}">
+                                <div class="attendingItem" data-attendee_id="${attendee.attendee_id}">
+                                    <a href="${path}/mypage/goMypage/${attendee.user_id}">
+                                        <div class="attendee">
+                                            <img src="${path}/images/${attendee.profile}">
+                                            <span>${attendee.nickname}</span>
+                                        </div>
+                                    </a>
+                                    <c:if test="${attendee.user_id != sessionScope.userid}">
+                                        <button type="button" onclick="throwAttendee(event)">강퇴</button>
+                                    </c:if>
+                                </div>
+                            </c:forEach>
+                        </div>
+                        </div>
+                    </div>
+                    <c:if test="${waitCount > 0}">
+                        <div id="waitingArea">
+                            <h2>대기자 총 <span class="waiting_count">${waitCount}</span>명</h2>
+                            <div>"${dto.question}"</div>
+                            <div id="waitingListWrapper">
+                                <div id="waitingList">
+                                <c:forEach var="waiting" items="${dto.waitingDTOList}">
+                                    <div class="attendingItem" data-attendee_id="${waiting.attendee_id}">
+                                        <a href="${path}/mypage/goMypage/${waiting.user_id}">
+                                            <div class="attendee">
+                                                <img src="${path}/images/${waiting.profile}">
+                                                <span>${waiting.nickname}</span>
+                                            </div>
+                                        </a>
+                                        <div>${waiting.answer}</div>
+                                        <button type="button" class="acceptBtn" onclick="accept(event)">승인</button>
+                                        <button type="button" class="rejectBtn" onclick="reject(event)">반려</button>
+                                    </div>
+                                </c:forEach>
+                                </div>
+                            </div>
+                        </div>
+                    </c:if>
+
+                </div>
+                    <button type="button" onclick="modalClose()">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 <%@include file="../include/footer.jsp" %>
 </body>

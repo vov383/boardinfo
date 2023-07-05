@@ -83,6 +83,11 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.selectOne("member.getNickname", user_id);
 	}
 
+	@Override
+	public String getProfile(String user_id) {
+		return sqlSession.selectOne("member.getProfile", user_id);
+	}
+
 	public String get_searchId(String name, String hp) {
 		Map<String, String> map = new HashMap<>();
 		map.put("name", name);

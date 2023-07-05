@@ -13,6 +13,7 @@ public interface ChatService {
     public Map<String, String> getNicknameMap(int gathering_id);
     public Map<String, Object> getAttendingChatroomList(String user_id, Integer gathering_id);
     public List<Integer> getMyActiveChats(String user_id);
-    public boolean checkUnreadMessage(String user_id, List<Integer> activeChats);
+    public boolean checkUnreadMessage(String user_id);
     public void updateActiveChatList(HttpSession session);
+    public boolean checkUnreadMessageExceptRoom(String userId, List<Integer> focusedRooms);
 }

@@ -91,6 +91,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where userid = #{user_id}
 	</select>
 
+	<select id="getProfile" resultType="String">
+		select profile
+		from member
+		where userid = #{user_id}
+	</select>
+
 	<select id="searchId" resultType="String">
 		select nvl(userid, 0) from member
 		where name = #{name} and hp = #{hp}

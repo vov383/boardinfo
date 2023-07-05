@@ -218,7 +218,7 @@ form[name="gameSearch"] #searchimg{
     padding: 10px 0;
 }
 
-.noticeList{
+.alarmList{
     position: absolute;
     z-index: 100;
     display: none;
@@ -226,14 +226,13 @@ form[name="gameSearch"] #searchimg{
 
     margin-top: 20px;
     width: 385px;
-    min-height: 100px;
     right: -40px;
     background-color: white;
     box-shadow: 10px 10px 20px 0 rgba(0,0,0,.1);
     border-radius: 10px;
 }
 
-.noticeList::after{
+.alarmList::after{
     content: "";
     position: absolute;
     bottom: 100%;
@@ -244,7 +243,7 @@ form[name="gameSearch"] #searchimg{
 }
 
 
-.noticeList > div:first-child{
+.alarmList > div:first-child{
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     width: 100%;
@@ -252,15 +251,37 @@ form[name="gameSearch"] #searchimg{
     padding: 10px 14px;
 }
 
+.alarmItem{
+    display: flex;
+    flex-direction: column;
+    padding: 10px 14px;
+    cursor: pointer;
+}
+
+.unreadAlarm{
+    background-color: #FFE699;
+}
+
+.alarmItem > div:first-of-type{
+    font-weight: bold;
+}
+
+div.alarmItem:last-of-type{
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+
 .toast-chat{
     margin-top: 8px;
     right: -88px;
     display: flex;
     flex-direction: column;
     position: absolute;
+    z-index: 1000;
 }
 
-.alarmMessages{
+.chatMessages{
     padding: 5px;
     background-color: white;
     width: 220px;
@@ -274,12 +295,12 @@ form[name="gameSearch"] #searchimg{
     border-radius: 6px;
 }
 
-.alarmMessages:hover{
+.chatMessages:hover{
     cursor: pointer;
 }
 
 
-.alarmMessages::after{
+.chatMessages::after{
     content: "";
     position: absolute;
     bottom: 100%;
@@ -290,29 +311,29 @@ form[name="gameSearch"] #searchimg{
 }
 
 
-#chatArea, #noticeArea{
+#chatArea, #alarmArea{
     margin-left: 35px;
     position: relative;
 }
 
-#noticeArea{
+#alarmArea{
     margin-right: 30px;
 }
 
-#chatArea a, #noticeArea a{
+#chatArea a, #alarmArea a{
     display: flex;
     align-items: center;
 }
 
-#chatImg, #noticeImg{
+#chatImg, #alarmImg{
     width: 25px;
 }
 
-#chatImg:hover, #noticeImg:hover{
+#chatImg:hover, #alarmImg:hover{
     cursor: pointer;
 }
 
-#unreadChat, #unreadNotice{
+#unreadChat, #unreadAlarm{
     position: absolute;
     top:0;
     width: 6px;
@@ -321,7 +342,10 @@ form[name="gameSearch"] #searchimg{
     border-radius: 50px;
     color: white;
     font-size: 13px;
-    opacity: 0;
+}
+
+.hidden{
+    display: none;
 }
 
 

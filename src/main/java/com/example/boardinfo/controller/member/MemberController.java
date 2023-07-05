@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.example.boardinfo.model.gathering.dao.GatheringAlarmDAO;
 import com.example.boardinfo.service.chat.ChatService;
+import com.example.boardinfo.service.gathering.GatheringAlarmService;
 import com.google.gson.Gson;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -36,6 +39,9 @@ import com.example.boardinfo.service.member.MemberService;
 @Controller
 @RequestMapping("member/*")
 public class MemberController {
+
+	@Inject
+	GatheringAlarmDAO gatheringAlarmDAO;
 
 	@Inject
 	MemberService memberService;
@@ -153,11 +159,13 @@ public class MemberController {
 		ModelAndView mav = new ModelAndView();
 		if (result) { //로그인 성공
 
-
 			//활성화된 채팅정보 저장
 			List<Integer> activeChats = chatService.getMyActiveChats(dto.getUserid());
+			LocalDateTime now = LocalDateTime.now();
+
 			Gson gson = new Gson();
 			session.setAttribute("activeChats", gson.toJson(activeChats));
+			session.setAttribute("lastUpdateDate", now);
 
 			mav.setViewName("home");
 
