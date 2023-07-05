@@ -7,39 +7,83 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <insert id="addAlarm">
         insert into alarm
-            (alarm_id, user_id, message, type, gathering_id, process)
+            (alarm_id, receiver_id, type, gathering_id, sender_id)
         values
-            (#{alarm_id}, #{user_id}, #{message}, #{type}, #{gathering_id}, #{process})
+            (alarm_id_seq.nextval, #{receiver_id}, #{type}, #{gathering_id}, #{sender_id})
     </insert>
 
 
-    <select id="isProcessed" resultType="gatheringAlarmDTO">
-        select alarm_id, process
+    <select id="countUrgentAlarms" resultType="int">
+        select count(*)
+         from alarm
+         where receiver_id = #{user_id} and create_date > #{lastUpdateDate}
+           and (type='ACCEPTED' or type='DELETED' or type = 'CLOSE' or type = 'THROWN')
+    </select>
+
+    <select id="countAlarms" resultType="int">
+        select count(*)
+        from alarm
+        where read_date is null and receiver_id = #{user_id}
+    </select>
+
+
+    <insert id="gatheringDeleted">
+        insert into alarm (
+        alarm_id, receiver_id, type, gathering_id, sender_id)
+        select alarm_id_seq.nextval, tmp.*
+        from
+        (
+        <trim suffixOverrides="union all">
+            <foreach collection="attendeeList" item="attendee">
+                select #{attendee}, #{chatAlarm.type}, #{chatAlarm.gathering_id}, #{chatAlarm.sender_id}
+                from dual
+                union all
+            </foreach>
+        </trim>
+        )tmp
+    </insert>
+
+
+    <select id="countTotList" resultType="int">
+        select count (*)
+        from alarm
+        where receiver_id = #{user_id} and show = 'Y'
+    </select>
+
+
+    <select id="getAlarmList" resultType="gatheringAlarmDTO">
+        select b.*, m.nickname as sender_nickname, g.title as post_title
+        from
+            (
+
+                select a.*, rownum rn
+                from
+                    (
+                        select alarm_id, receiver_id, sender_id, type, gathering_id, read_date
+                        from alarm
+                        where receiver_id = #{user_id} and show = 'Y'
+                        order by create_date desc
+                    )a
+            )b
+                left join member m on sender_id = m.userid
+                left join gathering g on g.gathering_id = b.gathering_id
+        where rn between #{start} and #{end}
+        order by rn
+    </select>
+
+
+    <select id="getAlarm" resultType="gatheringAlarmDTO">
+        select type, gathering_id
         from alarm
         where alarm_id = #{alarm_id}
     </select>
 
 
-    <update id="processDone">
+    <update id="readSameTypeAlarms">
         update alarm
-        set process = 'd'
-        where alarm_id = #{alarm_id}
+        set read_date = sysdate
+        where read_date is null and gathering_id = #{gathering_id} and receiver_id = #{user_id}
     </update>
-
-
-    <insert id="gatheringDeleted">
-            insert into alarm
-            (alarm_id, user_id, message, type, gathering_id, process)
-            <trim suffixOverrides="union all">
-            <foreach collection="attendeeList" item="attendee">
-            select #{chatAlarm.alarm_id}||#{attendee}, #{attendee}, #{chatAlarm.message},
-                #{chatAlarm.type}, #{chatAlarm.gathering_id}, #{chatAlarm.process}
-            from dual
-            union all
-            </foreach>
-            </trim>
-    </insert>
-
 </mapper>
 
 

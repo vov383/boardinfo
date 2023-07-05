@@ -15,11 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
+import com.example.boardinfo.model.gathering.dto.*;
 
-import com.example.boardinfo.model.gathering.dto.AttendeeType;
-import com.example.boardinfo.model.gathering.dto.GatheringDTO;
-import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
 import com.example.boardinfo.service.chat.ChatService;
 import com.example.boardinfo.service.gathering.GatheringService;
 import com.example.boardinfo.service.member.MemberService;
@@ -229,7 +226,7 @@ public class GatheringController {
 
 		LocalDateTime now = LocalDateTime.now();
 		if(dto.getGathering_date().isBefore(now)) {
-			String message = "모임 기간이 지난 글은 수정할 수 없습니다.";
+			String message = GatheringErrorMessages.CANNOT_EDIT_FINISHED_GATHERING;
 			redirectAttributes.addFlashAttribute("message", message);
 
 			if (request.getHeader("Referer") != null) {
@@ -268,6 +265,8 @@ public class GatheringController {
 
 	@RequestMapping("/update.do")
 	public String edit(@ModelAttribute GatheringDTO dto){
+
+		//이 사람이 쓴 글인지 + 모집정원, 기간 재체크
 		gatheringService.update(dto);
 		return "redirect:/gathering/view/" + dto.getGathering_id();
 	}
@@ -328,8 +327,6 @@ public class GatheringController {
 	}
 
 
-
-
 	@ResponseBody
 	@GetMapping("/getNickname.do")
 	public Map<String, String> getNickname(@RequestParam String user_id) {
@@ -339,6 +336,17 @@ public class GatheringController {
 		map.put("nickname", nickname);
 		return map;
 	}
+
+	@ResponseBody
+	@GetMapping("/getProfile.do")
+	public Map<String, String> getProfile(@RequestParam String user_id) {
+
+		String profile = memberService.getProfile(user_id);
+		Map<String, String> map = new HashMap<>();
+		map.put("profile", profile);
+		return map;
+	}
+
 
 
 	@ResponseBody
@@ -395,8 +403,34 @@ public class GatheringController {
 	}
 
 
+	@ResponseBody
+	@RequestMapping("/acceptApply.do")
+	public Map<String, Object> acceptApply(@RequestParam int gathering_id, @RequestParam int attendee_id,
+										   HttpSession session) {
+		String writer_id = (String) session.getAttribute("userid");
+		Map<String, Object> map = gatheringService.acceptApply(writer_id, gathering_id, attendee_id);
+		return map;
+	}
 
 
+	@ResponseBody
+	@RequestMapping("/rejectApply.do")
+	public Map<String, Object> rejectApply(@RequestParam int gathering_id, @RequestParam int attendee_id,
+										   HttpSession session) {
+		String writer_id = (String) session.getAttribute("userid");
+		Map<String, Object> map = gatheringService.rejectApply(writer_id, gathering_id, attendee_id);
+		return map;
+	}
+
+
+	@ResponseBody
+	@RequestMapping("/throwAttendee")
+	public Map<String, Object> throwAttendee(@RequestParam int gathering_id, @RequestParam int attendee_id,
+											 HttpSession session){
+		String writer_id = (String) session.getAttribute("userid");
+		Map<String, Object> map = gatheringService.throwAttendee(writer_id, gathering_id, attendee_id);
+		return map;
+	}
 
 
 }

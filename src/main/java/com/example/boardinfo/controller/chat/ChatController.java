@@ -10,10 +10,7 @@ import com.example.boardinfo.service.gathering.GatheringService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
@@ -147,11 +144,19 @@ public class ChatController {
     public Map<String, Boolean> getActiveUnreadCount(HttpSession session) {
 
         String user_id = (String) session.getAttribute("userid");
-        Gson gson = new Gson();
-        String json = (String) session.getAttribute("activeChats");
-        Type listType = new TypeToken<List<Integer>>() {}.getType();
-        List<Integer> activeChats = gson.fromJson(json, listType);
-        boolean unread = chatService.checkUnreadMessage(user_id, activeChats);
+        boolean unread = chatService.checkUnreadMessage(user_id);
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("unread", unread);
+        return map;
+    }
+
+    @ResponseBody
+    @PostMapping("/unreadCountExcept.do")
+    public Map<String, Boolean> getActiveUnreadCountExcept(HttpSession session,
+             @RequestBody List<Integer> focusedRooms){
+
+        String user_id = (String) session.getAttribute("userid");
+        boolean unread = chatService.checkUnreadMessageExceptRoom(user_id, focusedRooms);
         Map<String, Boolean> map = new HashMap<>();
         map.put("unread", unread);
         return map;
@@ -160,9 +165,10 @@ public class ChatController {
 
     @ResponseBody
     @GetMapping("/updateByAlarm.do")
-    public void updateByAlarm(HttpSession session, String alarm_id) {
-        gatheringAlarmService.updateSessionByAlarm(alarm_id, session);
+    public void updateByAlarm(HttpSession session) {
+        gatheringAlarmService.updateSessionByAlarm((String) session.getAttribute("userid"), session);
     }
+
 
 
 }

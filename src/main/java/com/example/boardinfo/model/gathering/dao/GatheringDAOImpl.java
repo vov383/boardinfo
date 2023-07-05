@@ -150,8 +150,8 @@ public class GatheringDAOImpl implements GatheringDAO {
 	}
 
 	@Override
-	public Map<String, String> getWriterAndShow(int gathering_id) {
-		return sqlSession.selectOne("gathering.getWriterAndShow", gathering_id);
+	public String getWriter(int gathering_id) {
+		return sqlSession.selectOne("gathering.getWriter", gathering_id);
 	}
 
 	@Override
@@ -226,6 +226,14 @@ public class GatheringDAOImpl implements GatheringDAO {
 	}
 
 	@Override
+	public List<ChatRoomDTO> getMyLastVisitExceptRoom(String user_id, List<Integer> focusedRooms) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("user_id", user_id);
+		map.put("focusedRooms", focusedRooms);
+		return sqlSession.selectList("gathering.getMyChatsLastVisitExceptRoom", map);
+	}
+
+	@Override
 	public List<String> leaveAll(int gathering_id) {
 		List<String> attendeeList = sqlSession.selectList("gathering.attendeeList", gathering_id);
 
@@ -254,6 +262,33 @@ public class GatheringDAOImpl implements GatheringDAO {
 			return sqlSession.selectOne("gathering.totalSearchCount", map);
 	}
 
+	@Override
+	public int acceptApply(int gathering_id, int attendee_id) {
+		Map<String, Integer> map = new HashMap();
+		map.put("gathering_id", gathering_id);
+		map.put("attendee_id", attendee_id);
+		return sqlSession.update("gathering.acceptApply", map);
+	}
 
+	@Override
+	public int rejectApply(int gathering_id, int attendee_id) {
+		Map<String, Integer> map = new HashMap();
+		map.put("gathering_id", gathering_id);
+		map.put("attendee_id", attendee_id);
+		return sqlSession.update("gathering.rejectApply", map);
+	}
+
+	@Override
+	public AttendeeDTO getAttendeeInfo(int attendee_id) {
+		return sqlSession.selectOne("gathering.getAttendeeInfo", attendee_id);
+	}
+
+	@Override
+	public int throwAttendee(int attendee_id, int gathering_id) {
+		Map<String, Integer> map = new HashMap();
+		map.put("gathering_id", gathering_id);
+		map.put("attendee_id", attendee_id);
+		return sqlSession.update("gathering.throwAttendee", map);
+	}
 }
 

@@ -2,18 +2,25 @@ package com.example.boardinfo.controller.chat;
 
 
 import com.example.boardinfo.model.chat.dao.ChatMessageDAO;
+import com.example.boardinfo.model.gathering.dao.GatheringAlarmDAO;
+import com.example.boardinfo.model.gathering.dao.GatheringDAO;
 import com.example.boardinfo.model.gathering.dto.GatheringAlarmDTO;
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
+import com.example.boardinfo.model.member.dao.MemberDAO;
 import com.example.boardinfo.service.chat.ChatRoomStore;
+import com.example.boardinfo.service.chat.ChatService;
+import com.example.boardinfo.service.chat.ChatServiceImpl;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.broker.SubscriptionRegistry;
 import org.springframework.stereotype.Controller;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -23,7 +30,17 @@ public class ChatMessageController {
     ChatMessageDAO chatMessageDao;
 
     @Inject
-    ChatRoomStore chatRoomStore;
+    GatheringDAO gatheringDAO;
+
+    @Inject
+    GatheringAlarmDAO gatheringAlarmDAO;
+
+    @Inject
+    MemberDAO memberDAO;
+
+
+
+
 
 
     private SimpMessagingTemplate messagingTemplate;
@@ -41,55 +58,44 @@ public class ChatMessageController {
         GatheringAlarmDTO.AlarmType type = chatAlarm.getType();
         chatAlarm.setMessage(session_id);
 
-        System.out.println(chatAlarm.toString());
-
         if(type.equals(GatheringAlarmDTO.AlarmType.FOCUS)){
             messagingTemplate.convertAndSend("/sub/alarm/user/" +
-                    chatAlarm.getUser_id(), chatAlarm);
+                    chatAlarm.getReceiver_id(), chatAlarm);
+            /*gatheringDAO.updateLastVisit(chatAlarm.getGathering_id(), chatAlarm.getReceiver_id(), LocalDateTime.of(2200, 12, 30, 0, 0));*/
         }
 
         else if(type.equals(GatheringAlarmDTO.AlarmType.BLUR)){
-            chatRoomStore.leaveOrRemoveRoom(session_id);
+            gatheringDAO.updateLastVisit(chatAlarm.getGathering_id(), chatAlarm.getReceiver_id(), LocalDateTime.now());
+            System.out.println("lastDate업뎃" + chatAlarm.getGathering_id() + chatAlarm.getReceiver_id() + LocalDateTime.now());
             messagingTemplate.convertAndSend("/sub/alarm/user/" +
-                    chatAlarm.getUser_id(), chatAlarm);
+                    chatAlarm.getReceiver_id(), chatAlarm);
         }
 
     }
 
 
     @EventListener
-    public void handleAlarm(GatheringAlarmDTO chatAlarm){
-        GatheringAlarmDTO.AlarmType type = chatAlarm.getType();
+    public void handleAlarm(GatheringAlarmDTO gatheringAlarm){
+        GatheringAlarmDTO.AlarmType type = gatheringAlarm.getType();
 
-        /*저장 등 처리하기
-         //일단 얜 굳이 저장 안해도 될거같아서 패스
-
-        if(type.equals(GatheringAlarmDTO.AlarmType.ATTEND)){
-
-            chatAlarm.setAlarm_id(gatheringAlarmDAO.addAlarm(chatAlarm));
-            chatAlarm.setMessage("모임에 가입되었습니다.");
-        }
-         */
-
-        if(type.equals(GatheringAlarmDTO.AlarmType.ACCEPTED)){
-            chatAlarm.setProcess("N");
-            chatAlarm.setAlarm_id(UUID.randomUUID().toString());
-            chatAlarm.setMessage("모임에 가입이 승인되었습니다.");
-
-            messagingTemplate.convertAndSend("/sub/alarm/user/" +
-                    chatAlarm.getUser_id(), chatAlarm);
+        //알람 저장
+        if(type.equals(GatheringAlarmDTO.AlarmType.ACCEPTED) ||
+                type.equals(GatheringAlarmDTO.AlarmType.THROWN) ||
+                type.equals(GatheringAlarmDTO.AlarmType.APPLY) ||
+                type.equals(GatheringAlarmDTO.AlarmType.REJECTED)
+        ){
+            gatheringAlarmDAO.addAlarm(gatheringAlarm);
         }
 
-        else if(type.equals(GatheringAlarmDTO.AlarmType.DELETED)){
+        //보내주기
+        if(type.equals(GatheringAlarmDTO.AlarmType.DELETED)){
             messagingTemplate.convertAndSend("/sub/chatting/room/" +
-                    chatAlarm.getGathering_id(), chatAlarm);
+                    gatheringAlarm.getGathering_id(), gatheringAlarm);
         }
-
-        else if(type.equals(GatheringAlarmDTO.AlarmType.LEAVE)){
+        else{
             messagingTemplate.convertAndSend("/sub/alarm/user/" +
-                    chatAlarm.getUser_id(), chatAlarm);
+                    gatheringAlarm.getReceiver_id(), gatheringAlarm);
         }
-
     }
 
 
@@ -98,6 +104,11 @@ public class ChatMessageController {
     @MessageMapping("/chatting/message")
     public void handleMessage(ChatMessageDTO chatMessage) {
         ChatMessageDTO.MessageType type = chatMessage.getType();
+
+        if(chatMessage.getNickname() == null){
+            String nickname = memberDAO.getNickname(chatMessage.getUserId());
+            chatMessage.setNickname(nickname);
+        }
 
         if(type.equals(ChatMessageDTO.MessageType.ATTEND)) {
             chatMessage.setMessage("[" + chatMessage.getUserId() + "]님이 입장하셨습니다.");
@@ -111,6 +122,11 @@ public class ChatMessageController {
 
         else if(type.equals(ChatMessageDTO.MessageType.CLOSE)){
             chatMessage.setMessage("모임이 종료된 지 3일이 지나 채팅이 종료되었습니다.\n우리 다음에 또 만나요!");
+            chatMessage.setUserId("SYSTEM");
+        }
+
+        else if(type.equals(ChatMessageDTO.MessageType.THROW)){
+            chatMessage.setMessage("[" + chatMessage.getUserId() + "]님이 모임에서 방출되었습니다.");
             chatMessage.setUserId("SYSTEM");
         }
 

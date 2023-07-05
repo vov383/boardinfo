@@ -15,14 +15,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public interface GatheringService {
-	
 
+	public boolean checkIsWriter(int gathering_id, String user_id);
+	public String setStatus(GatheringDTO dto);
 	public int addPost(GatheringDTO dto, HttpSession session);
 	public GatheringDTO simpleView(int gathering_id);
 	public GatheringDTO getGatheringDetails(int gathering_id);
 
 	@Transactional
-	String deletePost(int gathering_id, String user_id, HttpSession session);
+	public String deletePost(int gathering_id, String user_id, HttpSession session);
 
 	public List<GatheringDTO> list(boolean showAvailable, String[] address1List, LocalDate from, LocalDate to, int start, int end, String searchOption, String keyword);
 
@@ -48,5 +49,10 @@ public interface GatheringService {
 	public List<GatheringDTO> totalSearch(String gameKeyword);
     public Map<String, Object> totalSearchMore(Map<String, Object> map);
 
-    public void updateViewCount(int gatheringId, Cookie cookie, HttpServletResponse response);
+    public void updateViewCount(int gathering_id, Cookie cookie, HttpServletResponse response);
+	public Map<String, Object> acceptApply(String writer_id, int gathering_id, int attendee_id);
+	public Map<String, Object> rejectApply(String writerId, int gatheringId, int attendeeId);
+
+    public Map<String, Object> throwAttendee(String writer_id, int gathering_id, int attendee_id);
+
 }

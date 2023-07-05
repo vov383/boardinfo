@@ -34,16 +34,16 @@
                     <c:when test="${sessionScope.admin_id != null && !sessionScope.admin_id.equals('')}">
                         <a title="채팅" href="${path}/chat/room.do">
                             <div id="chatArea">
-                                <span id="unreadChat">
+                                <span id="unreadChat" class="hidden">
                                 </span><img src="${path}/images/chat.png" id="chatImg" alt="채팅">
                                 <div class="toast-chat"></div>
                             </div>
-                            <div id="noticeArea">
+                            <div id="alarmArea">
                                 <a title="알림" href="#">
-                                    <span id="unreadNotice"></span>
-                                    <img src="${path}/images/notice.png" id="noticeImg" alt="알림">
+                                    <span id="unreadAlarm" class="hidden"></span>
+                                    <img src="${path}/images/alarm.png" id="alarmImg" alt="알림">
                                 </a>
-                                <div class="noticeList">
+                                <div class="alarmList">
                                     <div>알림</div>
                                 </div>
                             </div>
@@ -67,22 +67,22 @@
                     <c:otherwise>
                             <div id="chatArea">
                                 <a title="채팅" href="${path}/chat/room.do">
-                                    <span id="unreadChat"></span>
+                                    <span id="unreadChat" class="hidden"></span>
                                     <img src="${path}/images/chat.png" id="chatImg" alt="채팅">
                                 </a>
                                 <div class="toast-chat"></div>
                             </div>
-                        <div id="noticeArea">
-                            <a title="알림" href="#">
-                                <span id="unreadNotice"></span>
-                                <img src="${path}/images/notice.png" id="noticeImg" alt="알림">
+                        <div id="alarmArea">
+                            <a title="알림" href="javascript:showAlarm()">
+                                <span id="unreadAlarm" class="hidden"></span>
+                                <img src="${path}/images/alarm.png" id="alarmImg" alt="알림">
                             </a>
-                            <div class="noticeList">
+                            <div class="alarmList">
                                 <div>알림</div>
                             </div>
                         </div>
                         <!-- userid로 로그인한 상태 -->
-<!-- 수진님꺼  -->
+
                     <div class="memberArea">
                         <div class="toMenu">
                             ${sessionScope.nickname} 님
@@ -168,10 +168,16 @@
     let chatList;
     let focusList = {};
 
+    var sock = new SockJS('http://localhost:8098/ws-stomp-out');
+    var stomp = Stomp.over(sock);
+    /*stomp.debug = null;*/
+
 
     //로그인 풀리면 채팅도 연결 끊어야 함
     let cur_session = '${sessionScope.userid}';
     const unreadChatSpan = $("#unreadChat");
+    const unreadAlarmSpan = $("#unreadAlarm");
+    let unreadAlarmCount = '${sessionScope.unreadAlarmCount}';
 
     function searchAll() {
         var keyword = $("#gameKeyword").val();
@@ -190,6 +196,10 @@
 
     //검색기능
     $(document).ready(function(){
+
+        if(unreadAlarmCount == 'true'){
+            unreadAlarmSpan.removeClass('hidden');
+        }
 
         var timeOutId;
 
@@ -216,41 +226,10 @@
         });
 
 
-
-        /* javascript로 만든 드롭다운
-document.addEventListener('click', function (event) {
-    //가장 가까운 dropdown클래스를 변수에 이벤트 할당
-    var dropdown = event.target.closest('.dropdown');
-    if (dropdown) {
-        //dropdown이 true면 classList.toggle() show클래스가 없으면 추가 & 있으면 제거
-        dropdown.querySelector('.bi-dropdown-content').classList.toggle('show');
-    } else {
-        //dropdown이 false면
-        var dropdowns = document.getElementsByClassName('bi-dropdown-content');
-        for (var i = 0; i < dropdowns.length; i++) {
-            var dropdownContent = dropdowns[i];
-            //show클래스를 갖고 있으면 제거
-            if (dropdownContent.classList.contains('show')) {
-                dropdownContent.classList.remove('show');
-            }
-        } //for문 end
-    } // if else문 end
-});
-
-*/
-
-
         //관리자버전도 만들어야
         if(cur_session !=""){
 
-
             chatList = JSON.parse('${sessionScope.activeChats}');
-
-            var sock = new SockJS('http://localhost:80/ws-stomp/out');
-            var stomp = Stomp.over(sock);
-
-            stomp.debug = null;
-
 
             $.ajax({
                 type: "get",
@@ -258,83 +237,52 @@ document.addEventListener('click', function (event) {
                 success: function (result) {
                    let unread = result.unread;
                    if(unread) {
-                       unreadChatSpan.css("opacity", 1);
+                       unreadChatSpan.removeClass('hidden');
                    }
                    else {
-                       unreadChatSpan.css("opacity", 0);
+                       unreadChatSpan.addClass('hidden');
                    }
 
                 }
             });
 
+
              stomp.connect({}, function () {
 
-                 //reconnect될 때 위치파악 작업 필요할듯
+                //reconnect될 때 위치파악 작업 필요할듯
                 stomp.subscribe("/sub/alarm/user/" + cur_session, function(msg){
 
                     var alarmDto = JSON.parse(msg.body);
-                    var type = alarmDto.type; //데이터를 보낸 사람
-                    var message = alarmDto.message; //메시지
+                    var type = alarmDto.type;
+                    var message = alarmDto.message;
                     var gathering_id = alarmDto.gathering_id;
-                    //알람 아이디도 같이 보내줘야지
 
 
                     if(type == 'FOCUS'){
-                        if (focusList.hasOwnProperty(gathering_id)) {
-                            focusList[gathering_id].push(message);
-                        } else {
-                            focusList[gathering_id] = [message];
-                        }
+                        addToFocusList(gathering_id, message);
 
                         if(alarmDto.existingUnread == true){
-                            unreadChatSpan.css("opacity", 1);
+                            unreadChatSpan.removeClass('hidden');
                         }
                         else{
-                            unreadChatSpan.css("opacity", 0);
+                            unreadChatSpan.addClass('hidden');
                         }
                     }
 
                     else if(type == 'BLUR'){
-                        if (focusList.hasOwnProperty(gathering_id)) {
-                            var index = focusList[gathering_id].indexOf(message);
-                            if (index !== -1) {
-                                focusList[gathering_id].splice(index, 1);
-                                if(focusList[gathering_id].length == 0){
-                                    delete focusList[gathering_id];
-                                }
-                            }
-                        }
+                        removeFromFocusList(gathering_id, message);
                     }
 
 
-                else if(type=='ATTEND'){
+                else if(type=='ATTEND' || type == 'ACCEPTED'){
                         if (!chatList.includes(gathering_id)) {
                             chatList.push(gathering_id);
                             stomp.subscribe("/sub/chatting/room/" + gathering_id, handleChatMessage);
                         }
-                        unreadChatSpan.css("opacity", 1);
+                        unreadChatSpan.removeClass('hidden');
                 }
 
-                else if(type=='ACCEPTED'){
-                        if (!chatList.includes(gathering_id)) {
-                            chatList.push(gathering_id);
-                            stomp.subscribe("/sub/chatting/room/" + gathering_id, handleChatMessage);
-
-                            //세션 및 알람 업데이트
-                            var alarm_id = alarmDto.alarm_id;
-
-                            $.ajax({
-                                type: "get",
-                                data: {"alarm_id" : alarm_id},
-                                url: "${path}/chat/updateByAlarm.do/"
-                            });
-                        }
-
-                        //여기에 추가로 알람칸도 업데이트해줘야 함
-                        unreadChatSpan.css("opacity", 1);
-                 }
-
-                    else if(type=='LEAVE'){
+                else if(type=='LEAVE' || type == 'THROWN' || type == 'CLOSE') {
                         if (chatList.includes(gathering_id)) {
                             var index = chatList.indexOf(gathering_id);
                             if (index > -1) {
@@ -342,7 +290,21 @@ document.addEventListener('click', function (event) {
                             }
                             stomp.unsubscribe("/sub/chatting/room/" + gathering_id);
                         }
+
+                        //안읽은 메시지 업데이트
+                        updateUnreadChatMessages();
                     }
+
+                if(type == 'ACCEPTED' || type == 'THROWN' || type == 'CLOSE') {
+                    updateSession();
+                }
+
+
+                if(type == 'ACCEPTED' || type == 'THROWN' || type == 'DELETED'
+                    || type == 'APPLY' || type == 'COMMENT' || type == 'REJECTED'){
+                    //안읽은 알람 업데이트
+                    unreadAlarmSpan.removeClass('hidden');
+                }
 
              });
 
@@ -414,10 +376,7 @@ document.addEventListener('click', function (event) {
                     });
                     }
                 }, 1000) //settimeout 콜백함수로 1초 딜레이 후 검색창 작동
-
                ;
-
-
 
             }
 
@@ -440,28 +399,6 @@ document.addEventListener('click', function (event) {
        }
 
 
-//     // javascript로 만든 드롭다운
-//     document.addEventListener('click', function (event) {
-//         /*가장 가까운 dropdown클래스를 변수에 이벤트 할당*/
-//         var dropdown = event.target.closest('.dropdown');
-//         if (dropdown) {
-//             /*dropdown이 true면 classList.toggle() show클래스가 없으면 추가 & 있으면 제거*/
-//             dropdown.querySelector('.dropdown-content').classList.toggle('show');
-//         } else {
-//             /*dropdown이 false면*/
-//             var dropdowns = document.getElementsByClassName('dropdown-content');
-//             for (var i = 0; i < dropdowns.length; i++) {
-//                 var dropdownContent = dropdowns[i];
-//                 /*show클래스를 갖고 있으면 제거*/
-//                 if (dropdownContent.classList.contains('show')) {
-//                     dropdownContent.classList.remove('show');//                 }
-//             }//for문 end
-//         } //if else문 end
-//     });
-
-
-
-
     function handleChatMessage(msg){
         var chatMessageDto = JSON.parse(msg.body);
         var sender = chatMessageDto.userId; //데이터를 보낸 사람
@@ -470,33 +407,50 @@ document.addEventListener('click', function (event) {
 
 
         if(type == 'DELETED'){
-            //알람으로 처리해야 함 알람 관련 처리할것
-            //내 아이디를 뒤에 붙여준 것이 실제 아이디
+            //알람으로 처리해야 함
             if (chatList.includes(msg_gathering_id)) {
                 var index = chatList.indexOf(msg_gathering_id);
                 if (index > -1) {
                     chatList.splice(index, 1);
                 }
-
                 stomp.unsubscribe("/sub/chatting/room/" + msg_gathering_id);
-
-                //세션 및 알람 업데이트
-                var alarm_id = chatMessageDto.alarm_id;
-
-                $.ajax({
-                    type: "get",
-                    data: {"alarm_id" : alarm_id},
-                    url: "${path}/chat/updateByAlarm.do/"
-                });
-
             }
+
+            //세션 업데이트
+            updateSession();
+
+            //안읽은 메시지 업데이트
+            updateUnreadChatMessages();
+
         }
 
 
         else if(sender != cur_session && !focusList[msg_gathering_id]){
-            unreadChatSpan.css("opacity", 1);
-            var chatAlarm = $("<span class='alarmMessages'>" + chatMessageDto.nickname + ": "
-                + chatMessageDto.message + "</span>");
+
+            let message = chatMessageDto.message;
+            let nickname = chatMessageDto.nickname;
+
+            if(sender == 'SYSTEM'){
+                let user_nickname = nickname;
+                nickname = '알림';
+
+                //내가 나가거나 나가진 거라면 채팅을 업데이트할 필요 없음
+                if(type == 'LEAVE' || type == 'THROW'){
+                    if(user_nickname == '${sessionScope.nickname}'){
+                        return;
+                    }
+                }
+
+                let index = message.indexOf("]");
+                if(index!=-1) {
+                    message = user_nickname + message.substr(index + 1);
+                }
+            }
+
+            unreadChatSpan.removeClass('hidden');
+
+            var chatAlarm = $("<span class='chatMessages'>" + nickname + ": "
+                + message + "</span>");
             chatAlarm.click(function(){
                 location.href = "${path}/chat/room.do?gathering_id=" + msg_gathering_id;
             });
@@ -523,6 +477,112 @@ document.addEventListener('click', function (event) {
             }
         }else{
             location.href= "${path}/game/write.do";
+        }
+    }
+
+
+    function showAlarm(){
+
+        let $alarmList = $(".alarmList");
+        $alarmList.html("<div>알림</div>");
+
+        $.ajax({
+            type: "get",
+            url: "${path}/gatheringAlarm/list.do/",
+            async: false,
+            success: function (result) {
+                let list = result.list;
+
+                let items = "";
+
+                for(var i=0; i<list.length; i++){
+
+                    let $item = $("<div></div>").addClass("alarmItem");
+                    $item.html("<div>" + list[i].sender_nickname + "</div>"
+                    + "<div>" + list[i].message + "</div>");
+
+                    if(!list[i].read_date || list[i].read_date == ""){
+                        $item.addClass("unreadAlarm");
+                    }
+
+                    $item.data("alarm_id", list[i].alarm_id);
+                    $item.data("url", list[i].url);
+
+                    $item.click(function(){
+                        if($(this).hasClass("unreadAlarm")){
+                            $.ajax({
+                                type: "get",
+                                url: "${path}/gatheringAlarm/read.do/",
+                                data: {"alarm_id" : $(this).data("alarm_id")},
+                                async: false
+                            });
+                        }
+
+                        location.href = $(this).data("url");
+                    });
+
+                    $alarmList.append($item);
+                }
+
+            }
+        });
+
+            $alarmList.slideToggle(300, function(){
+                if($alarmList.is(":visible")){
+                    $alarmList.css("display", "flex");
+                }
+                else $alarmList.css("display", "none");
+
+            });
+    }
+
+    function updateUnreadChatMessages(){
+
+        var focusedRooms = Object.keys(focusList);
+
+        $.ajax({
+            url: "${path}/chat/unreadCountExcept.do/",
+            data: JSON.stringify(focusedRooms),
+            type: "POST",
+            contentType: "application/json",
+            success: function (result) {
+                let unread = result.unread;
+                if(unread) {
+                    unreadChatSpan.removeClass('hidden');
+                }
+                else {
+                    unreadChatSpan.addClass('hidden');
+                }
+            }
+        });
+
+    }
+
+    function updateSession(){
+        $.ajax({
+            type: "get",
+            url: "${path}/chat/updateByAlarm.do/"
+        });
+    }
+
+
+    function addToFocusList(gathering_id, message){
+        if (focusList.hasOwnProperty(gathering_id)) {
+            focusList[gathering_id].push(message);
+        } else {
+            focusList[gathering_id] = [message];
+        }
+    }
+
+    function removeFromFocusList(gathering_id, message){
+        if (focusList.hasOwnProperty(gathering_id)) {
+            var index = focusList[gathering_id].indexOf(message);
+            if (index !== -1) {
+                focusList[gathering_id].splice(index, 1);
+                if(focusList[gathering_id].length == 0){
+                    delete focusList[gathering_id];
+                }
+            }
         }
     }
 

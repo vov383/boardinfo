@@ -5,31 +5,39 @@ import java.util.Date;
 public class GatheringAlarmDTO {
 
     public enum AlarmType{
-        FOCUS, BLUR, ATTEND, ACCEPTED, LEAVE, CLOSE, DELETED, APPLY
+        FOCUS, BLUR, ATTEND, ACCEPTED,
+        LEAVE, CLOSE, DELETED, APPLY, THROWN, REJECTED
     }
 
-    public String alarm_id;
-    private String user_id; //받는 사람
-    private String trigger_user_id;
-    private String message; //메시지 내용
+    private String alarm_id;
+    private String receiver_id; //받는 사람
+    private String sender_id;
     private GatheringAlarmDTO.AlarmType type; //알람 타입
+    private String message;
     private Date create_date; //메시지 보낸 날짜
+    private Date read_date;
     private String formattedDate;
     private int gathering_id;
-    private String read;
+    private String show;
+    private String post_title;
+    private String sender_nickname;
+    private String url;
     private boolean existingUnread;
-
-
-    //n: process필요, d: 완료
-    private String process;
 
 
     public GatheringAlarmDTO(){
 
     }
 
-    public GatheringAlarmDTO(String user_id, AlarmType type, int gathering_id) {
-        this.user_id = user_id;
+    public GatheringAlarmDTO(String receiver_id, String sender_id, AlarmType type, int gathering_id) {
+        this.receiver_id = receiver_id;
+        this.sender_id = sender_id;
+        this.type = type;
+        this.gathering_id = gathering_id;
+    }
+
+    public GatheringAlarmDTO(String receiver_id, AlarmType type, int gathering_id) {
+        this.receiver_id = receiver_id;
         this.type = type;
         this.gathering_id = gathering_id;
     }
@@ -42,20 +50,20 @@ public class GatheringAlarmDTO {
         this.alarm_id = alarm_id;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public String getReceiver_id() {
+        return receiver_id;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setReceiver_id(String receiver_id) {
+        this.receiver_id = receiver_id;
     }
 
-    public String getMessage() {
-        return message;
+    public String getSender_id() {
+        return sender_id;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setSender_id(String sender_id) {
+        this.sender_id = sender_id;
     }
 
     public AlarmType getType() {
@@ -74,6 +82,14 @@ public class GatheringAlarmDTO {
         this.create_date = create_date;
     }
 
+    public Date getRead_date() {
+        return read_date;
+    }
+
+    public void setRead_date(Date read_date) {
+        this.read_date = read_date;
+    }
+
     public String getFormattedDate() {
         return formattedDate;
     }
@@ -90,20 +106,44 @@ public class GatheringAlarmDTO {
         this.gathering_id = gathering_id;
     }
 
-    public String getRead() {
-        return read;
+    public String getShow() {
+        return show;
     }
 
-    public void setRead(String read) {
-        this.read = read;
+    public void setShow(String show) {
+        this.show = show;
     }
 
-    public String getProcess() {
-        return process;
+    public String getMessage() {
+        return message;
     }
 
-    public void setProcess(String process) {
-        this.process = process;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getPost_title() {
+        return post_title;
+    }
+
+    public void setPost_title(String post_title) {
+        this.post_title = post_title;
+    }
+
+    public String getSender_nickname() {
+        return sender_nickname;
+    }
+
+    public void setSender_nickname(String sender_nickname) {
+        this.sender_nickname = sender_nickname;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public boolean isExistingUnread() {
@@ -114,28 +154,21 @@ public class GatheringAlarmDTO {
         this.existingUnread = existingUnread;
     }
 
-    public String getTrigger_user_id() {
-        return trigger_user_id;
-    }
-
-    public void setTrigger_user_id(String trigger_user_id) {
-        this.trigger_user_id = trigger_user_id;
-    }
-
     @Override
     public String toString() {
         return "GatheringAlarmDTO{" +
                 "alarm_id='" + alarm_id + '\'' +
-                ", user_id='" + user_id + '\'' +
-                ", trigger_user_id='" + trigger_user_id + '\'' +
-                ", message='" + message + '\'' +
+                ", receiver_id='" + receiver_id + '\'' +
+                ", sender_id='" + sender_id + '\'' +
                 ", type=" + type +
+                ", message='" + message + '\'' +
                 ", create_date=" + create_date +
+                ", read_date=" + read_date +
                 ", formattedDate='" + formattedDate + '\'' +
                 ", gathering_id=" + gathering_id +
-                ", read='" + read + '\'' +
-                ", existingUnread=" + existingUnread +
-                ", process='" + process + '\'' +
+                ", show='" + show + '\'' +
+                ", post_title='" + post_title + '\'' +
+                ", sender_nickname='" + sender_nickname + '\'' +
                 '}';
     }
 }

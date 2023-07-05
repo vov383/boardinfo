@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -80,6 +81,8 @@ public class ChatServiceImpl implements ChatService {
                 ChatRoomDTO r = dto.get();
                 r.setLastChat(item);
                 resultList.add(r);
+                System.out.println(r.getGathering_id() + "방의" + r.getLast_visit() + "방문");
+                System.out.println(item.getInsertDate() + "채팅");
                 if(r.getLast_visit().before(item.getInsertDate())) {
                     if(gathering_id==null || r.getGathering_id()!=gathering_id){
                         r.setUnread(true);
@@ -97,24 +100,6 @@ public class ChatServiceImpl implements ChatService {
     }
 
 
-    /*
-    @Override
-    public long countMyUnreads(List<ChatRoomDTO> myRooms) {
-        long unread = 0L;
-
-        for (ChatRoomDTO room : myRooms) {
-            Query query = new Query()
-                    .addCriteria(Criteria.where("gathering_id").is(room.getGathering_id())
-                            .*and("timestamp").gt(room.getLast_visit()));
-            long unreadCount = mongoTemplate.count(query, ChatMessageDTO.class);
-            unread += unreadCount;
-        }
-
-        return unread;
-    }
-    */
-
-
     @Override
     public List<Integer> getMyActiveChats(String user_id) {
         return gatheringDAO.getMyActiveChats(user_id);
@@ -122,17 +107,26 @@ public class ChatServiceImpl implements ChatService {
 
 
     @Override
-    public boolean checkUnreadMessage(String user_id, List<Integer> activeChats) {
+    public boolean checkUnreadMessage(String user_id) {
         List<ChatRoomDTO> myChats = gatheringDAO.getMyLastVisit(user_id);
         return chatMessageDAO.hasUnreadMessages(myChats);
     }
 
+    @Override
+    public boolean checkUnreadMessageExceptRoom(String user_id, List<Integer> focusedRooms) {
+        List<ChatRoomDTO> myChats = gatheringDAO.getMyLastVisitExceptRoom(user_id, focusedRooms);
+        return chatMessageDAO.hasUnreadMessages(myChats);
+    }
 
     @Override
     public void updateActiveChatList(HttpSession session){
         List<Integer> activeChats = gatheringDAO.getMyActiveChats((String)session.getAttribute("userid"));
         Gson gson = new Gson();
         session.setAttribute("activeChats", gson.toJson(activeChats));
+
+        LocalDateTime now = LocalDateTime.now();
+        session.setAttribute("lastUpdateDate", now);
+
     }
 
 

@@ -298,8 +298,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
 
 
-	<select id="getWriterAndShow" resultType="hashMap">
-		select writer_id, show from gathering
+	<select id="getWriter" resultType="String">
+		select writer_id from gathering
 		where gathering_id = #{gathering_id}
 	</select>
 
@@ -441,7 +441,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 	<select id="waitingInfoList" resultType="attendeeDTO">
-		select attendee_id, user_id, nickname, profile
+		select attendee_id, user_id, nickname, profile, answer
 		from attendee a
 				 left join member m on a.user_id = m.userid
 		where gathering_id = #{gathering_id} and type = 'w'
@@ -463,14 +463,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
 
 
-
 	<select id="getMyChatsLastVisit" resultType="chatRoomDTO">
 		select a.gathering_id, a.last_visit
 		from attendee a
 				 join gathering g on a.gathering_id = g.gathering_id
-		where user_id = #{user_id} and type = 'a' and
-		      (g.finishChat = 'N' or
-		       g.finishChat = 'Y' and trunc(g.gathering_date+3)+1 <![CDATA[>]]>= a.last_visit)
+		where user_id = #{user_id} and type = 'a' and g.finishChat = 'N'
+	</select>
+
+
+	<select id="getMyChatsLastVisitExceptRoom" resultType="chatRoomDTO">
+		select a.gathering_id, a.last_visit
+		from attendee a
+		join gathering g on a.gathering_id = g.gathering_id
+		where user_id = #{user_id} and type = 'a' and g.finishChat = 'N'
+		<trim suffixOverrides="and">
+			<foreach collection="focusedRooms" item="room">
+				and g.gathering_id != room
+			</foreach>
+		</trim>
+
 	</select>
 
 
@@ -525,6 +536,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 
+	<update id="acceptApply">
+		update attendee
+		set type = 'a', update_date = sysdate
+		where attendee_id = #{attendee_id} and gathering_id = #{gathering_id} and type = 'w'
+	</update>
+
+
+	<update id="rejectApply">
+		update attendee
+		set type = 'r', update_date = sysdate
+		where attendee_id = #{attendee_id} and gathering_id = #{gathering_id} and type = 'w'
+	</update>
+
+	<update id="throwAttendee">
+		update attendee
+		set type = 'b', update_date = sysdate
+		where attendee_id = #{attendee_id} and gathering_id = #{gathering_id} and type = 'a'
+	</update>
+
+
+	<select id="getAttendeeInfo" resultType="attendeeDTO">
+		select a.attendee_id, a.user_id, a.type, m.nickname
+		from attendee a
+				 join member m on a.user_id = m.userid
+		where a.attendee_id = #{attendee_id}
+	</select>
 
 
 </mapper>
