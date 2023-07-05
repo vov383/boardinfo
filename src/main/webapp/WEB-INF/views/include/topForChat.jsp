@@ -90,9 +90,9 @@
 
                             <div class="bi-dropdown-content">
                                 <a href="#" onclick="goMypage()">내활동</a>
-                                <form name="mypageForm" method="post" style="display: none">
-                                    <input type="hidden" name="userid" value="${sessionScope.userid}">
-                                </form>
+                           	 	<form name="mypageForm" method="post" style="display: none">
+                                <input type="hidden" id="sessionUserid" name="sessionUserid" value="${sessionScope.userid}">
+                           		 </form>
                                 <a href="${path}/member/pass_check_u?userid=${sessionScope.userid}">회원정보</a>
                                 <a href="${path}/member/logout.do" class="sign">로그아웃</a>
                             </div>
