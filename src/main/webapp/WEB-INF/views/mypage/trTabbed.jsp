@@ -41,7 +41,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach items="${trList}" var="trRow">
+                <c:forEach items="${response.trList}" var="trRow">
                     <tr>
                         <td>
                             <c:choose>
@@ -91,7 +91,7 @@
                             <span class="address">${trRow.address1} ${trRow.address2}</span>
                         </td>
                         <td>
-                            <i class="fa-regular fa-clock"></i>&nbsp;
+                            <i class="fa-regular fa-clock"></i><span class="dot"></span>
                             <span class="dateSpan">${trRow.create_date}</span>
                         </td>
                     </tr>
@@ -100,5 +100,44 @@
             </table>
         </div>
     </div>
+
+    <%--페이징 처리--%>
+    <section class="pagenation">
+        <c:if test="${response.pager.curPage > 1}">
+            <div class="pageItem">
+                <a href="#" onclick="listTab('trade', this, 1)">&lt;&lt;</a>
+            </div>
+        </c:if>
+        <c:if test="${response.pager.curBlock > 1}">
+            <div class="pageItem">
+                <a href="#" onclick="listTab('trade', this, '${response.pager.prevBlock}')">&lt;</a>
+            </div>
+        </c:if>
+        <c:forEach var="num" begin="${response.pager.blockStart}" end="${response.pager.blockEnd}">
+            <c:choose>
+                <c:when test="${num == response.pager.curPage}">
+                    <!-- 현재 페이지인 경우 onclick 없음 -->
+                    <div class="pageItem">
+                        <div id="curPage">${num}</div>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="pageItem">
+                        <a href="#" onclick="listTab('trade', this, '${num}')">${num}</a>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+        <c:if test="${response.pager.curBlock < response.pager.totBlock}">
+            <div class="pageItem">
+                <a href="#" onclick="listTab('trade', this,'${response.pager.nextBlock}')">&gt;</a>
+            </div>
+        </c:if>
+        <c:if test="${response.pager.curPage < response.pager.totPage}">
+            <div class="pageItem">
+                <a href="#" onclick="listTab('trade', this, ${response.pager.totPage})">&gt;&gt;</a>
+            </div>
+        </c:if>
+    </section>
 
 </div>

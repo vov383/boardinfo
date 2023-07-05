@@ -25,19 +25,19 @@
                     <th>
                         제목<br>
                         참가자 수 / 모집 인원 <i class="fa-solid fa-user"></i><br>
-                        댓글&nbsp;<i class="fa-regular fa-comment-dots"></i>&nbsp;
-                        조회수&nbsp;<i class="fa-solid fa-eye"></i>&nbsp;
-                        좋아요&nbsp;<i class="fa-solid fa-heart"></i>&nbsp;
+                        댓글<span class="dot"></span><i class="fa-regular fa-comment-dots"></i><span class="dot"></span>
+                        조회수<span class="dot"></span><i class="fa-solid fa-eye"></i><span class="dot"></span>
+                        좋아요<span class="dot"></span><i class="fa-solid fa-heart"></i><span class="dot"></span>
                     </th>
                     <th>장소<i class="fa-solid fa-location-dot"></i></th>
                     <th>작성일<i class="fa-regular fa-clock"></i></th>
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach items="${gaList}" var="gaRow">
+                <c:forEach items="${response.gaList}" var="gaRow">
                     <tr>
                         <td>
-                            <i class="fa-regular fa-calendar" style="color: #cc350f;"></i>&nbsp;${gaRow.gathering_date}
+                            <i class="fa-regular fa-calendar" style="color: #cc350f;"></i><span class="dot"></span>${gaRow.gathering_date}
                         </td>
                         <td>
                             <c:choose>
@@ -45,11 +45,11 @@
                                     ${fn:substring(gaRow.title, 0, 14)}...
                                 </c:when>
                             </c:choose>
-                                ${gaRow.title}&nbsp;
+                                ${gaRow.title}<span class="dot"></span>
                             <br>
-                            <i class="fa-solid fa-user"></i>&nbsp;&nbsp;
+                            <i class="fa-solid fa-user"></i><span class="dot"></span>
                                 ${gaRow.attendee_count} / ${gaRow.maxpeople}<br>
-                            <i class="fa-regular fa-comment-dots"></i>&nbsp;<span
+                            <i class="fa-regular fa-comment-dots"></i><span class="dot"></span><span
                                 class="reCount">${gaRow.garCount}</span>
                             <span class="dot"></span>
                             <i class="fa-solid fa-eye"></i><span class="dot"></span>
@@ -60,11 +60,11 @@
                             </span><span class="dot"></span>
                         </td>
                         <td>
-                            <i class="fa-solid fa-location-dot"></i>&nbsp;
+                            <i class="fa-solid fa-location-dot"></i><span class="dot"></span>
                             <span class="address">${gaRow.address1} / ${gaRow.address2}</span>
                         </td>
                         <td>
-                            <i class="fa-regular fa-clock"></i>&nbsp;
+                            <i class="fa-regular fa-clock"></i><span class="dot"></span>
                             <span class="dateSpan">${gaRow.create_date}</span>
                         </td>
                     </tr>
@@ -73,5 +73,44 @@
             </table>
         </div>
     </div>
+
+    <%--페이징 처리--%>
+    <section class="pagenation">
+        <c:if test="${response.pager.curPage > 1}">
+            <div class="pageItem">
+                <a href="#" onclick="listTab('gathering', this, 1)">&lt;&lt;</a>
+            </div>
+        </c:if>
+        <c:if test="${response.pager.curBlock > 1}">
+            <div class="pageItem">
+                <a href="#" onclick="listTab('gathering', this, '${response.pager.prevBlock}')">&lt;</a>
+            </div>
+        </c:if>
+        <c:forEach var="num" begin="${response.pager.blockStart}" end="${response.pager.blockEnd}">
+            <c:choose>
+                <c:when test="${num == response.pager.curPage}">
+                    <!-- 현재 페이지인 경우 onclick 없음 -->
+                    <div class="pageItem">
+                        <div id="curPage">${num}</div>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="pageItem">
+                        <a href="#" onclick="listTab('gathering', this, '${num}')">${num}</a>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+        <c:if test="${response.pager.curBlock < response.pager.totBlock}">
+            <div class="pageItem">
+                <a href="#" onclick="listTab('gathering', this,'${response.pager.nextBlock}')">&gt;</a>
+            </div>
+        </c:if>
+        <c:if test="${response.pager.curPage < response.pager.totPage}">
+            <div class="pageItem">
+                <a href="#" onclick="listTab('gathering', this, ${response.pager.totPage})">&gt;&gt;</a>
+            </div>
+        </c:if>
+    </section>
 
 </div>

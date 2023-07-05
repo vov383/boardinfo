@@ -1,8 +1,9 @@
 package com.example.boardinfo.model.mypage.dao;
 
-import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.model.gathering.dto.GatheringDTO;
+import com.example.boardinfo.model.mypage.dto.MyLikeDTO;
+import com.example.boardinfo.model.mypage.dto.MyReplyDTO;
 import com.example.boardinfo.model.mypage.dto.MypageDTO;
 import com.example.boardinfo.model.mypage.dto.MypageGameDTO;
 import com.example.boardinfo.model.review.dto.ReviewDTO;
@@ -26,27 +27,27 @@ public interface MypageDAO {
     /*중고거래 list by userid*/
     List<TBoardDTO> getTbListByUserid(String userid);
 
-    List<Object> getTabbedList(String userid, String str);
+    /*페이징을 위한 count*/
+    int getGiCount(String userid);
 
+    int getGaCount(String userid);
+
+    int getTrCount(String userid);
+
+    int getGrCount(String userid);
+
+    int getRvCount(String userid);
+    int getReCount(String userid);
+    int getLikeCount(String userid);
+
+    /*탭으로 페이징 처리된 목록 출력*/
     List<MypageGameDTO> gameInfoTabbed(Map<String, Object> map);
+    List<GameRatingDTO> gameRatingTabbed(Map<String, Object> map);
+    List<ReviewDTO> reviewTabbed(Map<String, Object> userid);
+    List<MypageDTO> gatheringTabbed(Map<String, Object> map);
+    List<TBoardDTO> tradeTabbed(Map<String, Object> map);
 
-    List<GameRatingDTO> gameRatingTabbed(String userid);
+    List<MyReplyDTO> replyTabbed(Map<String, Object> map);
 
-    List<ReviewDTO> reviewTabbed(String userid);
-
-    List<TBoardDTO> tradeTabbed(String userid);
-
-    List<MypageGameDTO> gameInfoMore(String userid);
-
-    List<GameRatingDTO> gameRatingMore(String userid);
-
-    List<ReviewDTO> reviewMore(String userid);
-
-    List<TBoardDTO> tradeMore(String userid);
-
-    List<MypageDTO> gatheringTabbed(String userid);
-
-    List<MypageDTO> gatheringMore(String userid);
-
-    int countgetGiList(String userid);
+    List<MyLikeDTO> likeTabbed(Map<String, Object> map);
 }

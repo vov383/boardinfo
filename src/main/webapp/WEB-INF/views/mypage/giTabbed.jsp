@@ -13,7 +13,6 @@
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 <%@ page session="true" %>
 
-
 <div id="tabbedPost">
   <div id="listContainer">
     <p class="h3">게임 등록 신청</p>
@@ -32,10 +31,8 @@
           </th>
         </tr>
         </thead>
-
-
         <tbody>
-        <c:forEach items="${map.giList}" var="giRow">
+        <c:forEach items="${response.giList}" var="giRow">
           <tr>
             <td>
                 ${giRow.confirmed}<br>
@@ -85,11 +82,50 @@
             </td>
           </tr>
           <input type="hidden" name="gnum" value="${giRow.gnum}">
-          <input type="hidden" id="create_user" name="create_user" value="${giRow.create_user}">
+          <input type="hidden" name="create_user" value="${giRow.create_user}">
         </c:forEach>
         </tbody>
       </table>
     </div>
   </div>
-</div>
 
+  <%--페이징 처리--%>
+  <section class="pagenation">
+    <c:if test="${response.pager.curPage > 1}">
+      <div class="pageItem">
+        <a href="#" onclick="listTab('game', this, 1)">&lt;&lt;</a>
+      </div>
+    </c:if>
+    <c:if test="${response.pager.curBlock > 1}">
+      <div class="pageItem">
+        <a href="#" onclick="listTab('game', this, '${response.pager.prevBlock}')">&lt;</a>
+      </div>
+    </c:if>
+    <c:forEach var="num" begin="${response.pager.blockStart}" end="${response.pager.blockEnd}">
+      <c:choose>
+        <c:when test="${num == response.pager.curPage}">
+          <!-- 현재 페이지인 경우 onclick 없음 -->
+          <div class="pageItem">
+            <div id="curPage">${num}</div>
+          </div>
+        </c:when>
+        <c:otherwise>
+          <div class="pageItem">
+            <a href="#" onclick="listTab('game', this, '${num}')">${num}</a>
+          </div>
+        </c:otherwise>
+      </c:choose>
+    </c:forEach>
+    <c:if test="${response.pager.curBlock < response.pager.totBlock}">
+      <div class="pageItem">
+        <a href="#" onclick="listTab('game', this,'${response.pager.nextBlock}')">&gt;</a>
+      </div>
+    </c:if>
+    <c:if test="${response.pager.curPage < response.pager.totPage}">
+      <div class="pageItem">
+        <a href="#" onclick="listTab('game', this, ${response.pager.totPage})">&gt;&gt;</a>
+      </div>
+    </c:if>
+  </section>
+
+</div>
