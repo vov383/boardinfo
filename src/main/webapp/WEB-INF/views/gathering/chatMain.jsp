@@ -94,7 +94,7 @@
         overflow: hidden;
     }
 
-    .attendees{
+    .chatRoom .attendee_count{
         font-size: 13px;
     }
 
@@ -161,6 +161,10 @@
 		font-size: 18px;
 		margin-left: 20px;
 	}
+
+    #chatRoomInfo .attendee_count{
+        font-size: 18px;
+    }
 	
 	#chatRoomInfo button{
 		height: 100%;
@@ -343,7 +347,7 @@
 	  <c:forEach var="room" items="${rlist}">
 		  <div class="chatRoom" data-room="${room.gathering_id}">
 			  <div class="roomName">
-                  <div><h4>${room.title}</h4><span class="attendees">${room.attendee_count}</span></div>
+                  <div><h4>${room.title}</h4><span class="attendee_count">${room.attendee_count}</span></div>
                     <c:choose>
                         <c:when test="${room.unread == true}">
                             <span class="unread" style="visibility: visible"></span>
@@ -366,7 +370,7 @@
           <div id="chatRoomInfo">
               <div>
                   <a href="${path}/gathering/view/${dto.gathering_id}">${dto.title}</a>
-                  <span>${dto.attendee_count}/${dto.maxPeople}명 참가중</span>
+                  <span><span class="attendee_count">${dto.attendee_count}</span>/${dto.maxPeople}명 참가중</span>
                   <img src="${path}/images/more.png" id="showAttendeeBtn">
               </div>
               <button type="button" onclick="withdraw()">채팅방 나가기</button>
@@ -739,11 +743,16 @@
                                         }
                                     });
 
+
                                     //개수 체크먼저 하자
-                                    $attendee = "<a class='attendee-wrap' href='${path}/mypage/goMypage/" + user + "'>"
-                                    + "<div class='attendee><img src='${path}/images/" + profile + "'>"
+                                    $attendee = "<a class='attendee-wrap' data-user_id='" + user + "' href='${path}/mypage/goMypage/" + user + "'>"
+                                    + "<div class='attendee'><img src='${path}/images/" + profile + "'>"
                                     + "<span>" + nickname + "</span></div></a>";
-                                    $("attendeeList").append($attendee);
+
+                                    $("#attendeeList").append($attendee);
+
+                                    thisRoom.find(".attendee_count").text(Number(thisRoom.find(".attendee_count").text())+1);
+                                    $("#chatRoomInfo").find(".attendee_count").text(Number($("#chatRoomInfo").find(".attendee_count").text())+1);
 
                                 }
 
@@ -779,6 +788,8 @@
                                 str =
                                     "<div class='message_notice'>"+
                                     "<div class='messageContent'>"+nickname+message.substr(index+1)+"</div></div>";
+
+                                message = nickname+message.substr(index+1);
 
                             }
 
