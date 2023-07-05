@@ -22,11 +22,11 @@
                 <tr>
                     <th>썸네일</th>
                     <th>게임 제목<br>
-                        평점<i class="fa-solid fa-star" style="color: #f0bf0f;"></i>&nbsp;
-                        난이도<i class="fa-solid fa-star" style="color: #3b2cc5;"></i>&nbsp;
+                        평점<span class="dot"></span><i class="fa-solid fa-star" style="color: #f0bf0f;"></i><span class="dot"></span>
+                        난이도<span class="dot"></span><i class="fa-solid fa-star" style="color: #3b2cc5;"></i><span class="dot"></span>
                     </th>
                     <th>
-                        게임 평가 코멘트<i class="fa-regular fa-comment-dots"></i><br>
+                        게임 평가 코멘트<span class="dot"></span><i class="fa-regular fa-comment-dots"></i><br>
                         좋아요<span class="dot"></span><i class="fa-solid fa-heart"></i>
                     </th>
                     <th>
@@ -46,15 +46,15 @@
                                     ${fn:substring(grRow.gametitle, 0, 14)}...
                                 </c:when>
                                 <c:otherwise>
-                                    ${grRow.gametitle}&nbsp;
+                                    ${grRow.gametitle}<span class="dot"></span>
                                 </c:otherwise>
                             </c:choose>
                             <br>
-                            <i class="fa-solid fa-star" style="color: #f0bf0f;"></i>&nbsp; ${grRow.rating}&nbsp;
-                            <i class="fa-solid fa-star" style="color: #3b2cc5;"></i>&nbsp; ${grRow.weight}&nbsp;
+                            <i class="fa-solid fa-star" style="color: #f0bf0f;"></i><span class="dot"></span> ${grRow.rating}<span class="dot"></span>
+                            <i class="fa-solid fa-star" style="color: #3b2cc5;"></i><span class="dot"></span> ${grRow.weight}<span class="dot"></span>
                         </td>
                         <td>
-                            <i class="fa-regular fa-comment-dots"></i>&nbsp;
+                            <i class="fa-regular fa-comment-dots"></i><span class="dot"></span>
                             <c:choose>
                                 <c:when test="${fn:length(grRow.rating_comment) >= 40}">
                                     ${fn:substring(grRow.rating_comment, 0, 49)}...
@@ -64,17 +64,20 @@
                                 </c:otherwise>
                             </c:choose>
                             <br>
-                            <i class="fa-solid fa-heart"></i>&nbsp;
+                            <i class="fa-solid fa-heart"></i><span class="dot"></span>
                             <span class="goodCount">${grRow.likeCount}</span>
                         </td>
                         <td>
-                            <i class="fa-regular fa-clock"></i>&nbsp;
+                            <i class="fa-regular fa-clock"></i><span class="dot"></span>
                             <span class="dateSpan">${grRow.create_date}</span>
                         </td>
                     </tr>
                 </c:forEach>
                 </tbody>
             </table>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-outline-warning" href="#" onclick="listTab('game_rating', this, 1)">더보기</button>
         </div>
     </div>
     <%--<div id="grContainer" class="row">--%>
@@ -85,10 +88,10 @@
 <%--                        <h5 class="card-title">${card.gametitle}</h5>--%>
 <%--                        <img src="${card.bgg_thumbnail}" class="card-img-top" alt="Board Game Thumbnail">--%>
 <%--                        <p class="card-text">--%>
-<%--                            평점<i class="fa-solid fa-star" style="color: #f0bf0f;"></i>&nbsp; ${card.rating}<br>--%>
-<%--                            난이도<i class="fa-solid fa-star" style="color: #3b2cc5;"></i>&nbsp; ${card.weight}<br>--%>
+<%--                            평점<i class="fa-solid fa-star" style="color: #f0bf0f;"></i><span class="dot"></span> ${card.rating}<br>--%>
+<%--                            난이도<i class="fa-solid fa-star" style="color: #3b2cc5;"></i><span class="dot"></span> ${card.weight}<br>--%>
 <%--                        <div class="ratingComment">--%>
-<%--                            코멘트<i class="fa-regular fa-comment-dots"></i>&nbsp;--%>
+<%--                            코멘트<i class="fa-regular fa-comment-dots"></i><span class="dot"></span>--%>
 <%--                            <c:choose>--%>
 <%--                                <c:when test="${fn:length(card.rating_comment) >= 50}">--%>
 <%--                                    ${fn:substring(card.rating_comment, 0, 49)}...<br>--%>
@@ -98,8 +101,8 @@
 <%--                                </c:otherwise>--%>
 <%--                            </c:choose>--%>
 <%--                        </div>--%>
-<%--                        좋아요<i class="fa-solid fa-heart"></i>&nbsp;<span class="goodCount">${card.likeCount}</span> <br>--%>
-<%--                        <i class="fa-regular fa-clock"></i>&nbsp;<span class="dateSpan">${card.create_date}</span>--%>
+<%--                        좋아요<i class="fa-solid fa-heart"></i><span class="dot"></span><span class="goodCount">${card.likeCount}</span> <br>--%>
+<%--                        <i class="fa-regular fa-clock"></i><span class="dot"></span><span class="dateSpan">${card.create_date}</span>--%>
 <%--                        </p>--%>
 <%--                    </div>--%>
 <%--                </div>--%>
@@ -116,9 +119,9 @@
                     <th>
                         카테고리
                         제목<br>
-                        댓글&nbsp;<i class="fa-regular fa-comment-dots"></i>&nbsp;
-                        조회수&nbsp;<i class="fa-solid fa-eye"></i>&nbsp;
-                        좋아요&nbsp;<i class="fa-solid fa-heart"></i>&nbsp;
+                        댓글<span class="dot"></span><i class="fa-regular fa-comment-dots"></i><span class="dot"></span>
+                        조회수<span class="dot"></span><i class="fa-solid fa-eye"></i><span class="dot"></span>
+                        좋아요<span class="dot"></span><i class="fa-solid fa-heart"></i><span class="dot"></span>
                     </th>
                     <th>게임</th>
                     <th>작성일<span class="dot"></span><i class="fa-regular fa-clock"></i></th>
@@ -149,13 +152,16 @@
                             </c:if>
                         </td>
                         <td>
-                            <i class="fa-regular fa-clock"></i>&nbsp;
+                            <i class="fa-regular fa-clock"></i><span class="dot"></span>
                             <span class="dateSpan">${rvRow.createDate}</span>
                         </td>
                     </tr>
                 </c:forEach>
                 </tbody>
             </table>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-primary me-md-2" href="#" onclick="listTab('review', this, 1)">더보기</button>
         </div>
     </div>
 
@@ -169,10 +175,10 @@
                     <th>날짜<i class="fa-regular fa-calendar" style="color: #cc350f;"></i></th>
                     <th>
                         제목<br>
-                        참가자 수 / 모집 인원 <i class="fa-solid fa-user"></i><br>
-                        댓글&nbsp;<i class="fa-regular fa-comment-dots"></i>&nbsp;
-                        조회수&nbsp;<i class="fa-solid fa-eye"></i>&nbsp;
-                        좋아요&nbsp;<i class="fa-solid fa-heart"></i>&nbsp;
+                        참가자 수 / 모집 인원<span class="dot"></span><i class="fa-solid fa-user"></i><br>
+                        댓글<span class="dot"></span><i class="fa-regular fa-comment-dots"></i><span class="dot"></span>
+                        조회수<span class="dot"></span><i class="fa-solid fa-eye"></i><span class="dot"></span>
+                        좋아요<span class="dot"></span><i class="fa-solid fa-heart"></i><span class="dot"></span>
                     </th>
                     <th>장소<i class="fa-solid fa-location-dot"></i></th>
                     <th></th>
@@ -183,7 +189,7 @@
                 <c:forEach items="${map.gaList}" var="gaRow">
                     <tr>
                         <td>
-                            <i class="fa-regular fa-calendar" style="color: #cc350f;"></i>&nbsp;${gaRow.gathering_date}
+                            <i class="fa-regular fa-calendar" style="color: #cc350f;"></i><span class="dot"></span>${gaRow.gathering_date}
                         </td>
                         <td>
                             <c:choose>
@@ -191,37 +197,40 @@
                                     ${fn:substring(gaRow.title, 0, 14)}...
                                 </c:when>
                             </c:choose>
-                            ${gaRow.title}&nbsp;
+                            ${gaRow.title}<span class="dot"></span>
                             <br>
                             ${gaRow.attendee_count} / ${gaRow.maxpeople}<br>
-                            <i class="fa-regular fa-comment-dots"></i>&nbsp;<span
+                            <i class="fa-regular fa-comment-dots"></i><span class="dot"></span><span
                                     class="reCount">${gaRow.garCount}</span><span class="dot"></span>
-                                <i class="fa-regular fa-comment-dots"></i>&nbsp;<span
+                                <i class="fa-regular fa-comment-dots"></i><span class="dot"></span><span
                                     class="reCount">${gaRow.view_count}</span><span class="dot"></span>
-                                <i class="fa-regular fa-comment-dots"></i>&nbsp;<span
+                                <i class="fa-regular fa-comment-dots"></i><span class="dot"></span><span
                                     class="reCount">${gaRow.galLikeCount}</span><span class="dot"></span>
                         </td>
                         <td>
-                            <i class="fa-solid fa-location-dot"></i>&nbsp;
+                            <i class="fa-solid fa-location-dot"></i><span class="dot"></span>
                             <span class="address">${gaRow.address1} / ${gaRow.address2}</span>
                         </td>
 
                         <td>
-                            <i class="fa-solid fa-eye"></i>&nbsp;
+                            <i class="fa-solid fa-eye"></i><span class="dot"></span>
                             <span class="viewCount">${gaRow.view_count}</span>
                         </td>
                         <td>
-                            <i class="fa-solid fa-user"></i>&nbsp;
+                            <i class="fa-solid fa-user"></i><span class="dot"></span>
                                 ${gaRow.nickname}
                         </td>
                         <td>
-                            <i class="fa-regular fa-clock"></i>&nbsp;
+                            <i class="fa-regular fa-clock"></i><span class="dot"></span>
                             <span class="dateSpan">${gaRow.create_date}</span>
                         </td>
                     </tr>
                 </c:forEach>
                 </tbody>
             </table>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-primary me-md-2" href="#" onclick="listTab('gathering', this, 1)">더보기</button>
         </div>
     </div>
     <div id="trContainer">
@@ -301,13 +310,16 @@
                             <span class="address">${trRow.address1} ${trRow.address2}</span>
                         </td>
                         <td>
-                            <i class="fa-regular fa-clock"></i>&nbsp;
+                            <i class="fa-regular fa-clock"></i><span class="dot"></span>
                             <span class="dateSpan">${trRow.create_date}</span>
                         </td>
                     </tr>
                 </c:forEach>
                 </tbody>
             </table>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-primary me-md-2" href="#" onclick="listTab('trade', this, 1)">더보기</button>
         </div>
     </div>
 
@@ -326,7 +338,7 @@
 <%--                                ${trCard.title}--%>
 <%--                            </c:otherwise>--%>
 <%--                        </c:choose>--%>
-<%--                            <i class="fa-regular fa-comment-dots"></i>&nbsp;--%>
+<%--                            <i class="fa-regular fa-comment-dots"></i><span class="dot"></span>--%>
 <%--                            <span class="reCount">${trCard.re_count}</span>--%>
 
 <%--                        </h5>--%>
@@ -348,23 +360,23 @@
 <%--                                </c:when>--%>
 <%--                                <c:otherwise>--%>
 <%--                                    가격 <span class="price">--%>
-<%--                                    ${row.price}&nbsp;원</span> <br>--%>
+<%--                                    ${row.price}<span class="dot"></span>원</span> <br>--%>
 <%--                                </c:otherwise>--%>
 <%--                            </c:choose>--%>
-<%--                            <i class="fa-solid fa-location-dot"></i>&nbsp;--%>
+<%--                            <i class="fa-solid fa-location-dot"></i><span class="dot"></span>--%>
 <%--                            <span class="address">--%>
 <%--                                    ${trCard.address1}, ${trCard.address2}--%>
 <%--                            </span><br>--%>
-<%--                            <i class="fa-solid fa-eye"></i>&nbsp;--%>
+<%--                            <i class="fa-solid fa-eye"></i><span class="dot"></span>--%>
 <%--                            <span class="viewCount">${trCard.view_count}</span> <br>--%>
 
-<%--                            <i class="fa-solid fa-heart"></i>&nbsp;--%>
+<%--                            <i class="fa-solid fa-heart"></i><span class="dot"></span>--%>
 <%--                            <span class="goodCount">${trCard.good_count}</span> <br>--%>
 
 <%--                            <br>--%>
-<%--                            <i class="fa-solid fa-user"></i>&nbsp;--%>
+<%--                            <i class="fa-solid fa-user"></i><span class="dot"></span>--%>
 <%--                            <span class="nickname">${trCard.nickname}</span> <br>--%>
-<%--                            <i class="fa-regular fa-clock"></i>&nbsp;--%>
+<%--                            <i class="fa-regular fa-clock"></i><span class="dot"></span>--%>
 <%--                            <span class="dateSpan">${trCard.create_date}</span>--%>
 
 <%--                        </p>--%>

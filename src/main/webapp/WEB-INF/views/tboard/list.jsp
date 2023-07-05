@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Insert title here</title>
+    <title>보드인포</title>
     <%@ include file="../include/js/header.jsp" %>
     <script src="${path}/include/js/jquery-3.6.3.min.js"></script>
     <!--

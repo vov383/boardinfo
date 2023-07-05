@@ -41,6 +41,8 @@
 		<typeAlias type="com.example.boardinfo.model.mypage.dto.MypageDTO" alias="mypageDto" />
 
 		<typeAlias type="com.example.boardinfo.model.mypage.dto.MypageGameDTO" alias="myGiDto" />
+		<typeAlias type="com.example.boardinfo.model.mypage.dto.MyReplyDTO" alias="myReplyDto"/>
+		<typeAlias type="com.example.boardinfo.model.mypage.dto.MyLikeDTO" alias="myLikeDto"/>
 	</typeAliases>
 
 	<typeHandlers>

@@ -2,8 +2,11 @@ package com.example.boardinfo.model.admin.dao;
 
 import com.example.boardinfo.model.admin.dto.AdminDTO;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
+import com.example.boardinfo.model.member.dto.MemberDTO;
+import com.example.boardinfo.model.mypage.dto.MyReplyDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AdminDAO {
 
@@ -35,6 +38,14 @@ public interface AdminDAO {
     void deleteGamePublisher(int gnum);
     void deleteGameEx(int gnum);
     void deleteGameRe(int gnum);
+
+    int getMemberCount();
+
+    List<MemberDTO> getMemberTabbed(Map<String, Object> map);
+
+    int getAllReCount();
+
+    List<MyReplyDTO> getAllReplies(Map<String, Object> map);
 
 
     /*게임 정보 통계*/

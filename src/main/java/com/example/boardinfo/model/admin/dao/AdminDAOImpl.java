@@ -2,13 +2,14 @@ package com.example.boardinfo.model.admin.dao;
 
 import com.example.boardinfo.model.admin.dto.AdminDTO;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
+import com.example.boardinfo.model.member.dto.MemberDTO;
+import com.example.boardinfo.model.mypage.dto.MyReplyDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
-import java.awt.image.ImageProducer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,5 +153,25 @@ public class AdminDAOImpl implements AdminDAO{
     @Override
     public void deleteGameRe(int gnum) {
         sqlSession.delete("admin.deleteGameRe", gnum);
+    }
+
+    @Override
+    public int getMemberCount() {
+        return sqlSession.selectOne("admin.countMember");
+    }
+
+    @Override
+    public List<MemberDTO> getMemberTabbed(Map<String, Object> map) {
+        return sqlSession.selectList("admin.memberTabbed");
+    }
+
+    @Override
+    public int getAllReCount() {
+        return sqlSession.selectOne("admin.allReTabbed");
+    }
+
+    @Override
+    public List<MyReplyDTO> getAllReplies(Map<String, Object> map) {
+        return sqlSession.selectList("admin.allReList", map);
     }
 }

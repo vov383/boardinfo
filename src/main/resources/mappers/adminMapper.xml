@@ -122,6 +122,44 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from reimplement
         where gnum=#{gnum} or renum=#{gnum}
     </delete>
+
+    <select id="countMember" resultType="int">
+        select count(*) from member;
+    </select>
+
+    <select id="memberTabbed" resultType="com.example.boardinfo.model.member.dto.MemberDTO">
+        select *
+        from (select a.*, rownum rn
+              from (
+
+                       select PROFILE
+                            , NAME
+                            , USERID
+                            , PASSWD
+                            , NICKNAME
+                            , email
+                            , HP
+                            , JOIN_DATE
+                       from member
+                       order by DEL asc, JOIN_DATE desc
+                   ) a)
+        where rn between #{start} and #{end}
+    </select>
+    
+    <select id="allReTabbed" resultType="int">
+        select count(*)
+        from (SELECT gnum, writer_id, USER_ID as CREATE_USER
+              FROM GAME_RATING_LIKE
+              WHERE writer_id = #{userid}
+              UNION ALL
+              SELECT goodkey, reviewpk, CREATE_USER
+              FROM REVIEWGOOD
+              WHERE CREATE_USER = #{userid}
+              UNION ALL
+              SELECT GOODKEY, TB_NUM, USERID as CREATE_USER
+              FROM TRADEGOOD
+              WHERE USERID = #{userid})
+    </select>
 </mapper>
 
 

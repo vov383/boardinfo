@@ -2,11 +2,12 @@ package com.example.boardinfo.service.member;
 
 import com.example.boardinfo.controller.tboard.TBCommentController;
 import com.example.boardinfo.model.game.dao.gameRating.GameRatingDAO;
-import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.gameRating.GameRatingDTO;
 import com.example.boardinfo.model.gathering.dao.GatheringDAO;
 import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.model.mypage.dao.MypageDAO;
+import com.example.boardinfo.model.mypage.dto.MyLikeDTO;
+import com.example.boardinfo.model.mypage.dto.MyReplyDTO;
 import com.example.boardinfo.model.mypage.dto.MypageDTO;
 import com.example.boardinfo.model.mypage.dto.MypageGameDTO;
 import com.example.boardinfo.model.review.dao.ReviewDAO;
@@ -44,14 +45,14 @@ public class MypageServiceImpl implements MypageService {
 
     private static final Logger logger
             = LoggerFactory.getLogger(TBCommentController.class);
-
+    /*마이페이지 첫 화면의 회원정보 출력*/
     @Override
     public MypageDTO getUserInfo(String userid) {
         MypageDTO myDto = mypageDao.getUserInfo(userid);
         /*전체 게시물 수*/
         return myDto;
     }
-
+    /*마이페이지 첫화면의 회원 작성 글 게시판별 6개씩 출력*/
     @Override
     public Map<String, Object> getPostList(String userid) {
 
@@ -74,29 +75,89 @@ public class MypageServiceImpl implements MypageService {
         return map;
     }
 
-//    @Override
-//    public List<Object> getTabbedList(String userid, String str) {
-//        List<Object> dataList = null;
-//        switch (str){
-//            case "game":
-//                dataList = mypageDao.gameInfoTabbed(userid);
-//                break;
-//            case "game_rating":
-//                dataList = mypageDao.gameRatingTabbed(userid);
-//                break;
-//            case "review":
-//                dataList = mypageDao.reviewTabbed(userid);
-//                break;
-//            case "trade":
-//                dataList = mypageDao.tradeTabbed(userid);
-//                break;
-//        }
-//        return dataList;
-//    }
-
+    /*게시판 탭마다 회원이 작성한 글 10개씩 페이징 처리해서 출력*/
     @Override
     public Map<String, Object> getGiList(String userid, int curPage) {
-        int count = mypageDao.countgetGiList(userid);
+        Map<String, Object> map = new HashMap<>();
+        int count = mypageDao.getGiCount(userid);
+        Pager pager = new Pager(count, curPage, 10);
+        int start = pager.getPageBegin();
+        int end = pager.getPageEnd();
+        map.put("start", start);
+        map.put("end", end);
+        map.put("userid", userid);
+        List<MypageGameDTO> giList = mypageDao.gameInfoTabbed(map);
+        map.put("pager", pager);
+        map.put("giList", giList);
+        return map;
+    }
+
+
+    @Override
+    public Map<String, Object> getGrList(String userid, int curPage) {
+        Map<String, Object> map = new HashMap<>();
+        int count = mypageDao.getGrCount(userid);
+        Pager pager = new Pager(count, curPage, 10);
+        int Start = pager.getPageBegin();
+        int end = pager.getPageEnd();
+        map.put("start", Start);
+        map.put("end", end);
+        map.put("userid", userid);
+        List<GameRatingDTO> grList = mypageDao.gameRatingTabbed(map);
+        map.put("pager", pager);
+        map.put("grList", grList);
+
+        return map;
+    }
+
+
+    @Override
+    public Map<String, Object> getRvList(String userid, int curPage) {
+        Map<String, Object> map = new HashMap<>();
+
+        int count = mypageDao.getRvCount(userid);
+
+        Pager pager = new Pager(count, curPage, 10);
+        int Start = pager.getPageBegin();
+        int end = pager.getPageEnd();
+        map.put("start", Start);
+        map.put("end", end);
+        map.put("userid", userid);
+        List<ReviewDTO> rvList = mypageDao.reviewTabbed(map);
+        map.put("pager", pager);
+        map.put("rvList", rvList);
+
+        return map;
+    }
+
+
+    @Override
+    public Map<String, Object> getGaList(String userid, int curPage) {
+
+        Map<String, Object> map = new HashMap<>();
+
+        int count = mypageDao.getGaCount(userid);
+
+        Pager pager = new Pager(count, curPage, 10);
+        int Start = pager.getPageBegin();
+        int end = pager.getPageEnd();
+        map.put("start", Start);
+        map.put("end", end);
+        map.put("userid", userid);
+
+        List<MypageDTO> gaList = mypageDao.gatheringTabbed(map);
+        map.put("pager", pager);
+        map.put("gaList", gaList);
+
+        return map;
+
+    }
+
+    @Override
+    public Map<String, Object> getTrList(String userid, int curPage) {
+
+        /*tr count 값 구하고*/
+        int count = mypageDao.getTrCount(userid);
 
         Pager pager = new Pager(count, curPage, 10);
         int start = pager.getPageBegin();
@@ -104,74 +165,55 @@ public class MypageServiceImpl implements MypageService {
 
         Map<String, Object> map = new HashMap<>();
         map.put("userid", userid);
-        map.put("start",start);
-        map.put("end",end);
+        map.put("start", start);
+        map.put("end", end);
 
-        List<MypageGameDTO> list = mypageDao.gameInfoTabbed(map);
-        for (MypageGameDTO dto :
-                list) {
-            logger.info("리스트가 안넘어오냐 : " + dto.getGametitle());
-        }
+        List<TBoardDTO> trList = mypageDao.tradeTabbed(map);
 
-
-
-
-
-        map.put("count",count);
-        map.put("giList",list);
-        map.put("pager",pager);
+        map.put("trList", trList);
+        map.put("pager", pager);
+        map.put("count", count);
+        map.put("curPage", curPage);
 
         return map;
-
-    }
-
-    @Override
-    public List<MypageGameDTO> getGiMore(String userid) {
-        return mypageDao.gameInfoMore(userid);
-    }
-
-    @Override
-    public List<GameRatingDTO> getGrList(String userid) {
-        return mypageDao.gameRatingTabbed(userid);
-    }
-
-    @Override
-    public List<GameRatingDTO> getGrMore(String userid) {
-        return mypageDao.gameRatingMore(userid);
-    }
-
-    @Override
-    public List<ReviewDTO> getRvList(String userid) {
-        return mypageDao.reviewTabbed(userid);
-    }
-
-    @Override
-    public List<ReviewDTO> getRvMore(String userid) {
-        return mypageDao.reviewMore(userid);
     }
 
 
     @Override
-    public List<MypageDTO> getGaList(String userid) {
-        return mypageDao.gatheringTabbed(userid);
+    public Map<String, Object> getReList(String userid, int curPage) {
+        int count = mypageDao.getReCount(userid);
+        Pager pager = new Pager(count, curPage, 10);
+        int start = pager.getPageBegin();
+        int end = pager.getPageEnd();
+        Map<String, Object> map = new HashMap<>();
+        map.put("start", start);
+        map.put("end", end);
+        map.put("userid", userid);
+
+        List<MyReplyDTO> reList = mypageDao.replyTabbed(map);
+        map.put("pager", pager);
+        map.put("reList", reList);
+
+        return map;
     }
+
     @Override
-    public List<MypageDTO> getGaMore(String userid) {
-        return mypageDao.gatheringMore(userid);
+    public Map<String, Object> getLikeList(String userid, int curPage) {
+        int count = mypageDao.getLikeCount(userid);
+        Pager pager = new Pager(count, curPage, 10);
+        int start = pager.getPageBegin();
+        int end = pager.getPageEnd();
+        Map<String, Object> map = new HashMap<>();
+        map.put("start", start);
+        map.put("end", end);
+        map.put("userid", userid);
+
+        List<MyLikeDTO> likeList = mypageDao.likeTabbed(map);
+        map.put("pager", pager);
+        map.put("likeList", likeList);
+
+        return map;
     }
-
-
-
-    @Override
-    public List<TBoardDTO> getTrList(String userid) {
-        return mypageDao.tradeTabbed(userid);
-    }
-
-    @Override
-    public List<TBoardDTO> getTrMore(String userid) {
-        return mypageDao.tradeMore(userid);
-    }
-
 
 
 }
