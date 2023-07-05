@@ -12,7 +12,7 @@ public class reviewSerchDTO {
 	private String ReplyRegNum;			// 댓글 키 값
 	private String topReplyRegNum;		// 답글 키 값
 	private String boardDivision;		// 포럼게시판 및 자유게시판 나누기
-	private String freeFlag;		// 포럼게시판 및 자유게시판 나누기
+	private String freeFlag;			// 포럼게시판 및 자유게시판 나누기
 
 
 

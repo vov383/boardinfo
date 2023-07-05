@@ -112,6 +112,7 @@
              , t.LAT
              , t.LNG
              , m.nickname
+             , t.VIEW_COUNT
              , (SELECT COUNT(*)
                 FROM TB_COMMENTS
                 WHERE tb_num = t.TB_NUM)                       AS re_count
@@ -122,6 +123,7 @@
              , TO_CHAR(t.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS create_date
              , t.UPDATE_USER
              , TO_CHAR(t.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS update_date
+             , m.PROFILE
 
         FROM t_board t
                  /* member 테이블에서 닉네임 */
@@ -243,7 +245,7 @@
         select  tb_num, create_date, title, category, address1, address2, view_count, price,re_count
         from    (
         </if>
-                select  tb_num, create_date, title, category, address1, address2, view_count, price,
+                select  tb_num, to_char(create_date, 'yyyy-mm-dd') as create_date, title, category, address1, address2, view_count, price,
                         (select count(*)
                         from    tb_comments c
                         where   c.tb_num = t.tb_num and del='N'
@@ -261,19 +263,31 @@
         </if>
     </select>
 
+    <select id="totalSearchCount" resultType="int">
+        select  count(*)
+        from    t_board t
+        where   regexp_like(title, #{gameKeyword},'i') AND t.del = 'N'
+    </select>
+
+
+    <!--좋아요 체크-->
+    <select id="checkLike" resultType="int">
+        select count(GOODKEY) from TRADEGOOD
+        where GOODKEY = #{goodkey}
+    </select>
+
 
     <!--좋아요 C-->
-    <insert id="goodCreate">
+    <insert id="addLike">
         insert into TRADEGOOD (goodkey, tb_num, userid)
-        values (#{goodkey}, #{tb_num}, #{create_user})
+        values (#{goodkey}, #{tb_num}, #{userid})
     </insert>
 
 
     <!--좋아요 D-->
-    <delete id="goodDelete">
+    <delete id="deleteLike">
         delete
         FROM TRADEGOOD
-        WHERE tb_num = #{tb_num}
-          AND userid = #{create_user}
+        WHERE GOODKEY = #{goodkey}
     </delete>
 </mapper>

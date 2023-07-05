@@ -100,6 +100,8 @@ public class GameController {
 		Map<String, Object> statisticMap = gameRatingService.getStatistic(gnum, logonid);
 
 		mav.setViewName("game/game_viewDetail");
+//		mav.setViewName("game/game_common");
+
 		mav.addObject("map", map);
 		mav.addObject("statisticMap", statisticMap);
 

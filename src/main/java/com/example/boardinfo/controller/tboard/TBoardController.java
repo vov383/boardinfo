@@ -143,7 +143,6 @@ public class TBoardController {
             dto.setPrice(HtmlUtils.htmlUnescape(dto.getPrice()));
         }
         
-//        logger.info("price 어케 처리됐는지 봐봐!! ~~~~~"+dto.getPrice());
         map.put("dto", dto);
 
         List<String> tbfList = tboardService.getAttach(tb_num);
@@ -183,8 +182,6 @@ public class TBoardController {
     @ResponseBody
     @RequestMapping("deleteImage")
     public ResponseEntity<String> deleteImage(String fileName, HttpSession session){
-//        logger.info("fileName:"+fileName);
-//        logger.info("session" + session);
         Map<String, String> map = new HashMap<>();
 
         map.put("fileName", fileName);
@@ -226,6 +223,31 @@ public class TBoardController {
         return map;
     }
 
+    @RequestMapping("likeCheck.do")
+    @ResponseBody
+    public ResponseEntity<String> likeCheck(@RequestParam int tb_num, HttpSession session){
+        String userid = (String)session.getAttribute("userid");
+        if(userid == null){
+            return new ResponseEntity<>("unchecked", HttpStatus.OK);
+        }else{
+            String goodkey = userid + tb_num;
+            /*true면 checked, false면 unchecked*/
+            boolean checked = tboardService.checkLike(goodkey);
+            if(checked){
+                return new ResponseEntity<>("checked", HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("unchecked", HttpStatus.OK);
+            }
+        }
 
+    }
+
+
+    @RequestMapping("addLike.do")
+    @ResponseBody
+    public Map<String, String> addLike(@RequestParam int tb_num, HttpSession session){
+        Map<String, String> response = tboardService.addLike(session, tb_num);
+            return response;
+    }
 
 }

@@ -10,4 +10,16 @@ public interface MypageService {
 
     Map<String, Object> getPostList(String userid);
 
+//    List<Object> getTabbedList(String uesrid, String str);
+
+    Map<String, Object> getGiList(String userid, int curPage);
+    Map<String, Object> getGrList(String userid, int curPage);
+    Map<String, Object> getRvList(String userid, int curPage);
+    Map<String, Object> getGaList(String userid, int curPage);
+    Map<String, Object> getTrList(String userid, int curPage);
+
+
+    Map<String, Object> getReList(String userid, int curPage);
+
+    Map<String, Object> getLikeList(String userid, int curPage);
 }

@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Insert title here</title>
+    <title>보드인포</title>
     <%@ include file="../include/js/header.jsp" %>
     <script src="${path}/include/js/jquery-3.6.3.min.js"></script>
     <!--
@@ -12,7 +12,9 @@
     -->
 
     <style>
-
+        a {
+            text-decoration: none;
+        }
         .dot {
             position: relative;
             display: flex;
@@ -254,11 +256,15 @@
             $("#btnWrite").on("click", function () {
                 location.href = "${path}/tboard/write.do";
             });
-
+            /*카테고리 버튼*/
             $(".category").on("click", function () {
                 let category = $(this).text();
                 let searchForm = $("form[name='searchForm']");
-                searchForm.find("select[name='category']").val(category);
+                if(category == '전체'){
+                    searchForm.find("input[name='category']").val('all');
+                }else{
+                    searchForm.find("input[name='category']").val(category);
+                }
                 searchForm.submit();
             });
         });
@@ -293,39 +299,39 @@
         <div class="categories">
             <c:choose>
             <c:when test="${map.sDto.category eq 'all'}">
-                <div title="전체" class="category selected"> 전체</div>
-                <div title="판매" class="category"> 판매</div>
-                <div title="구매" class="category"> 구매</div>
-                <div title="나눔" class="category"> 나눔</div>
-                <div title="완료" class="category"> 완료</div>
+                <div title="전체" class="category selected">전체</div>
+                <div title="판매" class="category">판매</div>
+                <div title="구매" class="category">구매</div>
+                <div title="나눔" class="category">나눔</div>
+                <div title="완료" class="category">완료</div>
             </c:when>
             <c:when test="${map.sDto.category eq '판매'}">
-                <div title="전체" class="category"> 전체</div>
-                <div title="판매" class="category selected"> 판매</div>
-                <div title="구매" class="category"> 구매</div>
-                <div title="나눔" class="category"> 나눔</div>
-                <div title="완료" class="category"> 완료</div>
+                <div title="전체" class="category">전체</div>
+                <div title="판매" class="category selected">판매</div>
+                <div title="구매" class="category">구매</div>
+                <div title="나눔" class="category">나눔</div>
+                <div title="완료" class="category">완료</div>
             </c:when>
             <c:when test="${map.sDto.category eq '구매'}">
-                <div title="전체" class="category"> 전체</div>
-                <div title="판매" class="category"> 판매</div>
-                <div title="구매" class="category selected"> 구매</div>
-                <div title="나눔" class="category"> 나눔</div>
-                <div title="완료" class="category"> 완료</div>
+                <div title="전체" class="category">전체</div>
+                <div title="판매" class="category">판매</div>
+                <div title="구매" class="category selected">구매</div>
+                <div title="나눔" class="category">나눔</div>
+                <div title="완료" class="category">완료</div>
             </c:when>
             <c:when test="${map.sDto.category eq '나눔'}">
-                <div title="전체" class="category"> 전체</div>
-                <div title="판매" class="category"> 판매</div>
-                <div title="구매" class="category"> 구매</div>
-                <div title="나눔" class="category selected"> 나눔</div>
-                <div title="완료" class="category"> 완료</div>
+                <div title="전체" class="category">전체</div>
+                <div title="판매" class="category">판매</div>
+                <div title="구매" class="category">구매</div>
+                <div title="나눔" class="category selected">나눔</div>
+                <div title="완료" class="category">완료</div>
             </c:when>
             <c:otherwise>
-                <div title="전체" class="category"> 전체</div>
-                <div title="판매" class="category"> 판매</div>
-                <div title="구매" class="category"> 구매</div>
-                <div title="나눔" class="category"> 나눔</div>
-                <div title="완료" class="category selected"> 완료</div>
+                <div title="전체" class="category">전체</div>
+                <div title="판매" class="category">판매</div>
+                <div title="구매" class="category">구매</div>
+                <div title="나눔" class="category">나눔</div>
+                <div title="완료" class="category selected">완료</div>
             </c:otherwise>
             </c:choose>
         </div>
@@ -404,7 +410,7 @@
                                     <img src='${path}/resources/uploaded_image${row.tb_thumbnail}'>
                                 </c:when>
                                 <c:otherwise>
-                                    <img src="${path}/images/no-image-svgrepo-com.svg" alt="" width="20%">
+                                    <img src="${path}/images/no-image-svgrepo-com.svg" style="opacity: 20%;" width="20%">
                                 </c:otherwise>
 
                             </c:choose>
@@ -502,7 +508,7 @@
                 <c:when test="${num == map.pager.curPage}">
                     <!-- 현재 페이지인 경우 onclick 없음 -->
                     <div class="pageItem">
-                        <div id="curPage" style="color:red;">${num}</div>
+                        <div id="curPage">${num}</div>
                     </div>
                 </c:when>
                 <c:otherwise>

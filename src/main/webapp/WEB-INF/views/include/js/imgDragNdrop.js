@@ -96,9 +96,21 @@ function handleUpdate(fileList) {
                 imgContainer.remove();
 
                 // 내가 제거한 embed-img에 대응하는 file input에서 실제로 삭제
+                const input = document.getElementById("input");
+                /*이름이 일치하면 삭제함.*/
                 const fileIndex = Array.from(input.files).findIndex((inputFile) => inputFile.name === file.name);
                 if (fileIndex !== -1) {
-                    input.files[fileIndex] = null;
+                    /*파일을 삭제할 때마다 새로 files 배열 만들어*/
+                    const newFiles = Array.from(input.files).slice(0, fileIndex);
+
+                    /* splice() 메서드를 사용하여 특정 인덱스(fileIndex)에서 파일을 제거 */
+                    newFiles.splice(fileIndex.files, 1);
+
+
+                    /*'files' 속성을 사용하여 업데이트된 파일 배열을 파일 입력 필드에 다시 할당*/
+                    input.files = newFiles;
+
+
                 }
             });
 

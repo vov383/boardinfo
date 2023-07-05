@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Insert title here</title>
+    <title>보드인포</title>
     <%@ include file="../include/js/header.jsp" %>
     <link rel="stylesheet" href="${path}/include/css/trade/write.css">
     <script src="${path}/include/js/common.js"></script>

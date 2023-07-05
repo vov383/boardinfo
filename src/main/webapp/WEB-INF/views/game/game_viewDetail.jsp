@@ -15,8 +15,13 @@
     <link rel="stylesheet" href="${path}/include/js/style_game.css">
     <link rel="stylesheet" href="${path}/include/css/style_search.css">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <style>
+        main {
+            margin-bottom: 40px;
+        }
         #contentsMain{
             border-top: 2px solid black;
         }
@@ -425,7 +430,7 @@
 
         /*모달 내용 관련*/
         #bigFrame{
-            width: 550px;
+            /*width: 550px;*/
             padding: 50px;
             display: flex;
             flex-direction: column;
@@ -563,6 +568,171 @@
             cursor: pointer;
         }
 
+
+
+
+        /*여기서부터 캐러셀*/
+        .container {
+            width: 100%;
+        }
+
+        .indicatorDiv {
+            position: inherit;
+        }
+
+        .indicatorDiv .carousel-indicators {
+            margin-left: auto;
+            width: auto;
+            position: inherit;
+            left: 0;
+        }
+
+        .indicatorDiv .carousel-indicators li {
+            text-indent: inherit;
+            width: inherit;
+            height: inherit;
+            display: block;
+            font-size: 22px;
+            line-height: 60px;
+        }
+        .indicatorDiv .carousel-indicators li.active {
+            text-indent: inherit;
+            width: inherit;
+            height: inherit;
+            display: block;
+            font-weight: bolder;
+        }
+
+
+        .carousel-control {
+            left: -12px;
+        }
+
+        .carousel-control.right {
+            right: -12px;
+        }
+
+        .carousel {
+            margin: 10px auto;
+            padding: 0 20px;
+        }
+
+        .carousel .item {
+            min-height: 200px;
+            text-align: center;
+            overflow: hidden;
+            width: 780px;
+            margin: auto;
+        }
+
+        .carousel .item .img-box {
+            height: 150px;
+            width: 100%;
+            position: relative;
+        }
+
+        .carousel .item img {
+            width: 150px;
+            height: 150px;
+            display: inline-block;
+            position: absolute;
+            bottom: 0;
+            margin: 0 auto;
+            left: 0;
+            right: 0;
+        }
+
+        .carousel .item h4 {
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .carousel .item p {
+            font-size: 14px;
+        }
+
+        .carousel .item .btn {
+            color: #333;
+            border-radius: 0;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: bold;
+            background: none;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            margin-top: 5px;
+            line-height: 16px;
+        }
+
+        .carousel .item .btn:hover, .carousel .item .btn:focus {
+            color: #fff;
+            background: #000;
+            border-color: #000;
+            box-shadow: none;
+        }
+
+        .carousel .item .btn i {
+            font-size: 14px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .carousel .thumb-wrapper {
+            text-align: center;
+
+        }
+        .carousel .thumb-content {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 160px;
+        }
+
+        .carousel .carousel-control {
+            height: 80%;
+            width: 40px;
+            background: none;
+            margin: auto 0;
+        }
+
+        .carousel .carousel-control i {
+            font-size: 30px;
+            position: absolute;
+            top: 50%;
+            display: inline-block;
+            margin: -16px 0 0 0;
+            z-index: 5;
+            left: 0;
+            right: 0;
+            color: rgba(0, 0, 0, 0.8);
+            text-shadow: none;
+            font-weight: bold;
+        }
+
+        .carousel .carousel-control.left i {
+            margin-left: -3px;
+        }
+
+        .carousel .carousel-control.left i {
+            margin-right: -3px;
+        }
+
+
+        .divider {
+            position: relative;
+            height: 1px;
+        }
+
+        .div-transparent:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 5%;
+            right: 5%;
+            width: 90%;
+            height: 1px;
+            background-image: linear-gradient(to right, transparent, rgb(48, 49, 51), transparent);
+        }
 
     </style>
 </head>
@@ -775,75 +945,105 @@
             </div>
 
 
-            <div class="detailDiv" id="evaluate">
+            <div class="detailDiv">
                 <span class="smallTitle">보드인의 평가</span>
-                <div id="graphBigArea">
-                    <ul>
-                        <li class="slide-1">평점</li>
-                        <li class="slide-2">인원</li>
-                        <li class="slide-3">난이도</li>
-                    </ul>
 
-                    <div id="graphRightArea">
-                        <div class="before_div">
-                            <img src="../images/chevron-compact-left.svg" class="before" />
+
+
+
+                <div class="container">
+
+                    <div class="row">
+                        <div class="col-md-2 indicatorDiv">
+                            <!-- Indicators -->
+                            <ol class="carousel-indicators">
+                                <li data-target="#dataCarousel" data-slide-to="0" class="active" onclick="changeActive(this)">평점</li>
+                                <li data-target="#dataCarousel" data-slide-to="1" onclick="changeActive(this)">인원</li>
+                                <li data-target="#dataCarousel" data-slide-to="2" onclick="changeActive(this)">난이도</li>
+                            </ol>
                         </div>
-                        <div id="graphMainArea">
-                            <div class="slide-container">
-                                <div class="slide-box">
-                                    <div>
-                                        <c:choose>
-                                            <c:when test="${statisticMap!=null}">
-                                                <p>평균 평점 <strong><fmt:formatNumber value="${statisticMap.AVGRATING}" pattern="0.0"/></strong></p>
-                                                <p>전체 평가 수 ${statisticMap.TOT}</p>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <p>평균 평점 <strong>0.0</strong></p>
-                                                <p>전체 평가 수 0</p>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </div>
-                                    <div class="chartDiv" id="ratingChartDiv">평점그래프</div>
-                                </div>
-                                <div class="slide-box">
-                                    <div>
-                                        <p>추천 인원수</p>
-                                        <p>
-                                            <c:choose>
-                                                <c:when test="${statisticMap.recommendPlayers!=null && statisticMap.recommendPlayers!=''}">
-                                                    <strong>${statisticMap.recommendPlayers}</strong>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <strong>-</strong>
-                                                </c:otherwise>
-                                            </c:choose>
+                        <div class="col-md-10">
 
-                                        </p>
+                            <div id="dataCarousel" class="carousel slide" data-ride="carousel" data-interval="0">
+                                <!-- Wrapper for carousel items -->
+                                <div class="carousel-inner">
+
+                                    <div class="item active">
+                                        <div class="slide-box">
+                                            <div>
+                                                <c:choose>
+                                                    <c:when test="${statisticMap!=null}">
+                                                        <p>평균 평점 <strong><fmt:formatNumber value="${statisticMap.AVGRATING}" pattern="0.0"/></strong></p>
+                                                        <p>전체 평가 수 ${statisticMap.TOT}</p>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <p>평균 평점 <strong>0.0</strong></p>
+                                                        <p>전체 평가 수 0</p>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </div>
+                                            <div class="chartDiv" id="ratingChartDiv">평점그래프</div>
+                                        </div>
+
                                     </div>
-                                    <div class="chartDiv" id="playerChartDiv">인원그래프</div>
-                                </div>
-                                <div class="slide-box">
-                                    <div>
-                                        <c:choose>
-                                            <c:when test="${statisticMap!=null}">
-                                                <p>평균 난이도 <strong><fmt:formatNumber value="${statisticMap.AVGWEIGHT}" pattern="0.0"/></strong></p>
-                                                <p>전체 평가 수 <span id="weightPeopleCount"></span></p>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <p>평균 난이도 <strong>0.0</strong></p>
-                                                <p>전체 평가 수 0</p>
-                                            </c:otherwise>
-                                        </c:choose>
+
+                                    <div class="item">
+                                        <div class="slide-box">
+                                            <div>
+                                                <p>추천 인원수</p>
+                                                <p>
+                                                    <c:choose>
+                                                        <c:when test="${statisticMap.recommendPlayers!=null && statisticMap.recommendPlayers!=''}">
+                                                            <strong>${statisticMap.recommendPlayers}</strong>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <strong>-</strong>
+                                                        </c:otherwise>
+                                                    </c:choose>
+
+                                                </p>
+                                            </div>
+                                            <div class="chartDiv" id="playerChartDiv">인원그래프</div>
+                                        </div>
                                     </div>
-                                    <div class="chartDiv" id="weightChartDiv">난이도그래프</div>
+
+
+                                    <div class="item">
+                                        <div class="slide-box">
+                                            <div>
+                                                <c:choose>
+                                                    <c:when test="${statisticMap!=null}">
+                                                        <p>평균 난이도 <strong><fmt:formatNumber value="${statisticMap.AVGWEIGHT}" pattern="0.0"/></strong></p>
+                                                        <p>전체 평가 수 <span id="weightPeopleCount"></span></p>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <p>평균 난이도 <strong>0.0</strong></p>
+                                                        <p>전체 평가 수 0</p>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </div>
+                                            <div class="chartDiv" id="weightChartDiv">난이도그래프</div>
+                                        </div>
+                                    </div>
                                 </div>
+
+                                <!-- Carousel controls -->
+                                <a class="carousel-control left" href="#dataCarousel" data-slide="prev" onclick="changeIndicatorByControl(this, -1);">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                                <a class="carousel-control right" href="#dataCarousel" data-slide="next" onclick="changeIndicatorByControl(this, 1);">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
                             </div>
                         </div>
-                        <div class="next_div">
-                            <img src="../images/chevron-compact-right.svg" class="next" />
-                        </div>
+                    </div>
+
+                    <div class="wrapper">
+                        <div class="divider div-transparent"></div>
                     </div>
                 </div>
+            </div>
+        </div>
 
 
 
@@ -866,7 +1066,7 @@
 </main>
 
 <%--modal--%>
-<div class="container">
+<div class="container_modal">
     <div class="popup-wrap" id="popup">
         <div class="popup">
 
@@ -988,7 +1188,7 @@
                     </div>
                     <div class="columnFlex">
                         <span>코멘트 (선택)</span>
-                        <textarea name="rating_comment"></textarea>
+                        <textarea name="rating_comment" id="rating_comment"></textarea>
                     </div>
 
                     <div>
@@ -1021,6 +1221,26 @@
 </footer>
 
 <script>
+    function changeActive(indicator) {
+        var activeIndicator = document.querySelector('.carousel-indicators .active');
+        activeIndicator.classList.remove("active");
+        activeIndicator.style.fontWeight = "";
+
+        indicator.classList.add("active");
+        indicator.style.fontWeight = "bolder";
+    }
+
+    function changeIndicatorByControl(control, offset) {
+        var indicators = document.querySelectorAll('.carousel-indicators li');
+        var activeIndicator = document.querySelector('.carousel-indicators .active');
+
+        var activeIndex = Array.prototype.indexOf.call(indicators, activeIndicator);
+        var targetIndex = (activeIndex + offset + indicators.length) % indicators.length;
+
+        var targetIndicator = indicators[targetIndex];
+        changeActive(targetIndicator);
+    }
+
 
     //별점 차트 생성하기
     // 일단 구글 차트 라이브러리 로딩
@@ -1216,47 +1436,6 @@
     });
 
 
-    <%--캐러셀관련--%>
-
-    $('.slide-1').on('click', function() {
-        $('.slide-container').css('transform', 'translateX(0%)');
-    });
-
-    $('.slide-2').on('click', function() {
-        $('.slide-container').css('transform', 'translateX(-33.333%');
-    });
-
-    $('.slide-3').on('click', function() {
-        $('.slide-container').css('transform', 'translateX(-66.666%');
-    });
-
-    var item = 1;
-
-    $('.next_div').on('click', function(){
-        if (item == 1) {
-            $('.slide-container').css('transform', 'translateX(-33.333%');
-            item += 1;
-        }
-        else if (item == 2){
-            $('.slide-container').css('transform', 'translateX(-66.666%');
-            item += 1;
-        }else if (item == 3){
-            $('.slide-container').css('transform', 'translateX(0%)');
-            item = 1;
-        }
-    })
-
-    $('.before_div').on('click', function(){
-        if (item == 3) {
-            $('.slide-container').css('transform', 'translateX(-33.333%');
-            item -= 1;
-        }
-        else if (item == 2){
-            $('.slide-container').css('transform', 'translateX(0%)');
-            item -= 1;
-        }
-
-    })
 
     /*모달관련*/
     $(function(){
@@ -1267,7 +1446,7 @@
         });
         $("#myStars").click(function(){
             //로그인한 회원인지 확인
-            if("${sessionScope.userid}" == ""){
+            if("${sessionScope.userid}" == "" && "${sessionScope.admin_id}" == ""){
                 if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
                     location.href= "${path}/member/member_login.do";
                     return;
@@ -1503,7 +1682,7 @@
         let type = likeItDiv.data("like");
         likeCount = Number(review.find("span[class='likeCount']").text());
 
-        if("${sessionScope.userid}"==null || "${sessionScope.userid}"==''){
+        if(("${sessionScope.userid}"==null || "${sessionScope.userid}"=='')  && "${sessionScope.admin_id}" == ""){
             if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
                 location.href= "${path}/member/member_login.do";
             }
@@ -1688,6 +1867,13 @@
         $("input[name='rating]").val(star);
         if(star == null || star == '' || isNaN(star) || star < 0.5){
             alert("평가를 제출하려면 반드시 별점을 입력해야 합니다. 다시 시도해주세요.");
+            return;
+        }
+
+        var rating_comment = $("#rating_comment").val();
+        var exp_comment = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]*$/;
+        if(!exp_comment.test(rating_comment)){
+            alert("빈칸 , < , > , $ 등의 특수문자를 사용할 수 없습니다.");
             return;
         }
 

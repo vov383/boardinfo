@@ -4,7 +4,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Insert title here</title>
+    <title>보드인포</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <%@ include file="../include/js/header.jsp" %>

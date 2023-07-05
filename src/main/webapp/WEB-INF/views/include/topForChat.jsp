@@ -97,10 +97,6 @@
                                 <a href="${path}/member/logout.do" class="sign">로그아웃</a>
                             </div>
                         </div>
-
-
-
-
                     </c:otherwise>
                 </c:choose>
             </div>

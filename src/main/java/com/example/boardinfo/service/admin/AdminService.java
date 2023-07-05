@@ -69,4 +69,10 @@ public interface AdminService {
     void allowGame(GameDTO dto);
 
     void deleteGameAdmin(int gnum, String admin_id);
+
+    Map<String, Object> getMemberList(int curPage);
+
+    Map<String, Object> getAdminTabList();
+
+    Map<String, Object> getAllReListTab(int curPage);
 }

@@ -167,7 +167,7 @@ public class MemberController {
 			session.setAttribute("activeChats", gson.toJson(activeChats));
 			session.setAttribute("lastUpdateDate", now);
 
-			mav.setViewName("home");
+			mav.setViewName("redirect:/");
 
 		} else {
 			mav.setViewName("member/login");//뷰이름
@@ -460,7 +460,7 @@ public class MemberController {
 			Map<String, Object> map = new HashMap<>();
 			map.put("dto", dto);
 
-			mav.setViewName("member/mypage");
+			mav.setViewName("mypage/mypage");
 //			logger.info("@@@mav =>>"+mav+"@@@@@@@@@");
 
 			mav.addObject("map", map);
@@ -475,7 +475,3 @@ public class MemberController {
 	}
 
 }
-
-
-
-

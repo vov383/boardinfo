@@ -314,6 +314,7 @@
                 </tr>
 
                 <c:forEach items="${list}" var="vo">
+
                     <tr>
                         <td style="text-align: center;">${vo.rnum}</td>
                         <td style="text-align: center;">${vo.category}</td>
@@ -322,7 +323,9 @@
                         <c:if test="${freeFlag!='Y'}">
                         <td class="letLeft">${vo.gametitle}</td>
                         </c:if>
-                        <td class="letLeft">${vo.nickName}</td>
+
+                        <td class="letLeft">${vo.nickName}${vo.anickname}</td>
+
                         <td style="text-align: center;">${vo.views}</td>
                         <td style="text-align: center;">
                                 <c:if test="${vo.good>0}">

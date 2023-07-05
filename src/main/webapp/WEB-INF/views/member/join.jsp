@@ -92,6 +92,12 @@ $(function() {
         $("#nickname").focus();
         return;
       }
+      var exp_nick = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,15}$/;
+  		if(!exp_nick.test(nickname)){
+  		alert("잘못 입력했습니다.");
+  		$("#nickname").focus();
+  		return;
+  	  }
       $.ajax({
         url: "${path}/member/check_nick.do",
         type: "POST",
@@ -177,6 +183,14 @@ function check() {
 		$("#passwd").focus();
 		return;
 	}
+	
+	var exp_pw2 = /^[a-zA-Z0-9]{8,15}$/;
+	if(!exp_pw2.test(passwd2)){
+		alert("비밀번호는 영문 숫자 조합으로 8자 이상 입력하세요.");
+		$("#passwd2").focus();
+		return;
+	}
+	
 	if(passwd != passwd2){
 		alert("비밀번호 불일치");
 		$("#passwd2").focus();
@@ -188,6 +202,8 @@ function check() {
 	    $("#nickname").focus();
 	    return;
 	}
+	
+	
 	//이름 정규식
 	var exp3 = /^[가-힣]+$/;
 	if(!exp3.test(name)){

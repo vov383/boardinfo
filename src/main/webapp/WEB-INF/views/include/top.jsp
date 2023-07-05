@@ -16,7 +16,7 @@
                 <a href="${path}/" title="보드인포"><img src="${path}/images/logo.png" width="170px"></a>
             </div>
             <div id="header-right">
-                <form name="gameSearch" id="gameSearch" method="get" action="${path}/search/searchAll.do">
+                <form name="gameSearch" id="gameSearch" method="get" action="${path}/search/searchAll.do" onsubmit="return false">
                     <div>
                         <input name="gameKeyword" id="gameKeyword" placeholder="보드게임 찾기" autocomplete="off">
                         <input type="hidden">
@@ -26,6 +26,7 @@
                 </form>
                 <c:choose>
                     <c:when test="${sessionScope.userid == null && sessionScope.admin_id == null}">
+                        <input type="hidden" name="sessionUserid" value="''">
                         <!-- 로그인하지 않은 상태 -->
                         <a href="${path}/member/member_login.do" title="로그인" class="sign" id="signIn">로그인</a>
                         <a href="${path}/member/member_join.do" title="회원가입" class="sign" id="signUp">회원가입</a>
@@ -91,7 +92,7 @@
                         <div class="bi-dropdown-content">
                          <a href="#" onclick="goMypage()">내활동</a>
                             <form name="mypageForm" method="post" style="display: none">
-                                <input type="hidden" name="userid" value="${sessionScope.userid}">
+                                <input type="hidden" id="sessionUserid" name="sessionUserid" value="${sessionScope.userid}">
                             </form>
                          <a href="${path}/member/pass_check_u?userid=${sessionScope.userid}">회원정보</a>
                          <a href="${path}/member/logout.do" class="sign">로그아웃</a>
@@ -178,12 +179,18 @@
     const unreadAlarmSpan = $("#unreadAlarm");
     let unreadAlarmCount = '${sessionScope.unreadAlarmCount}';
 
-
     function searchAll() {
         var keyword = $("#gameKeyword").val();
-        if (keyword !== "") {
+
+        var exp_gametitle = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
+
+        if(!exp_gametitle.test(keyword) || keyword == "" || keyword == null){
+            alert("검색어로 빈칸 , < , > , $ 등의 특수문자를 사용할 수 없습니다.");
+            $("#gameKeyword").focus();
+            return;
+        }else
             document.gameSearch.submit();
-        }
+
     }
 
 
@@ -374,6 +381,8 @@
             }
 
         });
+
+
 
         /*관리자 로그아웃 버튼*/
         $("#adminLogoutBtn").on("click", function () {

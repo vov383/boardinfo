@@ -11,7 +11,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>관리자 목록</title>
+    <title>BOARDINFO</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%--부트스트랩--%>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"

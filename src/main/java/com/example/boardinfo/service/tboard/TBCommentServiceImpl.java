@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,18 +41,15 @@ public class TBCommentServiceImpl implements TBCommentService {
 			re_dto.setDepth(0);
 			int target = tbcommentDao.getTargetReplyOrder(re_dto);
 			re_dto.setInner_order(target);
-//			logger.info("target 값 : " + target);
 		}
 
 		//대댓글인 경우
 		else {
 			TBCommentDTO mother = tbcommentDao.getMotherObject(re_dto.getMother_reply());
-//			logger.info("mother : " + mother);
 			re_dto.setDepth(mother.getDepth() + 1);
 			re_dto.setParent_reply(mother.getParent_reply());
 			int target = tbcommentDao.getTargetReplyOrder(mother);
 			re_dto.setInner_order(target);
-//			logger.info("target : " + target);
 			tbcommentDao.replyOrderUpdate(re_dto.getParent_reply(), re_dto.getInner_order());
 		}
 		/*댓글 insert*/
@@ -63,15 +61,27 @@ public class TBCommentServiceImpl implements TBCommentService {
 	}
 
 	@Override
-	public String getReplyContent(int reply_reg_num) {
-		return tbcommentDao.getReplyContent(reply_reg_num);
+	public TBCommentDTO getReplyContent(int reply_reg_num, HttpSession session) {
+		boolean result = false;
+		TBCommentDTO re_dto = tbcommentDao.getReplyContent(reply_reg_num);
+		String userid = (String)session.getAttribute("userid");
+
+		/*세션 유저아이디와 댓글 create_user가 같으면 result를 true로 */
+		if(userid != null && userid.equals(re_dto.getCreate_user())){
+			result = true;
+		}
+		if(result){
+			return re_dto;
+		}else{
+			return null;
+		}
+
 	}
 
 	@Override
 	public boolean editReply(TBCommentDTO re_dto) {
 		boolean result = false;
 		int editted = tbcommentDao.editReply(re_dto);
-//		logger.info("에디티드 : "+ editted);
 		if(editted >= 1){
 			result = true;
 		}

@@ -267,4 +267,47 @@ public class AdminController {
         return "redirect:/";
     }
 
+    /*회원목록*/
+    @RequestMapping("memberListTab")
+    @ResponseBody
+    public ModelAndView getMemberList(HttpSession session, @RequestParam(value="curPage", defaultValue = "1") int curPage){
+//        String admin_id =(String)session.getAttribute("admin_id");
+//        ModelAndView mav = new ModelAndView();
+//        if(admin_id == null || admin_id.equals("")){
+//            mav.setViewName("home");
+//            mav.addObject("message", "비정상적인 접근입니다.");
+//            return mav;
+//        }
+        Map<String, Object> response = adminService.getMemberList(curPage);
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("admin/memberTabbed");
+        mav.addObject("response", response);
+        return mav;
+    }
+
+
+    /*관리자목록*/
+    @RequestMapping("adminListTab")
+    @ResponseBody
+    public ModelAndView getAdminList(HttpSession session, @RequestParam(value="curPage", defaultValue = "1") int curPage){
+        Map<String, Object> response = adminService.getAdminTabList();
+        ModelAndView mav = new ModelAndView();
+
+        mav.setViewName("admin/adminTabbed");
+        mav.addObject("response", response);
+        return mav;
+    }
+
+    /*전체 댓글 목록*/
+    @RequestMapping("AllReListTab")
+    @ResponseBody
+    public ModelAndView getAllReListTab(@RequestParam(value="curPage", defaultValue = "1") int curPage){
+        Map<String, Object> response = adminService.getAllReListTab(curPage);
+        ModelAndView mav = new ModelAndView();
+
+        mav.setViewName("admin/adminTabbed");
+        mav.addObject("response", response);
+        return mav;
+    }
+
 }

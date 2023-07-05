@@ -17,6 +17,7 @@ import com.example.boardinfo.model.game.dto.mechanic.MechanicDTO;
 import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
 import com.example.boardinfo.model.member.dao.MemberDAO;
 import com.example.boardinfo.model.member.dto.MemberDTO;
+import com.example.boardinfo.model.mypage.dto.MyReplyDTO;
 import com.example.boardinfo.util.GameUtils;
 import com.example.boardinfo.util.Pager;
 import com.example.boardinfo.util.UploadFileUtils;
@@ -345,6 +346,8 @@ public class AdminServiceImpl implements AdminService {
 
     }
 
+
+
     @Transactional
     @Override
     public void allowGame(GameDTO dto) {
@@ -482,4 +485,44 @@ public class AdminServiceImpl implements AdminService {
             }
 
     }
+
+    /*어드민 회원 목록 모듈*/
+    @Override
+    public Map<String, Object> getMemberList(int curPage) {
+        int count = adminDao.getMemberCount();
+        Pager pager = new Pager(count, curPage, 10);
+
+        int start = pager.getPageBegin();
+        int end = pager.getPageEnd();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("start", start);
+        map.put("end", end);
+        List<MemberDTO> memberList = adminDao.getMemberTabbed(map);
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> getAdminTabList() {
+        List<AdminDTO> adminDtos = adminDao.getAdminList();
+        Map<String, Object> map = new HashMap<>();
+        map.put("adminDtos", adminDtos);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> getAllReListTab(int curPage) {
+        int count = adminDao.getAllReCount();
+        Pager pager = new Pager(count, curPage, 10);
+        int start = pager.getPageBegin();
+        int end = pager.getPageEnd();
+        Map<String, Object> map = new HashMap<>();
+        map.put("start", start);
+        map.put("end", end);
+        List<MyReplyDTO> replyDtos = adminDao.getAllReplies(map);
+        map.put("pager", pager);
+        map.put("replyDtos", replyDtos);
+        return map;
+    }
+
 }

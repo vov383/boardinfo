@@ -15,13 +15,13 @@
         http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
 
-	<!-- DispatcherServlet Context: defines this servlet's request-processing 
+	<!-- DispatcherServlet Context: defines this servlet's request-processing
 		infrastructure -->
 
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
 
-	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving
 		up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
 	<resources location="/resources/uploaded_image/" mapping="/uploaded_image/**"/>
@@ -36,10 +36,10 @@
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
-	<!-- 스프링 빈을 태그로 등록하지 않고 자동으로 검색(auto scan) --> 
+	<!-- 스프링 빈을 태그로 등록하지 않고 자동으로 검색(auto scan) -->
 	<context:component-scan base-package="com.example.boardinfo" />
-	
-	
+
+
 	<!-- 파일업로드에 필요한 bean -->
 	<beans:bean id="multipartResolver"
 	class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -54,12 +54,12 @@
 	<beans:bean id="uploadLocalDir" class="java.lang.String">
 		<beans:constructor-arg value="c:/upload" />
 	</beans:bean>
-	
+
 	<!-- aop의 설정으로 Proxy 객체를 자동으로 생성 -->
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
-	
-	
-	
+
+
+
 	<!-- 웹소켓 핸들러 등록
 	<websocket:handlers>
 		<websocket:mapping handler="chatHandler" path="/chatting" />
@@ -69,7 +69,7 @@
 		<websocket:sockjs websocket-enabled="true"/>
 	</websocket:handlers>
 	-->
-	
+
 	<beans:bean class="com.example.boardinfo.interceptor.LoginInterceptor" id="loginInterceptor"> </beans:bean>
 	<beans:bean class="com.example.boardinfo.interceptor.AlarmInterceptor" id="alarmInterceptor"> </beans:bean>
 	<!-- 인터셉터 호출을 위한 url mapping -->
@@ -93,10 +93,27 @@
 			<mapping path="/gathering/addAttendee.do"/>
 			<mapping path="/gathering/add.do"/>
 			<mapping path="/gathering/edit/**"/>
+			<mapping path="/game/insert.do"/>
+ 		 <mapping path="/game/write.do"/>
+ 		 <mapping path="/game/updateView.do"/>
+ 		 <mapping path="/game/update.do"/>
+ 		 <mapping path="/game/delete.do"/>
+ 		 <mapping path="/game/parseAjax/*"/>
+ 		 <mapping path="/game/getExReAjax/*"/>
+ 		 <mapping path="/game/autoArtist.do/*"/>
+ 		 <mapping path="/game/autoPublisher.do/*"/>
+ 		 <mapping path="/game/autoDesigner.do/*"/>
+
+ 		 <mapping path="/admin/confirmList/*"/>
+ 		 <mapping path="/admin/deleteitem/*"/>
+ 		 <mapping path="/admin/updateGame/*"/>
+ 		 <mapping path="/admin/denyGame/*"/>
+ 		 <mapping path="/admin/allowGame/*"/>
+ 		 <mapping path="/admin/deleteGame/*"/>
 			<beans:ref bean="loginInterceptor"/>
 		</interceptor>
 	</interceptors>
 
 
-	
+
 </beans:beans>

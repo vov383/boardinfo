@@ -159,7 +159,7 @@
             <div style="color: red;">${message}</div>
           </div>
           <div>
-            <input type="submit" value="확인">
+            <input type="submit" value="확인" onclick="check()">
           </div>
         </form>
       </div>
