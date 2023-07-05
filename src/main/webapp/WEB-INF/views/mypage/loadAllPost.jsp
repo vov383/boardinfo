@@ -77,38 +77,10 @@
             </table>
         </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-outline-warning" href="#" onclick="listTab('game_rating', this, 1)">더보기</button>
+            <button class="btn btn btn-warning me-md-2" href="#" onclick="listTab('game_rating', this, 1)">더보기</button>
         </div>
     </div>
-    <%--<div id="grContainer" class="row">--%>
-<%--        <c:forEach var="card" items="${map.grList}">--%>
-<%--            <div class="grlDiv col-md-4">--%>
-<%--                <div class="card">--%>
-<%--                    <div class="card-body">--%>
-<%--                        <h5 class="card-title">${card.gametitle}</h5>--%>
-<%--                        <img src="${card.bgg_thumbnail}" class="card-img-top" alt="Board Game Thumbnail">--%>
-<%--                        <p class="card-text">--%>
-<%--                            평점<i class="fa-solid fa-star" style="color: #f0bf0f;"></i><span class="dot"></span> ${card.rating}<br>--%>
-<%--                            난이도<i class="fa-solid fa-star" style="color: #3b2cc5;"></i><span class="dot"></span> ${card.weight}<br>--%>
-<%--                        <div class="ratingComment">--%>
-<%--                            코멘트<i class="fa-regular fa-comment-dots"></i><span class="dot"></span>--%>
-<%--                            <c:choose>--%>
-<%--                                <c:when test="${fn:length(card.rating_comment) >= 50}">--%>
-<%--                                    ${fn:substring(card.rating_comment, 0, 49)}...<br>--%>
-<%--                                </c:when>--%>
-<%--                                <c:otherwise>--%>
-<%--                                    ${card.rating_comment}<br>--%>
-<%--                                </c:otherwise>--%>
-<%--                            </c:choose>--%>
-<%--                        </div>--%>
-<%--                        좋아요<i class="fa-solid fa-heart"></i><span class="dot"></span><span class="goodCount">${card.likeCount}</span> <br>--%>
-<%--                        <i class="fa-regular fa-clock"></i><span class="dot"></span><span class="dateSpan">${card.create_date}</span>--%>
-<%--                        </p>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </c:forEach>--%>
-<%--    </div>--%>
+
     <div id="rvContainer">
         <p class="h3">커뮤니티</p>
         <div class="rvlDiv">
@@ -161,7 +133,7 @@
             </table>
         </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-primary me-md-2" href="#" onclick="listTab('review', this, 1)">더보기</button>
+            <button class="btn btn-warning me-md-2" href="#" onclick="listTab('review', this, 1)">더보기</button>
         </div>
     </div>
 
@@ -230,7 +202,7 @@
             </table>
         </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-primary me-md-2" href="#" onclick="listTab('gathering', this, 1)">더보기</button>
+            <button class="btn btn-warning me-md-2" href="#" onclick="listTab('gathering', this, 1)">더보기</button>
         </div>
     </div>
     <div id="trContainer">
@@ -319,70 +291,8 @@
             </table>
         </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-primary me-md-2" href="#" onclick="listTab('trade', this, 1)">더보기</button>
+            <button class="btn btn-warning me-md-2" href="#" onclick="listTab('trade', this, 1)">더보기</button>
         </div>
     </div>
 
-<%--    <div id="tbContainer" class="row">--%>
-<%--        <c:forEach var="trCard" items="${map.tbList}">--%>
-<%--            <div class="tblDiv col-md-4">--%>
-<%--                <div class="card">--%>
-<%--                    <div class="card-body">--%>
-<%--                        <h5 class="card-title">--%>
-<%--                            <c:set var="titleLength" value="${fn:length(trCard.title)}" />--%>
-<%--                        <c:choose>--%>
-<%--                            <c:when test="${titleLength >= 15}">--%>
-<%--                                ${fn:substring(trCard.title, 0, 19)}...--%>
-<%--                            </c:when>--%>
-<%--                            <c:otherwise>--%>
-<%--                                ${trCard.title}--%>
-<%--                            </c:otherwise>--%>
-<%--                        </c:choose>--%>
-<%--                            <i class="fa-regular fa-comment-dots"></i><span class="dot"></span>--%>
-<%--                            <span class="reCount">${trCard.re_count}</span>--%>
-
-<%--                        </h5>--%>
-<%--                        <c:choose>--%>
-<%--                            <c:when test="${trCard.tb_thumbnail ne null}">--%>
-<%--                                <img src="${path}/resources/upload${trCard.tb_thumbnail}" class="card-img-top">--%>
-<%--                            </c:when>--%>
-<%--                            <c:otherwise>--%>
-<%--                                <img src="${path}/images/no-image-svgrepo-com.svg" class="card-img-top"--%>
-<%--                                     style="opacity: 20%;">--%>
-<%--                            </c:otherwise>--%>
-<%--                        </c:choose>--%>
-
-<%--                        <p class="card-text">--%>
-<%--                            <span class="category">${trCard.category}</span> <br>--%>
-<%--                            <c:choose>--%>
-<%--                                <c:when test="${row.category eq '나눔'}">--%>
-<%--                                    <span class="price">무료나눔</span><br>--%>
-<%--                                </c:when>--%>
-<%--                                <c:otherwise>--%>
-<%--                                    가격 <span class="price">--%>
-<%--                                    ${row.price}<span class="dot"></span>원</span> <br>--%>
-<%--                                </c:otherwise>--%>
-<%--                            </c:choose>--%>
-<%--                            <i class="fa-solid fa-location-dot"></i><span class="dot"></span>--%>
-<%--                            <span class="address">--%>
-<%--                                    ${trCard.address1}, ${trCard.address2}--%>
-<%--                            </span><br>--%>
-<%--                            <i class="fa-solid fa-eye"></i><span class="dot"></span>--%>
-<%--                            <span class="viewCount">${trCard.view_count}</span> <br>--%>
-
-<%--                            <i class="fa-solid fa-heart"></i><span class="dot"></span>--%>
-<%--                            <span class="goodCount">${trCard.good_count}</span> <br>--%>
-
-<%--                            <br>--%>
-<%--                            <i class="fa-solid fa-user"></i><span class="dot"></span>--%>
-<%--                            <span class="nickname">${trCard.nickname}</span> <br>--%>
-<%--                            <i class="fa-regular fa-clock"></i><span class="dot"></span>--%>
-<%--                            <span class="dateSpan">${trCard.create_date}</span>--%>
-
-<%--                        </p>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </c:forEach>--%>
-<%--    </div>--%>
 </div>
