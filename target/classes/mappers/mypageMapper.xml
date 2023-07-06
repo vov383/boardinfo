@@ -329,19 +329,6 @@
                                 = 'N'
                               AND REG_NUM = R.REG_NUM)      AS RECNT /*댓글 개수*/
                          , R.DEL
-                         , R.CREATE_USER         AS CREATEUSER
-                         , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS')
-                                                 AS CREATEDATE
-                         , R.UPDATE_USER         AS UPDATEUSER
-                         , TO_CHAR(R.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS')
-                                                 AS UPDATEDATE
-                    FROM REVIEW R
-                       , MEMBER M
-                       , CHOICE_GAME C
-                    WHERE R.CREATE_USER = M.USERID(+)
-                      AND R.REG_NUM
-                        = C.REVIEWREGNUM(+)
-                      and R.CREATE_USER = #{userid} /*검색*/ /*디테일 진입*/
                          , R.CREATE_USER                    AS CREATEUSER
                          , TO_CHAR(R.CREATE_DATE,
                                    'YYYY-MM-DD HH24:MI:SS') AS CREATEDATE
