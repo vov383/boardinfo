@@ -1,39 +1,30 @@
 package com.example.boardinfo.service.gathering;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.*;
-
+import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
+import com.example.boardinfo.model.gathering.dao.GatheringAlarmDAO;
+import com.example.boardinfo.model.gathering.dao.GatheringDAO;
+import com.example.boardinfo.model.gathering.dto.*;
+import com.example.boardinfo.service.chat.ChatService;
+import com.example.boardinfo.util.Pager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
-
-import com.example.boardinfo.model.gathering.dao.GatheringAlarmDAO;
-import com.example.boardinfo.model.gathering.dao.GatheringDAO;
-import com.example.boardinfo.model.gathering.dto.*;
-import com.example.boardinfo.service.chat.ChatService;
-
-import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
-import com.example.boardinfo.model.gathering.dto.AttendeeType;
-import com.example.boardinfo.model.gathering.dto.GatheringReplyDTO;
-import com.example.boardinfo.util.Pager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Service;
-
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 
 @Service

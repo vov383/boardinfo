@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
-
 <div id="header">
 
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -17,7 +16,8 @@
                 <a href="${path}/" title="보드인포"><img src="${path}/images/logo.png" width="170px"></a>
             </div>
             <div id="header-right">
-                <form name="gameSearch" id="gameSearch" method="get" action="${path}/search/searchAll.do" onsubmit="return false">
+                <form name="gameSearch" id="gameSearch" method="get" action="${path}/search/searchAll.do"
+                      onsubmit="return false">
                     <div>
                         <input name="gameKeyword" id="gameKeyword" placeholder="보드게임 찾기" autocomplete="off">
                         <input type="hidden">
@@ -67,13 +67,13 @@
 
                     </c:when>
                     <c:otherwise>
-                            <div id="chatArea">
-                                <a title="채팅" href="${path}/chat/room.do">
-                                    <span id="unreadChat" class="hidden"></span>
-                                    <img src="${path}/images/chat.png" id="chatImg" alt="채팅">
-                                </a>
-                                <div class="toast-chat"></div>
-                            </div>
+                        <div id="chatArea">
+                            <a title="채팅" href="${path}/chat/room.do">
+                                <span id="unreadChat" class="hidden"></span>
+                                <img src="${path}/images/chat.png" id="chatImg" alt="채팅">
+                            </a>
+                            <div class="toast-chat"></div>
+                        </div>
                         <div id="alarmArea">
                             <a title="알림" href="javascript:showAlarm()">
                                 <span id="unreadAlarm" class="hidden"></span>
@@ -86,25 +86,18 @@
                         </div>
                         <!-- userid로 로그인한 상태 -->
 
-                    <div class="memberArea">
-                        <div class="toMenu">
-                            ${sessionScope.nickname} 님
-                            <img src="${path}/images/dropdown.png" width="16px">
+                        <div class="memberArea">
+                            <div class="toMenu">
+                                    ${sessionScope.nickname} 님
+                                <img src="${path}/images/dropdown.png" width="16px">
+                            </div>
+
+                            <div class="bi-dropdown-content">
+                                <a href="${path}/mypage/moveUserPage/${sessionScope.userid}">내활동</a>
+                                <a href="${path}/member/pass_check_u?userid=${sessionScope.userid}">회원정보</a>
+                                <a href="${path}/member/logout.do" class="sign">로그아웃</a>
+                            </div>
                         </div>
-
-                        <div class="bi-dropdown-content">
-                         <a href="#" onclick="goMypage()">내활동</a>
-                            <form name="mypageForm" method="post" style="display: none">
-                                <input type="hidden" id="sessionUserid" name="sessionUserid" value="${sessionScope.userid}">
-                            </form>
-                         <a href="${path}/member/pass_check_u?userid=${sessionScope.userid}">회원정보</a>
-                         <a href="${path}/member/logout.do" class="sign">로그아웃</a>
-                        </div>
-                   </div>
-
-
-
-
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -115,7 +108,7 @@
         <ul class="menu">
             <li>
                 <div class="toMenu" onclick="location.href='${path}/game/gamerank/week'">
-                        게임정보
+                    게임정보
                     <img src="${path}/images/dropdown.png" width="16px">
                 </div>
                 <div class="bi-dropdown-content">
@@ -150,7 +143,7 @@
             <li>
                 <div class="toMenu">
                     <a href="${path}/gathering/list.do" class="toMenu" title="오프모임">
-                    오프모임
+                        오프모임
                     </a>
                 </div>
             </li>
@@ -174,11 +167,11 @@
 
         var exp_gametitle = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
 
-        if(!exp_gametitle.test(keyword) || keyword == "" || keyword == null){
+        if (!exp_gametitle.test(keyword) || keyword == "" || keyword == null) {
             alert("검색어로 빈칸 , < , > , $ 등의 특수문자를 사용할 수 없습니다.");
             $("#gameKeyword").focus();
             return;
-        }else
+        } else
             document.gameSearch.submit();
 
     }
@@ -187,14 +180,14 @@
     const $alarmListWrapper = $(".alarmListWrapper").eq(0);
 
     //검색기능
-    $(document).ready(function(){
+    $(document).ready(function () {
 
-        $(document).on("click", ".alarmItem", function() {
-            if($(this).hasClass("unreadAlarm")){
+        $(document).on("click", ".alarmItem", function () {
+            if ($(this).hasClass("unreadAlarm")) {
                 $.ajax({
                     type: "get",
                     url: "${path}/gatheringAlarm/read.do/",
-                    data: {"alarm_id" : $(this).data("alarm_id")},
+                    data: {"alarm_id": $(this).data("alarm_id")},
                     async: false
                 });
             }
@@ -202,30 +195,28 @@
         });
 
 
-
-        if(unreadAlarmCount == 'true'){
+        if (unreadAlarmCount == 'true') {
             unreadAlarmSpan.removeClass('hidden');
         }
 
         var timeOutId;
 
-        $(".menu li, .memberArea").on("mouseleave", function() {
+        $(".menu li, .memberArea").on("mouseleave", function () {
             var $dropdown = $(this).find(".bi-dropdown-content");
-            timeOutId = setTimeout(function() {
-                $dropdown.slideUp(300, function() {
+            timeOutId = setTimeout(function () {
+                $dropdown.slideUp(300, function () {
                     $dropdown.css("display", "none");
                 });
             }, 100);
         });
 
 
-        $(".menu li, .memberArea").on("mouseenter", function(){
+        $(".menu li, .memberArea").on("mouseenter", function () {
             var $dropdown = $(this).find(".bi-dropdown-content");
-            if($dropdown.is(":visible")){
+            if ($dropdown.is(":visible")) {
                 clearTimeout(timeOutId);
-            }
-            else{
-                $(this).find(".bi-dropdown-content").slideDown(200, function() {
+            } else {
+                $(this).find(".bi-dropdown-content").slideDown(200, function () {
                     $(this).css("display", "block");
                 });
             }
@@ -233,81 +224,80 @@
 
 
         //검색창 키입력후
-        $("#gameKeyword").keyup(function(event) {
+        $("#gameKeyword").keyup(function (event) {
             if (event.which === 13) { // 엔터 입력시
                 event.preventDefault();
                 searchAll();  //검색하러감
             } else {
                 setTimeout(function () {  //딜레이
-                //자동완성
+                    //자동완성
                     var input = $("#gameKeyword").val();
 
                     if (input == "")
                         $('#gameSearchDiv').empty()
                     else {
-                    $.ajax({
-                        type: "get",
-                        url: "${path}/game/autoGame.do/" + input,
-                        success: function (result) {
-                            var gameSearchDiv = $('#gameSearchDiv');
-                            gameSearchDiv.empty(); // 기존 내용 비우기
+                        $.ajax({
+                            type: "get",
+                            url: "${path}/game/autoGame.do/" + input,
+                            success: function (result) {
+                                var gameSearchDiv = $('#gameSearchDiv');
+                                gameSearchDiv.empty(); // 기존 내용 비우기
 
-                            if (result.length > 0) {  //결과값이 존재하면
-                                gameSearchDiv.css('max-height', '300px').show(); // 값이 있을 경우 높이 설정하고 보이기
-                                $(result).each(function (index, item) {
-                                    var gametitle = item.gametitle;
-                                    var gnum = item.gnum;
-                                    var gamephoto_url = item.gamephoto_url;
-                                    var bgg_thumbnail = item.bgg_thumbnail;
-                                    var bggnum = item.bggnum;
+                                if (result.length > 0) {  //결과값이 존재하면
+                                    gameSearchDiv.css('max-height', '300px').show(); // 값이 있을 경우 높이 설정하고 보이기
+                                    $(result).each(function (index, item) {
+                                        var gametitle = item.gametitle;
+                                        var gnum = item.gnum;
+                                        var gamephoto_url = item.gamephoto_url;
+                                        var bgg_thumbnail = item.bgg_thumbnail;
+                                        var bggnum = item.bggnum;
 
-                                    //var str => #gameSearchDiv 안에 들어갈 태그 입력
-                                    var str = "<div class='searched_top'><div class='imageDiv'>";
+                                        //var str => #gameSearchDiv 안에 들어갈 태그 입력
+                                        var str = "<div class='searched_top'><div class='imageDiv'>";
 
-                                    if (gamephoto_url != null) { //db에 입력된 사진 주소값이 없으면
-                                        str += '<img src="${path}/resources/uploaded_game' + gamephoto_url + '"';
-                                        str += 'onerror="this.src=\'${path}/images/game/no-image-icon.png\'">';
-                                    } else {
-                                        if (bggnum != null) { //보드게임긱 아이디가 존재하면
-                                            str += '<img class="img_photo" src="' + bgg_thumbnail + '"';
+                                        if (gamephoto_url != null) { //db에 입력된 사진 주소값이 없으면
+                                            str += '<img src="${path}/resources/uploaded_game' + gamephoto_url + '"';
                                             str += 'onerror="this.src=\'${path}/images/game/no-image-icon.png\'">';
                                         } else {
-                                            str += '<img src="${path}/images/game/no-image-icon.png">';
+                                            if (bggnum != null) { //보드게임긱 아이디가 존재하면
+                                                str += '<img class="img_photo" src="' + bgg_thumbnail + '"';
+                                                str += 'onerror="this.src=\'${path}/images/game/no-image-icon.png\'">';
+                                            } else {
+                                                str += '<img src="${path}/images/game/no-image-icon.png">';
+                                            }
                                         }
-                                    }
-                                    str += "</div><div class='titleDiv'><a href='${path}/game/view.do?gnum=" + gnum + "'>" + gametitle + "</a></div></div>";
+                                        str += "</div><div class='titleDiv'><a href='${path}/game/view.do?gnum=" + gnum + "'>" + gametitle + "</a></div></div>";
 
-                                    gameSearchDiv.append(str);
-                                });
-                            } else {
-                                gameSearchDiv.hide(); // 값이 없을 경우 숨기기
+                                        gameSearchDiv.append(str);
+                                    });
+                                } else {
+                                    gameSearchDiv.hide(); // 값이 없을 경우 숨기기
+                                }
+                            },
+                            error: function () {
+                                console.log("에러..");
                             }
-                        },
-                        error: function () {
-                            console.log("에러..");
-                        }
-                    });
+                        });
                     }
                 }, 1000) //settimeout 콜백함수로 1초 딜레이 후 검색창 작동
-               ;
+                ;
 
             }
 
         });
-
 
 
         /*관리자 로그아웃 버튼*/
         $("#adminLogoutBtn").on("click", function () {
-            if(confirm("로그아웃 하시겠습니까?")){
-                location.href="${path}/admin/logout.do";
+            if (confirm("로그아웃 하시겠습니까?")) {
+                location.href = "${path}/admin/logout.do";
             }
         });
 
 
-        $alarmList.scroll(function(){
+        $alarmList.scroll(function () {
 
-            if(($alarmList.height() + $alarmList.scrollTop()) >= $alarmList[0].scrollHeight-20){
+            if (($alarmList.height() + $alarmList.scrollTop()) >= $alarmList[0].scrollHeight - 20) {
 
                 if (alarmEnd == false && alarmLoading == false) {
 
@@ -319,7 +309,7 @@
                 }
             }
 
-    });
+        });
 
     });
 
@@ -332,44 +322,36 @@
     }
 
 
-    /*마이페이지로 이동하는 폼*/
-        function goMypage() {
-            document.mypageForm.action = "${path}/mypage/goMypage";
-            document.mypageForm.submit();
-       }
-
-
     function goInsert() {
-        if("${sessionScope.userid}" == "" && "${sessionScope.admin_id}" == ""){
-            if(confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")){
-                location.href= "${path}/member/member_login.do";
+        if ("${sessionScope.userid}" == "" && "${sessionScope.admin_id}" == "") {
+            if (confirm("로그인 이후에 이용 가능합니다. 로그인 페이지로 이동하시겠습니까?")) {
+                location.href = "${path}/member/member_login.do";
                 return;
             }
-        }else{
-            location.href= "${path}/game/write.do";
+        } else {
+            location.href = "${path}/game/write.do";
         }
     }
 
 
-    function showAlarm(){
+    function showAlarm() {
         $alarmList.html("");
         alarmCurPage = 1;
         alarmEnd = false;
 
         getAlarms();
 
-        $alarmListWrapper.slideToggle(300, function(){
-            if($alarmListWrapper.is(":visible")){
+        $alarmListWrapper.slideToggle(300, function () {
+            if ($alarmListWrapper.is(":visible")) {
                 $alarmListWrapper.css("display", "flex");
-            }
-            else $alarmListWrapper.css("display", "none");
+            } else $alarmListWrapper.css("display", "none");
 
         });
 
     }
 
 
-    function getAlarms(){
+    function getAlarms() {
 
         let size = 15;
 
@@ -383,17 +365,17 @@
 
                 let items = "";
 
-                if(list.length < size) {
+                if (list.length < size) {
                     alarmEnd = true;
                 }
 
-                for(var i=0; i<list.length; i++){
+                for (var i = 0; i < list.length; i++) {
 
                     let $item = $("<div></div>").addClass("alarmItem");
                     $item.html("<div>" + list[i].sender_nickname + "</div>"
                         + "<div>" + list[i].message + "</div>");
 
-                    if(!list[i].read_date || list[i].read_date == ""){
+                    if (!list[i].read_date || list[i].read_date == "") {
                         $item.addClass("unreadAlarm");
                     }
 
@@ -408,7 +390,5 @@
 
 
     }
-
-
 
 </script>

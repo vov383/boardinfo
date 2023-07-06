@@ -1,14 +1,9 @@
 package com.example.boardinfo.controller.upload;
 
-import java.io.File; 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
-import javax.annotation.Resource;
-import javax.inject.Inject;
-
 import com.example.boardinfo.service.game.GameService;
+import com.example.boardinfo.service.tboard.TBoardService;
+import com.example.boardinfo.util.MediaUtils;
+import com.example.boardinfo.util.UploadFileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.boardinfo.service.tboard.TBoardService;
-import com.example.boardinfo.util.MediaUtils;
-import com.example.boardinfo.util.UploadFileUtils;
+import javax.annotation.Resource;
+import javax.inject.Inject;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Controller
 public class AjaxUploadController {
@@ -103,7 +101,7 @@ public class AjaxUploadController {
 			if(in != null)
 				in.close(); //스트림 닫기
 		}
-		return entity;
+	 	return entity;
 	}
 	
 	@ResponseBody //뷰로 리턴하지 않고 데이터를 리턴 json 같이..
@@ -131,7 +129,6 @@ public class AjaxUploadController {
 
 		//레코드 삭제 기능 추가
 
-		//tboardService.deleteFile(fileName);
 
 		gameService.deleteFile(fileName);
 		

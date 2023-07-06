@@ -1221,7 +1221,6 @@
                                 <div id="attendeeList">
                                     <c:forEach var="attendee" items="${dto.attendeeDTOList}">
                                         <a href="${path}/mypage/moveUserPage/${attendee.user_id}">
-
                                         <div class="attendee">
                                             <img src="${path}/images/${attendee.profile}">
                                             <span>${attendee.nickname}</span>

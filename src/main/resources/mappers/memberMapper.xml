@@ -6,10 +6,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
 <mapper namespace="member">
 	<select id="memberList" resultType="com.example.boardinfo.model.member.dto.MemberDTO">
-		select * 
+		select *
 		from member
 		where del = 'N'
-		order by name 
+		order by name
 	</select>
 	
 	<insert id="insertMember">
