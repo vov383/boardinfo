@@ -418,6 +418,7 @@
 
         #attendingPopup img{
             width: 50px;
+            height: 50px;
         }
 
         #waitingArea .attendingItem > div:first-of-type{
@@ -447,6 +448,10 @@
     </style>
 
     <script>
+
+
+        let change = false;
+
 
 
         $(function(){
@@ -714,6 +719,12 @@
             $(".popup-wrap").fadeOut(); //페이드아웃 효과
             $("input[name='answer']").val('');
             document.body.style.overflowY = "auto";
+
+            if(change == true){
+                change = false;
+                location.reload();
+            }
+
         }
 
         function submitApplication(){
@@ -880,6 +891,7 @@
             let $button = $(event.currentTarget);
 
             if(confirm('이 회원의 모임참여를 승인하겠습니까?')){
+                change = true;
 
                 let attendee_id = $button.closest(".attendingItem").data("attendee_id");
 
@@ -892,8 +904,7 @@
                     },
                     success: function(result){
                         let message = result.message;
-
-                        if(!message && message!=""){
+                        if(message && message!=""){
                             alert(message);
                         }
 
@@ -951,7 +962,7 @@
             let $button = $(event.currentTarget);
 
             if(confirm('이 회원을 모임에서 탈퇴시키겠습니까?')){
-
+                change = true;
                 let attendee_id = $button.closest(".attendingItem").data("attendee_id");
 
                 $.ajax({

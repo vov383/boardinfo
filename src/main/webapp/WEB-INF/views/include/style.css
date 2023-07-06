@@ -218,7 +218,7 @@ form[name="gameSearch"] #searchimg{
     padding: 10px 0;
 }
 
-.alarmList{
+.alarmListWrapper{
     position: absolute;
     z-index: 100;
     display: none;
@@ -232,7 +232,7 @@ form[name="gameSearch"] #searchimg{
     border-radius: 10px;
 }
 
-.alarmList::after{
+.alarmListWrapper::after{
     content: "";
     position: absolute;
     bottom: 100%;
@@ -243,12 +243,24 @@ form[name="gameSearch"] #searchimg{
 }
 
 
-.alarmList > div:first-child{
+.alarmListWrapper > div:first-child{
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     width: 100%;
     background-color: #EDECEC;
     padding: 10px 14px;
+}
+
+.alarmList{
+    max-height: 500px;
+    overflow: auto;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.alarmListWrapper > div{
+    display: inherit;
+    flex-direction: column;
 }
 
 .alarmItem{

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-    
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,12 +19,12 @@
 		padding-top: 10px;
 		display: flex;
 	}
-	
+
 	#contentsMain > div{
 		display: flex;
 		flex-direction: column;
 	}
-	
+
 	#chatRoomListBox{
         padding-top: 42px;
         min-width: 300px;
@@ -45,14 +45,14 @@
 		position: relative;
 		margin-bottom: 10px;
 	}
-	
+
 	form[name="chatRoomSearch"] > input{
 		width: 100%;
 		height: 35px;
 		padding:  0 40px 0 15px;
 		border: 1px solid #D9D9D9;
 	}
-	
+
 	form[name="chatRoomSearch"] > img{
 		position: absolute;
 		z-index: 10;
@@ -60,7 +60,7 @@
 		right: 15px;
 	}
      */
-	
+
 	.chatRoom{
         border-bottom: 1px solid #D9D9D9;
 		padding: 12px 10px;
@@ -94,7 +94,7 @@
         overflow: hidden;
     }
 
-    .attendees{
+    .chatRoom .attendee_count{
         font-size: 13px;
     }
 
@@ -106,27 +106,27 @@
         visibility: hidden;
     }
 
-	
+
 	.selectedRoom{
 		background-color: #D9D9D9;
 	}
-	
-	
+
+
 	.lastChatTime{
 		font-size: 12px;
 		line-height: 12px;
 		text-align: right;
 	}
-	
+
 
 	.chatRoom > div:last-of-type{
 		font-size: 13px;
 	}
-	
+
 	#msgBox{
 		flex-grow: 1;
 	}
-	
+
 	#chatRoomInfo{
 		width: 100%;
 		height: 32px;
@@ -161,7 +161,11 @@
 		font-size: 18px;
 		margin-left: 20px;
 	}
-	
+
+    #chatRoomInfo .attendee_count{
+        font-size: 18px;
+    }
+
 	#chatRoomInfo button{
 		height: 100%;
 		border: 1px solid black;
@@ -235,7 +239,7 @@
 		display: flex;
 		margin-bottom: 10px;
 	}
-	
+
 	.message_yours{
 		flex-direction: column;
 	}
@@ -248,18 +252,18 @@
 	.message_notice{
 		justify-content: center;
 	}
-	
+
 	.sender{
 		font-size: 16px;
 		font-weight: bold;
 		margin-bottom: 3px;
 	}
-	
+
 	.message_yours > div:nth-child(2){
 		display: flex;
 		align-items: center;
 	}
-	
+
 	.messageContent{
 		padding: 5px 8px;
 		border-radius: 5px;
@@ -279,18 +283,18 @@
 		background-color: #1432B1;
 		color: white;
 	}
-	
+
 	.chatTime{
 		font-size: 13px;
 	}
-	
-	
+
+
 	#msgBox > div:last-child {
 		width: 100%;
 		display: flex;
 		position: relative;
 	}
-	
+
 	#msg, #msg2{
 		flex-grow: 1;
 		height: 37px;
@@ -298,11 +302,11 @@
 		background-color: #3D3D43;
 		color: white;
 	}
-	
+
 	#msg::placeholder, #msg2::placeholder{
 		color: #D9D9D9;
 	}
-	
+
 	#sendBtn, #sendBtn2{
 		width: 40px;
 		position: absolute;
@@ -310,12 +314,12 @@
 		right: 15px;
 		bottom: 3px;
 	}
-	
+
 	#sendBtn:hover{
 		cursor: pointer;
 	}
-	
-	
+
+
 
 </style>
 
@@ -328,7 +332,7 @@
     <h2>채팅</h2>
   </div>
   <div id="contentsMain">
-  
+
   <div id="chatRoomListBox">
 
 <!--
@@ -342,7 +346,7 @@
 	  <c:forEach var="room" items="${rlist}">
 		  <div class="chatRoom" data-room="${room.gathering_id}">
 			  <div class="roomName">
-                  <div><h4>${room.title}</h4><span class="attendees">${room.attendee_count}</span></div>
+                  <div><h4>${room.title}</h4><span class="attendee_count">${room.attendee_count}</span></div>
                     <c:choose>
                         <c:when test="${room.unread == true}">
                             <span class="unread" style="visibility: visible"></span>
@@ -365,7 +369,7 @@
           <div id="chatRoomInfo">
               <div>
                   <a href="${path}/gathering/view/${dto.gathering_id}">${dto.title}</a>
-                  <span>${dto.attendee_count}/${dto.maxPeople}명 참가중</span>
+                  <span><span class="attendee_count">${dto.attendee_count}</span>/${dto.maxPeople}명 참가중</span>
                   <img src="${path}/images/more.png" id="showAttendeeBtn">
               </div>
               <button type="button" onclick="withdraw()">채팅방 나가기</button>
@@ -524,9 +528,19 @@
     var lastTime = "${lastTime}";
 
 
+
+    //for sujin
+    //var sock = new SockJS('http://localhost:8098/ws-stomp-in');
+
+    //for others
     var sock = new SockJS('http://localhost:80/ws-stomp-in');
+
+    //for taeyoung
+    //var sock = new SockJS('http://localhost:80/board-info/ws-stomp-in');
+
+
     var stomp = Stomp.over(sock);
-    /*stomp.debug = null;*/
+    stomp.debug = null;
 
     let list;
     let focusList = {};
@@ -539,8 +553,6 @@
 
 
     $(function(){
-
-        console.log(nicknameMap);
 
         if('${unread}' == 'true'){
             unreadChatSpan.removeClass('hidden');
@@ -563,7 +575,7 @@
             });
         });
 
-        $(".chatRoom").click(function(){
+        $(document).on("click", ".chatRoom", function() {
             location.href = "${path}/chat/room.do?gathering_id=" + $(this).data("room");
         });
 
@@ -609,9 +621,38 @@
                         chatList.push(gathering_id);
                         stomp.subscribe("/sub/chatting/room/" + gathering_id, handleChatMessage);
                     }
-                    unreadChatSpan.removeClass('hidden');
 
-                    //채팅방 목록 업데이트 (focusList에 든 때와 아닌 때 구분해야 함)
+                    //방 있는지 먼저 확인하고
+                    //채팅방 목록 업데이트
+                    if($("#chatRoomList").find("div[data-room='" + gathering_id + "']").length == 0){
+
+                        $.ajax({
+                            type: "get",
+                            data: {"gathering_id": gathering_id},
+                            url: "${path}/chat/getNewRoom.do",
+                            success: function(result){
+
+                                if(result){
+                                    $chatRoom = $("<div class='chatRoom' data-room='" + result.gathering_id + "'>"
+                                        + "<div class='roomName'><div><h4>" + result.title + "</h4><span class='attendee_count'>"
+                                        + result.attendee_count + "</span></div>"
+                                        + "<span class='unread'></span></div>"
+                                        + "<div class='lastChatTime'>" + result.lastChat.formattedDate + "</div>"
+                                        + "<div>" + result.lastChat.message + "</div></div>");
+
+                                    if(result.unread){
+                                        $chatRoom.find(".unread").css("visibility", "visible");
+                                    }
+
+                                    $("#chatRoomList").prepend($chatRoom);
+
+                                }
+                            }
+                        });
+                    }
+
+
+                    unreadChatSpan.removeClass('hidden');
                 }
 
                 else if(type=='LEAVE' || type == 'THROWN' || type == 'CLOSE') {
@@ -650,6 +691,14 @@
                     || type == 'APPLY' || type == 'COMMENT' || type == 'REJECTED'){
                     //안읽은 알람 업데이트
                     unreadAlarmSpan.removeClass('hidden');
+
+                    if($alarmList.is(":visible")){
+                        $alarmList.scrollTop(0);
+                        $alarmList.html("");
+                        alarmCurPage = 1;
+                        alarmEnd = false;
+                        getAlarms();
+                    }
                 }
 
             });
@@ -710,9 +759,13 @@
 
 
                                 //회원 처리
+                                if(type == 'LEAVE' || type == 'THROW'){
 
-                                if(type == 'LEAVE'){
-                                    $("#attendeeList").find("a[data-user_id='" + user + "']").remove();
+                                    if($("#attendeeList").find("a[class='attendee-wrap'][data-user_id='" + user + "']").length > 0){
+                                        $("#attendeeList").find("a[class='attendee-wrap'][data-user_id='" + user + "']").remove();
+                                        thisRoom.find(".attendee_count").text(Number(thisRoom.find(".attendee_count").text())-1);
+                                        $("#chatRoomInfo").find(".attendee_count").text(Number($("#chatRoomInfo").find(".attendee_count").text())-1);
+                                    }
                                 }
 
                                 else if(type == 'ATTEND'){
@@ -738,11 +791,19 @@
                                         }
                                     });
 
+
                                     //개수 체크먼저 하자
-                                    $attendee = "<a class='attendee-wrap' href='${path}/mypage/goMypage/" + user + "'>"
-                                    + "<div class='attendee><img src='${path}/images/" + profile + "'>"
-                                    + "<span>" + nickname + "</span></div></a>";
-                                    $("attendeeList").append($attendee);
+
+                                    if($("#attendeeList").find("a[class='attendee-wrap'][data-user_id='" + user + "']").length == 0){
+                                        $attendee = "<a class='attendee-wrap' data-user_id='" + user + "' href='${path}/mypage/goMypage/" + user + "'>"
+                                            + "<div class='attendee'><img src='${path}/images/" + profile + "'>"
+                                            + "<span>" + nickname + "</span></div></a>";
+
+                                        $("#attendeeList").append($attendee);
+                                        thisRoom.find(".attendee_count").text(Number(thisRoom.find(".attendee_count").text())+1);
+                                        $("#chatRoomInfo").find(".attendee_count").text(Number($("#chatRoomInfo").find(".attendee_count").text())+1);
+
+                                    }
 
                                 }
 
@@ -778,6 +839,8 @@
                                 str =
                                     "<div class='message_notice'>"+
                                     "<div class='messageContent'>"+nickname+message.substr(index+1)+"</div></div>";
+
+                                message = nickname+message.substr(index+1);
 
                             }
 
@@ -853,8 +916,6 @@
 
                         var existingUnread = updateUnreadChatMessages();
 
-                        //그동안 나한테 온 알림 빼고 재계산
-
                         var focusMessageDTO = {
                             receiver_id: cur_session,
                             type: "FOCUS",
@@ -878,76 +939,8 @@
 
                     //다른 방인 경우
                 } else {
-                    stomp.subscribe("/sub/chatting/room/" + chatList[i], function (msg) {
-                        //이 채팅방을 찾아서 제일 위로
-                        room = $('.chatRoom[data-room="' + chatList[i] + '"]');
+                    stomp.subscribe("/sub/chatting/room/" + chatList[i], handleChatMessage);
 
-                        var chatMessageDto = JSON.parse(msg.body);
-                        var message = chatMessageDto.message; //메시지
-                        var dateTime = chatMessageDto.formattedDate.replace('T', ' ');
-                        var sender = chatMessageDto.userId; //데이터를 보낸 사람
-                        var type = chatMessageDto.type;
-                        var gathering_id = chatMessageDto.gathering_id;
-
-
-                        if(type == 'DELETED'){
-                            //채팅방 삭제시키고 unsubscribe
-                            if (chatList.includes(gathering_id)) {
-                                var index = chatList.indexOf(gathering_id);
-                                if (index > -1) {
-                                    chatList.splice(index, 1);
-                                }
-                                stomp.unsubscribe("/sub/chatting/room/" + gathering_id);
-                                updateSession();
-                                room.remove();
-                            }
-                        }
-
-
-                        else{
-
-                        if(sender == 'SYSTEM'){
-                            var index = message.indexOf("]");
-                            if(index!=-1){
-                                var user = message.substr(1, index-1);
-                                var nickname = "";
-                                $.ajax({
-                                        type: "get",
-                                        url : "${path}/gathering/getNickname.do",
-                                        async: false,
-                                        data : {
-                                            "user_id" : user
-                                        },
-                                        success: function(result){
-                                            if(result){
-                                                nicknameMap[user] = result.nickname;
-                                                nickname = result.nickname;
-                                            }
-                                            else alert("에러가 발생했습니다.");
-                                        },
-                                        error: function(){
-                                            alert("에러가 발생했습니다.");
-                                        }
-                                    });
-                                }
-
-                                message = nickname+message.substr(index+1);
-                            }
-
-                        room.find("div[class='lastChatTime']").text(dateTime);
-                        room.find("div[class='lastChatTime']").next().text(message);
-
-
-                        if (sender != cur_session && !focusList.hasOwnProperty(gathering_id)){
-                            room.find("span[class='unread']").css("visibility", "visible");
-                            unreadChatSpan.removeClass('hidden');
-                            }
-
-
-                        $("#chatRoomList").prepend(room);
-
-                        }
-                    });
                 }
             }
 
@@ -1089,6 +1082,80 @@
     });
 
 
+    function handleChatMessage(msg){
+
+        var chatMessageDto = JSON.parse(msg.body);
+        var message = chatMessageDto.message; //메시지
+        var dateTime = chatMessageDto.formattedDate.replace('T', ' ');
+        var sender = chatMessageDto.userId; //데이터를 보낸 사람
+        var type = chatMessageDto.type;
+        var gathering_id = chatMessageDto.gathering_id;
+
+        //이 채팅방을 찾아서 제일 위로
+        room = $('.chatRoom[data-room="' + gathering_id + '"]');
+
+
+        if(type == 'DELETED'){
+            //채팅방 삭제시키고 unsubscribe
+            if (chatList.includes(gathering_id)) {
+                var index = chatList.indexOf(gathering_id);
+                if (index > -1) {
+                    chatList.splice(index, 1);
+                }
+                stomp.unsubscribe("/sub/chatting/room/" + gathering_id);
+                updateSession();
+                room.remove();
+            }
+        }
+
+
+        else{
+
+            if(sender == 'SYSTEM'){
+                var index = message.indexOf("]");
+                if(index!=-1){
+                    var user = message.substr(1, index-1);
+                    var nickname = "";
+                    $.ajax({
+                        type: "get",
+                        url : "${path}/gathering/getNickname.do",
+                        async: false,
+                        data : {
+                            "user_id" : user
+                        },
+                        success: function(result){
+                            if(result){
+                                nicknameMap[user] = result.nickname;
+                                nickname = result.nickname;
+                            }
+                            else alert("에러가 발생했습니다.");
+                        },
+                        error: function(){
+                            alert("에러가 발생했습니다.");
+                        }
+                    });
+                }
+
+                message = nickname+message.substr(index+1);
+            }
+
+            room.find("div[class='lastChatTime']").text(dateTime);
+            room.find("div[class='lastChatTime']").next().text(message);
+
+
+            if (sender != cur_session && !focusList.hasOwnProperty(gathering_id)){
+                room.find("span[class='unread']").css("visibility", "visible");
+                unreadChatSpan.removeClass('hidden');
+            }
+
+
+            $("#chatRoomList").prepend(room);
+
+        }
+
+    }
+
+
     function sendMessage(type){
 
         var messageDTO = {
@@ -1160,6 +1227,8 @@
             return false;
         }
     }
+
+
 
     function updateSession(){
         $.ajax({

@@ -204,6 +204,13 @@ public class GatheringDAOImpl implements GatheringDAO {
 		return sqlSession.selectList("gathering.getAttendingGatheringList", user_id);
 	}
 
+	@Override
+	public ChatRoomDTO getAttendingChatroom(String user_id, int gathering_id) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("user_id", user_id);
+		map.put("gathering_id", gathering_id);
+		return sqlSession.selectOne("gathering.getAttendingChatRoom", map);
+	}
 
 	@Override
 	public List<Integer> getMyActiveChats(String user_id) {
@@ -225,13 +232,6 @@ public class GatheringDAOImpl implements GatheringDAO {
 		return sqlSession.selectList("gathering.getMyChatsLastVisit", user_id);
 	}
 
-	@Override
-	public List<ChatRoomDTO> getMyLastVisitExceptRoom(String user_id, List<Integer> focusedRooms) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("user_id", user_id);
-		map.put("focusedRooms", focusedRooms);
-		return sqlSession.selectList("gathering.getMyChatsLastVisitExceptRoom", map);
-	}
 
 	@Override
 	public List<String> leaveAll(int gathering_id) {

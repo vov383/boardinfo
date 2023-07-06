@@ -29,12 +29,14 @@ public class GatheringAlarmController {
     @ResponseBody
     @RequestMapping("/list.do")
     public Map<String, List<GatheringAlarmDTO>> list
-    (@RequestParam(value="curPage", required=false, defaultValue="1") int curPage, HttpSession session,
+    (@RequestParam(value="curPage", required=false, defaultValue="1") int curPage,
+     @RequestParam(value="size", required=false, defaultValue="20") int size,
+     HttpSession session,
      HttpServletRequest request) {
 
         String user_id = (String) session.getAttribute("userid");
         int count = gatheringAlarmService.countTotList(user_id);
-        Pager pager = new Pager(count, curPage, 10);
+        Pager pager = new Pager(count, curPage, size);
         int start = pager.getPageBegin();
         int end = pager.getPageEnd();
         List<GatheringAlarmDTO> list = gatheringAlarmService.getAlarmList(user_id, start, end, request);
