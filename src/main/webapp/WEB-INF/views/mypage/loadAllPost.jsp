@@ -22,8 +22,10 @@
                 <tr>
                     <th>썸네일</th>
                     <th>게임 제목<br>
-                        평점<span class="dot"></span><i class="fa-solid fa-star" style="color: #f0bf0f;"></i><span class="dot"></span>
-                        난이도<span class="dot"></span><i class="fa-solid fa-star" style="color: #3b2cc5;"></i><span class="dot"></span>
+                        평점<span class="dot"></span><i class="fa-solid fa-star" style="color: #f0bf0f;"></i><span
+                                class="dot"></span>
+                        난이도<span class="dot"></span><i class="fa-solid fa-star" style="color: #3b2cc5;"></i><span
+                                class="dot"></span>
                     </th>
                     <th>
                         게임 평가 코멘트<span class="dot"></span><i class="fa-regular fa-comment-dots"></i><br>
@@ -41,17 +43,21 @@
                             <img src="${grRow.bgg_thumbnail}" style="width:40px">
                         </td>
                         <td>
-                            <c:choose>
-                                <c:when test="${fn:length(grRow.gametitle) >= 15}">
-                                    ${fn:substring(grRow.gametitle, 0, 14)}...
-                                </c:when>
-                                <c:otherwise>
-                                    ${grRow.gametitle}<span class="dot"></span>
-                                </c:otherwise>
-                            </c:choose>
+                            <a href="${path}/game/view.do?gnum=${grRow.gnum}">
+                                <c:choose>
+                                    <c:when test="${fn:length(grRow.gametitle) >= 15}">
+                                        ${fn:substring(grRow.gametitle, 0, 14)}...
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${grRow.gametitle}<span class="dot"></span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </a>
                             <br>
-                            <i class="fa-solid fa-star" style="color: #f0bf0f;"></i><span class="dot"></span> ${grRow.rating}<span class="dot"></span>
-                            <i class="fa-solid fa-star" style="color: #3b2cc5;"></i><span class="dot"></span> ${grRow.weight}<span class="dot"></span>
+                            <i class="fa-solid fa-star" style="color: #f0bf0f;"></i><span
+                                class="dot"></span> ${grRow.rating}<span class="dot"></span>
+                            <i class="fa-solid fa-star" style="color: #3b2cc5;"></i><span
+                                class="dot"></span> ${grRow.weight}<span class="dot"></span>
                         </td>
                         <td>
                             <i class="fa-regular fa-comment-dots"></i><span class="dot"></span>
@@ -102,27 +108,45 @@
                 <tbody>
                 <c:forEach items="${map.rvList}" var="rvRow">
                     <tr>
-                        <td></td>
-                        <td>
-                            <span class="category">${rvRow.category}</span>
-                            <c:choose>
-                                <c:when test="${fn:length(rvRow.title) >= 20}">
-                                    ${fn:substring(rvRow.title, 0, 19)}...
-                                </c:when>
-                                <c:otherwise>
-                                    ${rvRow.title}
-                                </c:otherwise>
-                            </c:choose>
-                            <br>
-                            <i class="fa-regular fa-comment-dots"></i><span class="dot"></span><span class="reCount">${rvRow.recnt}</span><span class="dot"></span>
-                            <i class="fa-solid fa-eye"></i><span class="viewCont">${rvRow.views}</span><span class="dot"></span>
-                            <i class="fa-solid fa-heart"></i><span class="goodCount">${rvRow.good}</span><span class="dot"></span>
-                        </td>
-                        <td>
-                            <c:if test="${rvRow.gametitle ne null}">
-                                ${rvRow.gametitle}
-                            </c:if>
-                        </td>
+                        <c:choose>
+                            <c:when test="${rvRow.del eq 'Y'}">
+                                <td colspan="3">
+                                    <span class="category">|${rvRow.category}|</span>
+                                    <span class="rvTitle">
+                                        삭제된 글입니다.
+                                    </span>
+                                </td>
+                            </c:when>
+                            <c:otherwise>
+                                <td></td>
+                                <td>
+                                    <div class="category">${rvRow.category}</div>
+                                    <div class="rvTitle">
+                                        <a href="${path}/review/reviewdetail.do?reviewDetailKey=${rvRow.regNum}">
+                                            <c:choose>
+                                                <c:when test="${fn:length(rvRow.title) >= 20}">
+                                                    ${fn:substring(rvRow.title, 0, 19)}...
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${rvRow.title}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </a>
+                                    </div>
+                                    <i class="fa-regular fa-comment-dots"></i><span class="dot"></span><span
+                                        class="reCount">${rvRow.recnt}</span><span class="dot"></span>
+                                    <i class="fa-solid fa-eye"></i><span class="viewCont">${rvRow.views}</span><span
+                                        class="dot"></span>
+                                    <i class="fa-solid fa-heart"></i><span class="goodCount">${rvRow.good}</span><span
+                                        class="dot"></span>
+                                </td>
+                                <td>
+                                    <c:if test="${rvRow.gametitle ne null}">
+                                        ${rvRow.gametitle}
+                                    </c:if>
+                                </td>
+                            </c:otherwise>
+                        </c:choose>
                         <td>
                             <i class="fa-regular fa-clock"></i><span class="dot"></span>
                             <span class="dateSpan">${rvRow.createDate}</span>
@@ -160,37 +184,53 @@
                 <tbody>
                 <c:forEach items="${map.gaList}" var="gaRow">
                     <tr>
-                        <td>
-                            <i class="fa-regular fa-calendar" style="color: #cc350f;"></i><span class="dot"></span>${gaRow.gathering_date}
-                        </td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${fn:length(gaRow.title)>=15}">
-                                    ${fn:substring(gaRow.title, 0, 14)}...
-                                </c:when>
-                            </c:choose>
-                            ${gaRow.title}<span class="dot"></span>
-                            <br>
-                            ${gaRow.attendee_count} / ${gaRow.maxpeople}<br>
-                            <i class="fa-regular fa-comment-dots"></i><span class="dot"></span><span
-                                    class="reCount">${gaRow.garCount}</span><span class="dot"></span>
-                                <i class="fa-regular fa-comment-dots"></i><span class="dot"></span><span
-                                    class="reCount">${gaRow.view_count}</span><span class="dot"></span>
-                                <i class="fa-regular fa-comment-dots"></i><span class="dot"></span><span
-                                    class="reCount">${gaRow.galLikeCount}</span><span class="dot"></span>
-                        </td>
-                        <td>
-                            <i class="fa-solid fa-location-dot"></i><span class="dot"></span>
-                            <span class="address">${gaRow.address1} / ${gaRow.address2}</span>
-                        </td>
-
+                        <c:choose>
+                            <c:when test="${gaRow.show eq 'N'}">
+                                <td colspan="3">
+                                    <div class="delPost">
+                                        삭제된 글입니다.
+                                    </div>
+                                </td>
+                            </c:when>
+                            <c:otherwise>
+                                <td>
+                                    <i class="fa-regular fa-calendar" style="color: #cc350f;"></i><span
+                                        class="dot"></span>${gaRow.gathering_date}
+                                </td>
+                                <td>
+                                    <div class="title">
+                                        <a href="${path}/gathering/view/${gaRow.gathering_id}">
+                                            <c:choose>
+                                                <c:when test="${fn:length(gaRow.title)>=15}">
+                                                    ${fn:substring(gaRow.title, 0, 14)}...
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${gaRow.title}<span class="dot"></span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </a>
+                                    </div>
+                                    <i class="fa-solid fa-user"></i><span class="dot"></span>
+                                        ${gaRow.attendee_count} / ${gaRow.maxpeople}<br>
+                                    <i class="fa-regular fa-comment-dots"></i><span class="dot"></span><span
+                                        class="reCount">${gaRow.garCount}</span>
+                                    <span class="dot"></span>
+                                    <i class="fa-solid fa-eye"></i><span class="dot"></span>
+                                    <span class="viewCount">${gaRow.view_count}</span><span class="dot"></span>
+                                    <i class="fa-solid fa-heart"></i><span class="dot"></span>
+                                    <span class="goodCount">
+                                            ${gaRow.galLikeCount}
+                                    </span><span class="dot"></span>
+                                </td>
+                                <td>
+                                    <i class="fa-solid fa-location-dot"></i><span class="dot"></span>
+                                    <span class="address">${gaRow.address1} / ${gaRow.address2}</span>
+                                </td>
+                            </c:otherwise>
+                        </c:choose>
                         <td>
                             <i class="fa-solid fa-eye"></i><span class="dot"></span>
                             <span class="viewCount">${gaRow.view_count}</span>
-                        </td>
-                        <td>
-                            <i class="fa-solid fa-user"></i><span class="dot"></span>
-                                ${gaRow.nickname}
                         </td>
                         <td>
                             <i class="fa-regular fa-clock"></i><span class="dot"></span>
@@ -234,53 +274,65 @@
                 <tbody>
                 <c:forEach items="${map.tbList}" var="trRow">
                     <tr>
-                        <td>
-                            <c:choose>
-                                <c:when test="${trRow.tb_thumbnail ne null}">
-                                    <img src="${path}/resources/upload${trRow.tb_thumbnail}" class="" style="width: 40px;">
-                                </c:when>
-                                <c:otherwise>
-                                    <img src="${path}/images/no-image-svgrepo-com.svg" class=""
-                                         style="width: 40px; opacity: 20%;">
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td>
-                            <span class="category">${trRow.category}</span>
-                            <span class="dot"></span>
-                            <c:choose>
-                                <c:when test="${fn:length(trRow.title) >= 15}">
-                                    ${fn:substring(trRow.title, 0, 14)}...
-                                </c:when>
-                                <c:otherwise>
-                                    ${trRow.title}
-                                    <span class="dot"></span>
-                                </c:otherwise>
-                            </c:choose>
-                            <br>
-                            <i class="fa-regular fa-comment-dots"></i><span class="dot"></span>
-                            <span class="reCount">${trRow.re_count}</span><span class="dot"></span>
+                        <c:choose>
+                            <c:when test="${trRow.del eq 'Y'}">
+                                <td colspan="4">
+                                    삭제된 글입니다.
+                                </td>
+                            </c:when>
+                            <c:otherwise>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${trRow.tb_thumbnail ne null}">
+                                            <img src="${path}/resources/upload${trRow.tb_thumbnail}" class=""
+                                                 style="width: 40px;">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${path}/images/no-image-svgrepo-com.svg" class=""
+                                                 style="width: 40px; opacity: 20%;">
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <div class="category">${trRow.category}</div>
+                                    <div class="title">
+                                        <a href="${path}/tboard/view/${trRow.tb_num}">
+                                            <c:choose>
+                                                <c:when test="${fn:length(trRow.title) >= 15}">
+                                                    ${fn:substring(trRow.title, 0, 14)}...
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${trRow.title}
+                                                    <span class="dot"></span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </a>
+                                    </div>
+                                    <i class="fa-regular fa-comment-dots"></i><span class="dot"></span>
+                                    <span class="reCount">${trRow.re_count}</span><span class="dot"></span>
 
-                            <i class="fa-solid fa-eye"></i><span class="dot"></span>
-                            <span class="viewCount">${trRow.view_count}</span><span class="dot"></span>
+                                    <i class="fa-solid fa-eye"></i><span class="dot"></span>
+                                    <span class="viewCount">${trRow.view_count}</span><span class="dot"></span>
 
-                            <i class="fa-solid fa-heart"></i><span class="dot"></span>
-                            <span class="goodCount">${trRow.good_count}</span>
-                        </td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${trRow.category eq '나눔'}">
-                                    <span class="price">무료나눔</span>
-                                </c:when>
-                                <c:otherwise>
-                                    <span class="price">${trRow.price} 원</span>
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td>
-                            <i class="fa-solid fa-location-dot"></i><span class="dot"></span>
-                            <span class="address">${trRow.address1} ${trRow.address2}</span>
-                        </td>
+                                    <i class="fa-solid fa-heart"></i><span class="dot"></span>
+                                    <span class="goodCount">${trRow.good_count}</span>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${trRow.category eq '나눔'}">
+                                            <span class="price">무료나눔</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="price">${trRow.price} 원</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <i class="fa-solid fa-location-dot"></i><span class="dot"></span>
+                                    <span class="address">${trRow.address1} ${trRow.address2}</span>
+                                </td>
+                            </c:otherwise>
+                        </c:choose>
                         <td>
                             <i class="fa-regular fa-clock"></i><span class="dot"></span>
                             <span class="dateSpan">${trRow.create_date}</span>

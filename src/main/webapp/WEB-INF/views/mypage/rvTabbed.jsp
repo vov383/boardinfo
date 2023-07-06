@@ -35,34 +35,50 @@
                 <tbody>
                 <c:forEach items="${response.rvList}" var="rvRow">
                     <tr>
-                        <td></td>
-                        <td>
-                            <span class="category">${rvRow.category}</span>
-                            <c:choose>
-                                <c:when test="${fn:length(rvRow.title) >= 20}">
-                                    ${fn:substring(rvRow.title, 0, 19)}...
-                                </c:when>
-                                <c:otherwise>
-                                    ${rvRow.title}
-                                </c:otherwise>
-                            </c:choose>
-                            <br>
-                            <i class="fa-regular fa-comment-dots"></i><span class="dot"></span><span class="reCount">${rvRow.recnt}</span><span class="dot"></span>
-                            <i class="fa-solid fa-eye"></i><span class="viewCont">${rvRow.views}</span><span class="dot"></span>
-                            <i class="fa-solid fa-heart"></i><span class="goodCount">${rvRow.good}</span><span class="dot"></span>
-                        </td>
-                        <td>
-                            <c:if test="${rvRow.gametitle ne null}">
-                                ${rvRow.gametitle}
-                            </c:if>
-                        </td>
+                        <c:choose>
+                            <c:when test="${rvRow.del eq 'Y'}">
+                                <td colspan="3">
+                                    <span class="category">|${rvRow.category}|</span>
+                                    <span class="rvTitle">
+                                        삭제된 글입니다.
+                                    </span>
+                                </td>
+                            </c:when>
+                            <c:otherwise>
+                                <td></td>
+                                <td>
+                                    <div class="category">${rvRow.category}</div>
+                                    <div class="rvTitle">
+                                        <a href="${path}/review/reviewdetail.do?reviewDetailKey=${rvRow.regNum}">
+                                            <c:choose>
+                                                <c:when test="${fn:length(rvRow.title) >= 20}">
+                                                    ${fn:substring(rvRow.title, 0, 19)}...
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${rvRow.title}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </a>
+                                    </div>
+                                    <i class="fa-regular fa-comment-dots"></i><span class="dot"></span><span
+                                        class="reCount">${rvRow.recnt}</span><span class="dot"></span>
+                                    <i class="fa-solid fa-eye"></i><span class="viewCont">${rvRow.views}</span><span
+                                        class="dot"></span>
+                                    <i class="fa-solid fa-heart"></i><span class="goodCount">${rvRow.good}</span><span
+                                        class="dot"></span>
+                                </td>
+                                <td>
+                                    <c:if test="${rvRow.gametitle ne null}">
+                                        ${rvRow.gametitle}
+                                    </c:if>
+                                </td>
+                            </c:otherwise>
+                        </c:choose>
                         <td>
                             <i class="fa-regular fa-clock"></i><span class="dot"></span>
                             <span class="dateSpan">${rvRow.createDate}</span>
                         </td>
                     </tr>
-
-
                 </c:forEach>
                 </tbody>
             </table>

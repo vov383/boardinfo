@@ -35,51 +35,106 @@
         <c:forEach items="${response.giList}" var="giRow">
           <tr>
             <td>
-                ${giRow.confirmed}<br>
-                ${giRow.del}
-            </td>
-            <td>
+              <%--confirmed 컬럼의 값에 따라 다르게 표현 'checking', 'deny', 'allow'--%>
               <c:choose>
-                <c:when test="${giRow.bgg_thumbnail eq null }">
-                  <c:if test="${giRow.gamephoto_url ne null} ">
-                    <img src="${path}/resources/uploaded_image${giRow.gamephoto_url}" style="width:40px">
-                  </c:if>
-                  <img src="${path}/images/game/no-image-icon.png" style="width:40px">
+                <c:when test="${giRow.confirmed eq 'checking'}">
+                  <div class="confirmed">
+                    승인대기 <br>
+                  </div>
+                </c:when>
+                <c:when test="${giRow.confirmed eq 'deny'}">
+                  <div class="confirmed">
+                    승인거부
+                  </div>
                 </c:when>
                 <c:otherwise>
-                  &nbsp;<img src="${giRow.bgg_thumbnail}" style="width:40px">
+                  <div class="confirmed">
+                    승인완료
+                  </div>
                 </c:otherwise>
               </c:choose>
-            </td>
-            <td>
+              <%--del 컬럼의 값에 따라 다르게 표현--%>
               <c:choose>
-                <c:when test="${fn:length(giRow.gametitle) >= 15}">
-                  ${fn:substring(giRow.gametitle, 0, 14)}...
+                <c:when test="${giRow.del eq 'y'}">
+                  <div class="giDel">
+                    비공개 <br>
+                  </div>
                 </c:when>
-                <c:otherwise>
-                  ${giRow.gametitle}&nbsp;
-                </c:otherwise>
-              </c:choose>
-              <br>
-              <c:choose>
-                <c:when test="${fn:length(giRow.gametitle_eng) >= 15}">
-                  ${fn:substring(giRow.gametitle_eng, 0, 14)}...
+                <c:when test="${giRow.del eq 'n'}">
+                  <div class="giDel">
+                    공개 <br>
+                  </div>
                 </c:when>
-                <c:otherwise>
-                  ${giRow.gametitle_eng}
-                </c:otherwise>
               </c:choose>
             </td>
 
-            <td>
-                ${giRow.release_year}&nbsp;
-              <i class="fa-regular fa-calendar" style="color: #cc350f;"></i>
-            </td>
-            <td>${giRow.theme}</td>
-            <td>
-              <span class="dot"></span><i class="fa-regular fa-clock"></i><span class="dot"></span>
-                ${giRow.create_date}
-            </td>
+            <%--상태 컬럼 이후의 데이터는 del eq 'n' 이면 리스트에 보여주고 'y'이면 비공개 항목입니다로 출력--%>
+            <c:choose>
+              <c:when test="${giRow.del eq 'n'}">
+                <td>
+                  <c:choose>
+                    <c:when test="${giRow.bgg_thumbnail eq null }">
+                      <c:if test="${giRow.gamephoto_url ne null} ">
+                        <img src="${path}/resources/uploaded_image${giRow.gamephoto_url}" style="width:40px">
+                      </c:if>
+                      <img src="${path}/images/game/no-image-icon.png" style="width:40px">
+                    </c:when>
+                    <c:otherwise>
+                      &nbsp;<img src="${giRow.bgg_thumbnail}" style="width:40px">
+                    </c:otherwise>
+                  </c:choose>
+                </td>
+                <td>
+                  <a href="${path}/game/view.do?gnum=${giRow.gnum}">
+                  <c:choose>
+                    <c:when test="${fn:length(giRow.gametitle) >= 15}">
+<%--                      <a href="${path}/game/view.do?gnum=${giRow.gnum}"></a>--%>
+                        ${fn:substring(giRow.gametitle, 0, 14)}...
+
+                    </c:when>
+                    <c:otherwise>
+                      ${giRow.gametitle}&nbsp;
+                    </c:otherwise>
+                  </c:choose>
+                  </a>
+                  <br>
+                  <c:choose>
+                    <c:when test="${fn:length(giRow.gametitle_eng) >= 15}">
+                      ${fn:substring(giRow.gametitle_eng, 0, 14)}...
+                    </c:when>
+                    <c:otherwise>
+                      ${giRow.gametitle_eng}
+                    </c:otherwise>
+                  </c:choose>
+                </td>
+
+                <td>
+                    ${giRow.release_year}&nbsp;
+                  <i class="fa-regular fa-calendar" style="color: #cc350f;"></i>
+                </td>
+                <td>${giRow.theme}</td>
+                <td>
+                  <span class="dot"></span><i class="fa-regular fa-clock"></i><span class="dot"></span>
+                    ${giRow.create_date}
+                </td>
+
+              </c:when>
+              <c:otherwise>
+                <td>
+                  비공개 상태 게시물입니다.<br>
+                  관리자의 승인 이후 조회하실 수 있습니다.
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                  <c:if test="${giRow.update_date ne null}">
+                    c
+                  </c:if>
+                </td>
+              </c:otherwise>
+            </c:choose>
           </tr>
           <input type="hidden" name="gnum" value="${giRow.gnum}">
           <input type="hidden" name="create_user" value="${giRow.create_user}">

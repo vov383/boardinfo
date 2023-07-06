@@ -179,7 +179,7 @@
                             <div class="card-body">
                                 <div class="user-info-btn">
                                     <div class="d-grid gap-2">
-                                        <button class="btn btn-primary" type="button">내 정보 보기</button>
+                                        <button class="btn btn-primary" type="button" onclick="${path}/member/pass_check_u?userid=${map.myDto.userid}">내 정보</button>
                                     </div>
                                 </div>
                             </div>
@@ -299,8 +299,6 @@
 
 
 
-
-
     /*네브 탭에서 active를 옮기는 용도의 함수*/
     function removeOtherActive(element) {
         // 클릭한 탭 이외의 클래스 nav-item nav-link 에서 active를 지운다.
@@ -309,64 +307,8 @@
         // this 에 active 클래스를 더한다.
         $(element).addClass("active");
 
+
     }
-    var curPage = 1;
-
-    /*ajax 요청으로 curPage를 보내는 함수*/
-    function loadPage(pageNumber) {
-
-        $.ajax({
-            url: 'your-jsp-page.jsp',
-            type: 'GET',
-            dataType: 'json',
-            data: {
-                curPage: pageNumber, // Send the page number as a parameter
-            },
-            success: function(response) {
-                console.log(response);
-                // Process the response data and display it on your page
-                var posts = response.posts;
-                // ...
-                // Code to update your page with the retrieved posts
-                // ...
-            },
-            error: function(xhr, status, error) {
-                // Handle any error that occurs during the AJAX request
-                console.error(error);
-            }
-        });
-    }
-
-    // Function to update the page movement buttons
-    function updatePageButtons(totalPages) {
-        // Enable or disable the previous button based on the current page
-        if (currentPage > 1) {
-            $('#previousButton').prop('disabled', false);
-        } else {
-            $('#previousButton').prop('disabled', true);
-        }
-
-        // Enable or disable the next button based on the current page
-        if (currentPage < totalPages) {
-            $('#nextButton').prop('disabled', false);
-        } else {
-            $('#nextButton').prop('disabled', true);
-        }
-    }
-
-    // Function to handle previous page button click
-    $('#previousButton').on('click', function() {
-        if (currentPage > 1) {
-            loadPage(currentPage - 1);
-        }
-    });
-
-    // Function to handle next page button click
-    $('#nextButton').on('click', function() {
-        if (currentPage < totalPages) {
-            loadPage(currentPage + 1);
-        }
-    });
 
 
 </script>
