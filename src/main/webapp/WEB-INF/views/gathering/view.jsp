@@ -1176,7 +1176,11 @@
         map.setCenter(customOverlay.getPosition());
     }
   }
-
+  /*마이페이지로 이동하는 폼*/
+  function goMypage() {
+      document.mypageForm.action = "${path}/mypage/goMypage";
+      document.mypageForm.submit();
+  }
 </script>
 				 
                 <div id="profileArea">
@@ -1220,7 +1224,11 @@
                             <div id="attendeeListWrapper">
                                 <div id="attendeeList">
                                     <c:forEach var="attendee" items="${dto.attendeeDTOList}">
-                                        <a href="${path}/mypage/goMypage/${attendee.user_id}">
+                                        <a href="#" onclick="goMypage()">내활동</a>
+                                        <form name="mypageForm" method="post" style="display: none">
+                                            <input type="hidden" id="sessionUserid" name="sessionUserid" value="${attendee.user_id}">
+                                        </form>
+
                                         <div class="attendee">
                                             <img src="${path}/images/${attendee.profile}">
                                             <span>${attendee.nickname}</span>

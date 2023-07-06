@@ -199,9 +199,9 @@
                             let category = list[i].category;
                             if(category == '자유게시판') category = '자유';
                             else if(category == '게임후기') category = '후기';
-                            str += "<div><span class='cbadge'>"+category+"</span>" +
+                            str += "<div><div><span class='cbadge'>"+category+"</span>" +
                                 "<a href='${path}/review/reviewdetail.do?reviewDetailKey=" + list[i].regNum + "'>"+list[i].title
-                                +"</a><span class='reply'>"+reply+"</span></div>";
+                                +"</a></div><span class='reply'>"+reply+"</span></div>";
                         }
                         communityList.append(str);
 
@@ -228,9 +228,9 @@
 
                         for(var i=0; i<list.length; i++){
                             let reply = list[i].reply_count == 0 ? "" : list[i].reply_count;
-                            str += "<div><span class='cbadge'>"+list[i].address1+"</span>" +
+                            str += "<div><div><span class='cbadge'>"+list[i].address1+"</span>" +
                                 "<a href='${path}/gathering/view/" + list[i].gathering_id + "'>"+list[i].title
-                                +"</a><span class='reply'>"+reply+"</span></div>";
+                                +"</a></div><span class='reply'>"+reply+"</span></div>";
                         }
 
                         gatheringList.append(str);
@@ -259,9 +259,9 @@
 
                         for(var i=0; i<list.length; i++){
                             let reply = list[i].re_count == 0 ? "" : list[i].re_count;
-                            str += "<div><span class='cbadge'>"+list[i].category+"</span>" +
+                            str += "<div><div><span class='cbadge'>"+list[i].category+"</span>" +
                                 "<a href='${path}/tboard/view/" + list[i].tb_num + "'>"+list[i].title
-                                +"</a><span class='reply'>"+reply+"</span></div>";
+                                +"</a></div><span class='reply'>"+reply+"</span></div>";
                         }
 
 

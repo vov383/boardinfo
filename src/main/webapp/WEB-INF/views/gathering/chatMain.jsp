@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-    
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,12 +19,12 @@
 		padding-top: 10px;
 		display: flex;
 	}
-	
+
 	#contentsMain > div{
 		display: flex;
 		flex-direction: column;
 	}
-	
+
 	#chatRoomListBox{
         padding-top: 42px;
         min-width: 300px;
@@ -45,14 +45,14 @@
 		position: relative;
 		margin-bottom: 10px;
 	}
-	
+
 	form[name="chatRoomSearch"] > input{
 		width: 100%;
 		height: 35px;
 		padding:  0 40px 0 15px;
 		border: 1px solid #D9D9D9;
 	}
-	
+
 	form[name="chatRoomSearch"] > img{
 		position: absolute;
 		z-index: 10;
@@ -60,7 +60,7 @@
 		right: 15px;
 	}
      */
-	
+
 	.chatRoom{
         border-bottom: 1px solid #D9D9D9;
 		padding: 12px 10px;
@@ -106,27 +106,27 @@
         visibility: hidden;
     }
 
-	
+
 	.selectedRoom{
 		background-color: #D9D9D9;
 	}
-	
-	
+
+
 	.lastChatTime{
 		font-size: 12px;
 		line-height: 12px;
 		text-align: right;
 	}
-	
+
 
 	.chatRoom > div:last-of-type{
 		font-size: 13px;
 	}
-	
+
 	#msgBox{
 		flex-grow: 1;
 	}
-	
+
 	#chatRoomInfo{
 		width: 100%;
 		height: 32px;
@@ -165,7 +165,7 @@
     #chatRoomInfo .attendee_count{
         font-size: 18px;
     }
-	
+
 	#chatRoomInfo button{
 		height: 100%;
 		border: 1px solid black;
@@ -239,7 +239,7 @@
 		display: flex;
 		margin-bottom: 10px;
 	}
-	
+
 	.message_yours{
 		flex-direction: column;
 	}
@@ -252,18 +252,18 @@
 	.message_notice{
 		justify-content: center;
 	}
-	
+
 	.sender{
 		font-size: 16px;
 		font-weight: bold;
 		margin-bottom: 3px;
 	}
-	
+
 	.message_yours > div:nth-child(2){
 		display: flex;
 		align-items: center;
 	}
-	
+
 	.messageContent{
 		padding: 5px 8px;
 		border-radius: 5px;
@@ -283,18 +283,18 @@
 		background-color: #1432B1;
 		color: white;
 	}
-	
+
 	.chatTime{
 		font-size: 13px;
 	}
-	
-	
+
+
 	#msgBox > div:last-child {
 		width: 100%;
 		display: flex;
 		position: relative;
 	}
-	
+
 	#msg, #msg2{
 		flex-grow: 1;
 		height: 37px;
@@ -302,11 +302,11 @@
 		background-color: #3D3D43;
 		color: white;
 	}
-	
+
 	#msg::placeholder, #msg2::placeholder{
 		color: #D9D9D9;
 	}
-	
+
 	#sendBtn, #sendBtn2{
 		width: 40px;
 		position: absolute;
@@ -314,18 +314,17 @@
 		right: 15px;
 		bottom: 3px;
 	}
-	
+
 	#sendBtn:hover{
 		cursor: pointer;
 	}
-	
-	
+
+
 
 </style>
 
 </head>
 <body>
-<%@include file="../include/top.jsp" %>
 
 
 <div id="contents">
@@ -333,7 +332,7 @@
     <h2>채팅</h2>
   </div>
   <div id="contentsMain">
-  
+
   <div id="chatRoomListBox">
 
 <!--

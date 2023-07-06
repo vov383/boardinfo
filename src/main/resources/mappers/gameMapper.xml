@@ -574,10 +574,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="weeklyList" resultType="gameDto">
-		select GNUM,GAMETITLE,GAMETITLE_ENG,BGG_THUMBNAIL,RELEASE_YEAR, game_rank, bggnum, theme
-		from game
-		where del = 'n' and game_rank between 1 and 10
-		order by game_rank
+		select 	*
+		from	(
+				select 	a.*, rownum rn
+				from	(
+						select 	GNUM,GAMETITLE,GAMETITLE_ENG,BGG_THUMBNAIL,RELEASE_YEAR, game_rank, bggnum, theme
+						from 	game
+						where 	del = 'n'
+						order by game_rank
+						) a
+				)
+		where	rn between 1 and 10
 	</select>
 
 	<select id="newbieList" resultType="gameDto">
