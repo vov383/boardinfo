@@ -76,6 +76,18 @@ public class ChatMessageDAOImpl implements ChatMessageDAO {
 
 
 	@Override
+	public ChatMessageDTO getLastChatMessages(int gathering_id) {
+
+		Query query = new Query(Criteria.where("gathering_id").is(gathering_id))
+				.with(Sort.by(Sort.Direction.DESC, "insertDate"))
+				.limit(1);
+
+		ChatMessageDTO lastMessage = mongoTemplate.findOne(query, ChatMessageDTO.class, "chatMessage");
+		return lastMessage;
+
+	}
+
+	@Override
 	public boolean hasUnreadMessages(List<ChatRoomDTO> myRooms) {
 		for (ChatRoomDTO room : myRooms) {
 			Query query = new Query()

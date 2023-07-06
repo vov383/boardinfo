@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
+
 <div id="header">
 
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -43,8 +44,9 @@
                                     <span id="unreadAlarm" class="hidden"></span>
                                     <img src="${path}/images/alarm.png" id="alarmImg" alt="알림">
                                 </a>
-                                <div class="alarmList">
+                                <div class="alarmListWrapper">
                                     <div>알림</div>
+                                    <div class="alarmList"></div>
                                 </div>
                             </div>
                         </a>
@@ -77,8 +79,9 @@
                                 <span id="unreadAlarm" class="hidden"></span>
                                 <img src="${path}/images/alarm.png" id="alarmImg" alt="알림">
                             </a>
-                            <div class="alarmList">
+                            <div class="alarmListWrapper">
                                 <div>알림</div>
+                                <div class="alarmList"></div>
                             </div>
                         </div>
                         <!-- userid로 로그인한 상태 -->
@@ -193,9 +196,25 @@
 
     }
 
+    const $alarmList = $(".alarmList").eq(0);
+    const $alarmListWrapper = $(".alarmListWrapper").eq(0);
 
     //검색기능
     $(document).ready(function(){
+
+        $(document).on("click", ".alarmItem", function() {
+            if($(this).hasClass("unreadAlarm")){
+                $.ajax({
+                    type: "get",
+                    url: "${path}/gatheringAlarm/read.do/",
+                    data: {"alarm_id" : $(this).data("alarm_id")},
+                    async: false
+                });
+            }
+            location.href = $(this).data("url");
+        });
+
+
 
         if(unreadAlarmCount == 'true'){
             unreadAlarmSpan.removeClass('hidden');
@@ -224,99 +243,6 @@
                 });
             }
         });
-
-
-        //관리자버전도 만들어야
-        if(cur_session !=""){
-
-            chatList = JSON.parse('${sessionScope.activeChats}');
-
-            $.ajax({
-                type: "get",
-                url: "${path}/chat/unreadCount.do/",
-                success: function (result) {
-                   let unread = result.unread;
-                   if(unread) {
-                       unreadChatSpan.removeClass('hidden');
-                   }
-                   else {
-                       unreadChatSpan.addClass('hidden');
-                   }
-
-                }
-            });
-
-
-             stomp.connect({}, function () {
-
-                //reconnect될 때 위치파악 작업 필요할듯
-                stomp.subscribe("/sub/alarm/user/" + cur_session, function(msg){
-
-                    var alarmDto = JSON.parse(msg.body);
-                    var type = alarmDto.type;
-                    var message = alarmDto.message;
-                    var gathering_id = alarmDto.gathering_id;
-
-
-                    if(type == 'FOCUS'){
-                        addToFocusList(gathering_id, message);
-
-                        if(alarmDto.existingUnread == true){
-                            unreadChatSpan.removeClass('hidden');
-                        }
-                        else{
-                            unreadChatSpan.addClass('hidden');
-                        }
-                    }
-
-                    else if(type == 'BLUR'){
-                        removeFromFocusList(gathering_id, message);
-                    }
-
-
-                else if(type=='ATTEND' || type == 'ACCEPTED'){
-                        if (!chatList.includes(gathering_id)) {
-                            chatList.push(gathering_id);
-                            stomp.subscribe("/sub/chatting/room/" + gathering_id, handleChatMessage);
-                        }
-                        unreadChatSpan.removeClass('hidden');
-                }
-
-                else if(type=='LEAVE' || type == 'THROWN' || type == 'CLOSE') {
-                        if (chatList.includes(gathering_id)) {
-                            var index = chatList.indexOf(gathering_id);
-                            if (index > -1) {
-                                chatList.splice(index, 1);
-                            }
-                            stomp.unsubscribe("/sub/chatting/room/" + gathering_id);
-                        }
-
-                        //안읽은 메시지 업데이트
-                        updateUnreadChatMessages();
-                    }
-
-                if(type == 'ACCEPTED' || type == 'THROWN' || type == 'CLOSE') {
-                    updateSession();
-                }
-
-
-                if(type == 'ACCEPTED' || type == 'THROWN' || type == 'DELETED'
-                    || type == 'APPLY' || type == 'COMMENT' || type == 'REJECTED'){
-                    //안읽은 알람 업데이트
-                    unreadAlarmSpan.removeClass('hidden');
-                }
-
-             });
-
-
-                for (let i = 0; i < chatList.length; i++) {
-                    stomp.subscribe("/sub/chatting/room/" + chatList[i], handleChatMessage);
-                }
-            });
-
-
-        }
-
 
 
         //검색창 키입력후
@@ -390,83 +316,40 @@
                 location.href="${path}/admin/logout.do";
             }
         });
+
+
+        $alarmList.scroll(function(){
+
+            if(($alarmList.height() + $alarmList.scrollTop()) >= $alarmList[0].scrollHeight-20){
+
+                if (alarmEnd == false && alarmLoading == false) {
+
+                    alarmLoading = true;
+                    alarmCurPage++;
+
+                    getAlarms();
+                    alarmLoading = false;
+                }
+            }
+
     });
+
+    });
+
+
+    function searchAll() {
+        var keyword = $("#gameKeyword").val();
+        if (keyword !== "") {
+            document.gameSearch.submit();
+        }
+    }
+
 
     /*마이페이지로 이동하는 폼*/
         function goMypage() {
             document.mypageForm.action = "${path}/mypage/goMypage";
             document.mypageForm.submit();
        }
-
-
-    function handleChatMessage(msg){
-        var chatMessageDto = JSON.parse(msg.body);
-        var sender = chatMessageDto.userId; //데이터를 보낸 사람
-        var msg_gathering_id = chatMessageDto.gathering_id; //채팅방
-        var type = chatMessageDto.type;
-
-
-        if(type == 'DELETED'){
-            //알람으로 처리해야 함
-            if (chatList.includes(msg_gathering_id)) {
-                var index = chatList.indexOf(msg_gathering_id);
-                if (index > -1) {
-                    chatList.splice(index, 1);
-                }
-                stomp.unsubscribe("/sub/chatting/room/" + msg_gathering_id);
-            }
-
-            //세션 업데이트
-            updateSession();
-
-            //안읽은 메시지 업데이트
-            updateUnreadChatMessages();
-
-        }
-
-
-        else if(sender != cur_session && !focusList[msg_gathering_id]){
-
-            let message = chatMessageDto.message;
-            let nickname = chatMessageDto.nickname;
-
-            if(sender == 'SYSTEM'){
-                let user_nickname = nickname;
-                nickname = '알림';
-
-                //내가 나가거나 나가진 거라면 채팅을 업데이트할 필요 없음
-                if(type == 'LEAVE' || type == 'THROW'){
-                    if(user_nickname == '${sessionScope.nickname}'){
-                        return;
-                    }
-                }
-
-                let index = message.indexOf("]");
-                if(index!=-1) {
-                    message = user_nickname + message.substr(index + 1);
-                }
-            }
-
-            unreadChatSpan.removeClass('hidden');
-
-            var chatAlarm = $("<span class='chatMessages'>" + nickname + ": "
-                + message + "</span>");
-            chatAlarm.click(function(){
-                location.href = "${path}/chat/room.do?gathering_id=" + msg_gathering_id;
-            });
-
-            $(".toast-chat").append(chatAlarm);
-
-            chatAlarm.fadeIn(100, function() {
-                setTimeout(function() {
-                    chatAlarm.slideUp(300, function() {
-                        $(this).remove();
-                    });
-                }, 7000);
-
-            });
-        }
-    }
 
 
     function goInsert() {
@@ -482,24 +365,46 @@
 
 
     function showAlarm(){
+        $alarmList.html("");
+        alarmCurPage = 1;
+        alarmEnd = false;
 
-        let $alarmList = $(".alarmList");
-        $alarmList.html("<div>알림</div>");
+        getAlarms();
+
+        $alarmListWrapper.slideToggle(300, function(){
+            if($alarmListWrapper.is(":visible")){
+                $alarmListWrapper.css("display", "flex");
+            }
+            else $alarmListWrapper.css("display", "none");
+
+        });
+
+    }
+
+
+    function getAlarms(){
+
+        let size = 15;
 
         $.ajax({
             type: "get",
             url: "${path}/gatheringAlarm/list.do/",
+            data: {"curPage": alarmCurPage, "size": size},
             async: false,
             success: function (result) {
                 let list = result.list;
 
                 let items = "";
 
+                if(list.length < size) {
+                    alarmEnd = true;
+                }
+
                 for(var i=0; i<list.length; i++){
 
                     let $item = $("<div></div>").addClass("alarmItem");
                     $item.html("<div>" + list[i].sender_nickname + "</div>"
-                    + "<div>" + list[i].message + "</div>");
+                        + "<div>" + list[i].message + "</div>");
 
                     if(!list[i].read_date || list[i].read_date == ""){
                         $item.addClass("unreadAlarm");
@@ -508,83 +413,15 @@
                     $item.data("alarm_id", list[i].alarm_id);
                     $item.data("url", list[i].url);
 
-                    $item.click(function(){
-                        if($(this).hasClass("unreadAlarm")){
-                            $.ajax({
-                                type: "get",
-                                url: "${path}/gatheringAlarm/read.do/",
-                                data: {"alarm_id" : $(this).data("alarm_id")},
-                                async: false
-                            });
-                        }
-
-                        location.href = $(this).data("url");
-                    });
-
                     $alarmList.append($item);
                 }
 
             }
         });
 
-            $alarmList.slideToggle(300, function(){
-                if($alarmList.is(":visible")){
-                    $alarmList.css("display", "flex");
-                }
-                else $alarmList.css("display", "none");
-
-            });
-    }
-
-    function updateUnreadChatMessages(){
-
-        var focusedRooms = Object.keys(focusList);
-
-        $.ajax({
-            url: "${path}/chat/unreadCountExcept.do/",
-            data: JSON.stringify(focusedRooms),
-            type: "POST",
-            contentType: "application/json",
-            success: function (result) {
-                let unread = result.unread;
-                if(unread) {
-                    unreadChatSpan.removeClass('hidden');
-                }
-                else {
-                    unreadChatSpan.addClass('hidden');
-                }
-            }
-        });
 
     }
 
-    function updateSession(){
-        $.ajax({
-            type: "get",
-            url: "${path}/chat/updateByAlarm.do/"
-        });
-    }
-
-
-    function addToFocusList(gathering_id, message){
-        if (focusList.hasOwnProperty(gathering_id)) {
-            focusList[gathering_id].push(message);
-        } else {
-            focusList[gathering_id] = [message];
-        }
-    }
-
-    function removeFromFocusList(gathering_id, message){
-        if (focusList.hasOwnProperty(gathering_id)) {
-            var index = focusList[gathering_id].indexOf(message);
-            if (index !== -1) {
-                focusList[gathering_id].splice(index, 1);
-                if(focusList[gathering_id].length == 0){
-                    delete focusList[gathering_id];
-                }
-            }
-        }
-    }
 
 
 </script>

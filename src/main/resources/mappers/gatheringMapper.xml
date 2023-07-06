@@ -414,8 +414,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="getAttendingGatheringList" resultType="chatRoomDTO">
 
-		select a.gathering_id, g.title, a.last_visit,
-
+		select a.gathering_id, g.title, a.last_visit, g.finishChat,
 			   (select count(*)
 				from attendee a2
 				where a.gathering_id = a2.gathering_id and type = 'a') as attendee_count
@@ -423,6 +422,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				 join gathering g on a.gathering_id = g.gathering_id and g.show = 'Y'
 		where user_id = #{user_id} and type = 'a'
 
+	</select>
+
+
+	<select id="getAttendingChatRoom" resultType="chatRoomDTO">
+		select a.gathering_id, g.title, a.last_visit, g.finishChat,
+			   (select count(*)
+				from attendee a2
+				where a.gathering_id = a2.gathering_id and type = 'a') as attendee_count
+		from attendee a
+				 join gathering g on a.gathering_id = g.gathering_id and g.show = 'Y'
+		where user_id = #{user_id} and type = 'a' and a.gathering_id = #{gathering_id}
 	</select>
 
 	<select id="attendeeList" resultType="String">
@@ -468,20 +478,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from attendee a
 				 join gathering g on a.gathering_id = g.gathering_id
 		where user_id = #{user_id} and type = 'a' and g.finishChat = 'N'
-	</select>
-
-
-	<select id="getMyChatsLastVisitExceptRoom" resultType="chatRoomDTO">
-		select a.gathering_id, a.last_visit
-		from attendee a
-		join gathering g on a.gathering_id = g.gathering_id
-		where user_id = #{user_id} and type = 'a' and g.finishChat = 'N'
-		<trim suffixOverrides="and">
-			<foreach collection="focusedRooms" item="room">
-				and g.gathering_id != room
-			</foreach>
-		</trim>
-
 	</select>
 
 

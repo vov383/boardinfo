@@ -105,12 +105,14 @@ public class GatheringServiceImpl implements GatheringService {
 				List<String> attendeeList = gatheringDao.leaveAll(gathering_id);
 
 				//모임이 삭제됐다고 알림 통보
-				GatheringAlarmDTO alarm = new GatheringAlarmDTO();
-				alarm.setSender_id(user_id);
-				alarm.setGathering_id(gathering_id);
-				alarm.setType(GatheringAlarmDTO.AlarmType.DELETED);
-				eventPublisher.publishEvent(alarm);
-				gatheringAlarmDAO.noticeGatheringDeleted(alarm, attendeeList);
+				if(attendeeList!=null && attendeeList.size() > 0){
+					GatheringAlarmDTO alarm = new GatheringAlarmDTO();
+					alarm.setSender_id(user_id);
+					alarm.setGathering_id(gathering_id);
+					alarm.setType(GatheringAlarmDTO.AlarmType.DELETED);
+					eventPublisher.publishEvent(alarm);
+					gatheringAlarmDAO.noticeGatheringDeleted(alarm, attendeeList);
+				}
 
 				ChatMessageDTO chatMessageDTO = new ChatMessageDTO();
 				chatMessageDTO.setGathering_id(gathering_id);
@@ -164,12 +166,15 @@ public class GatheringServiceImpl implements GatheringService {
 	@Override
 	public GatheringDTO getGatheringDetails(int gathering_id) {
 		GatheringDTO dto = simpleView(gathering_id);
-		List<AttendeeDTO> attendees = gatheringDao.getAttendeeInfoList(gathering_id);
-		dto.setAttendeeDTOList(attendees);
-		List<AttendeeDTO> waitings = gatheringDao.getWaitingInfoList(gathering_id);
-		dto.setWaitingDTOList(waitings);
-		dto.setAttendee_count(dto.getAttendeeDTOList().size());
-		dto.setStatus(setStatus(dto));
+
+		if(dto!=null){
+			List<AttendeeDTO> attendees = gatheringDao.getAttendeeInfoList(gathering_id);
+			dto.setAttendeeDTOList(attendees);
+			List<AttendeeDTO> waitings = gatheringDao.getWaitingInfoList(gathering_id);
+			dto.setWaitingDTOList(waitings);
+			dto.setAttendee_count(dto.getAttendeeDTOList().size());
+			dto.setStatus(setStatus(dto));
+		}
 		return dto;
 	}
 
@@ -445,12 +450,12 @@ public class GatheringServiceImpl implements GatheringService {
 				if (num > 0){
 					List<AttendeeDTO> attendeeDTOList = gatheringDao.getAttendeeInfoList(gathering_id);
 					List<AttendeeDTO> waitingDTOList = gatheringDao.getWaitingInfoList(gathering_id);
-					resultMap.put("attendeeDTOList", attendeeDTOList);
-					resultMap.put("waitingDTOList", waitingDTOList);
 
 					if(attendeeDTOList.size() <= gatheringDTO.getMaxPeople()){
-						AttendeeDTO attendee = gatheringDao.getAttendeeInfo(attendee_id);
+						resultMap.put("attendeeDTOList", attendeeDTOList);
+						resultMap.put("waitingDTOList", waitingDTOList);
 
+						AttendeeDTO attendee = gatheringDao.getAttendeeInfo(attendee_id);
 						ChatMessageDTO chatMessage
 								= new ChatMessageDTO(ChatMessageDTO.MessageType.ATTEND, gathering_id, attendee.getUser_id());
 						chatMessage.setNickname(attendee.getNickname());
