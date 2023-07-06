@@ -103,39 +103,52 @@
     <select id="rvListByUserid" resultType="reviewDto">
         select *
         from (select a.*, rownum rn
-              from (SELECT R.REG_NUM             AS REGNUM
+              from (SELECT R.REG_NUM
+                                                            AS REGNUM
                          , M.USERID
                          , M.NICKNAME
+                         , AD.ADMIN_ID                      AS ADMINID
+                         , AD.NICKNAME                      AS ANICKNAME
                          , R.CATEGORY
                          , R.VIEWS
-                         , C.GNUM
-                         , (SELECT GAMETITLE
-                            FROM GAME
-                            WHERE GNUM = C.GNUM) AS GAMETITLE
                          , R.TITLE
-                         , R.REVIEW_DETAIL       AS
-                                                    REVIEWDETAIL
+                         , R.REVIEW_DETAIL                  AS REVIEWDETAIL
+                         , (SELECT MAX(B.GAMETITLE) || CASE (COUNT(1) - 1)
+                                                           WHEN 0 THEN ''
+                                                           ELSE ' 외 ' || (COUNT(1) - 1) END
+                            FROM CHOICE_GAME A,
+                                 GAME B
+                            WHERE A.DEL = 'N'
+                              AND B.DEL = 'n'
+                              AND A.GNUM = B.GNUM
+                              AND A.REVIEWREGNUM = R.REG_NUM
+                            GROUP BY A.REVIEWREGNUM)        AS
+                                                               GAMETITLE /*게임 타이틀 보여주기*/
                          , (SELECT COUNT(1)
                             FROM REVIEWGOOD
                             WHERE REVIEWPK = R.REG_NUM
                               AND GOOD = 'Y'
-                              AND DEL = 'N')     AS GOOD
-                         , (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM)
-                                                 AS RECNT
+                              AND DEL = 'N')                AS GOOD /*좋아요 개수*/
+                         , (SELECT COUNT(1)
+                            FROM REPLY_COMMENTS
+                            WHERE DEL
+                                = 'N'
+                              AND REG_NUM = R.REG_NUM)      AS RECNT /*댓글 개수*/
                          , R.DEL
-                         , R.CREATE_USER         AS CREATEUSER
-                         , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS')
-                                                 AS CREATEDATE
-                         , R.UPDATE_USER         AS UPDATEUSER
-                         , TO_CHAR(R.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS')
-                                                 AS UPDATEDATE
-                    FROM REVIEW R
-                       , MEMBER M
-                       , CHOICE_GAME C
-                    WHERE R.CREATE_USER = M.USERID(+)
-                      AND R.REG_NUM
-                        = C.REVIEWREGNUM(+)
-                      and R.CREATE_USER = #{userid} /*검색*/ /*디테일 진입*/
+                         , R.CREATE_USER                    AS CREATEUSER
+                         , TO_CHAR(R.CREATE_DATE,
+                                   'YYYY-MM-DD HH24:MI:SS') AS CREATEDATE
+                         , R.UPDATE_USER                    AS UPDATEUSER
+                         , TO_CHAR(R.UPDATE_DATE,
+                                   'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE
+                    FROM REVIEW R,
+                         MEMBER M,
+                         ADMIN AD
+                    WHERE R.CREATE_USER
+                        = M.USERID(+)
+                      AND R.CREATE_USER = AD.ADMIN_ID(+)
+                      AND r.CREATE_USER = #{userid} /*--현재 편의상 조회수 2개이상, 댓글 1개이상,
+좋아요 1개이상으로 구성*/
                     ORDER BY CREATEDATE DESC) a)
         where rn between 1 and 6
     </select>
@@ -284,25 +297,37 @@
     <select id="rvTabbed" resultType="reviewDto">
         select *
         from (select a.*, rownum rn
-              from (SELECT R.REG_NUM             AS REGNUM
+              from (SELECT R.REG_NUM
+                                                            AS REGNUM
                          , M.USERID
                          , M.NICKNAME
+                         , AD.ADMIN_ID                      AS ADMINID
+                         , AD.NICKNAME                      AS ANICKNAME
                          , R.CATEGORY
                          , R.VIEWS
-                         , C.GNUM
-                         , (SELECT GAMETITLE
-                            FROM GAME
-                            WHERE GNUM = C.GNUM) AS GAMETITLE
                          , R.TITLE
-                         , R.REVIEW_DETAIL       AS
-                                                    REVIEWDETAIL
+                         , R.REVIEW_DETAIL                  AS REVIEWDETAIL
+                         , (SELECT MAX(B.GAMETITLE) || CASE (COUNT(1) - 1)
+                                                           WHEN 0 THEN ''
+                                                           ELSE ' 외 ' || (COUNT(1) - 1) END
+                            FROM CHOICE_GAME A,
+                                 GAME B
+                            WHERE A.DEL = 'N'
+                              AND B.DEL = 'n'
+                              AND A.GNUM = B.GNUM
+                              AND A.REVIEWREGNUM = R.REG_NUM
+                            GROUP BY A.REVIEWREGNUM)        AS
+                                                               GAMETITLE /*게임 타이틀 보여주기*/
                          , (SELECT COUNT(1)
                             FROM REVIEWGOOD
                             WHERE REVIEWPK = R.REG_NUM
                               AND GOOD = 'Y'
-                              AND DEL = 'N')     AS GOOD
-                         , (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM)
-                                                 AS RECNT
+                              AND DEL = 'N')                AS GOOD /*좋아요 개수*/
+                         , (SELECT COUNT(1)
+                            FROM REPLY_COMMENTS
+                            WHERE DEL
+                                = 'N'
+                              AND REG_NUM = R.REG_NUM)      AS RECNT /*댓글 개수*/
                          , R.DEL
                          , R.CREATE_USER         AS CREATEUSER
                          , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS')
@@ -317,6 +342,20 @@
                       AND R.REG_NUM
                         = C.REVIEWREGNUM(+)
                       and R.CREATE_USER = #{userid} /*검색*/ /*디테일 진입*/
+                         , R.CREATE_USER                    AS CREATEUSER
+                         , TO_CHAR(R.CREATE_DATE,
+                                   'YYYY-MM-DD HH24:MI:SS') AS CREATEDATE
+                         , R.UPDATE_USER                    AS UPDATEUSER
+                         , TO_CHAR(R.UPDATE_DATE,
+                                   'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE
+                    FROM REVIEW R,
+                         MEMBER M,
+                         ADMIN AD
+                    WHERE R.CREATE_USER
+                        = M.USERID(+)
+                      AND R.CREATE_USER = AD.ADMIN_ID(+)
+                      AND r.CREATE_USER = #{userid} /*--현재 편의상 조회수 2개이상, 댓글 1개이상,
+좋아요 1개이상으로 구성*/
                     ORDER BY CREATEDATE DESC) a)
         where rn between #{start} and #{end}
     </select>
@@ -334,6 +373,7 @@
         select *
         from (select a.*, rownum rn
               from (select g.gathering_id
+                         , g.show
                          , g.writer_id as create_user
                          , to_char(g.post_date, 'YYYY-MM-DD HH24:MI-SS') as gathering_date
                          , g.title

@@ -1,7 +1,6 @@
 package com.example.boardinfo.model.game.dto;
 
 import java.util.Arrays;
-import java.util.Date;
 
 public class GameDTO {
 

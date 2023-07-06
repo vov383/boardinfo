@@ -4,7 +4,6 @@ import com.example.boardinfo.model.game.dto.GameDTO;
 import com.example.boardinfo.model.game.dto.artist.ArtistDTO;
 import com.example.boardinfo.model.game.dto.designer.DesignerDTO;
 import com.example.boardinfo.model.game.dto.publisher.PublisherDTO;
-import com.example.boardinfo.model.review.dto.ReviewDTO;
 import com.example.boardinfo.service.game.GameRatingService;
 import com.example.boardinfo.service.game.GameService;
 import org.slf4j.Logger;

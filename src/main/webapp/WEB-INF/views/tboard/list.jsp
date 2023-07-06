@@ -125,6 +125,7 @@
             flex-direction: row;
             flex-wrap: wrap;
         }
+
         .itemCard {
             flex-grow: 0;
             flex-shrink: 0;
@@ -237,11 +238,6 @@
 
 
     <script type="text/javascript">
-
-        function memberPostList() {
-
-        }
-
 
         $(function () {
 
@@ -457,7 +453,7 @@
                                 </c:otherwise>
                             </c:choose>
                             <div class="userNick">
-                                <a href="#" onclick="memberPostList(${row.create_user})">${row.nickname}</a>
+                                <a href="${path}/mypage/moveUserPage/${row.create_user}">${row.nickname}</a>
                             </div>
                         </div>
                         <div class="place">

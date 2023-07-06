@@ -1003,7 +1003,7 @@
 
                 $attendingItem = $("<div>").addClass('attendingItem')
                     .data("attendee_id", attendeeDTOList[i].attendee_id);;
-                $link = $("<a>").prop("href", "${path}/mypage/goMypage/" + attendeeDTOList[i].user_id);
+                $link = $("<a>").prop("href", "${path}/mypage/moveUserPage/" + attendeeDTOList[i].user_id);
                 $attendee = "<div class='attendee'><img src='${path}/images/" +
                     attendeeDTOList[i].profile + "'><span>" + attendeeDTOList[i].nickname + "</span></div>";
 
@@ -1021,7 +1021,7 @@
             for(let i=0; i<waitingDTOList.length; i++){
                 $attendingItem = $("<div></div>").addClass('attendingItem')
                     .data("attendee_id", waitingDTOList[i].attendee_id);
-                $link = $("<a>").prop("href", "${path}/mypage/goMypage/" + waitingDTOList[i].user_id);
+                $link = $("<a>").prop("href", "${path}/mypage/moveUserPage/" + waitingDTOList[i].user_id);
                 $attendee = "<div class='attendee'><img src='${path}/images/" +
                     waitingDTOList[i].profile + "'><span>" + waitingDTOList[i].nickname + "</span></div>";
 
@@ -1176,11 +1176,6 @@
         map.setCenter(customOverlay.getPosition());
     }
   }
-  /*마이페이지로 이동하는 폼*/
-  function goMypage() {
-      document.mypageForm.action = "${path}/mypage/goMypage";
-      document.mypageForm.submit();
-  }
 </script>
 				 
                 <div id="profileArea">
@@ -1224,10 +1219,7 @@
                             <div id="attendeeListWrapper">
                                 <div id="attendeeList">
                                     <c:forEach var="attendee" items="${dto.attendeeDTOList}">
-                                        <a href="#" onclick="goMypage()">내활동</a>
-                                        <form name="mypageForm" method="post" style="display: none">
-                                            <input type="hidden" id="sessionUserid" name="sessionUserid" value="${attendee.user_id}">
-                                        </form>
+                                        <a href="${path}/mypage/moveUserPage/${attendee.user_id}">내활동</a>
 
                                         <div class="attendee">
                                             <img src="${path}/images/${attendee.profile}">
@@ -1335,7 +1327,7 @@
                             <div id="attendingList">
                             <c:forEach var="attendee" items="${dto.attendeeDTOList}">
                                 <div class="attendingItem" data-attendee_id="${attendee.attendee_id}">
-                                    <a href="${path}/mypage/goMypage/${attendee.user_id}">
+                                    <a href="${path}/mypage/moveUserPage/${attendee.user_id}">
                                         <div class="attendee">
                                             <img src="${path}/images/${attendee.profile}">
                                             <span>${attendee.nickname}</span>
@@ -1357,7 +1349,7 @@
                                 <div id="waitingList">
                                 <c:forEach var="waiting" items="${dto.waitingDTOList}">
                                     <div class="attendingItem" data-attendee_id="${waiting.attendee_id}">
-                                        <a href="${path}/mypage/goMypage/${waiting.user_id}">
+                                        <a href="${path}/mypage/moveUserPage/${waiting.user_id}">
                                             <div class="attendee">
                                                 <img src="${path}/images/${waiting.profile}">
                                                 <span>${waiting.nickname}</span>

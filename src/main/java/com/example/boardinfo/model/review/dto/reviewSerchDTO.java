@@ -15,7 +15,6 @@ public class reviewSerchDTO {
 	private String freeFlag;			// 포럼게시판 및 자유게시판 나누기
 
 
-
 	public String getSearchTitle() {
 		return searchTitle;
 	}
