@@ -549,8 +549,6 @@
     var room;
 
     const unreadChatSpan = $("#unreadChat");
-    const unreadAlarmSpan = $("#unreadAlarm");
-    let unreadAlarmCount = '${sessionScope.unreadAlarmCount}';
 
 
     $(function(){
