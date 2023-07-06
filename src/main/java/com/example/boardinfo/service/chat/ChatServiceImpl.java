@@ -103,6 +103,24 @@ public class ChatServiceImpl implements ChatService {
     }
 
 
+    /*
+    @Override
+    public long countMyUnreads(List<ChatRoomDTO> myRooms) {
+        long unread = 0L;
+
+        for (ChatRoomDTO room : myRooms) {
+            Query query = new Query()
+                    .addCriteria(Criteria.where("gathering_id").is(room.getGathering_id())
+                            .*and("timestamp").gt(room.getLast_visit()));
+            long unreadCount = mongoTemplate.count(query, ChatMessageDTO.class);
+            unread += unreadCount;
+        }
+
+        return unread;
+    }
+    */
+
+
     @Override
     public ChatRoomDTO getAttendingChatroom(String user_id, int gathering_id) {
         ChatRoomDTO dto = gatheringDAO.getAttendingChatroom(user_id, gathering_id);

@@ -1,10 +1,8 @@
 package com.example.boardinfo.controller.review;
 
 import com.example.boardinfo.model.review.dto.*;
-import com.example.boardinfo.service.game.GameServiceImpl;
 import com.example.boardinfo.service.review.ReviewService;
 import com.example.boardinfo.service.review.paging;
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

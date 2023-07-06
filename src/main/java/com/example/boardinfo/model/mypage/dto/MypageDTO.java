@@ -46,6 +46,7 @@ public class MypageDTO {
 
     /*오프모임 게시판 dto*/
     private String gathering_id;
+    private String show;
     private String create_date;
     private String title;
     private String create_user;
@@ -200,6 +201,14 @@ public class MypageDTO {
 
     public void setGathering_id(String gathering_id) {
         this.gathering_id = gathering_id;
+    }
+
+    public String getShow() {
+        return show;
+    }
+
+    public void setShow(String show) {
+        this.show = show;
     }
 
     public String getCreate_date() {

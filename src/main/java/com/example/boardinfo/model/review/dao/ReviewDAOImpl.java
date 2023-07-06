@@ -5,7 +5,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -140,24 +139,14 @@ public class ReviewDAOImpl implements ReviewDAO {
 
 
 
-
-
-
-
-
-
-
     //리뷰 Blob 테스트
     @Override
     public void create(TestDTO testdto) {
 
         sqlSession.insert("review.reviewBlob", testdto);
     }
-    /*리뷰 list를 userid로 가져오는 방식*/
-    @Override
-    public List<ReviewDTO> getRvListByUserid(String userid) {
-        return sqlSession.selectList("review.rvListByUserid", userid);
-    }
+
+    /*mypageDao로 옮김*/
     
 
     @Override

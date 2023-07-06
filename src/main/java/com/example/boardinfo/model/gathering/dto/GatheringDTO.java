@@ -1,17 +1,11 @@
 package com.example.boardinfo.model.gathering.dto;
 
-import java.time.LocalDateTime;
-import java.util.*;
-
-import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 
 public class GatheringDTO {
 	
@@ -48,6 +42,7 @@ public class GatheringDTO {
 	private String finishChat;
 	private List<AttendeeDTO> attendeeDTOList;
 	private List<AttendeeDTO> waitingDTOList;
+
 
 
 

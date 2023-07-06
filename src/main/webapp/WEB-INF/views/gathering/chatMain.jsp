@@ -376,7 +376,7 @@
               <button type="button" onclick="withdraw()">채팅방 나가기</button>
               <div id="attendeeList">
                   <c:forEach var="attendee" items="${dto.attendeeDTOList}">
-                      <a class="attendee-wrap" href="${path}/mypage/goMypage/${attendee.user_id}" data-user_id="${attendee.user_id}">
+                      <a class="attendee-wrap" href="${path}/mypage/moveUserPage/${attendee.user_id}" data-user_id="${attendee.user_id}">
                           <div class="attendee">
                               <img src="${path}/images/${attendee.profile}">
                               <span>${attendee.nickname}</span>
@@ -796,7 +796,7 @@
                                     //개수 체크먼저 하자
 
                                     if($("#attendeeList").find("a[class='attendee-wrap'][data-user_id='" + user + "']").length == 0){
-                                        $attendee = "<a class='attendee-wrap' data-user_id='" + user + "' href='${path}/mypage/goMypage/" + user + "'>"
+                                        $attendee = "<a class='attendee-wrap' data-user_id='" + user + "' href='${path}/mypage/moveUserPage/" + user + "'>"
                                             + "<div class='attendee'><img src='${path}/images/" + profile + "'>"
                                             + "<span>" + nickname + "</span></div></a>";
 
