@@ -67,7 +67,7 @@
     </select>
 
 
-    <!--userid로 gathering 테이블에서 데이터 가져옴
+    <!--userid로 gathering 테이블에서 dto 6개 가져옴
     6개만-->
     <select id="gaListByUserid" resultType="mypageDto">
         select *
@@ -92,11 +92,10 @@
                               and type = 'a')                               as attendee_count
                     from gathering g
                              join member m on g.writer_id = m.userid
-                    where show = 'Y'
-                      and writer_id = #{userid}
+                    where writer_id = #{userid}
                     order by gathering_id
                             desc) a)
-        where rn between 1 and 10
+        where rn between 1 and 6
     </select>
 
     <!--id로 review list 가져오기
@@ -136,7 +135,6 @@
                     WHERE R.CREATE_USER = M.USERID(+)
                       AND R.REG_NUM
                         = C.REVIEWREGNUM(+)
-                      AND R.DEL = 'N'
                       and R.CREATE_USER = #{userid} /*검색*/ /*디테일 진입*/
                     ORDER BY CREATEDATE DESC) a)
         where rn between 1 and 6
@@ -204,13 +202,12 @@
                                         FROM TB_FILES
                                         GROUP BY TB_NUM, FULLNAME) f ON t.TB_NUM = f.TB_NUM
 
-                    WHERE t.del = 'N'
-                      AND CREATE_USER = #{userid}
+                    WHERE CREATE_USER = #{userid}
                     order by t.tb_num desc) a)
         where rn between 1 and 6
     </select>
 
-    <!--유저가 게임등록 요청 게시판에 작성한 글 조회 12개만-->
+    <!--유저가 게임등록 요청 게시판에 작성한 글 조회 10개씩 페이징-->
     <select id="giTabbed" resultType="myGiDto">
         select *
         from (select a.*, rownum rn
@@ -239,41 +236,15 @@
         where rn between #{start} and #{end}
     </select>
 
-    <!--유저가 작성한 게임인포 게시판 페이징용 카운트-->
-    <select id="countGetGiList" resultType="int">
+    <!--페이징 처리를 위한 count 구하는 쿼리-->
+    <select id="countGiList" resultType="int">
         select  count(*)
         from    game
         where   create_user = #{userid}
     </select>
 
-    <!--유저가 작성한 게임인포 게시판 전체보기-->
-    <select id="giMore" resultType="myGiDto">
-        SELECT g.gnum
-             , g.bggnum
-             , g.gametitle
-             , g.gametitle_eng
-             , g.release_year
-             , g.theme
-             , g.bgg_thumbnail
-             , ga.fullname           AS gamephoto_url
-             , to_char(g.create_date,
-                       'yyyy-mm-dd') as CREATE_DATE
-             , g.CREATE_USER
-             , g.CONFIRMED
-             , g.del
-        FROM game g
-                 LEFT JOIN (SELECT gnum, fullname
-                            FROM (SELECT ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum
-                                       , gnum
-                                       , fullname
-                                  FROM game_attach)
-                            WHERE rnum = 1) ga ON g.gnum = ga.gnum
-        WHERE CREATE_USER = #{userid}
-        order by CREATE_DATE desc
-    </select>
 
-
-    <!--gameRating 12개만-->
+    <!--gameRating 10개씩 페이징 처리-->
     <select id="grTabbed" resultType="gameRatingDTO">
         select *
         from (select a.*, rownum rn
@@ -299,36 +270,17 @@
                            , r.participant4
                            , r.participant5, r.rating_comment, r.create_date, g.GAMETITLE, g.BGG_THUMBNAIL
                     order by likeCount desc, create_date desc) a)
-        where rn between 1 and 12
+        where rn between #{start} and #{end}
     </select>
 
-    <!--gameRating 전부-->
-    <select id="grMore" resultType="gameRatingDTO">
-        select r.userid
-             , count(l.user_id)                     as likeCount
-             , r.gnum
-             , g.GAMETITLE
-             , g.BGG_THUMBNAIL
-             , r.rating
-             , r.weight
-             , r.participant1
-             , r.participant2
-             , r.participant3
-             , r.participant4
-             , r.participant5
-             , r.rating_comment
-             , to_char(r.create_date, 'YYYY-MM-dd') as create_date
-        from game_rating r
-                 join game g on r.GNUM = g.GNUM
-                 left join game_rating_like l on r.userid = l.writer_id
-        where r.userid = #{userid}
-        group by r.userid, r.gnum, r.rating, r.weight, r.participant1, r.participant2, r.participant3, r.participant4
-               , r.participant5, r.rating_comment, r.create_date, g.GAMETITLE, g.BGG_THUMBNAIL
-        order by likeCount desc, create_date desc
+    <!--페이징 처리를 위한 count 구하는 쿼리-->
+    <select id="countGrList" resultType="int">
+        select  count(*)
+        from    GAME_RATING
+        where   USERID = #{userid}
     </select>
 
-
-    <!--리뷰 테이블 12개만-->
+    <!--리뷰 테이블 10개씩 페이징 처리-->
     <select id="rvTabbed" resultType="reviewDto">
         select *
         from (select a.*, rownum rn
@@ -364,53 +316,20 @@
                     WHERE R.CREATE_USER = M.USERID(+)
                       AND R.REG_NUM
                         = C.REVIEWREGNUM(+)
-                      AND R.DEL = 'N'
                       and R.CREATE_USER = #{userid} /*검색*/ /*디테일 진입*/
                     ORDER BY CREATEDATE DESC) a)
-        where rn between 1 and 12
+        where rn between #{start} and #{end}
     </select>
 
-    <!--리뷰 테이블 더보기-->
-    <select id="rvMore" resultType="reviewDto">
-        SELECT R.REG_NUM             AS REGNUM
-             , M.USERID
-             , M.NICKNAME
-             , R.CATEGORY
-             , R.VIEWS
-             , C.GNUM
-             , (SELECT GAMETITLE
-                FROM GAME
-                WHERE GNUM = C.GNUM) AS GAMETITLE
-             , R.TITLE
-             , R.REVIEW_DETAIL       AS
-                                        REVIEWDETAIL
-             , (SELECT COUNT(1)
-                FROM REVIEWGOOD
-                WHERE REVIEWPK = R.REG_NUM
-                  AND GOOD = 'Y'
-                  AND DEL = 'N')     AS GOOD
-             , (SELECT COUNT(1) FROM REPLY_COMMENTS WHERE DEL = 'N' AND REG_NUM = R.REG_NUM)
-                                     AS RECNT
-             , R.DEL
-             , R.CREATE_USER         AS CREATEUSER
-             , TO_CHAR(R.CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS')
-                                     AS CREATEDATE
-             , R.UPDATE_USER         AS UPDATEUSER
-             , TO_CHAR(R.UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS')
-                                     AS UPDATEDATE
-        FROM REVIEW R
-           , MEMBER M
-           , CHOICE_GAME C
-        WHERE R.CREATE_USER = M.USERID(+)
-          AND R.REG_NUM
-            = C.REVIEWREGNUM(+)
-          AND R.DEL = 'N'
-          and R.CREATE_USER = #{userid} /*검색*/ /*디테일 진입*/
-        ORDER BY CREATEDATE DESC
+    <!--페이징 처리를 위한 count 구하는 쿼리-->
+    <select id="countRvList" resultType="int">
+        select  count(*)
+        from    REVIEW
+        where   CREATE_USER = #{userid}
     </select>
 
 
-    <!--gathering 테이블 12개만-->
+    <!--gathering 테이블 10개씩 페이징 처리-->
     <select id="gaTabbed" resultType="mypageDto">
         select *
         from (select a.*, rownum rn
@@ -433,43 +352,21 @@
                               and at.type = 'a')                    as attendee_count
                     from gathering g
                              join member m on g.writer_id = m.userid
-                    where g.show = 'Y'
-                      and g.WRITER_ID = #{userid}
+                    where g.WRITER_ID = #{userid}
                     order by g.gathering_id
                             desc) a)
-        where rn between 1 and 12
+        where rn between #{start} and #{end}
     </select>
 
-    <!--gathering 더보기-->
-    <select id="gaMore" resultType="mypageDto">
-        select gathering_id
-             , writer_id                                        as create_user
-             , to_char(post_date, 'YYYY-MM-DD HH24:MI:SS')      as create_date
-             , concat(substr(title, 1, 20), '...')              as shortedTitle
-             , to_char(GATHERING_DATE, 'YYYY-MM-DD HH24:MI:SS') as GATHERING_DATE
-             , address1
-             , address2
-             , place_name
-             , maxpeople
-             , view_count
-             , nickname
-             , (select count(*)
-                from gathering_reply
-                where gathering_id = g.gathering_id)            as garCount
-             , (select count(*)
-                from attendee
-                where gathering_id = g.gathering_id
-                  and type = 'a')                               as attendee_count
-        from gathering g
-                 join member m on g.writer_id = m.userid
-        where show = 'Y'
-          and writer_id = #{userid}
-        order by gathering_id
-                desc
+    <!--페이징 처리를 위한 count 구하는 쿼리-->
+    <select id="countGaList" resultType="int">
+        select  count(*)
+        from    REVIEW
+        where   CREATE_USER = #{userid}
     </select>
 
 
-    <!--t_board 테이블 10개만-->
+    <!--t_board 테이블 10개만 페이징 처리-->
     <select id="trTabbed" resultType="tboardDto">
         select *
         from (select a.*, rownum rn
@@ -497,44 +394,132 @@
                                         FROM TB_FILES
                                         GROUP BY TB_NUM, FULLNAME) f ON t.TB_NUM = f.TB_NUM
 
-                    WHERE t.del = 'N'
-                      AND CREATE_USER = #{userid}
+                    WHERE CREATE_USER = #{userid}
                     order by t.tb_num desc) a)
-        where rn between 1 and 12
+        where rn between #{start} and #{end}
     </select>
 
-    <!--t_board 테이블 다-->
-    <select id="trMore" resultType="tboardDto">
-        select t.tb_num
-             , t.title
-             , t.price
-             , t.description
-             , t.view_count
-             , (select count(*) FROM TB_COMMENTS WHERE tb_num = t.TB_NUM) as re_count /*댓글 수*/
-             , (select count(*) FROM TRADEGOOD WHERE TB_NUM = t.TB_NUM)   as good_count /*좋아요 수*/
-             , t.category
-             , t.CREATE_DATE
-             , t.create_user
-             , t.del
-             , t.update_user
-             , t.update_date
-             , t.address1
-             , t.address2
-             , f.fullName                                                 as first_img --썸네일 이미지
-
-        FROM t_board t
-                 LEFT JOIN (SELECT MIN(file_reg_num) AS min_file_reg_num
-                                 , FULLNAME
-                                 , TB_NUM
-                            FROM TB_FILES
-                            GROUP BY TB_NUM, FULLNAME) f ON t.TB_NUM = f.TB_NUM
-
-        WHERE t.del = 'N'
-          AND CREATE_USER = #{userid}
-        order by t.tb_num desc
+    <!--페이징 처리를 위한 count 구하는 쿼리-->
+    <select id="countTrList" resultType="int">
+        select  count(*)
+        from    t_board
+        where   create_user = #{userid}
     </select>
 
 
+
+    <!--내가 쓴 댓글 전체 조회-->
+    <select id="myReply" resultType="myReplyDto">
+        select *
+        from (select a.*, rownum rn
+              from (
+                       SELECT rc.COMMENT_DETAIL AS COMMENT_CONTENT
+                            , rc.CREATE_DATE    as create_date
+                            , rc.REPLY_REG_NUM  AS REPLY_ID
+                            , 'reply_comments'  AS TABLE_NAME
+                            , REG_NUM as POST_ID
+
+                       FROM REPLY_COMMENTS rc
+                       WHERE rc.CREATE_USER = #{userid}
+
+                       UNION ALL
+
+                       SELECT to_char(gr.REPLY_TEXT) AS COMMENT_CONTENT
+                            , gr.CREATE_DATE         as create_date
+                            , gr.REPLY_ID            as REPLY_ID
+                            , 'gathering_reply'      AS TABLE_NAME
+                            , GATHERING_ID as POST_ID
+                       FROM gathering_reply gr
+                       WHERE gr.CREATOR_ID = #{userid}
+
+
+                       UNION ALL
+
+                       SELECT to_char(tb.CONTENT) as COMMENT_CONTENT
+                            , tb.CREATE_DATE      as create_date
+                            , tb.REPLY_REG_NUM    AS REPLY_ID
+                            , 'tb_comments'       AS TABLE_NAME
+                            , TB_NUM as POST_ID
+                       FROM tb_comments tb
+                       WHERE tb.CREATE_USER = #{userid}
+
+                       ORDER BY CREATE_DATE DESC
+                   ) a)
+        where rn between #{start} and #{end}
+    </select>
+
+
+    <!--내가 누른 좋아요 전체 조회-->
+    <select id="myLike" resultType="myLikeDto">
+        select *
+        from (select a.*, rownum rn
+              from (
+                       SELECT gr.gnum as post_id
+                            , grl.WRITER_ID as create_user
+                            , 'game_rating' as table_name
+                            , gr.RATING_COMMENT as preview
+                            ,gr.CREATE_DATE as create_date
+                       from game_rating gr join GAME_RATING_LIKE grl  on gr.gnum = grl.gnum
+                       where grl.USER_ID = #{userid}
+
+                       union all
+
+                       SELECT rv.REG_NUM as post_id
+                            ,rv.CREATE_USER as create_user
+                            , 'reivew'  AS table_name
+                            ,rv.title AS preview
+                            , rv.CREATE_DATE    as create_date
+
+                       FROM review rv join REVIEWGOOD rvg on rv.REG_NUM = rvg.REVIEWPK
+                       WHERE rvg.CREATE_USER = #{userid}
+
+                       UNION ALL
+
+                       SELECT tb.TB_NUM as post_id
+                            , tb.CREATE_USER as create_user
+                            , 't_board' as table_name
+                            , tb.title as preview
+                            , tb.CREATE_DATE as create_date
+                       from T_BOARD tb join TRADEGOOD trg on tb.TB_NUM = trg.TB_NUM
+                       where CREATE_USER = #{userid}
+                       order by create_date
+                   ) a)
+        where rn between #{start} and #{end}
+    </select>
+
+    <select id="countReList" resultType="int">
+        select count(*)
+        from (SELECT REPLY_REG_NUM, CREATE_USER
+              FROM REPLY_COMMENTS
+              WHERE CREATE_USER = #{userid}
+              UNION ALL
+              SELECT REPLY_ID, CREATOR_ID as CREATE_USER
+              FROM gathering_reply
+              WHERE CREATOR_ID = #{userid}
+              UNION ALL
+              SELECT TB_COMMENTS.REPLY_REG_NUM, TB_COMMENTS.CREATE_USER as CREATE_USER
+              FROM tb_comments
+              WHERE TB_COMMENTS.CREATE_USER = #{userid})
+    </select>
+
+
+
+    <select id="countLikeList" resultType="int">
+        select count(*)
+        from (SELECT gnum, writer_id, USER_ID as CREATE_USER
+              FROM GAME_RATING_LIKE
+              WHERE writer_id = #{userid}
+
+              UNION ALL
+              SELECT goodkey, reviewpk, CREATE_USER
+              FROM REVIEWGOOD
+              WHERE CREATE_USER = #{userid}
+
+              UNION ALL
+              SELECT GOODKEY, TB_NUM, USERID as CREATE_USER
+              FROM TRADEGOOD
+              WHERE USERID = #{userid})
+    </select>
 </mapper>
 
 
