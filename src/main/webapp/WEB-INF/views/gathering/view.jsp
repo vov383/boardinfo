@@ -1176,6 +1176,7 @@
         map.setCenter(customOverlay.getPosition());
     }
   }
+
 </script>
 				 
                 <div id="profileArea">
@@ -1219,8 +1220,7 @@
                             <div id="attendeeListWrapper">
                                 <div id="attendeeList">
                                     <c:forEach var="attendee" items="${dto.attendeeDTOList}">
-                                        <a href="${path}/mypage/moveUserPage/${attendee.user_id}">내활동</a>
-
+                                        <a href="${path}/mypage/moveUserPage/${attendee.user_id}">
                                         <div class="attendee">
                                             <img src="${path}/images/${attendee.profile}">
                                             <span>${attendee.nickname}</span>
