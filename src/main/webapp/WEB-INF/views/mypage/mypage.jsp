@@ -25,13 +25,28 @@
         span.dot {
             padding: 0 2px;
         }
-        /*.card-img-top {*/
-        /*    !*object-fit은 이미지 크기가 줄면 바깥부터 잘려서 표현됨*!*/
-        /*    !*object-fit: cover;*!*/
-        /*    height: 200px; !* 썸네일 이미지에 일괄적인 높이 적용 *!*/
-        /*    width: 80%; !* 섬네일 이미지 컨테이너의 너비 100% 적용 *!*/
-        /*    margin: auto; !*가운데 정렬*!*/
-        /*}*/
+        /*페이지네이션*/
+        .pagenation {
+            display: flex;
+            margin: 20px auto;
+            justify-content: center;
+        }
+
+        #curPage {
+            color: #1432B1;
+        }
+
+        .pageItem {
+            width: 35px;
+            height: 35px;
+            border: 2px solid #1432B1;
+            border-radius: 10px;
+            line-height: 31px;
+            text-align: center;
+            margin: 0 3px;
+            font-size: 1.2em;
+        }
+
     </style>
 </head>
 <body>
