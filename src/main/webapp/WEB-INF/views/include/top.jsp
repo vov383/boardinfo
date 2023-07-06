@@ -166,19 +166,6 @@
 </div>
 
 <script>
-
-
-    let chatList;
-    let focusList = {};
-
-    var sock = new SockJS('http://localhost:80/ws-stomp-out');
-    var stomp = Stomp.over(sock);
-    /*stomp.debug = null;*/
-
-
-    //로그인 풀리면 채팅도 연결 끊어야 함
-    let cur_session = '${sessionScope.userid}';
-    const unreadChatSpan = $("#unreadChat");
     const unreadAlarmSpan = $("#unreadAlarm");
     let unreadAlarmCount = '${sessionScope.unreadAlarmCount}';
 

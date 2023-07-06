@@ -325,6 +325,7 @@
 
 </head>
 <body>
+<%@include file="../include/top.jsp" %>
 
 
 <div id="contents">
