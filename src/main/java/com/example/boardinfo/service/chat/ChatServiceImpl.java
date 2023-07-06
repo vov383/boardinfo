@@ -46,6 +46,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Map<String, Object> getAttendingChatroomList(String user_id, Integer gathering_id) {
+
         List<ChatRoomDTO> chatRoomList = gatheringDAO.getAttendingGatheringList(user_id);
 
         List<Integer> idList = new ArrayList<>();
@@ -60,7 +61,6 @@ public class ChatServiceImpl implements ChatService {
         List<ChatMessageDTO> lastMessages = chatMessageDAO.getLastChatMessages(idList);
 
         for(ChatMessageDTO item : lastMessages){
-
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
             item.setFormattedDate(dateFormat.format(item.getInsertDate()));
 
@@ -81,14 +81,17 @@ public class ChatServiceImpl implements ChatService {
                 ChatRoomDTO r = dto.get();
                 r.setLastChat(item);
                 resultList.add(r);
-                System.out.println(r.getGathering_id() + "방의" + r.getLast_visit() + "방문");
-                System.out.println(item.getInsertDate() + "채팅");
-                if(r.getLast_visit().before(item.getInsertDate())) {
-                    if(gathering_id==null || r.getGathering_id()!=gathering_id){
-                        r.setUnread(true);
-                        unread = true;
+
+                //finishChat인 경우 재처리
+                if(r.getFinishChat().equals("N")){
+                    if(r.getLast_visit().before(item.getInsertDate())) {
+                        if(gathering_id==null || r.getGathering_id()!=gathering_id){
+                            r.setUnread(true);
+                            unread = true;
+                        }
                     }
                 }
+
             }
 
         }
@@ -101,6 +104,33 @@ public class ChatServiceImpl implements ChatService {
 
 
     @Override
+    public ChatRoomDTO getAttendingChatroom(String user_id, int gathering_id) {
+        ChatRoomDTO dto = gatheringDAO.getAttendingChatroom(user_id, gathering_id);
+
+        if(dto!=null) {
+            ChatMessageDTO lastMessage = chatMessageDAO.getLastChatMessages(gathering_id);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
+            lastMessage.setFormattedDate(dateFormat.format(lastMessage.getInsertDate()));
+            if(lastMessage.getUserId().equals("SYSTEM")){
+                String message = lastMessage.getMessage();
+                int index = message.indexOf("]");
+                if(index!=-1){
+                    String user = message.substring(1, index);
+                    lastMessage.setMessage(memberDAO.getNickname(user) + message.substring(index+1));
+                }
+            }
+
+            dto.setLastChat(lastMessage);
+            if(dto.getLast_visit().before(lastMessage.getInsertDate())) {
+                dto.setUnread(true);
+            }
+        }
+
+            return dto;
+  }
+
+    @Override
     public List<Integer> getMyActiveChats(String user_id) {
         return gatheringDAO.getMyActiveChats(user_id);
     }
@@ -109,12 +139,6 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public boolean checkUnreadMessage(String user_id) {
         List<ChatRoomDTO> myChats = gatheringDAO.getMyLastVisit(user_id);
-        return chatMessageDAO.hasUnreadMessages(myChats);
-    }
-
-    @Override
-    public boolean checkUnreadMessageExceptRoom(String user_id, List<Integer> focusedRooms) {
-        List<ChatRoomDTO> myChats = gatheringDAO.getMyLastVisitExceptRoom(user_id, focusedRooms);
         return chatMessageDAO.hasUnreadMessages(myChats);
     }
 

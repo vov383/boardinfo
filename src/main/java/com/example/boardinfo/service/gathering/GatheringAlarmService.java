@@ -27,8 +27,9 @@ public class GatheringAlarmService {
 
 
     public void updateSessionByAlarm(String user_id, HttpSession session) {
-
         LocalDateTime lastUpdateDate = (LocalDateTime)session.getAttribute("lastUpdateDate");
+        System.out.println("lastUpdateDate : " + lastUpdateDate);
+        System.out.println(gatheringAlarmDAO.countUrgentAlarms(user_id, lastUpdateDate) + "개의 알림");
         if(gatheringAlarmDAO.countUrgentAlarms(user_id, lastUpdateDate)>0){
             chatService.updateActiveChatList(session);
         }

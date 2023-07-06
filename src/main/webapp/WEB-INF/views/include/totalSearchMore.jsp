@@ -98,7 +98,7 @@
 </main>
 
 <footer>
-    <%@include file="../include/footer.jsp" %>
+    <%@include file="footer.jsp" %>
 </footer>
 
 
