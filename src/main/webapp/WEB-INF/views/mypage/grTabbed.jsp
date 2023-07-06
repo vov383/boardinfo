@@ -41,17 +41,21 @@ giMore.jsp<%--
                             <img src="${grRow.bgg_thumbnail}" style="width:40px">
                         </td>
                         <td>
-                            <c:choose>
-                                <c:when test="${fn:length(grRow.gametitle) >= 15}">
-                                    ${fn:substring(grRow.gametitle, 0, 14)}...
-                                </c:when>
-                                <c:otherwise>
-                                    ${grRow.gametitle}<span class="dot"></span>
-                                </c:otherwise>
-                            </c:choose>
+                            <a href="${path}/game/view.do?gnum=${grRow.gnum}">
+                                <c:choose>
+                                    <c:when test="${fn:length(grRow.gametitle) >= 15}">
+                                        ${fn:substring(grRow.gametitle, 0, 14)}...
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${grRow.gametitle}<span class="dot"></span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </a>
                             <br>
-                            <i class="fa-solid fa-star" style="color: #f0bf0f;"></i><span class="dot"></span> ${grRow.rating}<span class="dot"></span>
-                            <i class="fa-solid fa-star" style="color: #3b2cc5;"></i><span class="dot"></span> ${grRow.weight}<span class="dot"></span>
+                            <i class="fa-solid fa-star" style="color: #f0bf0f;"></i><span
+                                class="dot"></span> ${grRow.rating}<span class="dot"></span>
+                            <i class="fa-solid fa-star" style="color: #3b2cc5;"></i><span
+                                class="dot"></span> ${grRow.weight}<span class="dot"></span>
                         </td>
                         <td>
                             <i class="fa-regular fa-comment-dots"></i><span class="dot"></span>

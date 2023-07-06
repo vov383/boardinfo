@@ -36,33 +36,50 @@
                 <tbody>
                 <c:forEach items="${response.gaList}" var="gaRow">
                     <tr>
-                        <td>
-                            <i class="fa-regular fa-calendar" style="color: #cc350f;"></i><span class="dot"></span>${gaRow.gathering_date}
-                        </td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${fn:length(gaRow.title)>=15}">
-                                    ${fn:substring(gaRow.title, 0, 14)}...
-                                </c:when>
-                            </c:choose>
-                                ${gaRow.title}<span class="dot"></span>
-                            <br>
-                            <i class="fa-solid fa-user"></i><span class="dot"></span>
-                                ${gaRow.attendee_count} / ${gaRow.maxpeople}<br>
-                            <i class="fa-regular fa-comment-dots"></i><span class="dot"></span><span
-                                class="reCount">${gaRow.garCount}</span>
-                            <span class="dot"></span>
-                            <i class="fa-solid fa-eye"></i><span class="dot"></span>
-                            <span class="viewCount">${gaRow.view_count}</span><span class="dot"></span>
-                            <i class="fa-solid fa-heart"></i><span class="dot"></span>
-                            <span class="goodCount">
-                                ${gaRow.galLikeCount}
-                            </span><span class="dot"></span>
-                        </td>
-                        <td>
-                            <i class="fa-solid fa-location-dot"></i><span class="dot"></span>
-                            <span class="address">${gaRow.address1} / ${gaRow.address2}</span>
-                        </td>
+                        <c:choose>
+                            <c:when test="${gaRow.show eq 'N'}">
+                                <td colspan="3">
+                                    <div class="delPost">
+                                        삭제된 글입니다.
+                                    </div>
+                                </td>
+                            </c:when>
+                            <c:otherwise>
+                                <td>
+                                    <i class="fa-regular fa-calendar" style="color: #cc350f;"></i><span
+                                        class="dot"></span>${gaRow.gathering_date}
+                                </td>
+                                <td>
+                                    <div class="title">
+                                        <a href="${path}/gathering/view/${gaRow.gathering_id}">
+                                            <c:choose>
+                                                <c:when test="${fn:length(gaRow.title)>=15}">
+                                                    ${fn:substring(gaRow.title, 0, 14)}...
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${gaRow.title}<span class="dot"></span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </a>
+                                    </div>
+                                    <i class="fa-solid fa-user"></i><span class="dot"></span>
+                                        ${gaRow.attendee_count} / ${gaRow.maxpeople}<br>
+                                    <i class="fa-regular fa-comment-dots"></i><span class="dot"></span><span
+                                        class="reCount">${gaRow.garCount}</span>
+                                    <span class="dot"></span>
+                                    <i class="fa-solid fa-eye"></i><span class="dot"></span>
+                                    <span class="viewCount">${gaRow.view_count}</span><span class="dot"></span>
+                                    <i class="fa-solid fa-heart"></i><span class="dot"></span>
+                                    <span class="goodCount">
+                                            ${gaRow.galLikeCount}
+                                    </span><span class="dot"></span>
+                                </td>
+                                <td>
+                                    <i class="fa-solid fa-location-dot"></i><span class="dot"></span>
+                                    <span class="address">${gaRow.address1} / ${gaRow.address2}</span>
+                                </td>
+                            </c:otherwise>
+                        </c:choose>
                         <td>
                             <i class="fa-regular fa-clock"></i><span class="dot"></span>
                             <span class="dateSpan">${gaRow.create_date}</span>

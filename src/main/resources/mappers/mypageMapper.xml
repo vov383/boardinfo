@@ -360,6 +360,7 @@
         select *
         from (select a.*, rownum rn
               from (select g.gathering_id
+                         , g.show
                          , g.writer_id as create_user
                          , to_char(g.post_date, 'YYYY-MM-DD HH24:MI-SS') as gathering_date
                          , g.title
