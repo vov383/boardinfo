@@ -25,7 +25,6 @@ public class AlarmInterceptor extends HandlerInterceptorAdapter {
         if (!"XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
 
             String requestUrl = request.getRequestURI();
-            System.out.println(requestUrl);
 
             HttpSession session=request.getSession();
             String user_id = (String)session.getAttribute("userid");

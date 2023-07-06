@@ -3,6 +3,7 @@ package com.example.boardinfo.controller.chat;
 import com.example.boardinfo.model.chat.dto.ChatMessageDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeDTO;
 import com.example.boardinfo.model.gathering.dto.AttendeeType;
+import com.example.boardinfo.model.gathering.dto.ChatRoomDTO;
 import com.example.boardinfo.model.gathering.dto.GatheringDTO;
 import com.example.boardinfo.service.chat.ChatService;
 import com.example.boardinfo.service.gathering.GatheringAlarmService;
@@ -115,30 +116,6 @@ public class ChatController {
     }
 
 
-    /*
-    @ResponseBody
-    @RequestMapping("/getMyActiveChats.do")
-    public Map<String, Object> getMyActiveChats(HttpSession session){
-        String user_id = (String)session.getAttribute("userid");
-        String message = "";
-        List<Integer> glist = null;
-        Map<String, Object> map = new HashMap<>();
-
-        if(user_id == null){
-            //오류 발생시키기
-        }
-
-        else{
-            glist = gatheringService.getMyActiveChats(user_id);
-        }
-
-        map.put("glist", glist);
-        return map;
-    }
-
-     */
-
-
     @ResponseBody
     @GetMapping("/unreadCount.do")
     public Map<String, Boolean> getActiveUnreadCount(HttpSession session) {
@@ -151,23 +128,20 @@ public class ChatController {
     }
 
     @ResponseBody
-    @PostMapping("/unreadCountExcept.do")
-    public Map<String, Boolean> getActiveUnreadCountExcept(HttpSession session,
-             @RequestBody List<Integer> focusedRooms){
-
-        String user_id = (String) session.getAttribute("userid");
-        boolean unread = chatService.checkUnreadMessageExceptRoom(user_id, focusedRooms);
-        Map<String, Boolean> map = new HashMap<>();
-        map.put("unread", unread);
-        return map;
-    }
-
-
-    @ResponseBody
     @GetMapping("/updateByAlarm.do")
     public void updateByAlarm(HttpSession session) {
         gatheringAlarmService.updateSessionByAlarm((String) session.getAttribute("userid"), session);
     }
+
+
+    @ResponseBody
+    @GetMapping("/getNewRoom.do")
+    public ChatRoomDTO getNewRoom(HttpSession session, @RequestParam int gathering_id) {
+        String user_id = (String) session.getAttribute("userid");
+        ChatRoomDTO dto = chatService.getAttendingChatroom(user_id, gathering_id);
+        return dto;
+    }
+
 
 
 

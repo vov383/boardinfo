@@ -11,5 +11,7 @@ public interface ChatMessageDAO {
     public void insert(ChatMessageDTO message);
     public List<ChatMessageDTO> getList(int gathering_id, int curPage, boolean desc, Date accessDate);
     public List<ChatMessageDTO> getLastChatMessages(List<Integer> idList);
+    public ChatMessageDTO getLastChatMessages(int gathering_id);
     public boolean hasUnreadMessages(List<ChatRoomDTO> myRooms);
+
 }

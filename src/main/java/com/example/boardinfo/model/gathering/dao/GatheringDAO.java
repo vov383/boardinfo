@@ -40,6 +40,7 @@ public interface GatheringDAO {
 	public int updateReply(GatheringReplyDTO dto);
 	public int deleteReply(GatheringReplyDTO dto);
 	public List<ChatRoomDTO> getAttendingGatheringList(String user_id);
+	public ChatRoomDTO getAttendingChatroom(String user_id, int gathering_id);
 	public List<Integer> getMyActiveChats(String user_id);
 	public void updateLastVisit(int gatheringId, String user_id, LocalDateTime date);
 	public List<String> leaveAll(int gathering_id);
@@ -48,10 +49,10 @@ public interface GatheringDAO {
 	public List<GatheringDTO> totalSearch(Map<String, Object> map);
 	public int totalSearchCount(Map<String, Object> map);
     public List<ChatRoomDTO> getMyLastVisit(String user_id);
-	public List<ChatRoomDTO> getMyLastVisitExceptRoom(String user_id, List<Integer> focusedRooms);
 	public int acceptApply(int gathering_id, int attendee_id);
 	public AttendeeDTO getAttendeeInfo(int attendee_id);
     public String getWriter(int gatheringId);
 	public int throwAttendee(int attendee_id, int gathering_id);
     public int rejectApply(int gathering_id, int attendee_id);
+
 }
