@@ -32,7 +32,6 @@ public class GameRatingController {
     public String ratingAdd(@RequestParam HashMap rating, HttpSession session){
     	String userid = (String) session.getAttribute("userid");
         rating.put("userid", userid);
-        System.out.println("gnum은 " + rating.get("gnum"));
         int num = gameRatingService.addGameRating(rating);
         if(num >= 1) return "success";
         else return "failure";

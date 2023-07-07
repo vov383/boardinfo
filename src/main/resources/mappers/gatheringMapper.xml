@@ -25,9 +25,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where gathering_id = #{gathering_id}
 	</update>
 
+
+
 	<select id="countList" resultType="int">
 		select count(*)
-		from gathering
+		<choose>
+			<when test="showAvailable==true">
+				from
+				(
+				select g.*, (select count(*) from attendee where gathering_id = g.gathering_id and type = 'a') as attendee_count
+				from gathering g
+				)
+			</when>
+			<otherwise>
+				from gathering
+			</otherwise>
+		</choose>
 		where
 		show = 'Y'
 		<if test="address1List!=null and address1List.length!=0">
@@ -46,9 +59,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</trim>
 			)
 		</if>
-
 		<if test="showAvailable==true">
 			and (sysdate + 1/48 ) <![CDATA[<]]> gathering_date
+			and maxpeople <![CDATA[>]]> attendee_count
 		</if>
 
 		<if test="from!=null">
@@ -129,6 +142,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<if test="showAvailable==true">
 	and sysdate <![CDATA[<]]> gathering_date
+	and	maxpeople <![CDATA[>]]> (select count(*)
+		from attendee
+		where gathering_id = g.gathering_id and type = 'a')
 	</if>
 
 	<if test="from!=null">

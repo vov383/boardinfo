@@ -66,7 +66,6 @@ public class ChatMessageController {
 
         else if(type.equals(GatheringAlarmDTO.AlarmType.BLUR)){
             gatheringDAO.updateLastVisit(chatAlarm.getGathering_id(), chatAlarm.getReceiver_id(), LocalDateTime.now());
-            System.out.println("lastDate업뎃" + chatAlarm.getGathering_id() + chatAlarm.getReceiver_id() + LocalDateTime.now());
             messagingTemplate.convertAndSend("/sub/alarm/user/" +
                     chatAlarm.getReceiver_id(), chatAlarm);
         }
