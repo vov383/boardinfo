@@ -802,7 +802,7 @@
                                     <fmt:formatNumber value="${statisticMap.AVGRATING}" pattern="0.0"/>
                                     </strong> (${statisticMap.TOT}명)
                                 </c:when>
-                                <c:otherwise>- (0명)</c:otherwise></c:choose><a href="#evaluate" class="goTo">&gt</a>
+                                <c:otherwise>- (0명)</c:otherwise></c:choose><a href="#boardinfo" class="goTo">&gt</a>
                         </span>
                                 <span>
                             <img src="../images/medal105.png" width="45px" height="45px" style="vertical-align: middle;">
@@ -882,7 +882,7 @@
                 </div>
 
 
-                <div class="detailDiv">
+                <div class="detailDiv" id="boardinfo">
                     <span class="smallTitle">상세정보</span>
                     <div class="detailInfoLabelAndItem">
                         <span>카테고리</span>

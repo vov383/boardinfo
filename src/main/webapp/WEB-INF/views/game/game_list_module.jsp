@@ -204,7 +204,7 @@
             else{
                 var filter = "${filter}";
                 if(filter ==="theme"){
-                    location.href="${path}/game/game_list_category_theme/${sort}?curPage="+page;
+                    location.href="${path}/game/themeList/${sort}?curPage="+page;
                 }else
                     location.href="${path}/game/gamerank/${sort}?curPage="+page;
             }

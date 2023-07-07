@@ -99,7 +99,7 @@
 
 <script>
     function list(page) {
-          location.href="${path}/search/totalSearchMore/${map.filter}/${map.gameKeyword}?curPage="+page;
+          location.href="${path}/game/categoryList?curPage="+page;
     }
 
 </script>
