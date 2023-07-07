@@ -32,7 +32,6 @@ public class ChatMessageDAOImpl implements ChatMessageDAO {
 		int pageSize = 30;
 		int skip = (curPage-1) * pageSize;
 
-
 		Query query = new Query(Criteria.where("gathering_id").is(gathering_id)
 				.and("insertDate").lt(accessDate))
 				.with(Sort.by(Sort.Direction.DESC, "insertDate"))
@@ -40,11 +39,6 @@ public class ChatMessageDAOImpl implements ChatMessageDAO {
 				.limit(pageSize);
 
 		List<ChatMessageDTO> list = mongoTemplate.find(query, ChatMessageDTO.class, "chatMessage");
-
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd'T'HH:mm");
-		list.forEach(item -> {
-			item.setFormattedDate(dateFormat.format(item.getInsertDate()));
-				});
 
 		if(desc == false){
 			Collections.reverse(list);

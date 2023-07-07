@@ -66,7 +66,6 @@ public class GatheringDAOImpl implements GatheringDAO {
 		Map<String, Integer> map = new HashMap<>();
 		map.put("parent_reply", parent_reply);
 		map.put("inner_order", inner_order);
-		System.out.println(sqlSession.update("gathering.replyOrderUpdate", map));
 	}
 
 	@Override
@@ -77,7 +76,6 @@ public class GatheringDAOImpl implements GatheringDAO {
 
 	@Override
 	public List<GatheringReplyDTO> getReplies(int gathering_id) {
-		System.out.println("gathering_id" + gathering_id);
 		return sqlSession.selectList("gathering.getReplies", gathering_id);
 	}
 

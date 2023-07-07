@@ -1275,13 +1275,16 @@
 
 
                     let weightSpan = "";
-                    let weight = list[i].weight + "";
-                    if(weight != '') {
+                    if(list[i].weight!=0.0){
+
+                        let weight = list[i].weight + "";
                         if(weight.indexOf('.') == -1){
                             weight += '.0';
                         }
                         weightSpan = "<span>난이도 " + weight + "</span>";
+
                     }
+
 
                     let bestSpan = "";
                     let goodSpan = "";

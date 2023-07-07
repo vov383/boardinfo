@@ -127,7 +127,6 @@ public class ChatServiceImpl implements ChatService {
 
         if(dto!=null) {
             ChatMessageDTO lastMessage = chatMessageDAO.getLastChatMessages(gathering_id);
-
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
             lastMessage.setFormattedDate(dateFormat.format(lastMessage.getInsertDate()));
             if(lastMessage.getUserId().equals("SYSTEM")){

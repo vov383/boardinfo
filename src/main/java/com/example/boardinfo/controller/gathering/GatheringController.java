@@ -185,7 +185,6 @@ public class GatheringController {
 		if(session!=null) user_id=(String)session.getAttribute("userid");
 
 		gatheringService.updateViewCount(gathering_id, cookie, response);
-
 		GatheringDTO dto = gatheringService.getGatheringDetails(gathering_id);
 
 		if(dto!=null){

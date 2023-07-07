@@ -25,10 +25,10 @@
   let focusList = {};
 
   //for sujin
-  //var sock = new SockJS('http://localhost:8098/ws-stomp-out');
+  var sock = new SockJS('http://localhost:8098/ws-stomp-out');
 
   //for others
-  var sock = new SockJS('http://localhost:80/ws-stomp-out');
+  //var sock = new SockJS('http://localhost:80/ws-stomp-out');
 
   //for taeyoung
   //var sock = new SockJS('http://localhost:80/board-info/ws-stomp-out');
@@ -39,7 +39,7 @@
 
 
   //로그인 풀리면 채팅도 연결 끊어야 함
-  let cur_session = '${sessionScope.userid}';
+  let cur_session = '${userid}';
   const unreadChatSpan = $("#unreadChat");
 
 

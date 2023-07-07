@@ -509,9 +509,12 @@
 
 <script>
 
-    var curPage = 1;
-    const cur_session = '${user_id}'; //현재 로그인한 사람
+    let curPage = 1;
+    const cur_session = '${userid}'; //현재 로그인한 사람
     const this_gathering_id = '${gathering_id}';
+
+    const thisRoom = $('.chatRoom[data-room="' + this_gathering_id + '"]');
+    const unreadChatSpan = $("#unreadChat");
 
     let curNickName = '${sessionScope.nickname}';
     let chatList = JSON.parse('${sessionScope.activeChats}');
@@ -531,36 +534,29 @@
 
 
     //for sujin
-    //var sock = new SockJS('http://localhost:8098/ws-stomp-in');
+    var sock = new SockJS('http://localhost:8098/ws-stomp-in');
 
     //for others
-    var sock = new SockJS('http://localhost:80/ws-stomp-in');
+    //let sock = new SockJS('http://localhost:80/ws-stomp-in');
 
     //for taeyoung
     //var sock = new SockJS('http://localhost:80/board-info/ws-stomp-in');
 
 
-    var stomp = Stomp.over(sock);
+    let stomp = Stomp.over(sock);
     stomp.debug = null;
 
-    let list;
     let focusList = {};
-    const thisRoom = $('.chatRoom[data-room="' + this_gathering_id + '"]');
-    var room;
-
-    const unreadChatSpan = $("#unreadChat");
-
+    let alarmTypeMap = {
+        'URGENT':['ACCEPTED','THROWN','CLOSE'],
+        'SUB':['ACCEPTED','ATTEND'],
+        'UNSUB':['LEAVE','THROWN','CLOSE'],
+        'SHOW':['ACCEPTED','THROWN','CLOSE','APPLY','COMMENT','REJECTED']};
 
     $(function(){
 
-        if('${unread}' == 'true'){
-            unreadChatSpan.removeClass('hidden');
-        }
-
-        if("${message}"!=""){
-            alert("${message}");
-        }
-
+        if('${unread}' == 'true') unreadChatSpan.removeClass('hidden');
+        if("${message}"!="") alert("${message}");
         if(cur_session=="") return;
 
         $("#showAttendeeBtn").click(function(){
@@ -580,7 +576,7 @@
 
         var connectHeaders = {};
 
-
+        //선택된 채팅방이 있다면
         if(this_gathering_id!=""){
             connectHeaders = {
                 "user_id" : cur_session,
@@ -601,7 +597,6 @@
 
                 if(type == 'FOCUS'){
                     addToFocusList(gathering_id, message);
-
                     if(alarmDto.existingUnread == true){
                         unreadChatSpan.removeClass('hidden');
                     }
@@ -615,7 +610,12 @@
                 }
 
 
-                else if(type=='ATTEND' || type == 'ACCEPTED'){
+                if(alarmTypeMap['URGENT'].includes(type)) {
+                    updateSession();
+                }
+
+                if(alarmTypeMap['SUB'].includes(type)){
+
                     if (!chatList.includes(gathering_id)) {
                         chatList.push(gathering_id);
                         stomp.subscribe("/sub/chatting/room/" + gathering_id, handleChatMessage);
@@ -649,45 +649,28 @@
                             }
                         });
                     }
-
-
                     unreadChatSpan.removeClass('hidden');
+
                 }
 
-                else if(type=='LEAVE' || type == 'THROWN' || type == 'CLOSE') {
-                    if (chatList.includes(gathering_id)) {
-                        var index = chatList.indexOf(gathering_id);
-                        if (index > -1) {
-                            chatList.splice(index, 1);
-                        }
-                        stomp.unsubscribe("/sub/chatting/room/" + gathering_id);
-                    }
-
-                    //그게 이 방이라면?
+                if(alarmTypeMap['UNSUB'].includes(type)){
                     if(this_gathering_id == gathering_id){
                         location.reload();
                     }
 
                     else{
-                        stomp.unsubscribe("/sub/chatting/room/" + gathering_id);
-                        room = $('.chatRoom[data-room="' + gathering_id + '"]');
+                        unsubscribeRoom(gathering_id);
+
+                        //채팅방 목록 업데이트
+                        let room = $('.chatRoom[data-room="' + gathering_id + '"]');
                         room.remove();
 
                         //안읽은 메시지 업데이트
                         updateUnreadChatMessages();
-
-                        //채팅방 목록 업데이트
                     }
-
                 }
 
-                if(type == 'ACCEPTED' || type == 'THROWN' || type == 'CLOSE') {
-                    updateSession();
-                }
-
-
-                if(type == 'ACCEPTED' || type == 'THROWN' || type == 'DELETED'
-                    || type == 'APPLY' || type == 'COMMENT' || type == 'REJECTED'){
+                if(alarmTypeMap['SHOW'].includes(type)){
                     //안읽은 알람 업데이트
                     unreadAlarmSpan.removeClass('hidden');
 
@@ -708,6 +691,7 @@
 
                 //현재 채팅방
                 if (chatList[i] == this_gathering_id) {
+
                     $("#sendBtn").click(function(){
                         if($('#msg').val()!=''){
                             sendMessage("SEND");
@@ -750,16 +734,12 @@
                         else if(sender == 'SYSTEM'){
 
                             var str = "";
-
                             var index = message.indexOf("]");
-
                             if(index!=-1){
                                 var user = message.substr(1, index-1);
 
-
                                 //회원 처리
                                 if(type == 'LEAVE' || type == 'THROW'){
-
                                     if($("#attendeeList").find("a[class='attendee-wrap'][data-user_id='" + user + "']").length > 0){
                                         $("#attendeeList").find("a[class='attendee-wrap'][data-user_id='" + user + "']").remove();
                                         thisRoom.find(".attendee_count").text(Number(thisRoom.find(".attendee_count").text())-1);
@@ -791,8 +771,7 @@
                                     });
 
 
-                                    //개수 체크먼저 하자
-
+                                    //회원추가
                                     if($("#attendeeList").find("a[class='attendee-wrap'][data-user_id='" + user + "']").length == 0){
                                         $attendee = "<a class='attendee-wrap' data-user_id='" + user + "' href='${path}/mypage/moveUserPage/" + user + "'>"
                                             + "<div class='attendee'><img src='${path}/images/" + profile + "'>"
@@ -1064,8 +1043,11 @@
                                 msgArea.prepend(div);
 
                             },
-                            error: function(){
+                            error: function(jqXHR, textStatus, errorThrown){
                                 alert("에러가 발생했습니다.");
+                                console.log(jqXHR);
+                                console.log(textStatus);
+                                console.log(errorThrown);
                             }
                         });
                     }
@@ -1091,20 +1073,14 @@
         var gathering_id = chatMessageDto.gathering_id;
 
         //이 채팅방을 찾아서 제일 위로
-        room = $('.chatRoom[data-room="' + gathering_id + '"]');
+        let room = $('.chatRoom[data-room="' + gathering_id + '"]');
 
 
         if(type == 'DELETED'){
             //채팅방 삭제시키고 unsubscribe
-            if (chatList.includes(gathering_id)) {
-                var index = chatList.indexOf(gathering_id);
-                if (index > -1) {
-                    chatList.splice(index, 1);
-                }
-                stomp.unsubscribe("/sub/chatting/room/" + gathering_id);
+                unsubscribeRoom(gathering_id);
                 updateSession();
                 room.remove();
-            }
         }
 
 
@@ -1254,6 +1230,17 @@
                     delete focusList[gathering_id];
                 }
             }
+        }
+    }
+
+
+    function unsubscribeRoom(gathering_id) {
+        if (chatList.includes(gathering_id)) {
+            var index = chatList.indexOf(gathering_id);
+            if (index > -1) {
+                chatList.splice(index, 1);
+            }
+            stomp.unsubscribe("/sub/chatting/room/" + gathering_id);
         }
     }
 

@@ -113,7 +113,9 @@
 
 		<div>
 			<div class="reviewDetail">
-				<span>난이도&nbsp; ${row.weight}</span>
+				<c:if test="${row.weight!=0.0}">
+					<span>난이도&nbsp; ${row.weight}</span>
+				</c:if>
 				<c:if test="${not empty bestPeople}">
 					<span>베스트인원 ${fn:substring(bestPeople, 0, fn:length(bestPeople)-2)}</span>
 				</c:if>

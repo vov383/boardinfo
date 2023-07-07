@@ -38,6 +38,7 @@ public class ChatController {
     @Inject
     ChatService chatService;
 
+
     @GetMapping("/room.do")
     public ModelAndView ChatRoomMain(@RequestParam(required = false) Integer gathering_id,
                                      HttpSession session, ModelAndView mav){
@@ -48,7 +49,6 @@ public class ChatController {
         Map<String, Object> map = chatService.getAttendingChatroomList(user_id, gathering_id);
         mav.addObject("rlist", map.get("rlist"));
         mav.addObject("unread", map.get("unread"));
-        mav.addObject("user_id", user_id);
         mav.setViewName("gathering/chatMain");
 
         Map<String, String> nicknameMap = null;
@@ -95,6 +95,7 @@ public class ChatController {
         mav.addObject("accessDate", dateString);
         return mav;
     }
+
 
 
     @ResponseBody
