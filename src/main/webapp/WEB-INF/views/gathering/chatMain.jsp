@@ -441,7 +441,7 @@
                   </c:if>
 
                   <c:choose>
-                      <c:when test="${row.userId==user_id}">
+                      <c:when test="${row.userId==userid}">
                           <div class='message_mine'>
 						<span class='chatTime'>
                                 ${thisTime}
@@ -1004,6 +1004,15 @@
                                         }
                                     }
 
+                                    else if(firstDate != thisDate){
+                                        if(dateDiv!='') {
+                                            div = dateDiv + div;
+                                            dateDiv = "";
+                                        }
+                                        else
+                                            div = "<div class='message_notice'><div class='messageContent chatDate'>" + thisDate + '</div></div>' + div;
+                                    }
+
                                     if (list[i].userId == cur_session) {
                                         div = "<div class='message_mine'><span class='chatTime'>" + thisTime + "</span>" +
                                             "<div class='messageContent'>" + list[i].message + "</div></div>" + div;
@@ -1027,7 +1036,7 @@
                                             + "<span class='chatTime'>" + thisTime + "</span></div></div>" + div;
                                     }
 
-                                    if(firstDate != thisDate || i == list.length-1){
+                                    if(i == list.length-1){
                                         if(dateDiv!='')
                                             div = dateDiv + div;
                                         else
