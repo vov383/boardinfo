@@ -531,17 +531,7 @@
     var lastDate = "${lastDate}";
     var lastTime = "${lastTime}";
 
-
-
-    //for sujin
-    var sock = new SockJS('http://localhost:8098/ws-stomp-in');
-
-    //for others
-    //let sock = new SockJS('http://localhost:80/ws-stomp-in');
-
-    //for taeyoung
-    //var sock = new SockJS('http://localhost:80/board-info/ws-stomp-in');
-
+    let sock = new SockJS('http://localhost:80/ws-stomp-in');
 
     let stomp = Stomp.over(sock);
     stomp.debug = null;
