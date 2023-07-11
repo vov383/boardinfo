@@ -441,7 +441,7 @@
                   </c:if>
 
                   <c:choose>
-                      <c:when test="${row.userId==user_id}">
+                      <c:when test="${row.userId==userid}">
                           <div class='message_mine'>
 						<span class='chatTime'>
                                 ${thisTime}
@@ -531,17 +531,7 @@
     var lastDate = "${lastDate}";
     var lastTime = "${lastTime}";
 
-
-
-    //for sujin
-    var sock = new SockJS('http://localhost:8098/ws-stomp-in');
-
-    //for others
-    //let sock = new SockJS('http://localhost:80/ws-stomp-in');
-
-    //for taeyoung
-    //var sock = new SockJS('http://localhost:80/board-info/ws-stomp-in');
-
+    let sock = new SockJS('http://localhost:80/ws-stomp-in');
 
     let stomp = Stomp.over(sock);
     stomp.debug = null;
@@ -1004,6 +994,15 @@
                                         }
                                     }
 
+                                    else if(firstDate != thisDate){
+                                        if(dateDiv!='') {
+                                            div = dateDiv + div;
+                                            dateDiv = "";
+                                        }
+                                        else
+                                            div = "<div class='message_notice'><div class='messageContent chatDate'>" + thisDate + '</div></div>' + div;
+                                    }
+
                                     if (list[i].userId == cur_session) {
                                         div = "<div class='message_mine'><span class='chatTime'>" + thisTime + "</span>" +
                                             "<div class='messageContent'>" + list[i].message + "</div></div>" + div;
@@ -1027,7 +1026,7 @@
                                             + "<span class='chatTime'>" + thisTime + "</span></div></div>" + div;
                                     }
 
-                                    if(firstDate != thisDate || i == list.length-1){
+                                    if(i == list.length-1){
                                         if(dateDiv!='')
                                             div = dateDiv + div;
                                         else
