@@ -128,7 +128,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				values (#{gnum},#{pnum})
 			</when>
 			<otherwise>
-				values (#{gnum}, seq_publisher.nextval)
+				values (#{gnum}, seq_publisher.currval)
 			</otherwise>
 		</choose>
 	</insert>

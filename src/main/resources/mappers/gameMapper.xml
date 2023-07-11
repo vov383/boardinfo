@@ -590,7 +590,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="newbieList" resultType="gameDto">
 		SELECT 	*
 		FROM 	(
-  				SELECT 	GAME.*,
+  				SELECT 	game.GAMETITLE, game.GNUM, game.GAMETITLE_ENG, game.BGG_THUMBNAIL,game.RELEASE_YEAR,
+  				CREATE_DATE, theme,  ga.FULLNAME as gamephoto_url,
     					ROW_NUMBER() OVER (ORDER BY GAME.create_date DESC) AS game_rank
   				FROM 	(
     					SELECT 	GAMETITLE, GNUM, GAMETITLE_ENG, BGG_THUMBNAIL,RELEASE_YEAR,
@@ -598,6 +599,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     					FROM 	GAME
     					where	del = 'n'
   						) GAME
+  				LEFT JOIN   (
+        		                    SELECT  gnum, fullname
+        		                    FROM    (
+        		                                SELECT  ROW_NUMBER() OVER (PARTITION BY gnum ORDER BY create_date DESC) rnum,
+        		                                        gnum, fullname
+        		                                FROM    game_attach
+        		                            )
+        		                    WHERE   rnum = 1
+        		                ) ga
+        		                ON      GAME.gnum = ga.gnum
 				) RANKED_GAMES
 		WHERE game_rank BETWEEN 1 AND 10
 	</select>

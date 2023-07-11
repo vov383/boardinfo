@@ -164,8 +164,8 @@
 
     <!--첨부파일-->
     <insert id="insertFile">
-        insert into tb_files (file_reg_num, tb_num, fullName, formatName, fileData, create_user)
-        values ((seq_tb_files.nextval), (seq_tboard.currval), #{fullName}, #{formatName}, #{fileData}, #{create_user})
+        insert into tb_files (file_reg_num, tb_num, fullName, formatName, fileData, create_user, del)
+        values ((seq_tb_files.nextval), (seq_tboard.currval), #{fullName}, #{formatName}, #{fileData}, #{create_user}, 'N')
     </insert>
 
     <select id="getFirstImageList" resultType="String">

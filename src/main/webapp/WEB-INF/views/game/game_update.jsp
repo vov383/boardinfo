@@ -1053,7 +1053,7 @@
 			var newPublisher = prompt("추가할 퍼블리셔명을 적어주세요.");
 			var exp_publisher = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.;:|\)*~`!^\-_+@\#%&\\\=\(\'\"\s]{1,}$/;
 
-			if(newPublisher != null && newArtist != "" && exp_artist.test(newArtist)){
+			if(newPublisher != null && newPublisher != "" && exp_publisher.test(newPublisher)){
 				var check = confirm(newPublisher+" 맞습니까?");
 				if(check == true){
 					if (selectedPublishers.indexOf(newPublisher) === -1) {

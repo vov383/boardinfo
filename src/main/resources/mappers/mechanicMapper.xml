@@ -88,7 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				values (#{gnum},#{mnum})
 			</when>
 			<otherwise>
-				values (#{gnum}, seq_mechanic.nextval)
+				values (#{gnum}, seq_mechanic.currval)
 			</otherwise>
 		</choose>
 	</insert>

@@ -157,7 +157,7 @@
                 <div class="wrap t_center">
                     <div class="ellipsis rank03">
                         <p>${row.publisher}</p>
-                        <button type="button" onclick="deleteitem('${param.filter}',${row.mnum})">삭제</button>
+                        <button type="button" onclick="deleteitem('${param.filter}',${row.pnum})">삭제</button>
                     </div>
                 </div>
             </div></td>
