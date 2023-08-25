@@ -1,12 +1,11 @@
 package com.example.boardinfo.service.member;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
 import com.example.boardinfo.model.member.dto.MemberDTO;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 public interface MemberService {
 

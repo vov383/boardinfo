@@ -2,22 +2,24 @@ package com.example.boardinfo.model.tboard.dto;
 
 public class TBCommentDTO {
 	private int reply_reg_num;
-
 	private Integer parent_reply;
-    private int tb_num;
-    private String content;
-    private String del;
-    private String create_user;
-    private String create_date;
-    private String update_user;
-    private String update_date;
+	private String tb_num;
+	private String content;
+	private String del;
+	private String create_user;
+	private String create_date;
+	private String update_user;
+	private String update_date;
 
 	private int depth;
 	private int inner_order;
 	private Integer mother_reply;
 
+	/*댓글에 유저 닉네임,프로필 이미지 넣기*/
+	private String nickname;
+	private String profile;
 
-	//getter, setter
+
 	public int getReply_reg_num() {
 		return reply_reg_num;
 	}
@@ -25,27 +27,43 @@ public class TBCommentDTO {
 	public void setReply_reg_num(int reply_reg_num) {
 		this.reply_reg_num = reply_reg_num;
 	}
-	public int getTb_num() {
+
+	public Integer getParent_reply() {
+		return parent_reply;
+	}
+
+	public void setParent_reply(Integer parent_reply) {
+		this.parent_reply = parent_reply;
+	}
+
+	public String getTb_num() {
 		return tb_num;
 	}
-	public void setTb_num(int tb_num) {
+
+	public void setTb_num(String tb_num) {
 		this.tb_num = tb_num;
 	}
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
+
 	public String getDel() {
 		return del;
 	}
+
 	public void setDel(String del) {
 		this.del = del;
 	}
+
 	public String getCreate_user() {
 		return create_user;
 	}
+
 	public void setCreate_user(String create_user) {
 		this.create_user = create_user;
 	}
@@ -61,6 +79,7 @@ public class TBCommentDTO {
 	public String getUpdate_user() {
 		return update_user;
 	}
+
 	public void setUpdate_user(String update_user) {
 		this.update_user = update_user;
 	}
@@ -97,12 +116,20 @@ public class TBCommentDTO {
 		this.mother_reply = mother_reply;
 	}
 
-	public Integer getParent_reply() {
-		return parent_reply;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setParent_reply(Integer parent_reply) {
-		this.parent_reply = parent_reply;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
 	}
 
 	@Override
@@ -110,7 +137,7 @@ public class TBCommentDTO {
 		return "TBCommentDTO{" +
 				"reply_reg_num=" + reply_reg_num +
 				", parent_reply=" + parent_reply +
-				", tb_num=" + tb_num +
+				", tb_num='" + tb_num + '\'' +
 				", content='" + content + '\'' +
 				", del='" + del + '\'' +
 				", create_user='" + create_user + '\'' +
@@ -120,6 +147,8 @@ public class TBCommentDTO {
 				", depth=" + depth +
 				", inner_order=" + inner_order +
 				", mother_reply=" + mother_reply +
+				", nickname='" + nickname + '\'' +
+				", profile='" + profile + '\'' +
 				'}';
 	}
 }

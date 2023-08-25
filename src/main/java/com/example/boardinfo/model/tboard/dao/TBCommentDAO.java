@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface TBCommentDAO {
-	List<TBCommentDTO> getReplyList(int tb_num);
-	int getReplyCount(int tb_num);
+	List<TBCommentDTO> getReplyList(String tb_num);
+	int getReplyCount(String tb_num);
 	int insertReply(TBCommentDTO re_dto);
 
 	TBCommentDTO getMotherObject(Integer mother_reply);

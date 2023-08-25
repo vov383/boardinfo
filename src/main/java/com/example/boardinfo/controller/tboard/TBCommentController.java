@@ -31,7 +31,7 @@ public class TBCommentController {
 	@RequestMapping("replyList")
 	@ResponseBody
 	public Map<String, Object> getList(
-			@RequestParam int tb_num){
+			@RequestParam String tb_num){
 		List<TBCommentDTO> re_list = tbcommentService.getCommentList(tb_num);
 		Map<String, Object> map = new HashMap<>();
 		map.put("re_list", re_list);

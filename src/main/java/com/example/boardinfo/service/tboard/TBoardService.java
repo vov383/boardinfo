@@ -5,6 +5,7 @@ import com.example.boardinfo.model.tboard.dto.TradeSearchDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -13,19 +14,20 @@ public interface TBoardService {
 
     void insert(TBoardDTO dto, MultipartFile[] files, String uploadPath) throws Exception;
 
-    Map<String, Object> viewPost(int tb_num);
+    Map<String, Object> viewPost(String tb_num);
 
-    void update(TBoardDTO dto);
+    void update(TBoardDTO dto, MultipartFile[] files, String uploadPath) throws IOException, Exception;
 
-    void delete(int tb_num);
+
 
     int countArticle(TradeSearchDTO sDto);
 
-    void increaseViewCount(int tb_num, HttpSession session);
+    void increaseViewCount(String tb_num, HttpSession session);
 
-    List<String> getAttach(int tb_num);
+    List<String> getAttach(String tb_num);
 
-    int deleteFile(Map<String, String> map);
+
+    int deleteFile(String tb_num);
 
     public List<TBoardDTO> getHomeList(Integer size);
 
@@ -36,12 +38,14 @@ public interface TBoardService {
     /*중고거래 좋아요 체크*/
     boolean checkLike(String goodkey);
 
-    long checkUpdateTime(HttpSession sessoin, int tb_num);
+    long checkUpdateTime(HttpSession sessoin, String tb_num);
 
     /*좋아요*/
-    Map<String, String> addLike(HttpSession session, int tb_num);
+    Map<String, String> addLike(HttpSession session, String tb_num);
 
 
     /*중고거래 좋아요 삭제*/
-    boolean deleteLike(HttpSession session, int tb_num);
+    boolean deleteLike(HttpSession session, String tb_num);
+
+    void delete(String tbNum);
 }
