@@ -6,7 +6,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public interface TBCommentService {
-	List<TBCommentDTO> getCommentList(int tb_num);
+	List<TBCommentDTO> getCommentList(String tb_num);
 	boolean insertReply(TBCommentDTO re_dto);
 
 	TBCommentDTO getReplyContent(int replyRegNum, HttpSession session);

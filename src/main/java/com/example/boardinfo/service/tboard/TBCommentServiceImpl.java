@@ -26,7 +26,7 @@ public class TBCommentServiceImpl implements TBCommentService {
 	TBoardDAO tboardDao;
 	
 	@Override
-	public List<TBCommentDTO> getCommentList(int tb_num) {
+	public List<TBCommentDTO> getCommentList(String tb_num) {
 		return tbcommentDao.getReplyList(tb_num);
 	}
 
@@ -46,6 +46,9 @@ public class TBCommentServiceImpl implements TBCommentService {
 		//대댓글인 경우
 		else {
 			TBCommentDTO mother = tbcommentDao.getMotherObject(re_dto.getMother_reply());
+
+			/*대댓글의 tb_num 설정*/
+			re_dto.setTb_num(mother.getTb_num());
 			re_dto.setDepth(mother.getDepth() + 1);
 			re_dto.setParent_reply(mother.getParent_reply());
 			int target = tbcommentDao.getTargetReplyOrder(mother);

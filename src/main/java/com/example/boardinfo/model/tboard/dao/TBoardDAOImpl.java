@@ -34,35 +34,35 @@ public class TBoardDAOImpl implements TBoardDAO {
 
 
 	@Override
-	public TBoardDTO viewPost(int tb_num) {
+	public TBoardDTO viewPost(String tb_num) {
 		return sqlSession.selectOne("tboard.viewPost", tb_num);
 	}
 
 	@Override
-	public void update(TBoardDTO dto) {
-		sqlSession.update("tboard.updatePost", dto);
-	}
+	public int update(TBoardDTO dto) {
+		return sqlSession.update("tboard.updatePost", dto);
+    }
 
 	@Override
-	public void delete(int tb_num) {
+	public void delete(String tb_num) {
 		sqlSession.delete("tboard.deletePost", tb_num);
 	}
 	
 
 	@Override
-	public void increaseViewcnt(int tb_num) {
+	public void increaseViewcnt(String tb_num) {
 		sqlSession.update("tboard.increaseViewcnt", tb_num);
 	}
 
 	@Override
-	public List<String> getAttach(int tb_num) {
+	public List<String> getAttach(String tb_num) {
 		return sqlSession.selectList("tboard.getAttachList", tb_num);
 	}
 
 	@Override
-	public int deleteFile(Map<String, String> map) {
-		int result = sqlSession.delete("tboard.deleteAttach", map);
-		return result;
+	public int deleteFile(String tb_num) {
+		sqlSession.delete("tboard.deleteAttach", tb_num);
+		return 0;
 	}
 
 	@Override

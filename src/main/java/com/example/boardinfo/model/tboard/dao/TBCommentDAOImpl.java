@@ -20,12 +20,12 @@ public class TBCommentDAOImpl implements TBCommentDAO {
     SqlSession sqlSession;
 
     @Override
-    public List<TBCommentDTO> getReplyList(int tb_num) {
+    public List<TBCommentDTO> getReplyList(String tb_num) {
         return sqlSession.selectList("tbComment.getReplyList", tb_num);
     }
 
     @Override
-    public int getReplyCount(int tb_num) {
+    public int getReplyCount(String tb_num) {
         return sqlSession.selectOne("tbComment.replyCount", tb_num);
     }
 
@@ -34,7 +34,7 @@ public class TBCommentDAOImpl implements TBCommentDAO {
         int target = 0;
 
         if (re_dto.getParent_reply() == null) {
-            int tb_num = re_dto.getTb_num();
+            String tb_num = re_dto.getTb_num();
             target = sqlSession.selectOne("tbComment.getLast", tb_num);
         } else {
             target = sqlSession.selectOne("tbComment.getTargetReplyOrder", re_dto);

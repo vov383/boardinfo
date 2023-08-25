@@ -12,19 +12,19 @@ public interface TBoardDAO {
 
 	int insert(TBoardDTO dto);
 	
-	TBoardDTO viewPost(int tb_num);
+	TBoardDTO viewPost(String tb_num);
 	
-	void update(TBoardDTO dto);
-	void delete(int tb_num);
+	int update(TBoardDTO dto);
+	void delete(String tb_num);
 
 	int countArticle(TradeSearchDTO sDto);
 
-	void increaseViewcnt(int tb_num);
+	void increaseViewcnt(String tb_num);
 
 
-	List<String> getAttach(int tb_num);
+	List<String> getAttach(String tb_num);
 
-	int deleteFile(Map<String, String> map);
+	int deleteFile(String tb_num);
 
     int fileAttach(TBAttachDTO fDto);
 

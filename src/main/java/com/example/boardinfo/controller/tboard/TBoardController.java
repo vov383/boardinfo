@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("tboard/*")
@@ -35,21 +36,22 @@ public class TBoardController {
     @Inject
     TBCommentService tbcommentService;
 
-    @RequestMapping("list.do")
+    @RequestMapping("list")
     @ResponseBody
     public ModelAndView list(
             @RequestParam(defaultValue = "all") String category,
             @RequestParam(defaultValue = "all") String search_option,
             @RequestParam(defaultValue = "") String keyword,
-            @RequestParam(defaultValue = "1") int curPage)
-            throws Exception {
+            @RequestParam(defaultValue = "1") int curPage) throws Exception {
 
         //레코드 갯수 계산
         /*sDto는 검색form  DTO*/
+
+
         TradeSearchDTO sDto = new TradeSearchDTO();
         sDto.setCategory(category);
         sDto.setSearch_option(search_option);
-        sDto.setKeyword("%"+keyword+"%");
+        sDto.setKeyword("%" + keyword + "%");
         sDto.setCurPage(curPage);
         int count = tboardService.countArticle(
                 sDto);
@@ -62,25 +64,25 @@ public class TBoardController {
         return mav;
     }
 
-    @RequestMapping("write.do")
+    @GetMapping("write")
     public String write(HttpSession session) {
         //글쓰기 폼 페이지로 이동
-        String userid = (String)session.getAttribute("userid");
+        String userid = (String) session.getAttribute("userid");
         if (userid == null || userid.equals("")) {
             return "member/login";
         }
         return "tboard/write";
     }
 
-//    @PostMapping("insert.do")
-    @RequestMapping("insert.do")
+    @PostMapping("insert.do")
     public String insert(
-            @RequestParam(value="files", required = false) MultipartFile[] files,
-            @RequestParam(value="title") String title, @RequestParam(value="price") String price, @RequestParam(value="description") String description, @RequestParam(value="category") String category, @RequestParam(value="address1", required = false) String address1, @RequestParam(value="address2", required = false) String address2, @RequestParam(value="address3", required = false) String address3, @RequestParam(value="place_name", required = false) String place_name, @RequestParam(value="lat", required = false) String lat, @RequestParam(value="lng", required = false) String lng, HttpSession session, HttpServletRequest request
+            @RequestParam(value = "files", required = false) MultipartFile[] files,
+            @RequestParam(value = "title") String title, @RequestParam(value = "price") String price, @RequestParam(value = "description") String description, @RequestParam(value = "category") String category, @RequestParam(value = "address1", required = false) String address1, @RequestParam(value = "address2", required = false) String address2, @RequestParam(value = "address3", required = false) String address3, @RequestParam(value = "place_name", required = false) String place_name, @RequestParam(value = "lat", required = false) String lat, @RequestParam(value = "lng", required = false) String lng, HttpSession session, HttpServletRequest request
     ) throws Exception {
         //로그인 한 사람만 들어올 수 있으니까 HttpSession 써야함
-        
-        if (session.getAttribute("userid") == null) {
+        String userid = (String) session.getAttribute("userid");
+        String admin_id = (String) session.getAttribute("admin_id");
+        if (userid == "" && admin_id == "") {
             return "member/login";
         } else {
             TBoardDTO dto = new TBoardDTO();
@@ -94,26 +96,32 @@ public class TBoardController {
             dto.setPlace_name(place_name);
 
             //여기서 lat이 null이라서 nullpointexception
-            //null 이 아닌 경우에만
-            if(lat != null){
-                dto.setLat(lat);
-                dto.setLng(lng);
-            }
+            //Optional 사용하여 null 체크, 없으면 빈값 들어감.
+            dto.setLat(Optional.ofNullable(lat).get());
+            dto.setLat(Optional.ofNullable(lng).get());
+
             //이름이 없기 때문에 session에서 id를 가져와야 한다.
-            String create_user = (String) session.getAttribute("userid");
-            dto.setCreate_user(create_user);
+            if (userid != "") {
+                String create_user = userid;
+                dto.setCreate_user(create_user);
+                String uploadPath = request.getSession().getServletContext().getRealPath("/resources/uploaded_image");
+                //게시물 저장
+                tboardService.insert(dto, files, uploadPath);
+            } else {
+                String create_user = admin_id;
+                dto.setCreate_user(create_user);
+                String uploadPath = request.getSession().getServletContext().getRealPath("/resources/uploaded_image");
+                //게시물 저장
+                tboardService.insert(dto, files, uploadPath);
+            }
 
-            String uploadPath = request.getSession().getServletContext().getRealPath("/resources/uploaded_image");
-            //게시물 저장
-            tboardService.insert(dto, files, uploadPath);
         }
-
         //게시물 목록 갱신처리
-        return "redirect:/tboard/list.do";
+        return "redirect:/tboard/list";
     }
 
     @RequestMapping("view/{tb_num}")
-    public ModelAndView view(@PathVariable("tb_num") int tb_num,
+    public ModelAndView view(@PathVariable("tb_num") String tb_num,
                              HttpSession session) throws Exception {
         //조회수 증가처리
         tboardService.increaseViewCount(tb_num, session);
@@ -128,8 +136,8 @@ public class TBoardController {
 
     }
 
-    @RequestMapping("change.do")
-    public ModelAndView moveUpdatePage(int tb_num) {
+    @GetMapping("change/{tb_num}")
+    public ModelAndView moveUpdatePage(@PathVariable String tb_num) {
 
         Map<String, Object> map = tboardService.viewPost(tb_num);
 
@@ -139,14 +147,16 @@ public class TBoardController {
         dto.setDescription(HtmlUtils.htmlUnescape(dto.getDescription()));
         /*price가 null인 경우에 nullPointException 발생하기 때문에
         값이 null인 경우와 아닌 경우 분기*/
-        if(dto.getPrice() != null){
+        if (dto.getPrice() != null) {
             dto.setPrice(HtmlUtils.htmlUnescape(dto.getPrice()));
+            dto.setPrice(dto.getPrice().replace(",", ""));
+            logger.info("@@@@프라이스 찍어보기" + dto.getPrice());
         }
-        
+
         map.put("dto", dto);
 
         List<String> tbfList = tboardService.getAttach(tb_num);
-        map.put("tbfList" ,tbfList);
+        map.put("tbfList", tbfList);
         ModelAndView mav = new ModelAndView();
         mav.setViewName("tboard/updatePost");
         mav.addObject("map", map);
@@ -154,69 +164,85 @@ public class TBoardController {
     }
 
     @RequestMapping("update.do")
-    public String update(TBoardDTO dto)
+    public String update(
+            @RequestParam(value = "files", required = false) MultipartFile[] files,
+            @RequestParam(value = "title") String title, @RequestParam(value = "price") String price, @RequestParam(value = "description") String description, @RequestParam(value = "category") String category, @RequestParam(value = "address1", required = false) String address1, @RequestParam(value = "address2", required = false) String address2, @RequestParam(value = "address3", required = false) String address3, @RequestParam(value = "place_name", required = false) String place_name, @RequestParam(value = "lat", required = false) String lat, @RequestParam(value = "lng", required = false) String lng, HttpSession session, HttpServletRequest request)
             throws Exception {
-        tboardService.update(dto);
-        return "redirect:/tboard/list.do";
+
+        //로그인 한 사람만 들어올 수 있으니까 HttpSession 써야함
+        String userid = (String) session.getAttribute("userid");
+        String admin_id = (String) session.getAttribute("admin_id");
+        price = price.replaceAll("[^\\w+]", "");
+
+        if (userid == "" && admin_id == "") {
+            return "member/login";
+        } else {
+            TBoardDTO dto = new TBoardDTO();
+            dto.setTitle(title);
+            dto.setPrice(String.valueOf(price));
+            dto.setDescription(description);
+            dto.setCategory(category);
+            dto.setAddress1(address1);
+            dto.setAddress2(address2);
+            dto.setAddress3(address3);
+            dto.setPlace_name(place_name);
+
+            //여기서 lat이 null이라서 nullpointexception
+            //null 이 아닌 경우에만
+            if (lat != null) {
+                dto.setLat(lat);
+                dto.setLng(lng);
+            }
+
+            //이름이 없기 때문에 session에서 id를 가져와야 한다.
+            if (userid != "") {
+                String update_user = userid;
+                dto.setUpdate_user(update_user);
+                String uploadPath = request.getSession().getServletContext().getRealPath("/resources/uploaded_image");
+
+                //게시물 저장
+                tboardService.update(dto, files, uploadPath);
+
+            } else if (admin_id != "") {
+                String update_user = admin_id;
+                dto.setUpdate_user(update_user);
+                String uploadPath = request.getSession().getServletContext().getRealPath("/resources/uploaded_image");
+
+                //게시물 저장
+                tboardService.update(dto, files, uploadPath);
+            }
+
+        }
+        //게시물 목록 갱신처리
+        return "redirect:/tboard/list";
     }
 
     @RequestMapping("getAttach")
     @ResponseBody
     public List<String> getAttach(
-            @RequestParam("tb_num") int tb_num) {
+            @RequestParam("tb_num") String tb_num) {
         return tboardService.getAttach(tb_num);
     }
 
     @RequestMapping("delete.do")
-    public String delete(int tb_num, HttpSession session) {
+    public String delete(String tb_num, HttpSession session) {
         tboardService.delete(tb_num);
-        return "redirect:/tboard/list.do";
+        return "redirect:/tboard/list";
     }
 
     @RequestMapping("imageUpload.do")
     public String imageUpload(
-            ) {
-        return "redirect:/tboard/list.do";
+    ) {
+        return "redirect:/tboard/list";
     }
 
-    @ResponseBody
-    @RequestMapping("deleteImage")
-    public ResponseEntity<String> deleteImage(String fileName, HttpSession session){
-        Map<String, String> map = new HashMap<>();
-
-        map.put("fileName", fileName);
-
-        /*세션에 유저id 와 admin id 둘다 없으면*/
-        if(session.getAttribute("userid")  == null && session.getAttribute("admin_id") == null){
-            return new ResponseEntity<String>("비정상적인 접근입니다. 다시 로그인 해주세요.", HttpStatus.BAD_REQUEST);
-        }else{
-            
-            if(session.getAttribute("userid")  != null){
-                String update_user = (String)session.getAttribute("userid");
-                map.put("update_user", update_user);
-            }else{
-                String update_user = (String)session.getAttribute("admin_id");
-                map.put("update_user", update_user);
-            }
-           int result = tboardService.deleteFile(map);
-            if(result == 1){
-                return new ResponseEntity<String>("deleted", HttpStatus.OK);
-                // 여기 deleted 는 uploadAjax.jsp 에서
-                // ajax success에 정의해놓은 result=="deleted" 다.
-            }else{
-                return new ResponseEntity<String>("이미지 삭제 실패", HttpStatus.BAD_REQUEST);
-            }
-
-        }
-
-    }
 
     @ResponseBody
     @GetMapping("/homeList")
     public Map<String, List<TBoardDTO>> getHomeList(
-            @RequestParam(value="size", required=false) Integer size){
+            @RequestParam(value = "size", required = false) Integer size) {
 
-        if(size == null) size = 8;
+        if (size == null) size = 8;
         List<TBoardDTO> list = tboardService.getHomeList(size);
         Map<String, List<TBoardDTO>> map = new HashMap<>();
         map.put("list", list);
@@ -225,17 +251,17 @@ public class TBoardController {
 
     @RequestMapping("likeCheck.do")
     @ResponseBody
-    public ResponseEntity<String> likeCheck(@RequestParam int tb_num, HttpSession session){
-        String userid = (String)session.getAttribute("userid");
-        if(userid == null){
+    public ResponseEntity<String> likeCheck(@RequestParam String tb_num, HttpSession session) {
+        String userid = (String) session.getAttribute("userid");
+        if (userid == null) {
             return new ResponseEntity<>("unchecked", HttpStatus.OK);
-        }else{
+        } else {
             String goodkey = userid + tb_num;
             /*true면 checked, false면 unchecked*/
             boolean checked = tboardService.checkLike(goodkey);
-            if(checked){
+            if (checked) {
                 return new ResponseEntity<>("checked", HttpStatus.OK);
-            }else{
+            } else {
                 return new ResponseEntity<>("unchecked", HttpStatus.OK);
             }
         }
@@ -245,9 +271,9 @@ public class TBoardController {
 
     @RequestMapping("addLike.do")
     @ResponseBody
-    public Map<String, String> addLike(@RequestParam int tb_num, HttpSession session){
+    public Map<String, String> addLike(@RequestParam String tb_num, HttpSession session) {
         Map<String, String> response = tboardService.addLike(session, tb_num);
-            return response;
+        return response;
     }
 
 }

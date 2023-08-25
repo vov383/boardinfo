@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class TBAttachDTO {
 
 	private int file_reg_num;
-	private int tb_num;
+	private String tb_num;
 	private String fullName;
 	private String formatName;
 	private byte[] fileData;
@@ -16,22 +16,6 @@ public class TBAttachDTO {
 	private String update_user;
 	private String update_date;
 
-	public String getFormatName() {
-		return formatName;
-	}
-
-	public void setCreate_date(String create_date) {
-		this.create_date = create_date;
-	}
-
-	public void setUpdate_date(String update_date) {
-		this.update_date = update_date;
-	}
-
-	public void setFormatName(String formatName) {
-		this.formatName = formatName;
-	}
-
 	public int getFile_reg_num() {
 		return file_reg_num;
 	}
@@ -40,11 +24,11 @@ public class TBAttachDTO {
 		this.file_reg_num = file_reg_num;
 	}
 
-	public int getTb_num() {
+	public String getTb_num() {
 		return tb_num;
 	}
 
-	public void setTb_num(int tb_num) {
+	public void setTb_num(String tb_num) {
 		this.tb_num = tb_num;
 	}
 
@@ -56,6 +40,13 @@ public class TBAttachDTO {
 		this.fullName = fullName;
 	}
 
+	public String getFormatName() {
+		return formatName;
+	}
+
+	public void setFormatName(String formatName) {
+		this.formatName = formatName;
+	}
 
 	public byte[] getFileData() {
 		return fileData;
@@ -81,6 +72,14 @@ public class TBAttachDTO {
 		this.create_user = create_user;
 	}
 
+	public String getCreate_date() {
+		return create_date;
+	}
+
+	public void setCreate_date(String create_date) {
+		this.create_date = create_date;
+	}
+
 	public String getUpdate_user() {
 		return update_user;
 	}
@@ -89,11 +88,19 @@ public class TBAttachDTO {
 		this.update_user = update_user;
 	}
 
+	public String getUpdate_date() {
+		return update_date;
+	}
+
+	public void setUpdate_date(String update_date) {
+		this.update_date = update_date;
+	}
+
 	@Override
 	public String toString() {
 		return "TBAttachDTO{" +
 				"file_reg_num=" + file_reg_num +
-				", tb_num=" + tb_num +
+				", tb_num='" + tb_num + '\'' +
 				", fullName='" + fullName + '\'' +
 				", formatName='" + formatName + '\'' +
 				", fileData=" + Arrays.toString(fileData) +
